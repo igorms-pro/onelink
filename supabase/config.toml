@@ -1,0 +1,25 @@
+# Supabase project configuration
+# Function settings and local development options
+
+[project]
+id = "local"
+
+[functions]
+# Public-facing webhook; JWT verification disabled
+[functions."stripe-webhook"]
+verify_jwt = false
+
+# Helper to create checkout sessions; requires auth
+[functions."stripe-create-checkout"]
+verify_jwt = true
+
+# Customer billing portal; requires auth
+[functions."stripe-portal"]
+verify_jwt = true
+
+# Domain verification worker; no auth (runs via scheduler)
+[functions."domain-verify"]
+verify_jwt = false
+
+# NOTE: Schedules are created and managed via CLI/API. See commands we provide.
+
