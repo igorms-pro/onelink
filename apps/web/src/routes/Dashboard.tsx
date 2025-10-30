@@ -1,30 +1,15 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../lib/AuthProvider";
 import { supabase } from "../lib/supabase";
-import { useForm } from "react-hook-form";
 import { isSafeHttpUrl } from "../lib/domain";
 import { getOrCreateProfile, getSelfPlan } from "../lib/profile";
+import { ProfileEditor, type ProfileForm } from "../components/ProfileEditor";
+import { NewLinkForm } from "../components/NewLinkForm";
+import { LinksList, type LinkRow } from "../components/LinksList";
+import { AnalyticsCard } from "../components/AnalyticsCard";
+import { goToCheckout, goToPortal } from "../lib/billing";
 
-type LinkRow = {
-  id: string;
-  label: string;
-  emoji: string | null;
-  url: string;
-  order: number;
-};
-
-type LinkForm = {
-  label: string;
-  url: string;
-  emoji?: string;
-};
-
-type ProfileForm = {
-  slug: string;
-  display_name: string | null;
-  bio: string | null;
-  avatar_url: string | null;
-};
+// types moved to components
 
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
@@ -33,15 +18,13 @@ export default function Dashboard() {
   const [profileFormInitial, setProfileFormInitial] = useState<ProfileForm | null>(null);
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [savingOrder, setSavingOrder] = useState(false);
+  // saving handled within LinksList
   const freeLimit = 3;
 
   const [plan, setPlan] = useState<string>("free");
   const isFree = plan !== "pro";
 
-  // DnD local refs
-  const dragIndex = useRef<number | null>(null);
-  const overIndex = useRef<number | null>(null);
+  // dnd handled inside LinksList
 
   useEffect(() => {
     if (!user) return;
@@ -169,85 +152,7 @@ export default function Dashboard() {
           </p>
         )}
 
-        <div className="mt-2 text-sm text-gray-600 h-5">
-          {savingOrder && <span>Saving order…</span>}
-        </div>
-        <ul className="mt-2 grid gap-3">
-          {links.map((l, idx) => (
-            <li
-              key={l.id}
-              className="flex items-center justify-between rounded border p-3"
-              draggable
-              onDragStart={() => { dragIndex.current = idx; }}
-              onDragOver={(e) => { e.preventDefault(); overIndex.current = idx; }}
-              onDrop={async () => {
-                const from = dragIndex.current; const to = overIndex.current;
-                dragIndex.current = null; overIndex.current = null;
-                if (from == null || to == null || from === to) return;
-                const prev = links;
-                const next = [...links];
-                const [moved] = next.splice(from, 1);
-                next.splice(to, 0, moved);
-                const reindexed = next.map((x, i) => ({ ...x, order: i + 1 }));
-                setLinks(reindexed);
-                setSavingOrder(true);
-                try {
-                  await Promise.all(reindexed.map((row) =>
-                    supabase
-                      .from("links")
-                      .update({ order: row.order })
-                      .eq("id", row.id)
-                      .eq("profile_id", profileId)
-                  ));
-                } catch (e) {
-                  console.error(e);
-                  setLinks(prev);
-                  alert("Failed to save order");
-                } finally {
-                  setSavingOrder(false);
-                }
-              }}
-            >
-              <div className="min-w-0 cursor-move">
-                <p className="font-medium truncate">{l.emoji ? `${l.emoji} ` : ""}{l.label}</p>
-                <a className="text-sm text-blue-600 underline break-all" href={l.url} target="_blank" rel="noreferrer">{l.url}</a>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  className="rounded border px-2 py-1 text-sm"
-                  onClick={async () => {
-                    const newLabel = prompt("New label", l.label);
-                    if (!newLabel) return;
-                    const { error } = await supabase
-                      .from("links")
-                      .update({ label: newLabel })
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) return alert("Update failed");
-                    setLinks(prev => prev.map(x => x.id === l.id ? { ...x, label: newLabel } : x));
-                  }}
-                >
-                  Edit
-                </button>
-                <button
-                  className="rounded border px-2 py-1 text-sm"
-                  onClick={async () => {
-                    if (!confirm("Delete link?")) return;
-                    const { error } = await supabase
-                      .from("links")
-                      .delete()
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) return alert("Delete failed");
-                    setLinks(prev => prev.filter(x => x.id !== l.id));
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+        <LinksList profileId={profileId} links={links} setLinks={setLinks} />
       </section>
 
       {/* Analytics */}
@@ -259,119 +164,4 @@ export default function Dashboard() {
   );
 }
 
-function ProfileEditor({ initial, disabled, onSave }: {
-  initial: ProfileForm | null;
-  disabled?: boolean;
-  onSave: (v: ProfileForm) => Promise<void>;
-}) {
-  const { register, handleSubmit, reset } = useForm<ProfileForm>({
-    values: initial ?? { slug: "", display_name: "", bio: "", avatar_url: "" }
-  });
-  useEffect(() => {
-    if (initial) reset(initial);
-  }, [initial, reset]);
-  return (
-    <form className="mt-4 grid gap-2" onSubmit={handleSubmit(async (v) => { await onSave(v); })}>
-      <input className="rounded border px-3 py-2" required placeholder="slug" {...register("slug")} />
-      <input className="rounded border px-3 py-2" placeholder="Display name" {...register("display_name")} />
-      <input className="rounded border px-3 py-2" placeholder="Avatar URL" {...register("avatar_url")} />
-      <textarea className="rounded border px-3 py-2" placeholder="Bio" {...register("bio")} />
-      <button className="rounded bg-black text-white px-4 py-2 disabled:opacity-50" disabled={disabled}>Save</button>
-    </form>
-  );
-}
-
-function AnalyticsCard({ profileId }: { profileId: string | null }) {
-  type ClickRow = { link_id: string; clicks: number; label?: string };
-  const [rows, setRows] = useState<Array<ClickRow>>([]);
-  const [loading, setLoading] = useState(false);
-  useEffect(() => {
-    if (!profileId) return;
-    setLoading(true);
-    (async () => {
-      try {
-        // Placeholder RPC; Agent D to supply implementation
-        const { data } = await supabase.rpc("get_clicks_by_profile", { profile_id: profileId, days: 7 });
-        if (Array.isArray(data)) setRows(data as Array<ClickRow>);
-        else setRows([]);
-      } catch {
-        setRows([]);
-      } finally {
-        setLoading(false);
-      }
-    })();
-  }, [profileId]);
-  if (!profileId) return <p className="text-sm text-gray-600">Profile not ready.</p>;
-  if (loading) return <p className="text-sm text-gray-600">Loading…</p>;
-  return (
-    <div className="mt-3 overflow-x-auto">
-      <table className="min-w-full text-sm">
-        <thead>
-          <tr>
-            <th className="text-left p-2">Link</th>
-            <th className="text-left p-2">Clicks (7d)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr key={r.link_id} className="border-t">
-              <td className="p-2">{r.label ?? r.link_id}</td>
-              <td className="p-2">{r.clicks}</td>
-            </tr>
-          ))}
-          {rows.length === 0 && (
-            <tr className="border-t"><td className="p-2" colSpan={2}>No data</td></tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function NewLinkForm({
-  onCreate,
-  disabled
-}: {
-  onCreate: (input: LinkForm) => Promise<void>;
-  disabled?: boolean;
-}) {
-  const { register, handleSubmit, reset } = useForm<LinkForm>();
-  return (
-    <form
-      className="mt-4 grid gap-2 sm:grid-cols-[1fr_2fr_auto]"
-      onSubmit={handleSubmit(async (values) => {
-        await onCreate(values);
-        reset();
-      })}
-    >
-      <input className="rounded border px-3 py-2" placeholder="🚀" {...register("emoji")} />
-      <input className="rounded border px-3 py-2" required placeholder="Label" {...register("label")} />
-      <input className="rounded border px-3 py-2 sm:col-span-2" required placeholder="https://…" {...register("url")} />
-      <button className="rounded bg-black text-white px-4 py-2 disabled:opacity-50" disabled={disabled}>
-        Add
-      </button>
-    </form>
-  );
-}
-
-async function goToCheckout() {
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-  const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-create-checkout`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}` }
-  });
-  const data = await res.json();
-  if (data?.url) window.location.href = data.url;
-}
-
-async function goToPortal() {
-  const token = (await supabase.auth.getSession()).data.session?.access_token;
-  const email = (await supabase.auth.getUser()).data.user?.email;
-  const res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-portal`, {
-    method: "POST",
-    headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
-  });
-  const data = await res.json();
-  if (data?.url) window.location.href = data.url;
-}
+// billing helpers moved to lib/billing
