@@ -1,4 +1,4 @@
--- OneMeet: RLS hardening + plan source of truth + analytics RPCs
+-- OneLink: RLS hardening + plan source of truth + analytics RPCs
 -- Safe to run multiple times; DROP/CREATE guarded where sensible.
 
 -- 1) LINKS: lock down anon SELECT; keep owner access; enforce RPC-only for public reads
