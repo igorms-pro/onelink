@@ -31,21 +31,15 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
 }
 
 export async function getSelfPlan(userId: string): Promise<"free" | "pro" | string> {
-  const { data } = await supabase
-    .from("profiles")
-    .select("plan")
-    .eq("user_id", userId)
-    .maybeSingle<{ plan: string }>();
-  return (data?.plan ?? "free") as "free" | "pro" | string;
+  const { data, error } = await supabase.rpc("get_plan_by_user", { p_user_id: userId });
+  if (error) return "free";
+  return (data ?? "free") as "free" | "pro" | string;
 }
 
 export async function getPlanBySlug(slug: string): Promise<"free" | "pro" | string> {
-  const { data } = await supabase
-    .from("profiles")
-    .select("plan")
-    .eq("slug", slug)
-    .maybeSingle<{ plan: string }>();
-  return (data?.plan ?? "free") as "free" | "pro" | string;
+  const { data, error } = await supabase.rpc("get_plan_by_slug", { p_slug: slug });
+  if (error) return "free";
+  return (data ?? "free") as "free" | "pro" | string;
 }
 
 
