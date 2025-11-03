@@ -1,3 +1,28 @@
+# OneLink Web
+
+## Apply SQL (Supabase)
+
+Run this in Supabase SQL Editor (or CLI) before running locally:
+
+1. Create the core schema (users, profiles, links, custom_domains, link_clicks) and RPC `get_links_by_slug`.
+2. Apply RLS + plan helpers and RPCs in `supabase/sql/001_rls_and_plan.sql`.
+   - Removes anon SELECT on `links` (public reads via RPC only)
+   - Grants execute on `public.get_links_by_slug`
+   - Adds `v_profiles_with_plan`, `get_plan_by_slug`, `get_plan_by_user`
+   - Optional: 3-link cap policy for Free, analytics RPC `get_clicks_by_profile`
+
+## Required Supabase Function secrets (set in each function env)
+
+- SUPABASE_URL
+- SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+- STRIPE_SECRET_KEY
+- STRIPE_WEBHOOK_SECRET
+- PRICE_ID
+- SITE_URL
+
+---
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

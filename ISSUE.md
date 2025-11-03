@@ -1,4 +1,4 @@
-# OneMeet – MVP hardening and launch checklist
+# OneLink – MVP hardening and launch checklist
 
 Prioritized, CTO-style task list. Use as GitHub issue description. Check items off as you land them.
 
@@ -10,12 +10,21 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
   - [ ] get_plan_by_user(user_id) (auth)
 - [ ] Optional but recommended: RLS policy to cap free plan inserts at 3 links/profile
 
+### Drops/Submissions (DropRequest)
+- [ ] Apply 002_drops_and_submissions.sql
+- [ ] Confirm RLS: anon can INSERT into submissions; owners can SELECT their submissions
+- [ ] Add RPCs wiring in web app: get_drops_by_slug, get_submissions_by_profile
+
 ## P0 – Billing/Infra
 - [ ] Supabase Functions: set secrets in prod (Stripe, Supabase, Vercel, SITE_URL)
   - [ ] SUPABASE_URL, SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
   - [ ] STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, PRICE_ID
   - [ ] SITE_URL, VERCEL_TOKEN, VERCEL_PROJECT_ID
 - [ ] Stripe: live product/price + webhook to stripe-webhook function
+- [ ] Storage cleanup: deploy storage-cleanup function + schedule daily cleanup
+  - [ ] Deploy: `supabase functions deploy storage-cleanup`
+  - [ ] Schedule in Supabase Dashboard: Daily at 02:00 UTC (or via external cron)
+  - [ ] Verify cleanup respects retention_days per plan (Free: 7, Starter: 30, Pro: 90)
 
 ## P1 – Frontend UX polish
 - [ ] Dashboard header shows current plan (Free/Pro)
@@ -25,9 +34,16 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 - [ ] GA: enable only when plan === 'pro' and VITE_GA_ID present (already gated; add .env)
 - [ ] Profile editor: basic validation (slug uniqueness surface error)
 
+### Drops UI
+- [ ] Dashboard: CRUD for Drop blocks (label, emoji, order, on/off)
+- [ ] Public page: render Drop uploader (name/email/note optional)
+- [ ] Dashboard: Inbox list + per-submission detail, download files
+
 ## P1 – Analytics
 - [ ] SQL: get_clicks_by_profile(profile_id, days) RPC (owner-only)
 - [ ] Dashboard: wire AnalyticsCard to RPC; add 7/30-day toggle
+### Drop analytics
+- [ ] Wire submission counts via get_submission_counts_by_profile
 
 ## P1 – Domains
 - [ ] Schedule domain-verify (cron) and observe logs; handle rate limits and retries
@@ -37,13 +53,16 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 - [ ] Unit tests
   - [ ] isBaseHost, isSafeHttpUrl
   - [ ] getOrCreateProfile happy path (mock supabase)
+  - [ ] Drops: rpc.get_drops_by_slug returns only active drops
 - [ ] E2E tests
   - [ ] /:slug renders scheduled links only, footer hidden for Pro
   - [ ] Clicking a link doesn’t block navigation and records a click
+  - [ ] Submitting a Drop inserts into submissions and shows in Inbox
 - [ ] Lighthouse: public profile ≥ 90 Perf/Best/SEO
 
 ## P2 – Docs
 - [ ] README: environment setup (web + supabase functions)
+  - [ ] Include 002_drops_and_submissions.sql in setup steps
 - [ ] Runbook: rotating Stripe keys, setting webhook secret, replacing PRICE_ID
 - [ ] Domain guide: DNS screenshots, expected Vercel state
 

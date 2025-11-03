@@ -1,7 +1,17 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-pnpm --filter web type-check || exit 1
-pnpm --filter web test:ci
+# Load NVM and set up PATH
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+
+# Enable pnpm
+export PATH="$PATH:$HOME/.local/share/pnpm"
+
+cd apps/web || exit 1
+
+pnpm type-check || exit 1
+pnpm test:ci || exit 1
 
 
