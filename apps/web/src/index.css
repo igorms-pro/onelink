@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-@variant dark (&:is(.dark, [data-theme="dark"]));
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
   font-family:
