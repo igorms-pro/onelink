@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
@@ -35,14 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       async signInWithEmail(email: string) {
         const { error } = await supabase.auth.signInWithOtp({
           email,
-          options: { emailRedirectTo: window.location.origin + "/dashboard" }
+          options: { emailRedirectTo: window.location.origin + "/dashboard" },
         });
         if (error) return { error: error.message };
         return {};
       },
       async signOut() {
         await supabase.auth.signOut();
-      }
+      },
     };
   }, [session, loading]);
 
