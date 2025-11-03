@@ -1,7 +1,14 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-pnpm --filter web type-check || exit 1
-pnpm --filter web test:ci
+cd apps/web || exit 1
+
+echo "🔍 Running type check..."
+pnpm type-check || exit 1
+
+echo "🧪 Running unit tests..."
+pnpm test:ci || exit 1
+
+echo "✅ All checks passed!"
 
 

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { isBaseHost } from "../lib/domain";
 import { getPlanBySlug } from "../lib/profile";
+import { Header } from "../components/Header";
 
 type PublicLink = { link_id: string; label: string; emoji: string | null; url: string; order: number };
 type PublicProfile = { slug?: string; display_name?: string | null; bio?: string | null; avatar_url?: string | null };
@@ -114,7 +115,9 @@ export default function Profile() {
   }
 
   return (
-    <main className="mx-auto max-w-md p-6">
+    <div className="min-h-screen flex flex-col">
+      <Header />
+      <main className="flex-1 mx-auto max-w-md w-full p-6">
       <header className="flex items-center gap-3">
         {profile?.avatar_url && <img className="h-12 w-12 rounded-full" src={profile.avatar_url} />}
         <div>
@@ -215,8 +218,11 @@ export default function Profile() {
       )}
 
       {isBaseHost(host) && plan !== "pro" && (
-        <footer className="mt-8 text-center text-sm text-gray-500">Powered by OneLink</footer>
+        <footer className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
+          Powered by OneLink
+        </footer>
       )}
-    </main>
+      </main>
+    </div>
   );
 }

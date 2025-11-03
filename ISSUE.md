@@ -21,6 +21,10 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
   - [ ] STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, PRICE_ID
   - [ ] SITE_URL, VERCEL_TOKEN, VERCEL_PROJECT_ID
 - [ ] Stripe: live product/price + webhook to stripe-webhook function
+- [ ] Storage cleanup: deploy storage-cleanup function + schedule daily cleanup
+  - [ ] Deploy: `supabase functions deploy storage-cleanup`
+  - [ ] Schedule in Supabase Dashboard: Daily at 02:00 UTC (or via external cron)
+  - [ ] Verify cleanup respects retention_days per plan (Free: 7, Starter: 30, Pro: 90)
 
 ## P1 – Frontend UX polish
 - [ ] Dashboard header shows current plan (Free/Pro)

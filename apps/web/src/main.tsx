@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./index.css";
+import "./lib/i18n";
 import App from "./routes/App";
 import Profile from "./routes/Profile";
 import Auth from "./routes/Auth";

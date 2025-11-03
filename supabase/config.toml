@@ -21,5 +21,9 @@ verify_jwt = true
 [functions."domain-verify"]
 verify_jwt = false
 
+# Storage cleanup; scheduled job (no auth) or manual (auth required)
+[functions."storage-cleanup"]
+verify_jwt = false
+
 # NOTE: Schedules are created and managed via CLI/API. See commands we provide.
 
