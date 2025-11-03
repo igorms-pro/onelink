@@ -1,6 +1,7 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { Toaster } from "sonner";
 import "./index.css";
 import "./lib/i18n";
 import App from "./routes/App";
@@ -13,13 +14,14 @@ const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/auth", element: <Auth /> },
   { path: "/dashboard", element: <Dashboard /> },
-  { path: "/:slug", element: <Profile /> }
+  { path: "/:slug", element: <Profile /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <AuthProvider>
       <RouterProvider router={router} />
+      <Toaster position="top-right" richColors />
     </AuthProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

@@ -8,7 +8,9 @@ export default function App() {
       <Header />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
         <h1 className="text-2xl font-semibold">{t("app_title")}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">{t("app_tagline")}</p>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          {t("app_tagline")}
+        </p>
         <div className="mt-6 flex gap-3">
           <a
             className="rounded bg-black dark:bg-white text-white dark:text-black px-4 py-2 hover:opacity-90 transition-opacity"
