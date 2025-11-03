@@ -10,26 +10,24 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Theme-aware root colors - only apply when .dark class is NOT present */
-:root {
   color-scheme: light dark;
   color: #1f2937;
-  background-color: #ffffff;
+  /* Let components set their own background colors */
 }
 
+/* Dark mode - when .dark class is on html */
 :root.dark {
   color-scheme: dark;
   color: #f9fafb;
-  background-color: #111827;
+  /* Don't set background-color on :root.dark - let components handle it */
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background-color: inherit;
+  /* Don't inherit background - let components handle their own backgrounds */
+  background-color: transparent;
   color: inherit;
   transition:
     background-color 0.2s ease,

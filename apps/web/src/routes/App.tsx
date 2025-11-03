@@ -4,10 +4,12 @@ import { Header } from "../components/Header";
 export default function App() {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <Header />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
-        <h1 className="text-2xl font-semibold">{t("app_title")}</h1>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          {t("app_title")}
+        </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">
           {t("app_tagline")}
         </p>

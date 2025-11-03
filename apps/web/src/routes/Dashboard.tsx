@@ -96,16 +96,29 @@ export default function Dashboard() {
   }, [user]);
 
   if (loading) {
-    return <main className="mx-auto max-w-md p-6">Loading…</main>;
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        <main className="mx-auto max-w-md p-6 text-gray-900 dark:text-white">
+          Loading…
+        </main>
+      </div>
+    );
   }
   if (!user) {
     return (
-      <main className="mx-auto max-w-md p-6">
-        <h1 className="text-xl font-semibold">Please sign in</h1>
-        <a className="text-blue-600 underline" href="/auth">
-          Go to sign in
-        </a>
-      </main>
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        <main className="mx-auto max-w-md p-6">
+          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
+            Please sign in
+          </h1>
+          <a
+            className="text-blue-600 dark:text-blue-400 underline"
+            href="/auth"
+          >
+            Go to sign in
+          </a>
+        </main>
+      </div>
     );
   }
 
