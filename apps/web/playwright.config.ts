@@ -27,7 +27,7 @@ export default defineConfig({
     // },
   ],
   webServer: {
-    command: "pnpm preview --port 4173",
+    command: "pnpm build && pnpm preview --port 4173",
     url: "http://localhost:4173",
     reuseExistingServer: !process.env.CI, // In CI, Playwright will start its own server
     timeout: 120 * 1000, // 2 minutes
