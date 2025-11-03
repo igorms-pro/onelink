@@ -10,6 +10,25 @@ import Auth from "./routes/Auth";
 import Dashboard from "./routes/Dashboard";
 import { AuthProvider } from "./lib/AuthProvider";
 
+// Initialize theme on app load
+const theme = localStorage.getItem("theme") || "system";
+const root = document.documentElement;
+let actualTheme = theme;
+if (theme === "system") {
+  actualTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+    ? "dark"
+    : "light";
+}
+if (actualTheme === "dark") {
+  root.classList.add("dark");
+  root.setAttribute("data-theme", "dark");
+  root.style.colorScheme = "dark";
+} else {
+  root.classList.remove("dark");
+  root.setAttribute("data-theme", "light");
+  root.style.colorScheme = "light";
+}
+
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/auth", element: <Auth /> },
