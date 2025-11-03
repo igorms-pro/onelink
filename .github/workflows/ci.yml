@@ -90,16 +90,15 @@ jobs:
       
       - name: Build app
         run: pnpm build
-      
-      - name: Start preview server
-        run: pnpm preview --port 4173 &
-      
-      - name: Wait for server
-        run: npx wait-on http://localhost:4173
+        env:
+          # Dummy values for build (Vercel uses real values)
+          VITE_SUPABASE_URL: "https://placeholder.supabase.co"
+          VITE_SUPABASE_ANON_KEY: "placeholder-key"
       
       - name: Run E2E tests
         run: pnpm e2e:ci
         env:
+          CI: "true"
           VITE_BASE_URL: http://localhost:4173
       
       - name: Upload Playwright report
