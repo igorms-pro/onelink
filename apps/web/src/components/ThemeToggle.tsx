@@ -22,15 +22,24 @@ export function ThemeToggle() {
         root.classList.add("dark");
         root.setAttribute("data-theme", "dark");
         root.style.colorScheme = "dark";
-        console.log("[Theme] Applied dark theme");
+        console.log(
+          "[Theme] Applied dark theme - class:",
+          root.classList.contains("dark"),
+          "HTML:",
+          root.className,
+        );
       } else {
         root.classList.remove("dark");
         root.setAttribute("data-theme", "light");
         root.style.colorScheme = "light";
         console.log(
-          "[Theme] Applied light theme, dark class removed:",
+          "[Theme] Applied light theme - dark class removed:",
           !root.classList.contains("dark"),
+          "HTML classes:",
+          root.className,
         );
+        // Force a repaint by triggering reflow
+        void root.offsetHeight;
       }
     };
 
