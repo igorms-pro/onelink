@@ -17,10 +17,11 @@ const languages = [
 export function LanguageToggle() {
   const { i18n, t } = useTranslation();
   const current = i18n.language;
-  const currentLang = languages.find((l) => l.code === current) || languages[0];
   return (
     <div className="flex items-center justify-between py-2">
-      <label className="text-sm text-gray-900 dark:text-gray-100">{t("language")}</label>
+      <label className="text-sm text-gray-900 dark:text-gray-100">
+        {t("language")}
+      </label>
       <select
         className="rounded border border-gray-300 dark:border-gray-600 px-3 py-1.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 text-sm"
         value={current}
@@ -35,5 +36,3 @@ export function LanguageToggle() {
     </div>
   );
 }
-
-

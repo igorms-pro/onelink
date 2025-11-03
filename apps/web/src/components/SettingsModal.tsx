@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { X } from "lucide-react";
-import { useTranslation } from "react-i18next";
 import { ThemeToggle } from "./ThemeToggle";
 import { LanguageToggle } from "./LanguageToggle";
 
@@ -10,8 +9,6 @@ interface SettingsModalProps {
 }
 
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
-  const { t } = useTranslation();
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
@@ -45,7 +42,9 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Settings</h2>
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100">
+            Settings
+          </h2>
           <button
             onClick={onClose}
             className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition-colors text-gray-900 dark:text-gray-100"
@@ -67,4 +66,3 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     </div>
   );
 }
-
