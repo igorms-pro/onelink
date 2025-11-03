@@ -6,6 +6,7 @@ import { supabase } from "../src/lib/supabase";
 vi.mock("../src/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
+    rpc: vi.fn(),
   },
 }));
 
@@ -54,22 +55,18 @@ describe("profile utils", () => {
 
   it("getSelfPlan returns free by default", async () => {
     const mockUserId = "123e4567-e89b-12d3-a456-426614174000";
-    
-    const mockSelect = vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        maybeSingle: vi.fn().mockResolvedValue({
-          data: { plan: "free" },
-          error: null,
-        }),
-      }),
+
+    const mockRpc = vi.fn().mockResolvedValue({
+      data: "free",
+      error: null,
     });
 
-    (supabase.from as unknown as Mock).mockReturnValue({
-      select: mockSelect,
-    });
+    (supabase.rpc as unknown as Mock).mockImplementation(mockRpc);
 
     const plan = await getSelfPlan(mockUserId);
     expect(plan).toBe("free");
+    expect(mockRpc).toHaveBeenCalledWith("get_plan_by_user", {
+      p_user_id: mockUserId,
+    });
   });
 });
-
