@@ -11,7 +11,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
     setLoading(true);
     (async () => {
       try {
-        const { data } = await supabase.rpc("get_clicks_by_profile", { profile_id: profileId, days: 7 });
+        const { data } = await supabase.rpc("get_clicks_by_profile", {
+          profile_id: profileId,
+          days: 7,
+        });
         if (Array.isArray(data)) setRows(data as Array<ClickRow>);
         else setRows([]);
       } catch {
@@ -21,31 +24,54 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
       }
     })();
   }, [profileId]);
-  if (!profileId) return <p className="text-sm text-gray-600">Profile not ready.</p>;
-  if (loading) return <p className="text-sm text-gray-600">Loading…</p>;
+  if (!profileId)
+    return (
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Profile not ready.
+      </p>
+    );
+  if (loading)
+    return <p className="text-sm text-gray-500 dark:text-gray-400">Loading…</p>;
   return (
-    <div className="mt-3 overflow-x-auto">
+    <div className="mt-2 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50">
       <table className="min-w-full text-sm">
         <thead>
-          <tr>
-            <th className="text-left p-2">Link</th>
-            <th className="text-left p-2">Clicks (7d)</th>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              Link
+            </th>
+            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              Clicks (7d)
+            </th>
           </tr>
         </thead>
         <tbody>
-          {rows.map((r) => (
-            <tr key={r.link_id} className="border-t">
-              <td className="p-2">{r.label ?? r.link_id}</td>
-              <td className="p-2">{r.clicks}</td>
+          {rows.length === 0 ? (
+            <tr>
+              <td
+                className="p-4 text-center text-gray-500 dark:text-gray-400"
+                colSpan={2}
+              >
+                No clicks yet
+              </td>
             </tr>
-          ))}
-          {rows.length === 0 && (
-            <tr className="border-t"><td className="p-2" colSpan={2}>No data</td></tr>
+          ) : (
+            rows.map((r) => (
+              <tr
+                key={r.link_id}
+                className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+              >
+                <td className="p-3 text-gray-900 dark:text-white">
+                  {r.label ?? r.link_id}
+                </td>
+                <td className="p-3 text-gray-700 dark:text-gray-300 font-medium">
+                  {r.clicks}
+                </td>
+              </tr>
+            ))
           )}
         </tbody>
       </table>
     </div>
   );
 }
-
-

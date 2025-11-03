@@ -110,36 +110,36 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors">
       <Header />
-      <main className="flex-1 mx-auto max-w-2xl w-full p-4 md:p-6">
-        <header className="flex items-center justify-between mb-8">
+      <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8">
+        <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
               Dashboard
             </h1>
-            <span className="rounded-full border border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-0.5 text-xs uppercase tracking-wide">
-              Plan: {isFree ? "Free" : "Pro"}
+            <span className="rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
+              {isFree ? "Free" : "Pro"}
             </span>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {isFree ? (
               <button
-                className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity"
+                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
                 onClick={goToCheckout}
               >
-                Upgrade
+                Upgrade to Pro
               </button>
             ) : (
               <button
-                className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity"
+                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
                 onClick={goToPortal}
               >
                 Manage billing
               </button>
             )}
             <button
-              className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-1 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               onClick={() => signOut()}
             >
               Sign out
@@ -148,10 +148,13 @@ export default function Dashboard() {
         </header>
 
         {/* Profile editor */}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Profile
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Manage your public profile settings
+          </p>
           <ProfileEditor
             initial={profileFormInitial}
             disabled={!profileId}
@@ -184,10 +187,13 @@ export default function Dashboard() {
         </section>
 
         {/* Links */}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Links
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Create buttons that link to your content
+          </p>
           <NewLinkForm
             disabled={
               busy ||
@@ -231,23 +237,30 @@ export default function Dashboard() {
             }}
           />
           {isFree && links.length + drops.length >= freeLimit && (
-            <p className="mt-2 text-sm text-amber-700 dark:text-amber-400">
-              Free plan limit reached ({freeLimit} actions total: {links.length}{" "}
-              links + {drops.length} drops). Remove one or upgrade for
-              unlimited.
-            </p>
+            <div className="mt-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3">
+              <p className="text-sm text-amber-700 dark:text-amber-400 font-medium">
+                ⚠️ Free plan limit reached ({freeLimit} actions total:{" "}
+                {links.length} links + {drops.length} drops)
+              </p>
+              <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
+                Remove one or upgrade to Pro for unlimited actions.
+              </p>
+            </div>
           )}
 
           <LinksList profileId={profileId} links={links} setLinks={setLinks} />
         </section>
 
         {/* Drops */}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Drops
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Create file inboxes for people to submit files
+          </p>
           <form
-            className="mt-2 grid gap-2 rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-3"
+            className="mt-4 grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4"
             onSubmit={async (e) => {
               e.preventDefault();
               if (!profileId) return;
@@ -315,126 +328,142 @@ export default function Dashboard() {
             </div>
           </form>
 
-          <ul className="mt-3 grid gap-3">
-            {drops.map((d) => (
-              <li
-                key={d.id}
-                className="flex items-center justify-between rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-3"
-              >
-                <div className="min-w-0">
-                  <p className="font-medium truncate text-gray-900 dark:text-white">
-                    {d.emoji ? `${d.emoji} ` : ""}
-                    {d.label}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Order {d.order} · {d.is_active ? "Active" : "Off"}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                    onClick={async () => {
-                      const newLabel = prompt("New label", d.label);
-                      if (!newLabel) return;
-                      const { error } = await supabase
-                        .from("drops")
-                        .update({ label: newLabel })
-                        .eq("id", d.id)
-                        .eq("profile_id", profileId);
-                      if (error) {
-                        toast.error("Update failed");
-                        return;
-                      }
-                      setDrops(
-                        drops.map((x) =>
-                          x.id === d.id ? { ...x, label: newLabel } : x,
-                        ),
-                      );
-                      toast.success("Drop updated");
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                    onClick={async () => {
-                      const { data, error } = await supabase
-                        .from("drops")
-                        .update({ is_active: !d.is_active })
-                        .eq("id", d.id)
-                        .eq("profile_id", profileId)
-                        .select("is_active")
-                        .single<{ is_active: boolean }>();
-                      if (error) {
-                        toast.error("Toggle failed");
-                        return;
-                      }
-                      setDrops(
-                        drops.map((x) =>
-                          x.id === d.id
-                            ? {
-                                ...x,
-                                is_active: data?.is_active ?? !d.is_active,
-                              }
-                            : x,
-                        ),
-                      );
-                      toast.success(
-                        `Drop ${data?.is_active ? "activated" : "deactivated"}`,
-                      );
-                    }}
-                  >
-                    {d.is_active ? "Turn off" : "Turn on"}
-                  </button>
-                  <button
-                    className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-1 text-sm hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                    onClick={async () => {
-                      if (!confirm("Delete drop?")) return;
-                      const { error } = await supabase
-                        .from("drops")
-                        .delete()
-                        .eq("id", d.id)
-                        .eq("profile_id", profileId);
-                      if (error) {
-                        toast.error("Delete failed");
-                        return;
-                      }
-                      setDrops(drops.filter((x) => x.id !== d.id));
-                      toast.success("Drop deleted");
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
+          <ul className="mt-4 grid gap-2">
+            {drops.length === 0 ? (
+              <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                  No drops yet. Create your first drop above!
+                </p>
+              </div>
+            ) : (
+              drops.map((d) => (
+                <li
+                  key={d.id}
+                  className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium truncate text-gray-900 dark:text-white">
+                      {d.emoji ? `${d.emoji} ` : ""}
+                      {d.label}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Order {d.order} · {d.is_active ? "Active" : "Off"}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                      onClick={async () => {
+                        const newLabel = prompt("New label", d.label);
+                        if (!newLabel) return;
+                        const { error } = await supabase
+                          .from("drops")
+                          .update({ label: newLabel })
+                          .eq("id", d.id)
+                          .eq("profile_id", profileId);
+                        if (error) {
+                          toast.error("Update failed");
+                          return;
+                        }
+                        setDrops(
+                          drops.map((x) =>
+                            x.id === d.id ? { ...x, label: newLabel } : x,
+                          ),
+                        );
+                        toast.success("Drop updated");
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                      onClick={async () => {
+                        const { data, error } = await supabase
+                          .from("drops")
+                          .update({ is_active: !d.is_active })
+                          .eq("id", d.id)
+                          .eq("profile_id", profileId)
+                          .select("is_active")
+                          .single<{ is_active: boolean }>();
+                        if (error) {
+                          toast.error("Toggle failed");
+                          return;
+                        }
+                        setDrops(
+                          drops.map((x) =>
+                            x.id === d.id
+                              ? {
+                                  ...x,
+                                  is_active: data?.is_active ?? !d.is_active,
+                                }
+                              : x,
+                          ),
+                        );
+                        toast.success(
+                          `Drop ${data?.is_active ? "activated" : "deactivated"}`,
+                        );
+                      }}
+                    >
+                      {d.is_active ? "Turn off" : "Turn on"}
+                    </button>
+                    <button
+                      className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                      onClick={async () => {
+                        if (!confirm("Delete drop?")) return;
+                        const { error } = await supabase
+                          .from("drops")
+                          .delete()
+                          .eq("id", d.id)
+                          .eq("profile_id", profileId);
+                        if (error) {
+                          toast.error("Delete failed");
+                          return;
+                        }
+                        setDrops(drops.filter((x) => x.id !== d.id));
+                        toast.success("Drop deleted");
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+              ))
+            )}
           </ul>
         </section>
 
         {/* Analytics */}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Analytics
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            Track your link clicks and submissions
+          </p>
           <AnalyticsCard profileId={profileId} />
           <SubmissionCountsCard profileId={profileId} />
         </section>
 
         {/* Inbox */}
-        <section className="mt-8">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <section className="mt-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
             Inbox
           </h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+            View and manage file submissions
+          </p>
           {submissions.length === 0 ? (
-            <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-              No submissions yet.
-            </p>
+            <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                No submissions yet.
+              </p>
+            </div>
           ) : (
-            <ul className="mt-3 grid gap-3">
+            <ul className="mt-4 grid gap-3">
               {submissions.map((s) => (
                 <li
                   key={s.submission_id}
-                  className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 p-3"
+                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 hover:shadow-sm transition-shadow"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
@@ -473,11 +502,11 @@ export default function Dashboard() {
                     </div>
                   </div>
                   {Array.isArray(s.files) && s.files.length > 0 && (
-                    <div className="mt-3">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        Files
+                    <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                        Files ({s.files.length})
                       </p>
-                      <ul className="mt-1 grid gap-1 text-sm">
+                      <ul className="grid gap-2">
                         {s.files.map((f, idx) => {
                           const pub = supabase.storage
                             .from("drops")
@@ -487,15 +516,17 @@ export default function Dashboard() {
                           return (
                             <li key={`${s.submission_id}-${idx}`}>
                               <a
-                                className="text-blue-600 dark:text-blue-400 underline break-all hover:opacity-80"
+                                className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline break-all text-sm font-medium"
                                 href={href}
                                 target="_blank"
                                 rel="noreferrer"
                               >
-                                {name}{" "}
-                                {f.size
-                                  ? `(${Math.round(f.size / 1024)} KB)`
-                                  : ""}
+                                <span className="truncate">{name}</span>
+                                {f.size && (
+                                  <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+                                    ({Math.round(f.size / 1024)} KB)
+                                  </span>
+                                )}
                               </a>
                             </li>
                           );
@@ -542,25 +573,43 @@ function SubmissionCountsCard({ profileId }: { profileId: string | null }) {
     })();
   }, [profileId]);
   if (!profileId) return null;
-  if (loading) return <p className="mt-3 text-sm text-gray-600">Loading…</p>;
+  if (loading)
+    return (
+      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading…</p>
+    );
   if (rows.length === 0)
     return (
-      <p className="mt-3 text-sm text-gray-600">No drop submissions yet.</p>
+      <div className="mt-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 text-center">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          No drop submissions yet.
+        </p>
+      </div>
     );
   return (
-    <div className="mt-3 overflow-x-auto">
+    <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50">
       <table className="min-w-full text-sm">
         <thead>
-          <tr>
-            <th className="text-left p-2">Drop</th>
-            <th className="text-left p-2">Submissions</th>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              Drop
+            </th>
+            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              Submissions
+            </th>
           </tr>
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.drop_id} className="border-t">
-              <td className="p-2">{r.drop_label ?? r.drop_id}</td>
-              <td className="p-2">{r.submissions}</td>
+            <tr
+              key={r.drop_id}
+              className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+            >
+              <td className="p-3 text-gray-900 dark:text-white">
+                {r.drop_label ?? r.drop_id}
+              </td>
+              <td className="p-3 text-gray-700 dark:text-gray-300 font-medium">
+                {r.submissions}
+              </td>
             </tr>
           ))}
         </tbody>
