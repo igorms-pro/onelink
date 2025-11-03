@@ -9,17 +9,17 @@ test.describe("Public Profile", () => {
 
   test("settings modal opens and closes", async ({ page }) => {
     await page.goto("/");
-    
+
     // Click settings icon
     const settingsButton = page.locator('button[aria-label="Settings"]');
     await expect(settingsButton).toBeVisible();
     await settingsButton.click();
-    
+
     // Modal should appear
     await expect(page.locator("text=Settings")).toBeVisible();
     await expect(page.locator("text=Theme")).toBeVisible();
     await expect(page.locator("text=Language")).toBeVisible();
-    
+
     // Close modal
     await page.locator('button[aria-label="Close"]').click();
     await expect(page.locator("text=Settings")).not.toBeVisible();
@@ -27,14 +27,14 @@ test.describe("Public Profile", () => {
 
   test("theme can be changed", async ({ page }) => {
     await page.goto("/");
-    
+
     // Open settings
     await page.locator('button[aria-label="Settings"]').click();
-    
+
     // Change theme to dark
-    const themeSelect = page.locator('select').first();
+    const themeSelect = page.locator("select").first();
     await themeSelect.selectOption("dark");
-    
+
     // Check that theme is applied (via data-theme attribute)
     const html = page.locator("html");
     await expect(html).toHaveAttribute("data-theme", "dark");
@@ -42,16 +42,22 @@ test.describe("Public Profile", () => {
 
   test("language can be changed", async ({ page }) => {
     await page.goto("/");
-    
+
     // Open settings
     await page.locator('button[aria-label="Settings"]').click();
-    
+
+    // Wait for modal to be visible
+    await expect(page.locator("text=Settings")).toBeVisible();
+
     // Change language to French
-    const langSelect = page.locator('select').last();
+    const langSelect = page.locator("select").last();
     await langSelect.selectOption("fr");
-    
-    // Check that translation is applied
-    await expect(page.locator("text=Se connecter")).toBeVisible(); // "Sign in" in French
+
+    // Wait a moment for i18n to update
+    await page.waitForTimeout(500);
+
+    // Check that translation is applied (button text changes)
+    await expect(page.locator('a:has-text("Se connecter")')).toBeVisible(); // "Sign in" in French
   });
 
   // Note: These tests require seeded data in Supabase
@@ -87,5 +93,3 @@ test.describe("Public Profile", () => {
   });
   */
 });
-
-
