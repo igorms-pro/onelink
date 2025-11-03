@@ -12,15 +12,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Theme-aware root colors */
-:root,
-:root[data-theme="light"] {
-  color-scheme: light;
+/* Theme-aware root colors - only apply when .dark class is NOT present */
+:root {
+  color-scheme: light dark;
   color: #1f2937;
   background-color: #ffffff;
 }
 
-:root[data-theme="dark"] {
+:root.dark {
   color-scheme: dark;
   color: #f9fafb;
   background-color: #111827;

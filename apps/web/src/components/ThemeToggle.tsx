@@ -22,10 +22,15 @@ export function ThemeToggle() {
         root.classList.add("dark");
         root.setAttribute("data-theme", "dark");
         root.style.colorScheme = "dark";
+        console.log("[Theme] Applied dark theme");
       } else {
         root.classList.remove("dark");
         root.setAttribute("data-theme", "light");
         root.style.colorScheme = "light";
+        console.log(
+          "[Theme] Applied light theme, dark class removed:",
+          !root.classList.contains("dark"),
+        );
       }
     };
 
