@@ -123,7 +123,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 opacity-30 dark:opacity-10 pointer-events-none">
         <div
@@ -143,7 +143,7 @@ export default function Dashboard() {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Dashboard
               </h1>
-              <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
+              <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
                 {isFree ? "Free" : "Pro"}
               </span>
             </div>
@@ -292,7 +292,7 @@ export default function Dashboard() {
               Create file inboxes for people to submit files
             </p>
             <form
-              className="mt-4 grid gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-gradient-to-br from-gray-50/80 to-white/80 dark:from-gray-900/50 dark:to-gray-950/50 backdrop-blur-sm p-4 shadow-sm"
+              className="mt-4 grid gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-linear-to-br from-gray-50/80 to-white/80 dark:from-gray-900/50 dark:to-gray-950/50 backdrop-blur-sm p-4 shadow-sm"
               onSubmit={async (e) => {
                 e.preventDefault();
                 if (!profileId) return;
