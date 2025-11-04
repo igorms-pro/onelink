@@ -15,7 +15,10 @@
     "e2e:ci": "playwright test"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.1.15",
     "@supabase/supabase-js": "^2.77.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "i18next": "^25.6.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "lucide-react": "^0.552.0",
@@ -24,6 +27,10 @@
     "react-hook-form": "^7.65.0",
     "react-i18next": "^16.2.3",
     "react-router-dom": "^7.9.5",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^3.3.1",
+    "usehooks-ts": "^3.1.1",
+    "vaul": "^1.1.2",
     "zod": "^4.1.12"
   },
   "devDependencies": {
@@ -49,6 +56,7 @@
     "playwright": "^1.56.1",
     "prettier": "^3.6.2",
     "tailwindcss": "^4.1.16",
+    "tw-animate-css": "^1.4.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.45.0",
     "vite": "^7.1.7",

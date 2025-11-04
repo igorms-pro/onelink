@@ -7,6 +7,9 @@ vi.mock("../src/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
     rpc: vi.fn(),
+    auth: {
+      getUser: vi.fn(),
+    },
   },
 }));
 
@@ -26,6 +29,16 @@ describe("profile utils", () => {
       avatar_url: null,
     };
 
+    // Mock auth.getUser
+    (supabase.auth.getUser as unknown as Mock).mockResolvedValue({
+      data: { user: { email: "test@example.com" } },
+    });
+
+    // Mock users upsert
+    const mockUsersUpsert = vi.fn().mockReturnValue({
+      error: null,
+    });
+
     // Mock: profile doesn't exist, then create
     const mockSelect = vi.fn().mockReturnValue({
       eq: vi.fn().mockReturnValue({
@@ -40,6 +53,11 @@ describe("profile utils", () => {
     });
 
     (supabase.from as unknown as Mock).mockImplementation((table: string) => {
+      if (table === "users") {
+        return {
+          upsert: mockUsersUpsert,
+        };
+      }
       if (table === "profiles") {
         return {
           select: mockSelect,
@@ -51,6 +69,57 @@ describe("profile utils", () => {
 
     const result = await getOrCreateProfile(mockUserId);
     expect(result.slug).toBe("test-slug");
+  });
+
+  it("getOrCreateProfile returns existing profile", async () => {
+    const mockUserId = "123e4567-e89b-12d3-a456-426614174000";
+    const mockProfile = {
+      id: "profile-id",
+      user_id: mockUserId,
+      slug: "existing-slug",
+      display_name: "Existing User",
+      bio: "Bio text",
+      avatar_url: "https://example.com/avatar.jpg",
+    };
+
+    // Mock auth.getUser
+    (supabase.auth.getUser as unknown as Mock).mockResolvedValue({
+      data: { user: { email: "test@example.com" } },
+    });
+
+    // Mock users upsert
+    const mockUsersUpsert = vi.fn().mockReturnValue({
+      error: null,
+    });
+
+    // Mock: profile exists
+    const mockSelect = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        maybeSingle: vi
+          .fn()
+          .mockResolvedValue({ data: mockProfile, error: null }),
+      }),
+    });
+
+    (supabase.from as unknown as Mock).mockImplementation((table: string) => {
+      if (table === "users") {
+        return {
+          upsert: mockUsersUpsert,
+        };
+      }
+      if (table === "profiles") {
+        return {
+          select: mockSelect,
+        };
+      }
+      return {};
+    });
+
+    const result = await getOrCreateProfile(mockUserId);
+    expect(result.slug).toBe("existing-slug");
+    expect(result.display_name).toBe("Existing User");
+    // Should not call insert
+    expect(mockSelect).toHaveBeenCalled();
   });
 
   it("getSelfPlan returns free by default", async () => {

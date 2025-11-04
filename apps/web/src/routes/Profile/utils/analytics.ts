@@ -1,0 +1,16 @@
+export function maybeInjectGA(plan: string) {
+  const gaId = import.meta.env.VITE_GA_ID as string | undefined;
+  if (plan !== "pro" || !gaId) return;
+  if (document.getElementById("ga-script")) return;
+
+  const s = document.createElement("script");
+  s.id = "ga-script";
+  s.async = true;
+  s.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`;
+  document.head.appendChild(s);
+
+  const inline = document.createElement("script");
+  inline.id = "ga-inline";
+  inline.innerHTML = `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${gaId}');`;
+  document.head.appendChild(inline);
+}

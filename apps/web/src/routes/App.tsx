@@ -1,14 +1,36 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../lib/AuthProvider";
 import { Header } from "../components/Header";
 
 export default function App() {
   const { t } = useTranslation();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect logged-in users to dashboard (like Linktree)
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  // Don't show landing page if redirecting
+  if (loading || user) {
+    return null;
+  }
+
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <Header />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
-        <h1 className="text-2xl font-semibold">{t("app_title")}</h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-2">{t("app_tagline")}</p>
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+          {t("app_title")}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 mt-2">
+          {t("app_tagline")}
+        </p>
         <div className="mt-6 flex gap-3">
           <a
             className="rounded bg-black dark:bg-white text-white dark:text-black px-4 py-2 hover:opacity-90 transition-opacity"

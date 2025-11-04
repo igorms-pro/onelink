@@ -27,33 +27,36 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
   - [ ] Verify cleanup respects retention_days per plan (Free: 7, Starter: 30, Pro: 90)
 
 ## P1 – Frontend UX polish
-- [ ] Dashboard header shows current plan (Free/Pro)
-- [ ] Empty/error states
-  - [ ] Public profile: slug not found / domain unverified
-  - [ ] Dashboard: no links yet
-- [ ] GA: enable only when plan === 'pro' and VITE_GA_ID present (already gated; add .env)
-- [ ] Profile editor: basic validation (slug uniqueness surface error)
+- [x] Dashboard header shows current plan (Free/Pro)
+- [x] Mobile responsiveness
+- [x] Empty/error states
+  - [x] Public profile: slug not found / domain unverified
+  - [x] Dashboard: no links yet
+  - [x] Dashboard: no drops yet
+- [x] GA: enable only when plan === 'pro' and VITE_GA_ID present (already gated; add .env)
+- [x] Profile editor: basic validation (slug uniqueness surface error)
 
 ### Drops UI
-- [ ] Dashboard: CRUD for Drop blocks (label, emoji, order, on/off)
-- [ ] Public page: render Drop uploader (name/email/note optional)
-- [ ] Dashboard: Inbox list + per-submission detail, download files
+- [x] Dashboard: CRUD for Drop blocks (label, emoji, order, on/off)
+- [x] Public page: render Drop uploader (name/email/note optional)
+- [x] Dashboard: Inbox list + per-submission detail, download files
 
 ## P1 – Analytics
-- [ ] SQL: get_clicks_by_profile(profile_id, days) RPC (owner-only)
-- [ ] Dashboard: wire AnalyticsCard to RPC; add 7/30-day toggle
+- [x] SQL: get_clicks_by_profile(profile_id, days) RPC (owner-only)
+- [x] Dashboard: wire AnalyticsCard to RPC
+- [x] Dashboard: add 7/30-day toggle to AnalyticsCard
 ### Drop analytics
-- [ ] Wire submission counts via get_submission_counts_by_profile
+- [x] Wire submission counts via get_submission_counts_by_profile
 
 ## P1 – Domains
 - [ ] Schedule domain-verify (cron) and observe logs; handle rate limits and retries
 - [ ] Owner UI: domain add instructions (DNS CNAME) + verification status
 
 ## P2 – Quality & tests
-- [ ] Unit tests
-  - [ ] isBaseHost, isSafeHttpUrl
-  - [ ] getOrCreateProfile happy path (mock supabase)
-  - [ ] Drops: rpc.get_drops_by_slug returns only active drops
+- [x] Unit tests
+  - [x] isBaseHost, isSafeHttpUrl
+  - [x] getOrCreateProfile happy path (mock supabase)
+  - [x] Drops: rpc.get_drops_by_slug returns only active drops
 - [ ] E2E tests
   - [ ] /:slug renders scheduled links only, footer hidden for Pro
   - [ ] Clicking a link doesn’t block navigation and records a click

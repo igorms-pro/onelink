@@ -7,51 +7,55 @@ test.describe("Public Profile", () => {
     await expect(page.locator("text=Share a single link")).toBeVisible();
   });
 
-  test("settings modal opens and closes", async ({ page }) => {
+  test("theme and language toggles are visible", async ({ page }) => {
     await page.goto("/");
 
-    // Click settings icon
-    const settingsButton = page.locator('button[aria-label="Settings"]');
-    await expect(settingsButton).toBeVisible();
-    await settingsButton.click();
+    // Theme toggle should be visible
+    const themeButton = page.locator('button[aria-label="Toggle theme"]');
+    await expect(themeButton).toBeVisible();
 
-    // Modal should appear
-    await expect(page.locator("text=Settings")).toBeVisible();
-    await expect(page.locator("text=Theme")).toBeVisible();
-    await expect(page.locator("text=Language")).toBeVisible();
-
-    // Close modal
-    await page.locator('button[aria-label="Close"]').click();
-    await expect(page.locator("text=Settings")).not.toBeVisible();
+    // Language toggle should be visible
+    const langButton = page.locator('button[aria-label="Change language"]');
+    await expect(langButton).toBeVisible();
   });
 
   test("theme can be changed", async ({ page }) => {
     await page.goto("/");
 
-    // Open settings
-    await page.locator('button[aria-label="Settings"]').click();
+    // Click theme toggle button
+    const themeButton = page.locator('button[aria-label="Toggle theme"]');
+    await expect(themeButton).toBeVisible();
 
-    // Change theme to dark
-    const themeSelect = page.locator("select").first();
-    await themeSelect.selectOption("dark");
+    // Get initial theme state
+    const initialTheme = await page.locator("html").getAttribute("data-theme");
 
-    // Check that theme is applied (via data-theme attribute)
+    // Click to toggle theme
+    await themeButton.click();
+
+    // Wait a moment for theme to apply
+    await page.waitForTimeout(300);
+
+    // Check that theme has changed (via data-theme attribute)
     const html = page.locator("html");
-    await expect(html).toHaveAttribute("data-theme", "dark");
+    const newTheme = await html.getAttribute("data-theme");
+    expect(newTheme).not.toBe(initialTheme);
   });
 
   test("language can be changed", async ({ page }) => {
     await page.goto("/");
 
-    // Open settings
-    await page.locator('button[aria-label="Settings"]').click();
+    // Click language toggle button
+    const langButton = page.locator('button[aria-label="Change language"]');
+    await expect(langButton).toBeVisible();
+    await langButton.click();
 
-    // Wait for modal to be visible
-    await expect(page.locator("text=Settings")).toBeVisible();
+    // Wait for dropdown to appear
+    await page.waitForTimeout(200);
 
-    // Change language to French
-    const langSelect = page.locator("select").last();
-    await langSelect.selectOption("fr");
+    // Click French option from dropdown
+    const frenchOption = page.locator('button:has-text("Français")');
+    await expect(frenchOption).toBeVisible();
+    await frenchOption.click();
 
     // Wait a moment for i18n to update
     await page.waitForTimeout(500);
