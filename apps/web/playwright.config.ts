@@ -8,7 +8,7 @@ export default defineConfig({
   workers: process.env.CI ? 3 : undefined, // Run browsers in parallel in CI
   reporter: process.env.CI ? "html" : "list",
   use: {
-    baseURL: process.env.VITE_BASE_URL || "http://localhost:5173",
+    baseURL: process.env.VITE_BASE_URL || "http://localhost:4173",
     trace: "on-first-retry",
   },
   projects: [
