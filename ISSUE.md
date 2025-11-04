@@ -29,6 +29,8 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 ## P1 – Frontend UX polish
 - [x] Dashboard header shows current plan (Free/Pro)
 - [x] Mobile responsiveness
+- [ ] Verify UI on mobile devices (needs testing)
+- [ ] Fix language switching if not working properly
 - [x] Empty/error states
   - [x] Public profile: slug not found / domain unverified
   - [x] Dashboard: no links yet
@@ -57,9 +59,13 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
   - [x] isBaseHost, isSafeHttpUrl
   - [x] getOrCreateProfile happy path (mock supabase)
   - [x] Drops: rpc.get_drops_by_slug returns only active drops
-- [ ] E2E tests
+- [x] E2E tests (basic coverage)
+  - [x] Landing page loads and renders correctly
+  - [x] Authentication flow (sign in page, dashboard requires auth)
+  - [x] Theme toggle functionality
+  - [x] Language toggle functionality
   - [ ] /:slug renders scheduled links only, footer hidden for Pro
-  - [ ] Clicking a link doesn’t block navigation and records a click
+  - [ ] Clicking a link doesn't block navigation and records a click
   - [ ] Submitting a Drop inserts into submissions and shows in Inbox
 - [ ] Lighthouse: public profile ≥ 90 Perf/Best/SEO
 

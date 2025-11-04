@@ -1,5 +1,7 @@
 import { Settings } from "lucide-react";
 import { goToCheckout, goToPortal } from "@/lib/billing";
+import { ThemeToggleButton } from "@/components/ThemeToggleButton";
+import { LanguageToggleButton } from "@/components/LanguageToggleButton";
 
 interface DashboardHeaderProps {
   isFree: boolean;
@@ -22,7 +24,7 @@ export function DashboardHeader({
           {isFree ? "Free" : "Pro"}
         </span>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <button
           onClick={onSettingsClick}
           className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
@@ -30,23 +32,25 @@ export function DashboardHeader({
         >
           <Settings className="w-5 h-5" />
         </button>
+        <ThemeToggleButton />
+        <LanguageToggleButton />
         {isFree ? (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-xs sm:text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm whitespace-nowrap"
             onClick={goToCheckout}
           >
             Upgrade to Pro
           </button>
         ) : (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-xs sm:text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm whitespace-nowrap"
             onClick={goToPortal}
           >
             Manage billing
           </button>
         )}
         <button
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-xs sm:text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
           onClick={onSignOut}
         >
           Sign out
