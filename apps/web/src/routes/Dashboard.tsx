@@ -157,6 +157,14 @@ export default function Dashboard() {
               </span>
             </div>
             <div className="flex items-center gap-2">
+              {/* Settings gear icon */}
+              <button
+                onClick={() => setActiveTab("account")}
+                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
+                aria-label="Settings"
+              >
+                <Settings className="w-5 h-5" />
+              </button>
               {isFree ? (
                 <button
                   className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
