@@ -7,6 +7,9 @@ vi.mock("../src/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
     rpc: vi.fn(),
+    auth: {
+      getUser: vi.fn(),
+    },
   },
 }));
 
@@ -26,6 +29,16 @@ describe("profile utils", () => {
       avatar_url: null,
     };
 
+    // Mock auth.getUser
+    (supabase.auth.getUser as unknown as Mock).mockResolvedValue({
+      data: { user: { email: "test@example.com" } },
+    });
+
+    // Mock users upsert
+    const mockUsersUpsert = vi.fn().mockReturnValue({
+      error: null,
+    });
+
     // Mock: profile doesn't exist, then create
     const mockSelect = vi.fn().mockReturnValue({
       eq: vi.fn().mockReturnValue({
@@ -40,6 +53,11 @@ describe("profile utils", () => {
     });
 
     (supabase.from as unknown as Mock).mockImplementation((table: string) => {
+      if (table === "users") {
+        return {
+          upsert: mockUsersUpsert,
+        };
+      }
       if (table === "profiles") {
         return {
           select: mockSelect,
