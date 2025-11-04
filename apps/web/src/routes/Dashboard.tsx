@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../lib/AuthProvider";
 import { supabase } from "../lib/supabase";
 import { isSafeHttpUrl } from "../lib/domain";
 import { getOrCreateProfile, getSelfPlan } from "../lib/profile";
-import { ProfileEditor, type ProfileForm } from "../components/ProfileEditor";
+import {
+  ProfileEditor,
+  type ProfileForm,
+  type ProfileEditorRef,
+} from "../components/ProfileEditor";
 import { NewLinkForm } from "../components/NewLinkForm";
 import { LinksList, type LinkRow } from "../components/LinksList";
 import { AnalyticsCard } from "../components/AnalyticsCard";
@@ -47,6 +51,7 @@ export default function Dashboard() {
   const isFree = plan !== "pro";
 
   // dnd handled inside LinksList
+  const profileEditorRef = useRef<ProfileEditorRef>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -180,6 +185,7 @@ export default function Dashboard() {
               Manage your public profile settings
             </p>
             <ProfileEditor
+              ref={profileEditorRef}
               initial={profileFormInitial}
               disabled={!profileId}
               onSave={async (values) => {
@@ -196,7 +202,21 @@ export default function Dashboard() {
                   .select("updated_at")
                   .single<{ updated_at: string }>();
                 if (error) {
-                  toast.error("Failed to update profile");
+                  // Check for PostgreSQL unique constraint violation (error code 23505)
+                  if (
+                    error.code === "23505" &&
+                    (error.message?.includes("slug") ||
+                      error.message?.includes("profiles_slug_key") ||
+                      error.message?.includes("unique") ||
+                      error.message?.toLowerCase().includes("slug"))
+                  ) {
+                    profileEditorRef.current?.setError(
+                      "slug",
+                      "This slug is already taken. Please choose another.",
+                    );
+                  } else {
+                    toast.error("Failed to update profile");
+                  }
                   return;
                 }
                 toast.success("Profile updated successfully");
