@@ -1,8 +1,26 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useAuth } from "../lib/AuthProvider";
 import { Header } from "../components/Header";
 
 export default function App() {
   const { t } = useTranslation();
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Redirect logged-in users to dashboard (like Linktree)
+    if (!loading && user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [user, loading, navigate]);
+
+  // Don't show landing page if redirecting
+  if (loading || user) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <Header />

@@ -18,12 +18,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Get initial session
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session ?? null);
       setLoading(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+
+    // Listen for auth state changes (including magic link redirects)
+    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+      console.log("[Auth] State change:", event, s?.user?.email);
       setSession(s ?? null);
+      setLoading(false);
+
+      // Clean up URL hash after successful sign-in
+      if (event === "SIGNED_IN" && window.location.hash) {
+        window.history.replaceState(null, "", window.location.pathname);
+      }
     });
     return () => sub.subscription.unsubscribe();
   }, []);
