@@ -16,6 +16,23 @@ describe("domain utils", () => {
     expect(isSafeHttpUrl("javascript:alert(1)")).toBe(false);
     expect(isSafeHttpUrl("not a url")).toBe(false);
   });
+
+  it("isSafeHttpUrl handles edge cases", () => {
+    expect(isSafeHttpUrl("http://localhost:3000")).toBe(true);
+    expect(isSafeHttpUrl("https://subdomain.example.com/path?query=1")).toBe(
+      true,
+    );
+    expect(isSafeHttpUrl("http://192.168.1.1")).toBe(true);
+    expect(isSafeHttpUrl("data:text/plain,hello")).toBe(false);
+    expect(isSafeHttpUrl("file:///etc/passwd")).toBe(false);
+    expect(isSafeHttpUrl("")).toBe(false);
+  });
+
+  it("isBaseHost handles edge cases", () => {
+    expect(isBaseHost("ONEMEET.APP")).toBe(true); // case insensitive
+    expect(isBaseHost("sub.onemeet.app")).toBe(true);
+    expect(isBaseHost("localhost:8080")).toBe(false); // different port
+    expect(isBaseHost("example.onemeet.app.com")).toBe(false); // different domain
+    expect(isBaseHost("")).toBe(false);
+  });
 });
-
-
