@@ -601,21 +601,9 @@ export default function Dashboard() {
               <div className="space-y-8">
                 {/* Profile editor */}
                 <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-                  <div className="flex items-center justify-between mb-2">
-                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                      Profile
-                    </h2>
-                    {profileFormInitial?.slug && (
-                      <a
-                        href={`/${profileFormInitial.slug}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                      >
-                        View my profile →
-                      </a>
-                    )}
-                  </div>
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Profile
+                  </h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
                     Manage your public profile settings
                   </p>
