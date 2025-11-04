@@ -15,6 +15,7 @@ import { goToCheckout, goToPortal } from "../lib/billing";
 import { Header } from "../components/Header";
 import { toast } from "sonner";
 import { Settings } from "lucide-react";
+import { SettingsModal } from "../components/SettingsModal";
 
 // types moved to components
 
@@ -23,6 +24,7 @@ type TabId = "inbox" | "content" | "account";
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [links, setLinks] = useState<LinkRow[]>([]);
   type DropRow = {
     id: string;
@@ -159,7 +161,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-2">
               {/* Settings gear icon */}
               <button
-                onClick={() => setActiveTab("account")}
+                onClick={() => setIsSettingsOpen(true)}
                 className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300"
                 aria-label="Settings"
               >
@@ -683,6 +685,10 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 }
