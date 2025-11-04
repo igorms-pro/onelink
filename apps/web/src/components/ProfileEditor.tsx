@@ -1,4 +1,4 @@
-import { useEffect, useImperativeHandle, forwardRef } from "react";
+import { useEffect, useImperativeHandle, forwardRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export type ProfileForm = {
@@ -21,6 +21,7 @@ export const ProfileEditor = forwardRef<
     onSave: (v: ProfileForm) => Promise<void>;
   }
 >(({ initial, disabled, onSave }, ref) => {
+  const [showAdditional, setShowAdditional] = useState(false);
   const {
     register,
     handleSubmit,
@@ -42,7 +43,13 @@ export const ProfileEditor = forwardRef<
   }));
 
   useEffect(() => {
-    if (initial) reset(initial);
+    if (initial) {
+      reset(initial);
+      // Auto-expand if bio or avatar_url have values
+      if (initial.bio || initial.avatar_url) {
+        setShowAdditional(true);
+      }
+    }
   }, [initial, reset]);
 
   return (
@@ -79,21 +86,63 @@ export const ProfileEditor = forwardRef<
           </p>
         )}
       </div>
-      <input
-        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all"
-        placeholder="Display name"
-        {...register("display_name")}
-      />
-      <input
-        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all"
-        placeholder="Avatar URL"
-        {...register("avatar_url")}
-      />
-      <textarea
-        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all resize-none min-h-[80px]"
-        placeholder="Bio"
-        {...register("bio")}
-      />
+      <div>
+        <input
+          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all w-full"
+          required
+          placeholder="Display name"
+          {...register("display_name", {
+            required: "Display name is required",
+          })}
+        />
+        {errors.display_name && (
+          <p className="text-red-600 dark:text-red-400 text-sm mt-1">
+            {errors.display_name.message}
+          </p>
+        )}
+      </div>
+
+      <div className="border-t border-gray-200 dark:border-gray-700 pt-3">
+        <button
+          type="button"
+          onClick={() => setShowAdditional(!showAdditional)}
+          className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors w-full"
+        >
+          <span className="font-medium">
+            {showAdditional ? "Hide" : "Show"} additional info
+          </span>
+          <svg
+            className={`w-4 h-4 transition-transform ${
+              showAdditional ? "rotate-180" : ""
+            }`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M19 9l-7 7-7-7"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {showAdditional && (
+        <div className="grid gap-3 transition-all duration-200 ease-in-out">
+          <input
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all w-full"
+            placeholder="Avatar URL"
+            {...register("avatar_url")}
+          />
+          <textarea
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all resize-none min-h-[80px]"
+            placeholder="Bio"
+            {...register("bio")}
+          />
+        </div>
+      )}
       <button
         className="rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         disabled={disabled}

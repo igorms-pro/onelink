@@ -17,8 +17,11 @@ import { toast } from "sonner";
 
 // types moved to components
 
+type TabId = "inbox" | "content" | "settings";
+
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
+  const [activeTab, setActiveTab] = useState<TabId>("content");
   const [links, setLinks] = useState<LinkRow[]>([]);
   type DropRow = {
     id: string;
@@ -143,7 +146,7 @@ export default function Dashboard() {
       <div className="relative z-10">
         <Header />
         <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8">
-          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 pb-6 border-b border-gray-200/60 dark:border-gray-800/60">
+          <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200/60 dark:border-gray-800/60">
             <div className="flex items-center gap-3">
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                 Dashboard
@@ -176,440 +179,511 @@ export default function Dashboard() {
               </button>
             </div>
           </header>
-          {/* Inbox */}
-          <section className="mt-8 rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Inbox
-              </h2>
-              <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
-                {submissions.length}
-              </span>
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              View and manage file submissions
-            </p>
-            {submissions.length === 0 ? (
-              <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
-                  No submissions yet.
-                </p>
-              </div>
-            ) : (
-              <ul className="mt-4 grid gap-3">
-                {submissions.map((s) => (
-                  <li
-                    key={s.submission_id}
-                    className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 hover:shadow-sm transition-shadow"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <p className="font-medium truncate text-gray-900 dark:text-white">
-                          {s.drop_label ?? "Drop"}
-                        </p>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {new Date(s.created_at).toLocaleString()}
-                        </p>
-                        <div className="mt-2 grid gap-1 text-sm">
-                          {s.name && (
-                            <p className="text-gray-700 dark:text-gray-300">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Name:
-                              </span>{" "}
-                              {s.name}
-                            </p>
-                          )}
-                          {s.email && (
-                            <p className="text-gray-700 dark:text-gray-300">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Email:
-                              </span>{" "}
-                              {s.email}
-                            </p>
-                          )}
-                          {s.note && (
-                            <p className="text-gray-700 dark:text-gray-300">
-                              <span className="text-gray-600 dark:text-gray-400">
-                                Note:
-                              </span>{" "}
-                              {s.note}
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    {Array.isArray(s.files) && s.files.length > 0 && (
-                      <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                          Files ({s.files.length})
-                        </p>
-                        <ul className="grid gap-2">
-                          {s.files.map((f, idx) => {
-                            const pub = supabase.storage
-                              .from("drops")
-                              .getPublicUrl(f.path);
-                            const href = pub.data.publicUrl;
-                            const name = f.path.split("/").pop();
-                            return (
-                              <li key={`${s.submission_id}-${idx}`}>
-                                <a
-                                  className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline break-all text-sm font-medium"
-                                  href={href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  <span className="truncate">{name}</span>
-                                  {f.size && (
-                                    <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
-                                      ({Math.round(f.size / 1024)} KB)
-                                    </span>
-                                  )}
-                                </a>
-                              </li>
-                            );
-                          })}
-                        </ul>
-                      </div>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
 
-          {/* Profile editor */}
-          <section className="mt-8 rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                Profile
-              </h2>
-              {profileFormInitial?.slug && (
-                <a
-                  href={`/${profileFormInitial.slug}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
-                >
-                  View my profile →
-                </a>
-              )}
-            </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Manage your public profile settings
-            </p>
-            <ProfileEditor
-              ref={profileEditorRef}
-              initial={profileFormInitial}
-              disabled={!profileId}
-              onSave={async (values) => {
-                if (!profileId) return;
-                const { data, error } = await supabase
-                  .from("profiles")
-                  .update({
-                    slug: values.slug,
-                    display_name: values.display_name,
-                    bio: values.bio,
-                    avatar_url: values.avatar_url,
-                  })
-                  .eq("id", profileId)
-                  .select("updated_at")
-                  .single<{ updated_at: string }>();
-                if (error) {
-                  // Check for PostgreSQL unique constraint violation (error code 23505)
-                  if (
-                    error.code === "23505" &&
-                    (error.message?.includes("slug") ||
-                      error.message?.includes("profiles_slug_key") ||
-                      error.message?.includes("unique") ||
-                      error.message?.toLowerCase().includes("slug"))
-                  ) {
-                    const errorMessage =
-                      "This slug is already taken. Please choose another.";
-                    profileEditorRef.current?.setError("slug", errorMessage);
-                    toast.error(errorMessage);
-                  } else {
-                    toast.error("Failed to update profile");
-                  }
-                  return;
+          {/* Tab Navigation */}
+          <div className="flex gap-2 mb-6 border-b border-gray-200/60 dark:border-gray-800/60 overflow-x-auto">
+            <button
+              onClick={() => setActiveTab("inbox")}
+              className={`
+                relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+                ${
+                  activeTab === "inbox"
+                    ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }
-                toast.success("Profile updated successfully");
-                setProfileUpdatedAt(
-                  data?.updated_at ?? new Date().toISOString(),
-                );
-              }}
-            />
-            {profileUpdatedAt && (
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-                Updated at {new Date(profileUpdatedAt).toLocaleString()}
-              </p>
-            )}
-          </section>
-
-          {/* Links */}
-          <section className="mt-8 rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Links
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Create buttons that link to your content
-            </p>
-            <NewLinkForm
-              disabled={
-                busy ||
-                !profileId ||
-                (isFree && links.length + drops.length >= freeLimit)
-              }
-              onCreate={async (input) => {
-                setBusy(true);
-                try {
-                  if (!isSafeHttpUrl(input.url)) {
-                    toast.error("Please enter a valid http(s) URL.");
-                    return;
-                  }
-                  const nextOrder = links.length
-                    ? Math.max(...links.map((l) => l.order)) + 1
-                    : 1;
-                  const { data, error } = await supabase
-                    .from("links")
-                    .insert([
-                      {
-                        profile_id: profileId,
-                        label: input.label,
-                        url: input.url,
-                        emoji: input.emoji ?? null,
-                        order: nextOrder,
-                      },
-                    ])
-                    .select("id,label,emoji,url,order")
-                    .single();
-                  if (error) throw error;
-                  setLinks((prev) =>
-                    [...prev, data as LinkRow].sort(
-                      (a, b) => a.order - b.order,
-                    ),
-                  );
-                  toast.success("Link created successfully");
-                } catch (e) {
-                  console.error(e);
-                  toast.error("Failed to create link");
-                } finally {
-                  setBusy(false);
-                }
-              }}
-            />
-            {isFree && links.length + drops.length >= freeLimit && (
-              <div className="mt-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3">
-                <p className="text-sm text-amber-700 dark:text-amber-400 font-medium">
-                  ⚠️ Free plan limit reached ({freeLimit} actions total:{" "}
-                  {links.length} links + {drops.length} drops)
-                </p>
-                <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
-                  Remove one or upgrade to Pro for unlimited actions.
-                </p>
-              </div>
-            )}
-
-            <LinksList
-              profileId={profileId}
-              links={links}
-              setLinks={setLinks}
-            />
-          </section>
-
-          {/* Drops */}
-          <section className="mt-8 rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Drops
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Create file inboxes for people to submit files
-            </p>
-            <form
-              className="mt-4 grid gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-linear-to-br from-gray-50/80 to-white/80 dark:from-gray-900/50 dark:to-gray-950/50 backdrop-blur-sm p-4 shadow-sm"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                if (!profileId) return;
-                if (isFree && links.length + drops.length >= freeLimit) {
-                  toast.error(
-                    `Free plan limit reached (${freeLimit} actions). Remove one or upgrade.`,
-                  );
-                  return;
-                }
-                const form = e.currentTarget as HTMLFormElement;
-                const fd = new FormData(form);
-                const label = String(fd.get("label") || "").trim();
-                const emoji = (String(fd.get("emoji") || "").trim() || null) as
-                  | string
-                  | null;
-                if (!label) {
-                  toast.error("Label is required");
-                  return;
-                }
-                setBusy(true);
-                try {
-                  const nextOrder = drops.length
-                    ? Math.max(...drops.map((d) => d.order)) + 1
-                    : 1;
-                  const { data, error } = await supabase
-                    .from("drops")
-                    .insert([
-                      { profile_id: profileId, label, emoji, order: nextOrder },
-                    ])
-                    .select("id,label,emoji,order,is_active")
-                    .single();
-                  if (error) throw error;
-                  setDrops((prev) =>
-                    [...prev, data as DropRow].sort(
-                      (a, b) => a.order - b.order,
-                    ),
-                  );
-                  form.reset();
-                  toast.success("Drop created successfully");
-                } catch (e) {
-                  console.error(e);
-                  toast.error("Failed to create drop");
-                } finally {
-                  setBusy(false);
-                }
-              }}
+              `}
             >
-              <div className="grid grid-cols-3 gap-2">
-                <input
-                  name="label"
-                  placeholder="Label (e.g. Upload assets)"
-                  className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 col-span-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                />
-                <input
-                  name="emoji"
-                  placeholder="Emoji (optional)"
-                  className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-                />
-              </div>
-              <div>
-                <button
-                  type="submit"
-                  className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity"
-                >
-                  Add Drop
-                </button>
-              </div>
-            </form>
-
-            <ul className="mt-4 grid gap-2">
-              {drops.length === 0 ? (
-                <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
-                  <p className="text-gray-500 dark:text-gray-400 text-sm">
-                    No drops yet. Create your first drop above!
-                  </p>
-                </div>
-              ) : (
-                drops.map((d) => (
-                  <li
-                    key={d.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
-                  >
-                    <div className="min-w-0">
-                      <p className="font-medium truncate text-gray-900 dark:text-white">
-                        {d.emoji ? `${d.emoji} ` : ""}
-                        {d.label}
-                      </p>
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Order {d.order} · {d.is_active ? "Active" : "Off"}
-                      </p>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                        onClick={async () => {
-                          const newLabel = prompt("New label", d.label);
-                          if (!newLabel) return;
-                          const { error } = await supabase
-                            .from("drops")
-                            .update({ label: newLabel })
-                            .eq("id", d.id)
-                            .eq("profile_id", profileId);
-                          if (error) {
-                            toast.error("Update failed");
-                            return;
-                          }
-                          setDrops(
-                            drops.map((x) =>
-                              x.id === d.id ? { ...x, label: newLabel } : x,
-                            ),
-                          );
-                          toast.success("Drop updated");
-                        }}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                        onClick={async () => {
-                          const { data, error } = await supabase
-                            .from("drops")
-                            .update({ is_active: !d.is_active })
-                            .eq("id", d.id)
-                            .eq("profile_id", profileId)
-                            .select("is_active")
-                            .single<{ is_active: boolean }>();
-                          if (error) {
-                            toast.error("Toggle failed");
-                            return;
-                          }
-                          setDrops(
-                            drops.map((x) =>
-                              x.id === d.id
-                                ? {
-                                    ...x,
-                                    is_active: data?.is_active ?? !d.is_active,
-                                  }
-                                : x,
-                            ),
-                          );
-                          toast.success(
-                            `Drop ${data?.is_active ? "activated" : "deactivated"}`,
-                          );
-                        }}
-                      >
-                        {d.is_active ? "Turn off" : "Turn on"}
-                      </button>
-                      <button
-                        className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        onClick={async () => {
-                          if (!confirm("Delete drop?")) return;
-                          const { error } = await supabase
-                            .from("drops")
-                            .delete()
-                            .eq("id", d.id)
-                            .eq("profile_id", profileId);
-                          if (error) {
-                            toast.error("Delete failed");
-                            return;
-                          }
-                          setDrops(drops.filter((x) => x.id !== d.id));
-                          toast.success("Drop deleted");
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </li>
-                ))
+              Inbox
+              {submissions.length > 0 && (
+                <span className="ml-2 rounded-full bg-blue-600 dark:bg-blue-500 text-white text-xs px-2 py-0.5">
+                  {submissions.length}
+                </span>
               )}
-            </ul>
-          </section>
+            </button>
+            <button
+              onClick={() => setActiveTab("content")}
+              className={`
+                relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+                ${
+                  activeTab === "content"
+                    ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                }
+              `}
+            >
+              Content
+            </button>
+            <button
+              onClick={() => setActiveTab("settings")}
+              className={`
+                relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+                ${
+                  activeTab === "settings"
+                    ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
+                }
+              `}
+            >
+              Settings
+            </button>
+          </div>
 
-          {/* Analytics */}
-          <section className="mt-8 rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-              Analytics
-            </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-              Track your link clicks and submissions
-            </p>
-            <AnalyticsCard profileId={profileId} />
-            <SubmissionCountsCard profileId={profileId} />
-          </section>
+          {/* Tab Content */}
+          <div className="transition-opacity duration-200">
+            {activeTab === "inbox" && (
+              <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+                <div className="flex items-center gap-3 mb-2">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                    Inbox
+                  </h2>
+                  <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
+                    {submissions.length}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                  View and manage file submissions
+                </p>
+                {submissions.length === 0 ? (
+                  <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+                    <p className="text-gray-500 dark:text-gray-400 text-sm">
+                      No submissions yet.
+                    </p>
+                  </div>
+                ) : (
+                  <ul className="mt-4 grid gap-3">
+                    {submissions.map((s) => (
+                      <li
+                        key={s.submission_id}
+                        className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 hover:shadow-sm transition-shadow"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="font-medium truncate text-gray-900 dark:text-white">
+                              {s.drop_label ?? "Drop"}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {new Date(s.created_at).toLocaleString()}
+                            </p>
+                            <div className="mt-2 grid gap-1 text-sm">
+                              {s.name && (
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <span className="text-gray-600 dark:text-gray-400">
+                                    Name:
+                                  </span>{" "}
+                                  {s.name}
+                                </p>
+                              )}
+                              {s.email && (
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <span className="text-gray-600 dark:text-gray-400">
+                                    Email:
+                                  </span>{" "}
+                                  {s.email}
+                                </p>
+                              )}
+                              {s.note && (
+                                <p className="text-gray-700 dark:text-gray-300">
+                                  <span className="text-gray-600 dark:text-gray-400">
+                                    Note:
+                                  </span>{" "}
+                                  {s.note}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                        {Array.isArray(s.files) && s.files.length > 0 && (
+                          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                            <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                              Files ({s.files.length})
+                            </p>
+                            <ul className="grid gap-2">
+                              {s.files.map((f, idx) => {
+                                const pub = supabase.storage
+                                  .from("drops")
+                                  .getPublicUrl(f.path);
+                                const href = pub.data.publicUrl;
+                                const name = f.path.split("/").pop();
+                                return (
+                                  <li key={`${s.submission_id}-${idx}`}>
+                                    <a
+                                      className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline break-all text-sm font-medium"
+                                      href={href}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                    >
+                                      <span className="truncate">{name}</span>
+                                      {f.size && (
+                                        <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+                                          ({Math.round(f.size / 1024)} KB)
+                                        </span>
+                                      )}
+                                    </a>
+                                  </li>
+                                );
+                              })}
+                            </ul>
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </section>
+            )}
+
+            {activeTab === "content" && (
+              <div className="space-y-8">
+                {/* Links */}
+                <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Links
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Create buttons that link to your content
+                  </p>
+                  <NewLinkForm
+                    disabled={
+                      busy ||
+                      !profileId ||
+                      (isFree && links.length + drops.length >= freeLimit)
+                    }
+                    onCreate={async (input) => {
+                      setBusy(true);
+                      try {
+                        if (!isSafeHttpUrl(input.url)) {
+                          toast.error("Please enter a valid http(s) URL.");
+                          return;
+                        }
+                        const nextOrder = links.length
+                          ? Math.max(...links.map((l) => l.order)) + 1
+                          : 1;
+                        const { data, error } = await supabase
+                          .from("links")
+                          .insert([
+                            {
+                              profile_id: profileId,
+                              label: input.label,
+                              url: input.url,
+                              emoji: input.emoji ?? null,
+                              order: nextOrder,
+                            },
+                          ])
+                          .select("id,label,emoji,url,order")
+                          .single();
+                        if (error) throw error;
+                        setLinks((prev) =>
+                          [...prev, data as LinkRow].sort(
+                            (a, b) => a.order - b.order,
+                          ),
+                        );
+                        toast.success("Link created successfully");
+                      } catch (e) {
+                        console.error(e);
+                        toast.error("Failed to create link");
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  />
+                  {isFree && links.length + drops.length >= freeLimit && (
+                    <div className="mt-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3">
+                      <p className="text-sm text-amber-700 dark:text-amber-400 font-medium">
+                        ⚠️ Free plan limit reached ({freeLimit} actions total:{" "}
+                        {links.length} links + {drops.length} drops)
+                      </p>
+                      <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
+                        Remove one or upgrade to Pro for unlimited actions.
+                      </p>
+                    </div>
+                  )}
+
+                  <LinksList
+                    profileId={profileId}
+                    links={links}
+                    setLinks={setLinks}
+                  />
+                </section>
+
+                {/* Drops */}
+                <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Drops
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Create file inboxes for people to submit files
+                  </p>
+                  <form
+                    className="mt-4 grid gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-linear-to-br from-gray-50/80 to-white/80 dark:from-gray-900/50 dark:to-gray-950/50 backdrop-blur-sm p-4 shadow-sm"
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+                      if (!profileId) return;
+                      if (isFree && links.length + drops.length >= freeLimit) {
+                        toast.error(
+                          `Free plan limit reached (${freeLimit} actions). Remove one or upgrade.`,
+                        );
+                        return;
+                      }
+                      const form = e.currentTarget as HTMLFormElement;
+                      const fd = new FormData(form);
+                      const label = String(fd.get("label") || "").trim();
+                      const emoji = (String(fd.get("emoji") || "").trim() ||
+                        null) as string | null;
+                      if (!label) {
+                        toast.error("Label is required");
+                        return;
+                      }
+                      setBusy(true);
+                      try {
+                        const nextOrder = drops.length
+                          ? Math.max(...drops.map((d) => d.order)) + 1
+                          : 1;
+                        const { data, error } = await supabase
+                          .from("drops")
+                          .insert([
+                            {
+                              profile_id: profileId,
+                              label,
+                              emoji,
+                              order: nextOrder,
+                            },
+                          ])
+                          .select("id,label,emoji,order,is_active")
+                          .single();
+                        if (error) throw error;
+                        setDrops((prev) =>
+                          [...prev, data as DropRow].sort(
+                            (a, b) => a.order - b.order,
+                          ),
+                        );
+                        form.reset();
+                        toast.success("Drop created successfully");
+                      } catch (e) {
+                        console.error(e);
+                        toast.error("Failed to create drop");
+                      } finally {
+                        setBusy(false);
+                      }
+                    }}
+                  >
+                    <div className="grid grid-cols-3 gap-2">
+                      <input
+                        name="label"
+                        placeholder="Label (e.g. Upload assets)"
+                        className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 col-span-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      />
+                      <input
+                        name="emoji"
+                        placeholder="Emoji (optional)"
+                        className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+                      />
+                    </div>
+                    <div>
+                      <button
+                        type="submit"
+                        className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity"
+                      >
+                        Add Drop
+                      </button>
+                    </div>
+                  </form>
+
+                  <ul className="mt-4 grid gap-2">
+                    {drops.length === 0 ? (
+                      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                          No drops yet. Create your first drop above!
+                        </p>
+                      </div>
+                    ) : (
+                      drops.map((d) => (
+                        <li
+                          key={d.id}
+                          className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
+                        >
+                          <div className="min-w-0">
+                            <p className="font-medium truncate text-gray-900 dark:text-white">
+                              {d.emoji ? `${d.emoji} ` : ""}
+                              {d.label}
+                            </p>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              Order {d.order} · {d.is_active ? "Active" : "Off"}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <button
+                              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                              onClick={async () => {
+                                const newLabel = prompt("New label", d.label);
+                                if (!newLabel) return;
+                                const { error } = await supabase
+                                  .from("drops")
+                                  .update({ label: newLabel })
+                                  .eq("id", d.id)
+                                  .eq("profile_id", profileId);
+                                if (error) {
+                                  toast.error("Update failed");
+                                  return;
+                                }
+                                setDrops(
+                                  drops.map((x) =>
+                                    x.id === d.id
+                                      ? { ...x, label: newLabel }
+                                      : x,
+                                  ),
+                                );
+                                toast.success("Drop updated");
+                              }}
+                            >
+                              Edit
+                            </button>
+                            <button
+                              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                              onClick={async () => {
+                                const { data, error } = await supabase
+                                  .from("drops")
+                                  .update({ is_active: !d.is_active })
+                                  .eq("id", d.id)
+                                  .eq("profile_id", profileId)
+                                  .select("is_active")
+                                  .single<{ is_active: boolean }>();
+                                if (error) {
+                                  toast.error("Toggle failed");
+                                  return;
+                                }
+                                setDrops(
+                                  drops.map((x) =>
+                                    x.id === d.id
+                                      ? {
+                                          ...x,
+                                          is_active:
+                                            data?.is_active ?? !d.is_active,
+                                        }
+                                      : x,
+                                  ),
+                                );
+                                toast.success(
+                                  `Drop ${data?.is_active ? "activated" : "deactivated"}`,
+                                );
+                              }}
+                            >
+                              {d.is_active ? "Turn off" : "Turn on"}
+                            </button>
+                            <button
+                              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                              onClick={async () => {
+                                if (!confirm("Delete drop?")) return;
+                                const { error } = await supabase
+                                  .from("drops")
+                                  .delete()
+                                  .eq("id", d.id)
+                                  .eq("profile_id", profileId);
+                                if (error) {
+                                  toast.error("Delete failed");
+                                  return;
+                                }
+                                setDrops(drops.filter((x) => x.id !== d.id));
+                                toast.success("Drop deleted");
+                              }}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </li>
+                      ))
+                    )}
+                  </ul>
+                </section>
+              </div>
+            )}
+
+            {activeTab === "settings" && (
+              <div className="space-y-8">
+                {/* Profile editor */}
+                <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      Profile
+                    </h2>
+                    {profileFormInitial?.slug && (
+                      <a
+                        href={`/${profileFormInitial.slug}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+                      >
+                        View my profile →
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Manage your public profile settings
+                  </p>
+                  <ProfileEditor
+                    ref={profileEditorRef}
+                    initial={profileFormInitial}
+                    disabled={!profileId}
+                    onSave={async (values) => {
+                      if (!profileId) return;
+                      const { data, error } = await supabase
+                        .from("profiles")
+                        .update({
+                          slug: values.slug,
+                          display_name: values.display_name,
+                          bio: values.bio,
+                          avatar_url: values.avatar_url,
+                        })
+                        .eq("id", profileId)
+                        .select("updated_at")
+                        .single<{ updated_at: string }>();
+                      if (error) {
+                        // Check for PostgreSQL unique constraint violation (error code 23505)
+                        if (
+                          error.code === "23505" &&
+                          (error.message?.includes("slug") ||
+                            error.message?.includes("profiles_slug_key") ||
+                            error.message?.includes("unique") ||
+                            error.message?.toLowerCase().includes("slug"))
+                        ) {
+                          const errorMessage =
+                            "This slug is already taken. Please choose another.";
+                          profileEditorRef.current?.setError(
+                            "slug",
+                            errorMessage,
+                          );
+                          toast.error(errorMessage);
+                        } else {
+                          toast.error("Failed to update profile");
+                        }
+                        return;
+                      }
+                      toast.success("Profile updated successfully");
+                      setProfileUpdatedAt(
+                        data?.updated_at ?? new Date().toISOString(),
+                      );
+                    }}
+                  />
+                  {profileUpdatedAt && (
+                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                      Updated at {new Date(profileUpdatedAt).toLocaleString()}
+                    </p>
+                  )}
+                </section>
+
+                {/* Analytics */}
+                <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    Analytics
+                  </h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+                    Track your link clicks and submissions
+                  </p>
+                  <AnalyticsCard profileId={profileId} />
+                  <SubmissionCountsCard profileId={profileId} />
+                </section>
+              </div>
+            )}
+          </div>
         </main>
       </div>
     </div>

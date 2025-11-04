@@ -29,12 +29,12 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 ## P1 – Frontend UX polish
 - [x] Dashboard header shows current plan (Free/Pro)
 - [x] Mobile responsiveness
-- [ ] Empty/error states
-  - [ ] Public profile: slug not found / domain unverified
-  - [ ] Dashboard: no links yet
-  - [ ] Dashboard: no drops yet
+- [x] Empty/error states
+  - [x] Public profile: slug not found / domain unverified
+  - [x] Dashboard: no links yet
+  - [x] Dashboard: no drops yet
 - [x] GA: enable only when plan === 'pro' and VITE_GA_ID present (already gated; add .env)
-- [ ] Profile editor: basic validation (slug uniqueness surface error)
+- [x] Profile editor: basic validation (slug uniqueness surface error)
 
 ### Drops UI
 - [x] Dashboard: CRUD for Drop blocks (label, emoji, order, on/off)
@@ -44,7 +44,7 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 ## P1 – Analytics
 - [x] SQL: get_clicks_by_profile(profile_id, days) RPC (owner-only)
 - [x] Dashboard: wire AnalyticsCard to RPC
-- [ ] Dashboard: add 7/30-day toggle to AnalyticsCard
+- [x] Dashboard: add 7/30-day toggle to AnalyticsCard
 ### Drop analytics
 - [x] Wire submission counts via get_submission_counts_by_profile
 
@@ -53,10 +53,10 @@ Prioritized, CTO-style task list. Use as GitHub issue description. Check items o
 - [ ] Owner UI: domain add instructions (DNS CNAME) + verification status
 
 ## P2 – Quality & tests
-- [ ] Unit tests
-  - [ ] isBaseHost, isSafeHttpUrl
-  - [ ] getOrCreateProfile happy path (mock supabase)
-  - [ ] Drops: rpc.get_drops_by_slug returns only active drops
+- [x] Unit tests
+  - [x] isBaseHost, isSafeHttpUrl
+  - [x] getOrCreateProfile happy path (mock supabase)
+  - [x] Drops: rpc.get_drops_by_slug returns only active drops
 - [ ] E2E tests
   - [ ] /:slug renders scheduled links only, footer hidden for Pro
   - [ ] Clicking a link doesn’t block navigation and records a click
