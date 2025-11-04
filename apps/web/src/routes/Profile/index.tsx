@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
 import { Header } from "@/components/Header";
 import { useProfileData } from "./hooks/useProfileData";
@@ -11,6 +12,7 @@ import {
 } from "./components";
 
 export default function Profile() {
+  const { t } = useTranslation();
   const { slug } = useParams();
   const host = window.location.host;
   const { links, drops, profile, plan, isLoading, errorType } = useProfileData(
@@ -45,7 +47,7 @@ export default function Profile() {
           <DropsSection drops={drops} />
           {isBaseHost(host) && plan !== "pro" && (
             <footer className="mt-8 text-center text-sm text-gray-500 dark:text-gray-400">
-              Powered by OneLink
+              {t("profile_powered_by")}
             </footer>
           )}
         </main>

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { TabId } from "../types";
 
 interface TabNavigationProps {
@@ -11,6 +12,7 @@ export function TabNavigation({
   onTabChange,
   submissionCount,
 }: TabNavigationProps) {
+  const { t } = useTranslation();
   return (
     <div className="flex gap-2 mb-6 border-b border-gray-200/60 dark:border-gray-800/60 overflow-x-auto">
       <button
@@ -24,7 +26,7 @@ export function TabNavigation({
           }
         `}
       >
-        Inbox
+        {t("dashboard_tab_inbox")}
         {submissionCount > 0 && (
           <span className="ml-2 rounded-full bg-blue-600 dark:bg-blue-500 text-white text-xs px-2 py-0.5">
             {submissionCount}
@@ -42,7 +44,7 @@ export function TabNavigation({
           }
         `}
       >
-        Content
+        {t("dashboard_tab_content")}
       </button>
       <button
         onClick={() => onTabChange("account")}
@@ -55,7 +57,7 @@ export function TabNavigation({
           }
         `}
       >
-        Account
+        {t("dashboard_tab_account")}
       </button>
     </div>
   );

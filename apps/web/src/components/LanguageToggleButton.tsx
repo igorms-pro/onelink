@@ -21,27 +21,11 @@ export function LanguageToggleButton() {
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langDropdownRef = useRef<HTMLDivElement>(null);
 
-  // Force re-render when language changes
-  const [langKey, setLangKey] = useState(() => {
-    return localStorage.getItem("lang") || i18n.language || "en";
-  });
-
-  useEffect(() => {
-    const handleLanguageChange = (lng: string) => {
-      setLangKey(lng);
-    };
-    i18n.on("languageChanged", handleLanguageChange);
-    return () => {
-      i18n.off("languageChanged", handleLanguageChange);
-    };
-  }, [i18n]);
-
-  // Sync with i18n on mount
-  useEffect(() => {
-    if (i18n.language && i18n.language !== langKey) {
-      setLangKey(i18n.language);
-    }
-  }, [i18n.language, langKey]);
+  // Use i18n.language directly - it will automatically update when language changes
+  // via react-i18next's React Context
+  const currentLangCode = i18n.language || localStorage.getItem("lang") || "en";
+  const currentLang =
+    languages.find((l) => l.code === currentLangCode) || languages[0];
 
   // Close language dropdown on outside click
   useEffect(() => {
@@ -60,13 +44,11 @@ export function LanguageToggleButton() {
     }
   }, [isLangOpen]);
 
-  const currentLang = languages.find((l) => l.code === langKey) || languages[0];
-
   return (
     <div className="relative" ref={langDropdownRef}>
       <button
         onClick={() => setIsLangOpen(!isLangOpen)}
-        className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center gap-1"
+        className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1"
         aria-label="Change language"
       >
         <span className="text-base">{currentLang.flag}</span>
@@ -81,11 +63,10 @@ export function LanguageToggleButton() {
               key={lang.code}
               onClick={() => {
                 setLanguage(lang.code);
-                setLangKey(lang.code);
                 setIsLangOpen(false);
               }}
               className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
-                langKey === lang.code
+                currentLangCode === lang.code
                   ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
                   : "text-gray-700 dark:text-gray-300"
               }`}
