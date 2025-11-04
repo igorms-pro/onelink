@@ -17,11 +17,11 @@ import { toast } from "sonner";
 
 // types moved to components
 
-type TabId = "inbox" | "content" | "settings";
+type TabId = "inbox" | "content" | "account";
 
 export default function Dashboard() {
   const { user, loading, signOut } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabId>("content");
+  const [activeTab, setActiveTab] = useState<TabId>("inbox");
   const [links, setLinks] = useState<LinkRow[]>([]);
   type DropRow = {
     id: string;
@@ -214,17 +214,17 @@ export default function Dashboard() {
               Content
             </button>
             <button
-              onClick={() => setActiveTab("settings")}
+              onClick={() => setActiveTab("account")}
               className={`
                 relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
                 ${
-                  activeTab === "settings"
+                  activeTab === "account"
                     ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
                     : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                 }
               `}
             >
-              Settings
+              Account
             </button>
           </div>
 
@@ -597,7 +597,7 @@ export default function Dashboard() {
               </div>
             )}
 
-            {activeTab === "settings" && (
+            {activeTab === "account" && (
               <div className="space-y-8">
                 {/* Profile editor */}
                 <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
