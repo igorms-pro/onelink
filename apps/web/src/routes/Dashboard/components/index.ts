@@ -6,3 +6,5 @@ export { ContentTab } from "./ContentTab";
 export { AccountTab } from "./AccountTab";
 export { LinksSection } from "./LinksSection";
 export { DropsSection } from "./DropsSection";
+export { DropForm } from "./DropForm";
+export { DropList } from "./DropList";
