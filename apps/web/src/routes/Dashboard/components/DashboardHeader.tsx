@@ -1,20 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { Settings } from "lucide-react";
 import { goToCheckout, goToPortal } from "@/lib/billing";
-import { ThemeToggleButton } from "@/components/ThemeToggleButton";
-import { LanguageToggleButton } from "@/components/LanguageToggleButton";
 
 interface DashboardHeaderProps {
   isFree: boolean;
-  onSettingsClick: () => void;
   onSignOut: () => void;
 }
 
-export function DashboardHeader({
-  isFree,
-  onSettingsClick,
-  onSignOut,
-}: DashboardHeaderProps) {
+export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
   return (
     <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200/60 dark:border-gray-800/60">
@@ -26,33 +18,24 @@ export function DashboardHeader({
           {isFree ? t("dashboard_header_free") : t("dashboard_header_pro")}
         </span>
       </div>
-      <div className="flex items-center justify-end gap-1.5 sm:gap-2 flex-nowrap overflow-x-auto">
-        <button
-          onClick={onSettingsClick}
-          className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center"
-          aria-label="Settings"
-        >
-          <Settings className="w-5 h-5" />
-        </button>
-        <ThemeToggleButton />
-        <LanguageToggleButton />
+      <div className="flex items-center justify-end gap-2">
         {isFree ? (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2.5 min-h-[44px] sm:min-h-0 text-xs sm:text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm whitespace-nowrap flex items-center justify-center"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap"
             onClick={goToCheckout}
           >
             {t("dashboard_header_upgrade")}
           </button>
         ) : (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2.5 min-h-[44px] sm:min-h-0 text-xs sm:text-sm font-semibold hover:opacity-90 active:scale-[0.98] transition-all shadow-sm whitespace-nowrap flex items-center justify-center"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap"
             onClick={goToPortal}
           >
             {t("dashboard_header_manage_billing")}
           </button>
         )}
         <button
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2.5 min-h-[44px] sm:min-h-0 text-xs sm:text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap flex items-center justify-center"
+          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
           onClick={onSignOut}
         >
           {t("dashboard_header_sign_out")}

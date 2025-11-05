@@ -77,13 +77,9 @@ export default function Dashboard() {
       </div>
 
       <div className="relative z-10">
-        <Header />
+        <Header onSettingsClick={() => setIsSettingsOpen(true)} />
         <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8">
-          <DashboardHeader
-            isFree={isFree}
-            onSettingsClick={() => setIsSettingsOpen(true)}
-            onSignOut={() => signOut()}
-          />
+          <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
 
           <TabNavigation
             activeTab={activeTab}
