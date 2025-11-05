@@ -10,7 +10,7 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
   return (
     <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200/60 dark:border-gray-800/60">
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}
         </h1>
@@ -35,7 +35,7 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
           </button>
         )}
         <button
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
+          className="hidden sm:inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
           onClick={onSignOut}
         >
           {t("dashboard_header_sign_out")}

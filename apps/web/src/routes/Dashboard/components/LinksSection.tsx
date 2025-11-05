@@ -77,21 +77,6 @@ export function LinksSection({
           }
         }}
       />
-      {isFree && links.length + drops.length >= freeLimit && (
-        <div className="mt-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3">
-          <p className="text-sm text-amber-700 dark:text-amber-400 font-medium">
-            ⚠️{" "}
-            {t("dashboard_content_links_limit_reached", {
-              limit: freeLimit,
-              links: links.length,
-              drops: drops.length,
-            })}
-          </p>
-          <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
-            {t("dashboard_content_links_limit_hint")}
-          </p>
-        </div>
-      )}
 
       <LinksList profileId={profileId} links={links} setLinks={setLinks} />
     </section>

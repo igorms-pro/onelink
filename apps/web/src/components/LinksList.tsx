@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
+import { Pencil, Trash2 } from "lucide-react";
 
 export type LinkRow = {
   id: string;
@@ -90,7 +91,7 @@ export function LinksList({
                   {l.label}
                 </p>
                 <a
-                  className="text-sm text-blue-600 dark:text-blue-400 hover:underline break-all"
+                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all"
                   href={l.url}
                   target="_blank"
                   rel="noreferrer"
@@ -100,7 +101,7 @@ export function LinksList({
               </div>
               <div className="flex items-center gap-2 ml-4">
                 <button
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors opacity-0 group-hover:opacity-100"
+                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 sm:px-3 sm:py-1.5 sm:text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
                   onClick={async (e) => {
                     e.stopPropagation();
                     const newLabel = prompt(t("common_new_label"), l.label);
@@ -121,11 +122,13 @@ export function LinksList({
                     );
                     toast.success(t("dashboard_content_links_update_success"));
                   }}
+                  aria-label={t("common_edit")}
                 >
-                  {t("common_edit")}
+                  <Pencil className="w-4 h-4 sm:hidden" />
+                  <span className="hidden sm:inline">{t("common_edit")}</span>
                 </button>
                 <button
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
+                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 p-2 sm:px-3 sm:py-1.5 sm:text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                   onClick={async (e) => {
                     e.stopPropagation();
                     if (!confirm(t("dashboard_content_links_delete_confirm")))
@@ -142,8 +145,10 @@ export function LinksList({
                     setLinks(links.filter((x) => x.id !== l.id));
                     toast.success(t("dashboard_content_links_delete_success"));
                   }}
+                  aria-label={t("common_delete")}
                 >
-                  {t("common_delete")}
+                  <Trash2 className="w-4 h-4 sm:hidden" />
+                  <span className="hidden sm:inline">{t("common_delete")}</span>
                 </button>
               </div>
             </li>

@@ -26,9 +26,9 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
       {drops.map((d) => (
         <li
           key={d.id}
-          className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
         >
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="font-medium truncate text-gray-900 dark:text-white">
               {d.emoji ? `${d.emoji} ` : ""}
               {d.label}
@@ -40,7 +40,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
               })}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
             <button
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               onClick={async () => {
@@ -101,7 +101,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                 : t("dashboard_content_drops_turn_on")}
             </button>
             <button
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               onClick={async () => {
                 if (!confirm(t("dashboard_content_drops_delete_confirm")))
                   return;

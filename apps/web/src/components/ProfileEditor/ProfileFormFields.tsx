@@ -28,11 +28,11 @@ export function ProfileFormFields({
         <input
           className={`rounded-lg border ${
             errors.slug
-              ? "border-red-500 dark:border-red-400"
+              ? "border-red-500 dark:border-red-300"
               : "border-gray-300 dark:border-gray-600"
           } bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 ${
             errors.slug
-              ? "focus:ring-red-500 dark:focus:ring-red-400"
+              ? "focus:ring-red-500 dark:focus:ring-red-300"
               : "focus:ring-blue-500 dark:focus:ring-blue-400"
           } focus:border-transparent transition-all w-full`}
           required
@@ -46,7 +46,7 @@ export function ProfileFormFields({
           })}
         />
         {errors.slug && (
-          <p className="text-red-600 dark:text-red-400 text-sm mt-1">
+          <p className="text-red-600 dark:text-red-300 text-sm mt-1">
             {errors.slug.message}
           </p>
         )}
@@ -61,7 +61,7 @@ export function ProfileFormFields({
           })}
         />
         {errors.display_name && (
-          <p className="text-red-600 dark:text-red-400 text-sm mt-1">
+          <p className="text-red-600 dark:text-red-300 text-sm mt-1">
             {errors.display_name.message}
           </p>
         )}

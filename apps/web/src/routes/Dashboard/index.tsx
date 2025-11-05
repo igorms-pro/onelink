@@ -53,7 +53,7 @@ export default function Dashboard() {
             {t("dashboard_please_sign_in")}
           </h1>
           <a
-            className="text-blue-600 dark:text-blue-400 underline"
+            className="text-blue-600 dark:text-blue-300 underline"
             href="/auth"
           >
             {t("dashboard_go_to_sign_in")}
@@ -113,6 +113,7 @@ export default function Dashboard() {
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        onSignOut={() => signOut()}
       />
     </div>
   );

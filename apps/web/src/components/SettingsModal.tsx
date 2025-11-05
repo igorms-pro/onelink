@@ -7,9 +7,16 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from "./ui/drawer";
 interface SettingsModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSignOut?: () => void;
 }
 
-function SettingsContent({ isMobile = false }: { isMobile?: boolean }) {
+function SettingsContent({
+  isMobile = false,
+  onSignOut,
+}: {
+  isMobile?: boolean;
+  onSignOut?: () => void;
+}) {
   const { t } = useTranslation();
   return (
     <div
@@ -86,13 +93,21 @@ function SettingsContent({ isMobile = false }: { isMobile?: boolean }) {
           </h3>
         </div>
         <div className="space-y-3 pl-7">
-          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline">
             {t("settings_change_password")}
           </button>
-          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-400 hover:underline">
+          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline">
             {t("settings_two_factor")}
           </button>
-          <button className="w-full text-left text-sm text-red-600 dark:text-red-400 hover:underline">
+          {isMobile && onSignOut && (
+            <button
+              className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline"
+              onClick={onSignOut}
+            >
+              {t("dashboard_header_sign_out")}
+            </button>
+          )}
+          <button className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline">
             {t("settings_delete_account")}
           </button>
         </div>
@@ -101,7 +116,11 @@ function SettingsContent({ isMobile = false }: { isMobile?: boolean }) {
   );
 }
 
-export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
+export function SettingsModal({
+  isOpen,
+  onClose,
+  onSignOut,
+}: SettingsModalProps) {
   const { t } = useTranslation();
   const { width } = useWindowSize();
   const isDesktop = width >= 768; // md breakpoint
@@ -113,7 +132,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
           <DialogHeader>
             <DialogTitle>{t("settings_title")}</DialogTitle>
           </DialogHeader>
-          <SettingsContent isMobile={false} />
+          <SettingsContent isMobile={false} onSignOut={onSignOut} />
         </DialogContent>
       </Dialog>
     );
@@ -125,7 +144,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
         <DrawerHeader className="text-left">
           <DrawerTitle>{t("settings_title")}</DrawerTitle>
         </DrawerHeader>
-        <SettingsContent isMobile={true} />
+        <SettingsContent isMobile={true} onSignOut={onSignOut} />
       </DrawerContent>
     </Drawer>
   );

@@ -85,7 +85,7 @@ export function InboxTab({ submissions }: InboxTabProps) {
                       return (
                         <li key={`${s.submission_id}-${idx}`}>
                           <a
-                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-400 hover:underline break-all text-sm font-medium"
+                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-300 hover:underline break-all text-sm font-medium"
                             href={href}
                             target="_blank"
                             rel="noreferrer"
