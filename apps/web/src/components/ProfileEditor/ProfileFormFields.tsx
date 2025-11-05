@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type {
   UseFormRegister,
   FieldErrors,
@@ -20,6 +21,7 @@ export function ProfileFormFields({
   showAdditional,
   onToggleAdditional,
 }: ProfileFormFieldsProps) {
+  const { t } = useTranslation();
   return (
     <>
       <div>
@@ -34,7 +36,7 @@ export function ProfileFormFields({
               : "focus:ring-blue-500 dark:focus:ring-blue-400"
           } focus:border-transparent transition-all w-full`}
           required
-          placeholder="slug"
+          placeholder={t("profile_form_slug_placeholder")}
           {...register("slug", {
             onChange: () => {
               if (errors.slug) {
@@ -53,9 +55,9 @@ export function ProfileFormFields({
         <input
           className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all w-full"
           required
-          placeholder="Display name"
+          placeholder={t("profile_form_display_name_placeholder")}
           {...register("display_name", {
-            required: "Display name is required",
+            required: t("profile_form_display_name_required"),
           })}
         />
         {errors.display_name && (
@@ -72,7 +74,9 @@ export function ProfileFormFields({
           className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 transition-colors w-full"
         >
           <span className="font-medium">
-            {showAdditional ? "Hide" : "Show"} additional info
+            {showAdditional
+              ? t("profile_form_hide_additional")
+              : t("profile_form_show_additional")}
           </span>
           <svg
             className={`w-4 h-4 transition-transform ${
@@ -96,12 +100,12 @@ export function ProfileFormFields({
         <div className="grid gap-3 transition-all duration-200 ease-in-out">
           <input
             className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all w-full"
-            placeholder="Avatar URL"
+            placeholder={t("profile_form_avatar_url_placeholder")}
             {...register("avatar_url")}
           />
           <textarea
             className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all resize-none min-h-[80px]"
-            placeholder="Bio"
+            placeholder={t("profile_form_bio_placeholder")}
             {...register("bio")}
           />
         </div>

@@ -28,12 +28,14 @@ export function LinksList({
   return (
     <>
       <div className="mt-2 text-sm text-gray-600 dark:text-gray-400 h-5">
-        {savingOrder && <span>Saving order…</span>}
+        {savingOrder && (
+          <span>{t("dashboard_content_links_saving_order")}</span>
+        )}
       </div>
       {links.length === 0 ? (
         <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
-            No links yet. Create your first link above!
+            {t("dashboard_content_links_empty")}
           </p>
         </div>
       ) : (

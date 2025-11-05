@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import type { PublicDrop } from "../types";
 
@@ -6,6 +7,7 @@ interface DropSubmissionFormProps {
 }
 
 export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
+  const { t } = useTranslation();
   return (
     <form
       className="rounded border p-4"
@@ -26,7 +28,12 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
         // Client-side validation
         for (const f of files) {
           if (f.size > maxSizeBytes) {
-            alert(`File "${f.name}" exceeds ${maxSizeMB}MB limit.`);
+            alert(
+              t("profile_drop_submission_file_too_large", {
+                name: f.name,
+                limit: maxSizeMB,
+              }),
+            );
             return;
           }
           const ext = f.name.split(".").pop()?.toLowerCase() || "";
@@ -44,7 +51,7 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
             "dmg",
           ];
           if (blocked.includes(ext)) {
-            alert(`File type .${ext} is not allowed.`);
+            alert(t("profile_drop_submission_file_type_blocked", { ext }));
             return;
           }
         }
@@ -85,11 +92,11 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
             },
           ]);
           if (error) throw error;
-          alert("Submitted successfully.");
+          alert(t("profile_drop_submission_success"));
           form.reset();
         } catch (err) {
           console.error(err);
-          alert("Submission failed");
+          alert(t("profile_drop_submission_failed"));
         }
       }}
     >
@@ -100,18 +107,18 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
       <div className="grid gap-2">
         <input
           name="name"
-          placeholder="Your name (optional)"
+          placeholder={t("profile_drop_submission_name_placeholder")}
           className="rounded border px-3 py-2"
         />
         <input
           name="email"
           type="email"
-          placeholder="Your email (optional)"
+          placeholder={t("profile_drop_submission_email_placeholder")}
           className="rounded border px-3 py-2"
         />
         <textarea
           name="note"
-          placeholder="Note (optional)"
+          placeholder={t("profile_drop_submission_note_placeholder")}
           className="rounded border px-3 py-2"
         />
         <input
@@ -121,7 +128,7 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
           className="rounded border px-3 py-2"
         />
         <button type="submit" className="rounded bg-black text-white px-4 py-2">
-          Send
+          {t("profile_drop_submission_send")}
         </button>
       </div>
     </form>

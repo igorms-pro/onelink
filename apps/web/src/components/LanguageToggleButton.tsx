@@ -17,7 +17,7 @@ const languages = [
 ];
 
 export function LanguageToggleButton() {
-  const { i18n } = useTranslation();
+  const { i18n, t } = useTranslation();
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -49,7 +49,7 @@ export function LanguageToggleButton() {
       <button
         onClick={() => setIsLangOpen(!isLangOpen)}
         className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1"
-        aria-label="Change language"
+        aria-label={t("aria_change_language")}
       >
         <span className="text-base">{currentLang.flag}</span>
         <Languages className="w-4 h-4" />

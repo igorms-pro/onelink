@@ -1,7 +1,9 @@
 import { Moon, Sun } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 export function ThemeToggleButton() {
+  const { t } = useTranslation();
   const [theme, setTheme] = useState<string>(
     () => localStorage.getItem("theme") || "system",
   );
@@ -10,9 +12,9 @@ export function ThemeToggleButton() {
   // Apply theme
   useEffect(() => {
     const root = document.documentElement;
-    const apply = (t: string) => {
-      let actualTheme = t;
-      if (t === "system") {
+    const apply = (themeValue: string) => {
+      let actualTheme = themeValue;
+      if (themeValue === "system") {
         actualTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light";
@@ -57,7 +59,7 @@ export function ThemeToggleButton() {
     <button
       onClick={toggleTheme}
       className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center"
-      aria-label="Toggle theme"
+      aria-label={t("aria_toggle_theme")}
     >
       {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
     </button>
