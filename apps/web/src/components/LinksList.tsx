@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 
@@ -19,6 +20,7 @@ export function LinksList({
   links: LinkRow[];
   setLinks: (rows: LinkRow[]) => void;
 }) {
+  const { t } = useTranslation();
   const dragIndex = useRef<number | null>(null);
   const overIndex = useRef<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
@@ -99,7 +101,7 @@ export function LinksList({
                   className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors opacity-0 group-hover:opacity-100"
                   onClick={async (e) => {
                     e.stopPropagation();
-                    const newLabel = prompt("New label", l.label);
+                    const newLabel = prompt(t("common_new_label"), l.label);
                     if (!newLabel) return;
                     const { error } = await supabase
                       .from("links")
@@ -107,7 +109,7 @@ export function LinksList({
                       .eq("id", l.id)
                       .eq("profile_id", profileId);
                     if (error) {
-                      toast.error("Update failed");
+                      toast.error(t("common_update_failed"));
                       return;
                     }
                     setLinks(
@@ -115,30 +117,31 @@ export function LinksList({
                         x.id === l.id ? { ...x, label: newLabel } : x,
                       ),
                     );
-                    toast.success("Link updated");
+                    toast.success(t("dashboard_content_links_update_success"));
                   }}
                 >
-                  Edit
+                  {t("common_edit")}
                 </button>
                 <button
                   className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
                   onClick={async (e) => {
                     e.stopPropagation();
-                    if (!confirm("Delete link?")) return;
+                    if (!confirm(t("dashboard_content_links_delete_confirm")))
+                      return;
                     const { error } = await supabase
                       .from("links")
                       .delete()
                       .eq("id", l.id)
                       .eq("profile_id", profileId);
                     if (error) {
-                      toast.error("Delete failed");
+                      toast.error(t("common_delete_failed"));
                       return;
                     }
                     setLinks(links.filter((x) => x.id !== l.id));
-                    toast.success("Link deleted");
+                    toast.success(t("dashboard_content_links_delete_success"));
                   }}
                 >
-                  Delete
+                  {t("common_delete")}
                 </button>
               </div>
             </li>

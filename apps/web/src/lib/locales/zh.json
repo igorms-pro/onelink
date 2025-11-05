@@ -53,5 +53,14 @@
   "settings_change_password": "更改密码",
   "settings_two_factor": "双因素认证",
   "settings_delete_account": "删除账户",
-  "profile_powered_by": "由 OneLink 提供支持"
+  "profile_powered_by": "由 OneLink 提供支持",
+  "dashboard_content_links_title": "链接",
+  "dashboard_content_links_description": "创建链接到您内容的按钮",
+  "dashboard_content_links_limit_reached": "免费计划限制已达到（共{limit}个操作：{links}个链接 + {drops}个文件箱）",
+  "dashboard_content_links_limit_hint": "删除一个或升级到 Pro 以获得无限操作。",
+  "dashboard_content_links_create_success": "链接创建成功",
+  "dashboard_content_links_create_failed": "创建链接失败",
+  "dashboard_content_links_invalid_url": "请输入有效的 http(s) URL。",
+  "dashboard_content_drops_title": "文件箱",
+  "dashboard_content_drops_description": "创建文件收件箱，供人们提交文件"
 }

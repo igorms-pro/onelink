@@ -53,5 +53,14 @@
   "settings_change_password": "Alterar senha",
   "settings_two_factor": "Autenticação de dois fatores",
   "settings_delete_account": "Excluir conta",
-  "profile_powered_by": "Desenvolvido por OneLink"
+  "profile_powered_by": "Desenvolvido por OneLink",
+  "dashboard_content_links_title": "Links",
+  "dashboard_content_links_description": "Crie botões que vinculam ao seu conteúdo",
+  "dashboard_content_links_limit_reached": "Limite do plano gratuito atingido ({limit} ações no total: {links} links + {drops} drops)",
+  "dashboard_content_links_limit_hint": "Remova um ou atualize para Pro para ações ilimitadas.",
+  "dashboard_content_links_create_success": "Link criado com sucesso",
+  "dashboard_content_links_create_failed": "Falha ao criar link",
+  "dashboard_content_links_invalid_url": "Por favor, insira uma URL http(s) válida.",
+  "dashboard_content_drops_title": "Drops",
+  "dashboard_content_drops_description": "Crie caixas de entrada de arquivos para as pessoas enviarem arquivos"
 }

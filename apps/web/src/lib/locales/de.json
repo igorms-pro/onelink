@@ -53,5 +53,14 @@
   "settings_change_password": "Passwort ändern",
   "settings_two_factor": "Zwei-Faktor-Authentifizierung",
   "settings_delete_account": "Konto löschen",
-  "profile_powered_by": "Unterstützt von OneLink"
+  "profile_powered_by": "Unterstützt von OneLink",
+  "dashboard_content_links_title": "Links",
+  "dashboard_content_links_description": "Erstellen Sie Schaltflächen, die zu Ihrem Inhalt verlinken",
+  "dashboard_content_links_limit_reached": "Grenze des kostenlosen Plans erreicht ({limit} Aktionen insgesamt: {links} Links + {drops} Drops)",
+  "dashboard_content_links_limit_hint": "Entfernen Sie einen oder upgraden Sie auf Pro für unbegrenzte Aktionen.",
+  "dashboard_content_links_create_success": "Link erfolgreich erstellt",
+  "dashboard_content_links_create_failed": "Fehler beim Erstellen des Links",
+  "dashboard_content_links_invalid_url": "Bitte geben Sie eine gültige http(s) URL ein.",
+  "dashboard_content_drops_title": "Drops",
+  "dashboard_content_drops_description": "Erstellen Sie Datei-Postfächer, damit Benutzer Dateien einreichen können"
 }

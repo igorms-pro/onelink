@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import type { DropRow } from "../types";
@@ -18,6 +19,7 @@ export function DropForm({
   freeLimit,
   totalItems,
 }: DropFormProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
   return (
@@ -28,7 +30,7 @@ export function DropForm({
         if (!profileId) return;
         if (isFree && totalItems >= freeLimit) {
           toast.error(
-            `Free plan limit reached (${freeLimit} actions). Remove one or upgrade.`,
+            t("dashboard_content_drops_limit_reached", { limit: freeLimit }),
           );
           return;
         }
@@ -39,7 +41,7 @@ export function DropForm({
           | string
           | null;
         if (!label) {
-          toast.error("Label is required");
+          toast.error(t("common_label_required"));
           return;
         }
         setBusy(true);
@@ -59,10 +61,10 @@ export function DropForm({
           if (error) throw error;
           onDropCreated(data as DropRow);
           form.reset();
-          toast.success("Drop created successfully");
+          toast.success(t("dashboard_content_drops_create_success"));
         } catch (e) {
           console.error(e);
-          toast.error("Failed to create drop");
+          toast.error(t("dashboard_content_drops_create_failed"));
         } finally {
           setBusy(false);
         }
@@ -71,12 +73,12 @@ export function DropForm({
       <div className="grid grid-cols-3 gap-2">
         <input
           name="label"
-          placeholder="Label (e.g. Upload assets)"
+          placeholder={t("dashboard_content_drops_label_placeholder")}
           className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 col-span-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
         />
         <input
           name="emoji"
-          placeholder="Emoji (optional)"
+          placeholder={t("dashboard_content_drops_emoji_placeholder")}
           className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
         />
       </div>
@@ -86,7 +88,7 @@ export function DropForm({
           disabled={busy}
           className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Add Drop
+          {t("dashboard_content_drops_add_button")}
         </button>
       </div>
     </form>

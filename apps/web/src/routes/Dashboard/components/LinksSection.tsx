@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { isSafeHttpUrl } from "@/lib/domain";
 import { NewLinkForm } from "@/components/NewLinkForm";
@@ -23,15 +24,16 @@ export function LinksSection({
   isFree,
   freeLimit,
 }: LinksSectionProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
   return (
     <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        Links
+        {t("dashboard_content_links_title")}
       </h2>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        Create buttons that link to your content
+        {t("dashboard_content_links_description")}
       </p>
       <NewLinkForm
         disabled={
@@ -43,7 +45,7 @@ export function LinksSection({
           setBusy(true);
           try {
             if (!isSafeHttpUrl(input.url)) {
-              toast.error("Please enter a valid http(s) URL.");
+              toast.error(t("dashboard_content_links_invalid_url"));
               return;
             }
             const nextOrder = links.length
@@ -66,10 +68,10 @@ export function LinksSection({
             setLinks((prev) =>
               [...prev, data as LinkRow].sort((a, b) => a.order - b.order),
             );
-            toast.success("Link created successfully");
+            toast.success(t("dashboard_content_links_create_success"));
           } catch (e) {
             console.error(e);
-            toast.error("Failed to create link");
+            toast.error(t("dashboard_content_links_create_failed"));
           } finally {
             setBusy(false);
           }
@@ -78,11 +80,15 @@ export function LinksSection({
       {isFree && links.length + drops.length >= freeLimit && (
         <div className="mt-3 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 p-3">
           <p className="text-sm text-amber-700 dark:text-amber-400 font-medium">
-            ⚠️ Free plan limit reached ({freeLimit} actions total:{" "}
-            {links.length} links + {drops.length} drops)
+            ⚠️{" "}
+            {t("dashboard_content_links_limit_reached", {
+              limit: freeLimit,
+              links: links.length,
+              drops: drops.length,
+            })}
           </p>
           <p className="text-xs text-amber-600 dark:text-amber-500 mt-1">
-            Remove one or upgrade to Pro for unlimited actions.
+            {t("dashboard_content_links_limit_hint")}
           </p>
         </div>
       )}

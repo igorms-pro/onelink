@@ -53,5 +53,14 @@
   "settings_change_password": "パスワードを変更",
   "settings_two_factor": "二要素認証",
   "settings_delete_account": "アカウントを削除",
-  "profile_powered_by": "OneLink提供"
+  "profile_powered_by": "OneLink提供",
+  "dashboard_content_links_title": "リンク",
+  "dashboard_content_links_description": "コンテンツにリンクするボタンを作成",
+  "dashboard_content_links_limit_reached": "無料プランの上限に達しました（合計{limit}アクション：{links}リンク + {drops}ドロップ）",
+  "dashboard_content_links_limit_hint": "1つ削除するか、Proにアップグレードして無制限のアクションを取得してください。",
+  "dashboard_content_links_create_success": "リンクが正常に作成されました",
+  "dashboard_content_links_create_failed": "リンクの作成に失敗しました",
+  "dashboard_content_links_invalid_url": "有効なhttp(s) URLを入力してください。",
+  "dashboard_content_drops_title": "ドロップ",
+  "dashboard_content_drops_description": "ファイルを送信できるファイル受信ボックスを作成"
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import type { DropRow } from "../types";
@@ -9,11 +10,12 @@ interface DropListProps {
 }
 
 export function DropList({ profileId, drops, setDrops }: DropListProps) {
+  const { t } = useTranslation();
   if (drops.length === 0) {
     return (
       <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
         <p className="text-gray-500 dark:text-gray-400 text-sm">
-          No drops yet. Create your first drop above!
+          {t("dashboard_content_drops_empty")}
         </p>
       </div>
     );
@@ -32,14 +34,17 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
               {d.label}
             </p>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Order {d.order} · {d.is_active ? "Active" : "Off"}
+              {t("dashboard_content_drops_order_status", {
+                order: d.order,
+                status: d.is_active ? t("common_active") : t("common_off"),
+              })}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               onClick={async () => {
-                const newLabel = prompt("New label", d.label);
+                const newLabel = prompt(t("common_new_label"), d.label);
                 if (!newLabel) return;
                 const { error } = await supabase
                   .from("drops")
@@ -47,7 +52,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                   .eq("id", d.id)
                   .eq("profile_id", profileId);
                 if (error) {
-                  toast.error("Update failed");
+                  toast.error(t("common_update_failed"));
                   return;
                 }
                 setDrops(
@@ -55,10 +60,10 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                     x.id === d.id ? { ...x, label: newLabel } : x,
                   ),
                 );
-                toast.success("Drop updated");
+                toast.success(t("dashboard_content_drops_update_success"));
               }}
             >
-              Edit
+              {t("common_edit")}
             </button>
             <button
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
@@ -71,7 +76,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                   .select("is_active")
                   .single<{ is_active: boolean }>();
                 if (error) {
-                  toast.error("Toggle failed");
+                  toast.error(t("common_toggle_failed"));
                   return;
                 }
                 setDrops(
@@ -85,30 +90,35 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                   ),
                 );
                 toast.success(
-                  `Drop ${data?.is_active ? "activated" : "deactivated"}`,
+                  data?.is_active
+                    ? t("dashboard_content_drops_activated")
+                    : t("dashboard_content_drops_deactivated"),
                 );
               }}
             >
-              {d.is_active ? "Turn off" : "Turn on"}
+              {d.is_active
+                ? t("dashboard_content_drops_turn_off")
+                : t("dashboard_content_drops_turn_on")}
             </button>
             <button
               className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-400 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
               onClick={async () => {
-                if (!confirm("Delete drop?")) return;
+                if (!confirm(t("dashboard_content_drops_delete_confirm")))
+                  return;
                 const { error } = await supabase
                   .from("drops")
                   .delete()
                   .eq("id", d.id)
                   .eq("profile_id", profileId);
                 if (error) {
-                  toast.error("Delete failed");
+                  toast.error(t("common_delete_failed"));
                   return;
                 }
                 setDrops(drops.filter((x) => x.id !== d.id));
-                toast.success("Drop deleted");
+                toast.success(t("dashboard_content_drops_delete_success"));
               }}
             >
-              Delete
+              {t("common_delete")}
             </button>
           </div>
         </li>
