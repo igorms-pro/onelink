@@ -77,7 +77,29 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 flex flex-col">
+    <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 flex flex-col relative">
+      {/* Background image - light mode */}
+      <div
+        className="absolute inset-0 pointer-events-none dark:hidden"
+        style={{
+          backgroundImage: "url(/screen.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
+
+      {/* Background image - dark mode */}
+      <div
+        className="absolute inset-0 pointer-events-none hidden dark:block"
+        style={{
+          backgroundImage: "url(/screen-dark.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      ></div>
+
       {/* Skip button */}
       <button
         onClick={handleSkip}
@@ -88,7 +110,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </button>
 
       {/* Carousel */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      <div className="flex-1 flex items-center justify-center px-6 relative z-10">
         <Carousel setApi={setApi} className="w-full max-w-sm">
           <CarouselContent>
             {slides.map((slide, index) => (
@@ -125,7 +147,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Dots indicator */}
-      <div className="flex justify-center gap-2 mb-8">
+      <div className="flex justify-center gap-2 mb-8 relative z-10">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -141,7 +163,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Next/Get Started button */}
-      <div className="px-6 pb-8">
+      <div className="px-6 pb-8 relative z-10">
         <button
           onClick={handleNext}
           className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
