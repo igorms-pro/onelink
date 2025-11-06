@@ -24,7 +24,7 @@ export function DropForm({
 
   return (
     <form
-      className="mt-4 grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4"
+      className="grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4"
       onSubmit={async (e) => {
         e.preventDefault();
         if (!profileId) return;
