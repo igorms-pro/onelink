@@ -25,7 +25,7 @@ export default function App() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
       <Header />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
           {t("app_title")}
         </h1>
         <p className="text-gray-600 dark:text-gray-400 mt-2">

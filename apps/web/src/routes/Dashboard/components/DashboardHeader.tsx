@@ -14,21 +14,21 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}
         </h1>
-        <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide shadow-sm">
+        <span className="rounded-full border border-purple-200/80 dark:border-purple-700/80 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide shadow-sm">
           {isFree ? t("dashboard_header_free") : t("dashboard_header_pro")}
         </span>
       </div>
       <div className="flex items-center justify-end gap-2">
         {isFree ? (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap"
+            className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap opacity-100"
             onClick={goToCheckout}
           >
             {t("dashboard_header_upgrade")}
           </button>
         ) : (
           <button
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap"
+            className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-2 text-sm font-semibold hover:opacity-90 transition-all shadow-sm whitespace-nowrap opacity-100"
             onClick={goToPortal}
           >
             {t("dashboard_header_manage_billing")}

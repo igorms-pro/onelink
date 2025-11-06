@@ -14,7 +14,7 @@ export function InboxTab({ submissions }: InboxTabProps) {
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard_inbox_title")}
         </h2>
-        <span className="rounded-full border border-gray-200/80 dark:border-gray-700/80 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 backdrop-blur-sm text-gray-700 dark:text-gray-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
+        <span className="rounded-full border border-purple-200/80 dark:border-purple-700/80 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
           {submissions.length}
         </span>
       </div>

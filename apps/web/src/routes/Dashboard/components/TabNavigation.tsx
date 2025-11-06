@@ -21,14 +21,14 @@ export function TabNavigation({
           relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
           ${
             activeTab === "inbox"
-              ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+              ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"
               : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           }
         `}
       >
         {t("dashboard_tab_inbox")}
         {submissionCount > 0 && (
-          <span className="ml-2 rounded-full bg-blue-600 dark:bg-blue-500 text-white text-xs px-2 py-0.5">
+          <span className="ml-2 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white text-xs px-2 py-0.5 shadow-sm">
             {submissionCount}
           </span>
         )}
@@ -39,7 +39,7 @@ export function TabNavigation({
           relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
           ${
             activeTab === "content"
-              ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+              ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"
               : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           }
         `}
@@ -52,7 +52,7 @@ export function TabNavigation({
           relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
           ${
             activeTab === "account"
-              ? "text-gray-900 dark:text-white border-b-2 border-gray-900 dark:border-white"
+              ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"
               : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           }
         `}
