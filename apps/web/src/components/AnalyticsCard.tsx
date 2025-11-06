@@ -1,17 +1,14 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "../lib/supabase"; // Temporarily commented for dummy data
 
 type ClickRow = { link_id: string; clicks: number; label?: string };
-type SortField = "label" | "clicks";
-type SortDirection = "asc" | "desc";
 
 export function AnalyticsCard({ profileId }: { profileId: string | null }) {
   const [rows, setRows] = useState<Array<ClickRow>>([]);
   const [loading, setLoading] = useState(false);
   const [days, setDays] = useState<7 | 30 | 90>(7);
-  const [sortField, setSortField] = useState<SortField>("clicks");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   useEffect(() => {
     if (!profileId) return;
@@ -50,35 +47,17 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
     */
   }, [profileId, days]);
 
-  // Sort rows based on current sort field and direction
-  const sortedRows = useMemo(() => {
-    const sorted = [...rows].sort((a, b) => {
-      if (sortField === "label") {
-        const labelA = (a.label ?? a.link_id).toLowerCase();
-        const labelB = (b.label ?? b.link_id).toLowerCase();
-        return sortDirection === "asc"
-          ? labelA.localeCompare(labelB)
-          : labelB.localeCompare(labelA);
-      } else {
-        // Sort by clicks
-        return sortDirection === "asc"
-          ? a.clicks - b.clicks
-          : b.clicks - a.clicks;
-      }
-    });
-    return sorted;
-  }, [rows, sortField, sortDirection]);
-
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      // Toggle direction if same field
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      // New field, default to desc for clicks, asc for label
-      setSortField(field);
-      setSortDirection(field === "clicks" ? "desc" : "asc");
-    }
-  };
+  // Use sortable data hook
+  const {
+    sortedData: sortedRows,
+    sortField,
+    sortDirection,
+    handleSort,
+  } = useSortableData({
+    data: rows,
+    defaultSortField: "clicks",
+    defaultSortDirection: "desc",
+  });
 
   if (!profileId)
     return (

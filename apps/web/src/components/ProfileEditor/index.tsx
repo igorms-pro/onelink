@@ -58,7 +58,7 @@ export const ProfileEditor = forwardRef<
         onToggleAdditional={() => setShowAdditional(!showAdditional)}
       />
       <button
-        className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
+        className="rounded-lg bg-linear-to-r from-purple-600 to-purple-700 text-white px-4 py-2.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
         disabled={disabled}
       >
         Save

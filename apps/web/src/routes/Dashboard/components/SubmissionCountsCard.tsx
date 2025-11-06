@@ -1,10 +1,8 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "@/lib/supabase"; // Temporarily commented for dummy data
 import type { CountRow } from "../types";
-
-type SortField = "label" | "submissions";
-type SortDirection = "asc" | "desc";
 
 export function SubmissionCountsCard({
   profileId,
@@ -13,8 +11,6 @@ export function SubmissionCountsCard({
 }) {
   const [rows, setRows] = useState<Array<CountRow>>([]);
   const [loading, setLoading] = useState(false);
-  const [sortField, setSortField] = useState<SortField>("submissions");
-  const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
   useEffect(() => {
     if (!profileId) return;
@@ -51,35 +47,25 @@ export function SubmissionCountsCard({
     */
   }, [profileId]);
 
-  // Sort rows based on current sort field and direction
-  const sortedRows = useMemo(() => {
-    const sorted = [...rows].sort((a, b) => {
-      if (sortField === "label") {
-        const labelA = (a.drop_label ?? a.drop_id).toLowerCase();
-        const labelB = (b.drop_label ?? b.drop_id).toLowerCase();
-        return sortDirection === "asc"
-          ? labelA.localeCompare(labelB)
-          : labelB.localeCompare(labelA);
-      } else {
-        // Sort by submissions
-        return sortDirection === "asc"
-          ? a.submissions - b.submissions
-          : b.submissions - a.submissions;
-      }
-    });
-    return sorted;
-  }, [rows, sortField, sortDirection]);
+  // Map drop_label to label for sorting compatibility
+  const mappedRows = rows.map((r) => ({
+    ...r,
+    label: r.drop_label ?? r.drop_id,
+  }));
 
-  const handleSort = (field: SortField) => {
-    if (sortField === field) {
-      // Toggle direction if same field
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      // New field, default to desc for submissions, asc for label
-      setSortField(field);
-      setSortDirection(field === "submissions" ? "desc" : "asc");
-    }
-  };
+  // Use sortable data hook
+  const { sortedData, sortField, sortDirection, handleSort } = useSortableData({
+    data: mappedRows,
+    defaultSortField: "submissions",
+    defaultSortDirection: "desc",
+  });
+
+  // Map back to original structure
+  const sortedRows = sortedData.map((r) => ({
+    drop_id: r.drop_id,
+    drop_label: r.drop_label,
+    submissions: r.submissions,
+  }));
 
   if (!profileId) return null;
 

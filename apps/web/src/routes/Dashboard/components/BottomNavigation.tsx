@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useEffect, useState } from "react";
 import { Inbox, Link2, User, Trash2 } from "lucide-react";
+import { useScrollState } from "@/hooks/useScrollState";
 import type { TabId } from "../types";
 
 interface BottomNavigationProps {
@@ -17,36 +17,7 @@ export function BottomNavigation({
   onClearAll,
 }: BottomNavigationProps) {
   const { t } = useTranslation();
-  const [isScrolling, setIsScrolling] = useState(false);
-  const [isScrollable, setIsScrollable] = useState(false);
-
-  useEffect(() => {
-    let scrollTimeout: ReturnType<typeof setTimeout>;
-
-    const checkScrollable = () => {
-      setIsScrollable(document.body.scrollHeight > window.innerHeight);
-    };
-
-    const handleScroll = () => {
-      if (!isScrollable) return;
-
-      setIsScrolling(true);
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-        setIsScrolling(false);
-      }, 150);
-    };
-
-    checkScrollable();
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("resize", checkScrollable);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("resize", checkScrollable);
-      clearTimeout(scrollTimeout);
-    };
-  }, [isScrollable]);
+  const { isScrolling, isScrollable } = useScrollState(150);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden">
