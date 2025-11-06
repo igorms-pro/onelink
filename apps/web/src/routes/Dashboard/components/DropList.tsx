@@ -26,7 +26,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
       {drops.map((d) => (
         <li
           key={d.id}
-          className="flex flex-col gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
+          className="flex flex-col gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 hover:shadow-md transition-all"
         >
           <div className="min-w-0 flex-1">
             <p className="font-medium truncate text-gray-900 dark:text-white mb-2">
@@ -101,7 +101,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                 : t("dashboard_content_drops_turn_on")}
             </button>
             <button
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-all w-full"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 px-3 py-1.5 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-all w-full"
               onClick={async () => {
                 if (!confirm(t("dashboard_content_drops_delete_confirm")))
                   return;
