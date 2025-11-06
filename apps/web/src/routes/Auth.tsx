@@ -36,7 +36,7 @@ export default function Auth() {
       <HeaderMobileSignIn />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center relative z-10">
         <div className="flex flex-col justify-center text-center">
-          <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
+          <h1 className="text-5xl sm:text-6xl font-bold bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
             {t("app_title")}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
@@ -70,7 +70,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
+              className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
             >
               {loading ? t("auth_sending") : t("auth_send_link")}
             </button>
