@@ -125,7 +125,7 @@ export function LinksList({
                 }}
               >
                 <button
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  className="rounded-lg text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuId(openMenuId === l.id ? null : l.id);
