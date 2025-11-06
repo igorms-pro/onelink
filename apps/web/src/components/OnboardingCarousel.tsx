@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { X } from "lucide-react";
 import {
   Carousel,
@@ -13,6 +14,7 @@ interface OnboardingCarouselProps {
 }
 
 export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
+  const navigate = useNavigate();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -71,6 +73,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
   const handleComplete = () => {
     setOnboardingCompleted();
     onComplete();
+    navigate("/auth");
   };
 
   return (
