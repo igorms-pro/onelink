@@ -4,24 +4,17 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "../lib/AuthProvider";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 import { OnboardingCarousel } from "../components/OnboardingCarousel";
-import { shouldShowOnboarding } from "../lib/onboarding";
 
 export default function App() {
   const { t } = useTranslation();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [showOnboarding, setShowOnboarding] = useState(() => {
-    // Check onboarding state immediately on mount
-    if (typeof window !== "undefined" && !user) {
-      return shouldShowOnboarding();
-    }
-    return false;
-  });
+  const [showOnboarding, setShowOnboarding] = useState(true); // Always show for now
 
   useEffect(() => {
-    // Check if onboarding should be shown when auth state changes
+    // Keep onboarding visible if not logged in
     if (!loading && !user) {
-      setShowOnboarding(shouldShowOnboarding());
+      setShowOnboarding(true);
     } else if (user) {
       setShowOnboarding(false);
     }
