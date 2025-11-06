@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import {
   Carousel,
@@ -17,32 +18,34 @@ interface OnboardingCarouselProps {
 
 export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
 
   const slides = [
     {
-      title: "Welcome to OneLink",
-      description: "Share a single link. Route by intent.",
+      title: t("onboarding_welcome_title"),
+      description: t("onboarding_welcome_description"),
       icon: "🔗",
     },
     {
-      title: "Create Routes",
-      description:
-        "Add multiple links and organize them by intent. Visitors choose where to go based on their needs.",
+      title: t("onboarding_routes_title"),
+      description: t("onboarding_routes_description"),
       icon: "✨",
+      exampleLabel: t("onboarding_routes_example"),
+      exampleText: t("onboarding_routes_example_text"),
     },
     {
-      title: "Receive Files",
-      description:
-        "Create file drops where visitors can submit files directly to you without logging in.",
+      title: t("onboarding_files_title"),
+      description: t("onboarding_files_description"),
       icon: "📁",
+      usecaseLabel: t("onboarding_files_usecase"),
+      usecaseText: t("onboarding_files_usecase_text"),
     },
     {
-      title: "Get Started",
-      description:
-        "Sign in to create your OneLink profile and start sharing your single link everywhere.",
+      title: t("onboarding_getstarted_title"),
+      description: t("onboarding_getstarted_description"),
       icon: "🚀",
     },
   ];
@@ -133,19 +136,19 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
                   <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                     {slide.description}
                   </p>
-                  {index === 1 && (
+                  {slide.exampleLabel && slide.exampleText && (
                     <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
                       <p className="text-sm text-purple-700 dark:text-purple-300">
-                        <strong>Example:</strong> Link to your calendar,
-                        portfolio, or contact form - all from one URL!
+                        <strong>{slide.exampleLabel}</strong>{" "}
+                        {slide.exampleText}
                       </p>
                     </div>
                   )}
-                  {index === 2 && (
+                  {slide.usecaseLabel && slide.usecaseText && (
                     <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <p className="text-sm text-blue-700 dark:text-blue-300">
-                        <strong>Use case:</strong> Collect resumes, design
-                        files, or documents without email attachments.
+                        <strong>{slide.usecaseLabel}</strong>{" "}
+                        {slide.usecaseText}
                       </p>
                     </div>
                   )}
@@ -178,7 +181,9 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
           onClick={handleNext}
           className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
         >
-          {current === count ? "Get Started" : "Next"}
+          {current === count
+            ? t("onboarding_getstarted_button")
+            : t("onboarding_next")}
         </button>
       </div>
     </div>
