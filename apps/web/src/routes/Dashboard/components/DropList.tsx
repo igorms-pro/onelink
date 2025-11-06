@@ -22,7 +22,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
   }
 
   return (
-    <ul className="mt-4 grid gap-2">
+    <ul className="mt-4 grid gap-4">
       {drops.map((d) => (
         <li
           key={d.id}
