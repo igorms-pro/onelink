@@ -20,13 +20,13 @@ export function Header({ onSettingsClick }: HeaderProps) {
   const appTitle = i18n.exists("app_title") ? t("app_title") : "OneLink";
 
   return (
-    <header className="fixed top-0 left-0 right-0 sm:sticky w-full flex items-center justify-between p-4 md:p-6 lg:p-8 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 sm:sticky w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 shadow-sm">
       <div
-        className={`mx-auto ${isDashboard ? "max-w-4xl" : ""} w-full flex items-center justify-between`}
+        className={`mx-auto ${isDashboard ? "max-w-4xl" : "max-w-md"} w-full flex items-center justify-between p-4 md:p-6 lg:p-8`}
       >
         <Link
           to="/"
-          className="text-xl font-bold text-gray-900 dark:text-white hover:opacity-80 transition-opacity"
+          className="text-xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent hover:opacity-80 transition-opacity"
         >
           {appTitle}
         </Link>

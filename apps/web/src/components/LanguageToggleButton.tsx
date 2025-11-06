@@ -24,8 +24,6 @@ export function LanguageToggleButton() {
   // Use i18n.language directly - it will automatically update when language changes
   // via react-i18next's React Context
   const currentLangCode = i18n.language || localStorage.getItem("lang") || "en";
-  const currentLang =
-    languages.find((l) => l.code === currentLangCode) || languages[0];
 
   // Close language dropdown on outside click
   useEffect(() => {
@@ -51,8 +49,7 @@ export function LanguageToggleButton() {
         className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1"
         aria-label={t("aria_change_language")}
       >
-        <span className="text-base">{currentLang.flag}</span>
-        <Languages className="w-4 h-4" />
+        <Languages className="w-5 h-5" />
       </button>
 
       {/* Language Dropdown */}
