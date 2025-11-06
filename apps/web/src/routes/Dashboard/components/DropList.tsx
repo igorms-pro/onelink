@@ -26,7 +26,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
       {drops.map((d) => (
         <li
           key={d.id}
-          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow"
+          className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
         >
           <div className="min-w-0 flex-1">
             <p className="font-medium truncate text-gray-900 dark:text-white">

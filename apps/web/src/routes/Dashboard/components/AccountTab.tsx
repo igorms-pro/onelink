@@ -21,9 +21,9 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Profile editor */}
-      <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           {t("dashboard_account_profile_title")}
         </h2>
@@ -77,7 +77,7 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
       </section>
 
       {/* Analytics */}
-      <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
           {t("dashboard_account_analytics_title")}
         </h2>

@@ -23,7 +23,7 @@ export function ContentTab({
   freeLimit,
 }: ContentTabProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <LinksSection
         profileId={profileId}
         links={links}

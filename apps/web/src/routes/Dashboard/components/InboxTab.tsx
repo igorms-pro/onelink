@@ -9,7 +9,7 @@ interface InboxTabProps {
 export function InboxTab({ submissions }: InboxTabProps) {
   const { t } = useTranslation();
   return (
-    <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
       <div className="flex items-center gap-3 mb-2">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard_inbox_title")}
