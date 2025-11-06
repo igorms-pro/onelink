@@ -58,45 +58,37 @@ export default function Auth() {
           </div>
 
           {/* Sign-in form */}
-          <div className="rounded-xl border border-gray-200/50 dark:border-gray-800 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 shadow-lg">
-            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1">
-              {t("auth_sign_in_title")}
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {t("auth_sign_in_description")}
-            </p>
-            <form
-              className="grid gap-3"
-              onSubmit={handleSubmit(async (values) => {
-                setLoading(true);
-                const res = await signInWithEmail(values.email);
-                setLoading(false);
+          <form
+            className="grid gap-3 max-w-sm mx-auto"
+            onSubmit={handleSubmit(async (values) => {
+              setLoading(true);
+              const res = await signInWithEmail(values.email);
+              setLoading(false);
 
-                if (res.error) {
-                  toast.error(res.error);
-                } else {
-                  toast.success(t("auth_magic_link_sent"));
-                  reset(); // Clear the email field
-                }
-              })}
+              if (res.error) {
+                toast.error(res.error);
+              } else {
+                toast.success(t("auth_magic_link_sent"));
+                reset(); // Clear the email field
+              }
+            })}
+          >
+            <input
+              type="email"
+              required
+              placeholder={t("auth_email_placeholder")}
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
+              disabled={loading}
+              {...register("email")}
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 text-sm font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
             >
-              <input
-                type="email"
-                required
-                placeholder={t("auth_email_placeholder")}
-                className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
-                disabled={loading}
-                {...register("email")}
-              />
-              <button
-                type="submit"
-                disabled={loading}
-                className="rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 text-sm font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
-              >
-                {loading ? t("auth_sending") : t("auth_send_link")}
-              </button>
-            </form>
-          </div>
+              {loading ? t("auth_sending") : t("auth_send_link")}
+            </button>
+          </form>
         </div>
 
         <footer className="text-center py-4">
