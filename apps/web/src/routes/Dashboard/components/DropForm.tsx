@@ -37,9 +37,6 @@ export function DropForm({
         const form = e.currentTarget as HTMLFormElement;
         const fd = new FormData(form);
         const label = String(fd.get("label") || "").trim();
-        const emoji = (String(fd.get("emoji") || "").trim() || null) as
-          | string
-          | null;
         if (!label) {
           toast.error(t("common_label_required"));
           return;
@@ -52,7 +49,7 @@ export function DropForm({
               {
                 profile_id: profileId,
                 label,
-                emoji,
+                emoji: null,
                 order: 1, // Order will be recalculated by parent
               },
             ])
@@ -70,16 +67,11 @@ export function DropForm({
         }
       }}
     >
-      <div className="grid grid-cols-3 gap-2">
+      <div>
         <input
           name="label"
           placeholder={t("dashboard_content_drops_label_placeholder")}
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 col-span-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
-        />
-        <input
-          name="emoji"
-          placeholder={t("dashboard_content_drops_emoji_placeholder")}
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
+          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
         />
       </div>
       <div>
