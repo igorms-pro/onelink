@@ -54,7 +54,7 @@ export function LanguageToggleButton() {
 
       {/* Language Dropdown */}
       {isLangOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[160px] max-w-[calc(100vw-2rem)] overflow-hidden">
+        <div className="absolute left-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-[100] min-w-[180px] max-h-[320px] overflow-y-auto">
           {languages.map((lang) => (
             <button
               key={lang.code}
