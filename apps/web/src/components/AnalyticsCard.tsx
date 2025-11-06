@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
+// import { supabase } from "../lib/supabase"; // Temporarily commented for dummy data
 
 type ClickRow = { link_id: string; clicks: number; label?: string };
 
@@ -11,6 +11,23 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
   useEffect(() => {
     if (!profileId) return;
     setLoading(true);
+
+    // Dummy data for testing
+    const dummyData: ClickRow[] = [
+      { link_id: "1", label: "Portfolio", clicks: 45 },
+      { link_id: "2", label: "GitHub", clicks: 32 },
+      { link_id: "3", label: "LinkedIn", clicks: 28 },
+      { link_id: "4", label: "Twitter", clicks: 15 },
+      { link_id: "5", label: "Blog", clicks: 8 },
+    ];
+
+    setTimeout(() => {
+      setRows(dummyData);
+      setLoading(false);
+    }, 300);
+
+    // Real API call (commented out for now)
+    /*
     (async () => {
       try {
         const { data } = await supabase.rpc("get_clicks_by_profile", {
@@ -25,6 +42,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         setLoading(false);
       }
     })();
+    */
   }, [profileId, days]);
   if (!profileId)
     return (
@@ -37,7 +55,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
   return (
     <div className="mt-2">
       {/* Toggle buttons */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div className="grid grid-cols-3 gap-2 mb-4">
         <button
           onClick={() => setDays(7)}
           className={`px-3 py-2 text-sm font-medium rounded-lg transition-all ${
@@ -70,8 +88,8 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         </button>
       </div>
       <div className="overflow-x-auto">
-        <div className="space-y-2">
-          <div className="flex justify-between items-center px-3 pb-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
+        <div className="space-y-2 pb-3">
+          <div className="flex justify-between items-center px-3 pb-0 mt-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
             <span>Link</span>
             <span>Clicks</span>
           </div>

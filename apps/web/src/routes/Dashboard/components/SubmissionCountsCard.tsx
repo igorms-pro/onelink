@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
+// import { supabase } from "@/lib/supabase"; // Temporarily commented for dummy data
 import type { CountRow } from "../types";
 
 export function SubmissionCountsCard({
@@ -13,6 +13,21 @@ export function SubmissionCountsCard({
   useEffect(() => {
     if (!profileId) return;
     setLoading(true);
+
+    // Dummy data for testing
+    const dummyData: CountRow[] = [
+      { drop_id: "1", drop_label: "Speaker Request", submissions: 12 },
+      { drop_id: "2", drop_label: "Resume Submissions", submissions: 8 },
+      { drop_id: "3", drop_label: "Design Files", submissions: 5 },
+    ];
+
+    setTimeout(() => {
+      setRows(dummyData);
+      setLoading(false);
+    }, 300);
+
+    // Real API call (commented out for now)
+    /*
     (async () => {
       try {
         const { data } = await supabase.rpc(
@@ -27,6 +42,7 @@ export function SubmissionCountsCard({
         setLoading(false);
       }
     })();
+    */
   }, [profileId]);
 
   if (!profileId) return null;
@@ -49,7 +65,7 @@ export function SubmissionCountsCard({
 
   return (
     <div className="mt-3 space-y-2">
-      <div className="flex justify-between items-center px-3 pb-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
+      <div className="flex justify-between items-center px-3 pb-0  text-xs font-semibold text-gray-700 dark:text-gray-300">
         <span>Drop</span>
         <span>Submissions</span>
       </div>
