@@ -1,13 +1,38 @@
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
+import { Upload, TrendingUp } from "lucide-react";
 import type { SubmissionRow } from "../types";
 
 interface InboxTabProps {
   submissions: SubmissionRow[];
 }
 
+// Fake notification items matching screenshot style
+const fakeNotifications = [
+  {
+    id: "fake-1",
+    icon: Upload,
+    iconBg: "bg-orange-100 dark:bg-orange-900/20",
+    iconColor: "text-orange-600 dark:text-orange-400",
+    title: "New File Upload:...",
+    description: "Submitted to your 'Project Briefs' link.",
+    timestamp: "5m ago",
+  },
+  {
+    id: "fake-2",
+    icon: TrendingUp,
+    iconBg: "bg-blue-100 dark:bg-blue-900/20",
+    iconColor: "text-blue-600 dark:text-blue-400",
+    title: "Link Click: Portfolio",
+    description: "Your link was viewed 25 times today.",
+    timestamp: "2h ago",
+  },
+];
+
 export function InboxTab({ submissions }: InboxTabProps) {
   const { t } = useTranslation();
+  const totalCount = submissions.length + fakeNotifications.length;
+
   return (
     <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
       <div className="flex items-center gap-3 mb-2">
@@ -15,98 +40,125 @@ export function InboxTab({ submissions }: InboxTabProps) {
           {t("dashboard_inbox_title")}
         </h2>
         <span className="rounded-full border border-purple-200/80 dark:border-purple-700/80 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-3 py-1 text-xs font-medium uppercase tracking-wide shadow-sm">
-          {submissions.length}
+          {totalCount}
         </span>
       </div>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         {t("dashboard_inbox_description")}
       </p>
-      {submissions.length === 0 ? (
-        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
-          <p className="text-gray-500 dark:text-gray-400 text-sm">
-            {t("dashboard_inbox_empty")}
-          </p>
-        </div>
-      ) : (
-        <ul className="mt-4 grid gap-3">
-          {submissions.map((s) => (
+      <ul className="mt-4 grid gap-3">
+        {/* Fake notifications */}
+        {fakeNotifications.map((notif) => {
+          const Icon = notif.icon;
+          return (
             <li
-              key={s.submission_id}
+              key={notif.id}
               className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
             >
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <p className="font-medium truncate text-gray-900 dark:text-white">
-                    {s.drop_label ?? t("dashboard_inbox_drop")}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    {new Date(s.created_at).toLocaleString()}
-                  </p>
-                  <div className="mt-2 grid gap-1 text-sm">
-                    {s.name && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {t("dashboard_inbox_name")}{" "}
-                        </span>
-                        {s.name}
+              <div className="flex items-start gap-3">
+                <div
+                  className={`flex-shrink-0 w-10 h-10 rounded-lg ${notif.iconBg} flex items-center justify-center`}
+                >
+                  <Icon className={`w-5 h-5 ${notif.iconColor}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-gray-900 dark:text-white">
+                        {notif.title}
                       </p>
-                    )}
-                    {s.email && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {t("dashboard_inbox_email")}{" "}
-                        </span>
-                        {s.email}
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {notif.description}
                       </p>
-                    )}
-                    {s.note && (
-                      <p className="text-gray-700 dark:text-gray-300">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          {t("dashboard_inbox_note")}{" "}
-                        </span>
-                        {s.note}
-                      </p>
-                    )}
+                    </div>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                      {notif.timestamp}
+                    </span>
                   </div>
                 </div>
               </div>
-              {Array.isArray(s.files) && s.files.length > 0 && (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
-                    {t("dashboard_inbox_files")} ({s.files.length})
-                  </p>
-                  <ul className="grid gap-2">
-                    {s.files.map((f, idx) => {
-                      const pub = supabase.storage
-                        .from("drops")
-                        .getPublicUrl(f.path);
-                      const href = pub.data.publicUrl;
-                      const name = f.path.split("/").pop();
-                      return (
-                        <li key={`${s.submission_id}-${idx}`}>
-                          <a
-                            className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-300 hover:underline break-all text-sm font-medium"
-                            href={href}
-                            target="_blank"
-                            rel="noreferrer"
-                          >
-                            <span className="truncate">{name}</span>
-                            {f.size && (
-                              <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
-                                ({Math.round(f.size / 1024)} KB)
-                              </span>
-                            )}
-                          </a>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
             </li>
-          ))}
-        </ul>
-      )}
+          );
+        })}
+
+        {/* Real submissions */}
+        {submissions.map((s) => (
+          <li
+            key={s.submission_id}
+            className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium truncate text-gray-900 dark:text-white">
+                  {s.drop_label ?? t("dashboard_inbox_drop")}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {new Date(s.created_at).toLocaleString()}
+                </p>
+                <div className="mt-2 grid gap-1 text-sm">
+                  {s.name && (
+                    <p className="text-gray-700 dark:text-gray-300">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {t("dashboard_inbox_name")}{" "}
+                      </span>
+                      {s.name}
+                    </p>
+                  )}
+                  {s.email && (
+                    <p className="text-gray-700 dark:text-gray-300">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {t("dashboard_inbox_email")}{" "}
+                      </span>
+                      {s.email}
+                    </p>
+                  )}
+                  {s.note && (
+                    <p className="text-gray-700 dark:text-gray-300">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {t("dashboard_inbox_note")}{" "}
+                      </span>
+                      {s.note}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+            {Array.isArray(s.files) && s.files.length > 0 && (
+              <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                  {t("dashboard_inbox_files")} ({s.files.length})
+                </p>
+                <ul className="grid gap-2">
+                  {s.files.map((f, idx) => {
+                    const pub = supabase.storage
+                      .from("drops")
+                      .getPublicUrl(f.path);
+                    const href = pub.data.publicUrl;
+                    const name = f.path.split("/").pop();
+                    return (
+                      <li key={`${s.submission_id}-${idx}`}>
+                        <a
+                          className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-300 hover:underline break-all text-sm font-medium"
+                          href={href}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          <span className="truncate">{name}</span>
+                          {f.size && (
+                            <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+                              ({Math.round(f.size / 1024)} KB)
+                            </span>
+                          )}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            )}
+          </li>
+        ))}
+      </ul>
     </section>
   );
 }
