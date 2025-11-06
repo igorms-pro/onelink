@@ -14,15 +14,15 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors relative">
-      {/* Gradient blobs background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-400/20 dark:bg-purple-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-blue-400/20 dark:bg-blue-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-pink-400/15 dark:bg-pink-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-300/15 dark:bg-purple-500/10 rounded-full blur-3xl"></div>
-      </div>
-
+    <div
+      className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative"
+      style={{
+        backgroundImage: "url(/sign-bg.png)",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       <HeaderMobileSignIn />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
         <div className="rounded-xl border border-gray-200/50 dark:border-gray-800 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 shadow-lg">
