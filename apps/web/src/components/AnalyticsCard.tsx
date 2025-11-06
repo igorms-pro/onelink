@@ -42,7 +42,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
           onClick={() => setDays(7)}
           className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
             days === 7
-              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm opacity-100"
+              ? "bg-gray-900 dark:bg-gray-700 text-white shadow-sm"
               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           }`}
         >
@@ -52,7 +52,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
           onClick={() => setDays(30)}
           className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
             days === 30
-              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm opacity-100"
+              ? "bg-gray-900 dark:bg-gray-700 text-white shadow-sm"
               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           }`}
         >
@@ -63,10 +63,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         <table className="min-w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">
-              <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 w-2/3">
                 Link
               </th>
-              <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+              <th className="text-right p-3 font-semibold text-gray-700 dark:text-gray-300 w-1/3">
                 Clicks ({days}d)
               </th>
             </tr>
@@ -87,10 +87,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   key={r.link_id}
                   className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
                 >
-                  <td className="p-3 text-gray-900 dark:text-white">
+                  <td className="p-3 text-gray-900 dark:text-white w-2/3">
                     {r.label ?? r.link_id}
                   </td>
-                  <td className="p-3 text-gray-700 dark:text-gray-300 font-medium">
+                  <td className="p-3 text-gray-700 dark:text-gray-300 font-medium text-right w-1/3">
                     {r.clicks}
                   </td>
                 </tr>

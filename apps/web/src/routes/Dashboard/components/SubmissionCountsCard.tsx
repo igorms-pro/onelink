@@ -52,10 +52,10 @@ export function SubmissionCountsCard({
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 w-2/3">
               Drop
             </th>
-            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300">
+            <th className="text-right p-3 font-semibold text-gray-700 dark:text-gray-300 w-1/3">
               Submissions
             </th>
           </tr>
@@ -66,10 +66,10 @@ export function SubmissionCountsCard({
               key={r.drop_id}
               className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
             >
-              <td className="p-3 text-gray-900 dark:text-white">
+              <td className="p-3 text-gray-900 dark:text-white w-2/3">
                 {r.drop_label ?? r.drop_id}
               </td>
-              <td className="p-3 text-gray-700 dark:text-gray-300 font-medium">
+              <td className="p-3 text-gray-700 dark:text-gray-300 font-medium text-right w-1/3">
                 {r.submissions}
               </td>
             </tr>
