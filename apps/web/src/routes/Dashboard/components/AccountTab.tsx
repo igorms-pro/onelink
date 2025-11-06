@@ -21,7 +21,7 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6 mt-6">
+    <div className="space-y-6 mt-4">
       {/* Profile editor */}
       <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
