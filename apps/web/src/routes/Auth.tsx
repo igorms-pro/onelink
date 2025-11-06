@@ -17,7 +17,7 @@ export default function Auth() {
     <div
       className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative"
       style={{
-        backgroundImage: "url(/sign-bg.png)",
+        backgroundImage: "url(/screen.png)",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
