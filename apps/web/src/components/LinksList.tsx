@@ -63,7 +63,7 @@ export function LinksList({
           {links.map((l, idx) => (
             <li
               key={l.id}
-              className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow cursor-move group"
+              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-sm transition-shadow cursor-move group"
               draggable
               onDragStart={() => {
                 dragIndex.current = idx;
@@ -104,13 +104,13 @@ export function LinksList({
                 }
               }}
             >
-              <div className="min-w-0 flex-1 cursor-move">
+              <div className="min-w-0 flex-1 cursor-move pr-4">
                 <p className="font-medium truncate text-gray-900 dark:text-white">
                   {l.emoji ? `${l.emoji} ` : ""}
                   {l.label}
                 </p>
                 <a
-                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all"
+                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2"
                   href={l.url}
                   target="_blank"
                   rel="noreferrer"
@@ -119,7 +119,7 @@ export function LinksList({
                 </a>
               </div>
               <div
-                className="relative ml-4"
+                className="relative flex-shrink-0"
                 ref={(el) => {
                   menuRefs.current[l.id] = el;
                 }}
