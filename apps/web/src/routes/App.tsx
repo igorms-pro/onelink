@@ -1,13 +1,23 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../lib/AuthProvider";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
+import { OnboardingCarousel } from "../components/OnboardingCarousel";
+import { shouldShowOnboarding } from "../lib/onboarding";
 
 export default function App() {
   const { t } = useTranslation();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    // Check if onboarding should be shown
+    if (!loading && !user) {
+      setShowOnboarding(shouldShowOnboarding());
+    }
+  }, [loading, user]);
 
   useEffect(() => {
     // Redirect logged-in users to dashboard (like Linktree)
@@ -19,6 +29,11 @@ export default function App() {
   // Don't show landing page if redirecting
   if (loading || user) {
     return null;
+  }
+
+  // Show onboarding carousel
+  if (showOnboarding) {
+    return <OnboardingCarousel onComplete={() => setShowOnboarding(false)} />;
   }
 
   return (
@@ -41,7 +56,7 @@ export default function App() {
         <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
       </div>
 
-      <HeaderMobileSignIn />
+      {!showOnboarding && <HeaderMobileSignIn />}
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col">
         <div className="flex-1 flex flex-col justify-center text-center">
           <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
