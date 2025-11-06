@@ -56,6 +56,7 @@
   "profile_powered_by": "Powered by OneLink",
   "dashboard_content_links_title": "Routes",
   "dashboard_content_links_description": "Create buttons that link to your content",
+  "dashboard_content_links_add_button": "Add Route",
   "dashboard_content_links_limit_reached": "Free plan limit reached ({limit} actions total: {links} links + {drops} drops)",
   "dashboard_content_links_limit_hint": "Remove one or upgrade to Pro for unlimited actions.",
   "dashboard_content_links_create_success": "Link created successfully",

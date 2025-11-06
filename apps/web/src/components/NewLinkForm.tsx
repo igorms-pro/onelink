@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 
 export type LinkForm = {
   label: string;
@@ -13,6 +14,7 @@ export function NewLinkForm({
   onCreate: (input: LinkForm) => Promise<void>;
   disabled?: boolean;
 }) {
+  const { t } = useTranslation();
   const { register, handleSubmit, reset } = useForm<LinkForm>();
   return (
     <form
@@ -38,7 +40,7 @@ export function NewLinkForm({
         className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
         disabled={disabled}
       >
-        Add
+        {t("dashboard_content_links_add_button")}
       </button>
     </form>
   );
