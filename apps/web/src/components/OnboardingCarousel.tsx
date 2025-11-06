@@ -8,6 +8,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { setOnboardingCompleted } from "@/lib/onboarding";
+import { ThemeToggleButton } from "./ThemeToggleButton";
+import { LanguageToggleButton } from "./LanguageToggleButton";
 
 interface OnboardingCarouselProps {
   onComplete: () => void;
@@ -99,6 +101,12 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
           backgroundRepeat: "no-repeat",
         }}
       ></div>
+
+      {/* Theme and Language toggles */}
+      <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
+        <ThemeToggleButton />
+        <LanguageToggleButton />
+      </div>
 
       {/* Skip button */}
       <button
