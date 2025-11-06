@@ -28,57 +28,63 @@ export function LinksSection({
   const [busy, setBusy] = useState(false);
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        {t("dashboard_content_links_title")}
-      </h2>
-      <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        {t("dashboard_content_links_description")}
-      </p>
-      <NewLinkForm
-        disabled={
-          busy ||
-          !profileId ||
-          (isFree && links.length + drops.length >= freeLimit)
-        }
-        onCreate={async (input) => {
-          setBusy(true);
-          try {
-            if (!isSafeHttpUrl(input.url)) {
-              toast.error(t("dashboard_content_links_invalid_url"));
-              return;
+    <section>
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-purple-50 dark:bg-purple-900/20 p-6 mb-4">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          {t("dashboard_content_links_title")}
+        </h2>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
+          {t("dashboard_content_links_description")}
+        </p>
+        <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4">
+          <NewLinkForm
+            disabled={
+              busy ||
+              !profileId ||
+              (isFree && links.length + drops.length >= freeLimit)
             }
-            const nextOrder = links.length
-              ? Math.max(...links.map((l) => l.order)) + 1
-              : 1;
-            const { data, error } = await supabase
-              .from("links")
-              .insert([
-                {
-                  profile_id: profileId,
-                  label: input.label,
-                  url: input.url,
-                  emoji: input.emoji ?? null,
-                  order: nextOrder,
-                },
-              ])
-              .select("id,label,emoji,url,order")
-              .single();
-            if (error) throw error;
-            setLinks((prev) =>
-              [...prev, data as LinkRow].sort((a, b) => a.order - b.order),
-            );
-            toast.success(t("dashboard_content_links_create_success"));
-          } catch (e) {
-            console.error(e);
-            toast.error(t("dashboard_content_links_create_failed"));
-          } finally {
-            setBusy(false);
-          }
-        }}
-      />
+            onCreate={async (input) => {
+              setBusy(true);
+              try {
+                if (!isSafeHttpUrl(input.url)) {
+                  toast.error(t("dashboard_content_links_invalid_url"));
+                  return;
+                }
+                const nextOrder = links.length
+                  ? Math.max(...links.map((l) => l.order)) + 1
+                  : 1;
+                const { data, error } = await supabase
+                  .from("links")
+                  .insert([
+                    {
+                      profile_id: profileId,
+                      label: input.label,
+                      url: input.url,
+                      emoji: input.emoji ?? null,
+                      order: nextOrder,
+                    },
+                  ])
+                  .select("id,label,emoji,url,order")
+                  .single();
+                if (error) throw error;
+                setLinks((prev) =>
+                  [...prev, data as LinkRow].sort((a, b) => a.order - b.order),
+                );
+                toast.success(t("dashboard_content_links_create_success"));
+              } catch (e) {
+                console.error(e);
+                toast.error(t("dashboard_content_links_create_failed"));
+              } finally {
+                setBusy(false);
+              }
+            }}
+          />
+        </div>
+      </div>
 
-      <LinksList profileId={profileId} links={links} setLinks={setLinks} />
+      <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-purple-50 dark:bg-purple-900/20 p-6">
+        <LinksList profileId={profileId} links={links} setLinks={setLinks} />
+      </div>
     </section>
   );
 }

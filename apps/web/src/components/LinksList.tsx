@@ -63,7 +63,7 @@ export function LinksList({
           {links.map((l, idx) => (
             <li
               key={l.id}
-              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-all cursor-move group"
+              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all cursor-move group"
               draggable
               onDragStart={() => {
                 dragIndex.current = idx;
