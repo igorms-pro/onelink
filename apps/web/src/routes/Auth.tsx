@@ -14,15 +14,24 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div
-      className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative"
-      style={{
-        backgroundImage: "url(/screen.png)",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+        }}
+      ></div>
+
+      {/* Purple blob gradients */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-400/10 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-0 w-80 h-80 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-purple-200/6 dark:bg-purple-400/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
+      </div>
       <HeaderMobileSignIn />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
         <div className="rounded-xl border border-gray-200/50 dark:border-gray-800 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 shadow-lg">

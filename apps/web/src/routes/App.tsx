@@ -22,13 +22,23 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-purple-50 via-white to-blue-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-900 transition-colors relative">
-      {/* Gradient blobs background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-400/20 dark:bg-purple-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/3 right-0 w-80 h-80 bg-blue-400/20 dark:bg-blue-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-1/3 w-72 h-72 bg-pink-400/15 dark:bg-pink-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-300/15 dark:bg-purple-500/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
+      {/* Subtle grid pattern */}
+      <div
+        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
+        style={{
+          backgroundImage:
+            "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)",
+          backgroundSize: "20px 20px",
+        }}
+      ></div>
+
+      {/* Purple blob gradients */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-purple-400/10 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-0 w-80 h-80 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/4 w-72 h-72 bg-purple-200/6 dark:bg-purple-400/3 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
       </div>
 
       <HeaderMobileSignIn />
