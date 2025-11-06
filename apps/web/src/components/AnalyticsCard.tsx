@@ -73,7 +73,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         <div className="space-y-2">
           <div className="flex justify-between items-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
             <span>Link</span>
-            <span>Clicks ({days}d)</span>
+            <span>Clicks</span>
           </div>
           {rows.length === 0 ? (
             <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
