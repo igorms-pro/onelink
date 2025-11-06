@@ -22,7 +22,7 @@ export function InboxTab({ submissions }: InboxTabProps) {
         {t("dashboard_inbox_description")}
       </p>
       {submissions.length === 0 ? (
-        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             {t("dashboard_inbox_empty")}
           </p>
@@ -32,7 +32,7 @@ export function InboxTab({ submissions }: InboxTabProps) {
           {submissions.map((s) => (
             <li
               key={s.submission_id}
-              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 hover:shadow-sm transition-shadow"
+              className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
             >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">

@@ -53,7 +53,7 @@ export function LinksList({
         )}
       </div>
       {links.length === 0 ? (
-        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-8 text-center">
+        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             {t("dashboard_content_links_empty")}
           </p>
@@ -125,7 +125,7 @@ export function LinksList({
                 }}
               >
                 <button
-                  className="rounded-lg text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="rounded-lg text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-50 dark:hover:bg-gray-700 transition-all"
                   onClick={(e) => {
                     e.stopPropagation();
                     setOpenMenuId(openMenuId === l.id ? null : l.id);
@@ -139,7 +139,7 @@ export function LinksList({
                 {openMenuId === l.id && (
                   <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[160px] overflow-hidden">
                     <button
-                      className="w-full px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                      className="w-full px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-all flex items-center gap-2 text-gray-700 dark:text-gray-300"
                       onClick={async (e) => {
                         e.stopPropagation();
                         setOpenMenuId(null);
@@ -168,7 +168,7 @@ export function LinksList({
                       <span className="text-sm">{t("common_edit")}</span>
                     </button>
                     <button
-                      className="w-full px-4 py-2.5 text-left hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-300"
+                      className="w-full px-4 py-2.5 text-left hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center gap-2 text-red-600 dark:text-red-300"
                       onClick={async (e) => {
                         e.stopPropagation();
                         setOpenMenuId(null);

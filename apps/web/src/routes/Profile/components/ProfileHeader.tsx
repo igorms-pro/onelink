@@ -11,10 +11,14 @@ export function ProfileHeader({ profile }: ProfileHeaderProps) {
         <img className="h-12 w-12 rounded-full" src={profile.avatar_url} />
       )}
       <div>
-        <h1 className="text-xl font-semibold">
+        <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
           {profile?.display_name ?? profile?.slug ?? "Profile"}
         </h1>
-        {profile?.bio && <p className="text-gray-600">{profile.bio}</p>}
+        {profile?.bio && (
+          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+            {profile.bio}
+          </p>
+        )}
       </div>
     </header>
   );

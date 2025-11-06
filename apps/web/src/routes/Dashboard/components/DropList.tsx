@@ -13,7 +13,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
   const { t } = useTranslation();
   if (drops.length === 0) {
     return (
-      <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-8 text-center">
+      <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
         <p className="text-gray-500 dark:text-gray-400 text-sm">
           {t("dashboard_content_drops_empty")}
         </p>
@@ -42,7 +42,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
           </div>
           <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
             <button
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
               onClick={async () => {
                 const newLabel = prompt(t("common_new_label"), d.label);
                 if (!newLabel) return;
@@ -66,7 +66,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
               {t("common_edit")}
             </button>
             <button
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-3 py-1.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-all"
               onClick={async () => {
                 const { data, error } = await supabase
                   .from("drops")
@@ -101,7 +101,7 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
                 : t("dashboard_content_drops_turn_on")}
             </button>
             <button
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 px-3 py-1.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
               onClick={async () => {
                 if (!confirm(t("dashboard_content_drops_delete_confirm")))
                   return;

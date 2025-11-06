@@ -14,22 +14,11 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-10 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0)`,
-            backgroundSize: "24px 24px",
-          }}
-        ></div>
-      </div>
-
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors relative overflow-hidden">
       <div className="relative z-10">
         <Header />
         <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
-          <div className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 shadow-lg shadow-gray-200/50 dark:shadow-black/20">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-8 shadow-md">
             <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
               {t("auth_sign_in_title")}
             </h1>

@@ -7,6 +7,7 @@ import { useDashboardData } from "./hooks/useDashboardData";
 import {
   DashboardHeader,
   TabNavigation,
+  BottomNavigation,
   InboxTab,
   ContentTab,
   AccountTab,
@@ -37,7 +38,7 @@ export default function Dashboard() {
 
   if (loading || dataLoading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6 text-gray-900 dark:text-white">
           {t("dashboard_loading")}
         </main>
@@ -47,7 +48,7 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_please_sign_in")}
@@ -64,21 +65,10 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-10 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0)`,
-            backgroundSize: "24px 24px",
-          }}
-        ></div>
-      </div>
-
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors relative overflow-hidden">
       <div className="relative z-10">
         <Header onSettingsClick={() => setIsSettingsOpen(true)} />
-        <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8">
+        <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8 pb-20 sm:pb-4">
           <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
 
           <TabNavigation
@@ -110,6 +100,11 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
+      <BottomNavigation
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        submissionCount={submissions.length}
+      />
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}

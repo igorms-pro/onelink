@@ -14,7 +14,7 @@ export function TabNavigation({
 }: TabNavigationProps) {
   const { t } = useTranslation();
   return (
-    <div className="flex justify-center sm:justify-start gap-2 mb-6 border-b border-gray-200/60 dark:border-gray-800/60 overflow-x-auto">
+    <div className="flex justify-center sm:justify-start gap-2 mb-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto">
       <button
         onClick={() => onTabChange("inbox")}
         className={`

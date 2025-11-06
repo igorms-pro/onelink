@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200/60 dark:border-gray-800/60">
+    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}

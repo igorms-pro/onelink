@@ -39,7 +39,7 @@ export function SubmissionCountsCard({
 
   if (rows.length === 0) {
     return (
-      <div className="mt-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 text-center">
+      <div className="mt-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 text-center">
         <p className="text-sm text-gray-500 dark:text-gray-400">
           No drop submissions yet.
         </p>
@@ -48,7 +48,7 @@ export function SubmissionCountsCard({
   }
 
   return (
-    <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50">
+    <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
       <table className="min-w-full text-sm">
         <thead>
           <tr className="border-b border-gray-200 dark:border-gray-700">

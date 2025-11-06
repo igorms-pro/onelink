@@ -42,7 +42,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
           onClick={() => setDays(7)}
           className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
             days === 7
-              ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm"
+              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm opacity-100"
               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           }`}
         >
@@ -52,14 +52,14 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
           onClick={() => setDays(30)}
           className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all ${
             days === 30
-              ? "bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-sm"
+              ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-sm opacity-100"
               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
           }`}
         >
           30 days
         </button>
       </div>
-      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900/50">
+      <div className="overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         <table className="min-w-full text-sm">
           <thead>
             <tr className="border-b border-gray-200 dark:border-gray-700">

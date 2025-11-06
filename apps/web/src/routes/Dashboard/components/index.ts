@@ -1,5 +1,6 @@
 export { DashboardHeader } from "./DashboardHeader";
 export { TabNavigation } from "./TabNavigation";
+export { BottomNavigation } from "./BottomNavigation";
 export { SubmissionCountsCard } from "./SubmissionCountsCard";
 export { InboxTab } from "./InboxTab";
 export { ContentTab } from "./ContentTab";

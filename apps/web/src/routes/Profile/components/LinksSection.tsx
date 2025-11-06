@@ -11,7 +11,7 @@ export function LinksSection({ links }: LinksSectionProps) {
       {links.map((l) => (
         <a
           key={l.link_id}
-          className="rounded bg-black text-white px-4 py-3 text-center"
+          className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-3 text-center font-medium hover:opacity-90 transition-all shadow-sm opacity-100"
           href={l.url}
           target="_blank"
           rel="noreferrer"
