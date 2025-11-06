@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "../lib/AuthProvider";
 import { toast } from "sonner";
-import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 
 type FormValues = { email: string };
 
@@ -33,9 +32,8 @@ export default function Auth() {
         <div className="absolute bottom-0 right-1/4 w-64 h-64 bg-purple-300/8 dark:bg-purple-500/4 rounded-full blur-3xl"></div>
       </div>
 
-      <HeaderMobileSignIn />
-      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col">
-        <div className="flex-1 flex flex-col justify-center text-center">
+      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
+        <div className="flex flex-col justify-center text-center">
           <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
             {t("app_title")}
           </h1>
@@ -76,12 +74,6 @@ export default function Auth() {
             </button>
           </form>
         </div>
-
-        <footer className="text-center py-4">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            © 2024 OneLink. All rights reserved.
-          </p>
-        </footer>
       </main>
     </div>
   );
