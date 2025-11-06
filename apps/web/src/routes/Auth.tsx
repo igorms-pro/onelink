@@ -18,7 +18,7 @@ export default function Auth() {
       className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative"
       style={{
         backgroundImage: "url(/screen.png)",
-        backgroundSize: "cover",
+        backgroundSize: "fit",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
       }}
@@ -58,7 +58,7 @@ export default function Auth() {
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-4 py-2.5 text-sm font-medium hover:opacity-90 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-md"
+              className="rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 text-sm font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
             >
               {loading ? t("auth_sending") : t("auth_send_link")}
             </button>
