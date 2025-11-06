@@ -40,7 +40,6 @@ export function DropsSection({
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         {t("dashboard_content_drops_description")}
       </p>
-      <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
       <DropForm
         profileId={profileId}
         onDropCreated={handleDropCreated}

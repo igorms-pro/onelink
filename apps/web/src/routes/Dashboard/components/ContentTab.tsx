@@ -32,6 +32,7 @@ export function ContentTab({
         isFree={isFree}
         freeLimit={freeLimit}
       />
+      <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
       <DropsSection
         profileId={profileId}
         drops={drops}
