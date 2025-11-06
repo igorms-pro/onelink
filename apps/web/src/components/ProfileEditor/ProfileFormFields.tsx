@@ -30,7 +30,7 @@ export function ProfileFormFields({
             errors.slug
               ? "border-red-500 dark:border-red-300"
               : "border-gray-300 dark:border-gray-600"
-          } bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 ${
+          } bg-purple-50 dark:bg-purple-900/20 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 ${
             errors.slug
               ? "focus:ring-red-500 dark:focus:ring-red-300"
               : "focus:ring-purple-500 dark:focus:ring-purple-400"
@@ -53,7 +53,7 @@ export function ProfileFormFields({
       </div>
       <div>
         <input
-          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all w-full"
+          className="rounded-lg border border-gray-300 dark:border-gray-600 bg-purple-50 dark:bg-purple-900/20 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all w-full"
           required
           placeholder={t("profile_form_display_name_placeholder")}
           {...register("display_name", {
@@ -99,12 +99,12 @@ export function ProfileFormFields({
       {showAdditional && (
         <div className="grid gap-3 transition-all duration-200 ease-in-out">
           <input
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all w-full"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-purple-50 dark:bg-purple-900/20 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all w-full"
             placeholder={t("profile_form_avatar_url_placeholder")}
             {...register("avatar_url")}
           />
           <textarea
-            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-transparent transition-all resize-none min-h-[80px]"
+            className="rounded-lg border border-gray-300 dark:border-gray-600 bg-purple-50 dark:bg-purple-900/20 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all resize-none min-h-[80px]"
             placeholder={t("profile_form_bio_placeholder")}
             {...register("bio")}
           />
