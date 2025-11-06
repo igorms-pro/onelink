@@ -105,7 +105,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       ></div>
 
       {/* Theme and Language toggles */}
-      <div className="absolute top-4 left-4 flex items-center gap-2 z-10">
+      <div className="absolute top-4 left-4 flex items-center gap-2 z-50">
         <ThemeToggleButton />
         <LanguageToggleButton />
       </div>
@@ -113,7 +113,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       {/* Skip button */}
       <button
         onClick={handleSkip}
-        className="absolute top-4 right-4 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors z-10"
+        className="absolute top-4 right-4 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors z-50"
         aria-label="Skip onboarding"
       >
         <X className="w-5 h-5" />
