@@ -17,7 +17,7 @@ export default function Auth() {
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
       {/* Subtle grid pattern */}
       <div
-        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05]"
+        className="absolute inset-0 opacity-[0.02] dark:opacity-[0.05] pointer-events-none"
         style={{
           backgroundImage:
             "linear-gradient(to right, #000 1px, transparent 1px), linear-gradient(to bottom, #000 1px, transparent 1px)",
@@ -34,7 +34,7 @@ export default function Auth() {
       </div>
 
       <HeaderMobileSignIn />
-      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
+      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center relative z-10">
         <div className="flex flex-col justify-center text-center">
           <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
             {t("app_title")}
