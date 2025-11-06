@@ -29,11 +29,11 @@ export function DropList({ profileId, drops, setDrops }: DropListProps) {
           className="flex flex-col gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all"
         >
           <div className="min-w-0 flex-1">
-            <p className="font-medium truncate text-gray-900 dark:text-white">
+            <p className="font-medium truncate text-gray-900 dark:text-white mb-2">
               {d.emoji ? `${d.emoji} ` : ""}
               {d.label}
             </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
               {t("dashboard_content_drops_order_status", {
                 order: d.order,
                 status: d.is_active ? t("common_active") : t("common_off"),
