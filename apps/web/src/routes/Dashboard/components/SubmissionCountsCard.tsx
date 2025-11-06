@@ -49,7 +49,7 @@ export function SubmissionCountsCard({
 
   return (
     <div className="mt-3 space-y-2">
-      <div className="flex justify-between items-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+      <div className="flex justify-between items-center px-3 pb-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
         <span>Drop</span>
         <span>Submissions</span>
       </div>

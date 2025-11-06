@@ -71,7 +71,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
       </div>
       <div className="overflow-x-auto">
         <div className="space-y-2">
-          <div className="flex justify-between items-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+          <div className="flex justify-between items-center px-3 pb-1 text-xs font-semibold text-gray-700 dark:text-gray-300">
             <span>Link</span>
             <span>Clicks</span>
           </div>
