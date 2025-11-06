@@ -35,7 +35,7 @@ export function LinksSection({
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         {t("dashboard_content_links_description")}
       </p>
-      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 p-4 mb-4">
+      <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4">
         <NewLinkForm
           disabled={
             busy ||
