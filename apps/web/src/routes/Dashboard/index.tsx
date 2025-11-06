@@ -38,7 +38,7 @@ export default function Dashboard() {
 
   if (loading || dataLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6 text-gray-900 dark:text-white">
           {t("dashboard_loading")}
         </main>
@@ -48,7 +48,7 @@ export default function Dashboard() {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <div className="min-h-screen bg-white dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_please_sign_in")}
@@ -65,7 +65,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
       {/* Gradient blobs background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300/5 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
