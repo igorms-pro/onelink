@@ -103,7 +103,13 @@ export default function Dashboard() {
       <BottomNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        submissionCount={submissions.length}
+        submissionCount={submissions.length + 6}
+        onClearAll={() => {
+          if (confirm("Clear all inbox items? This cannot be undone.")) {
+            // TODO: Implement actual clear functionality with database
+            console.log("Clear all clicked");
+          }
+        }}
       />
       <SettingsModal
         isOpen={isSettingsOpen}

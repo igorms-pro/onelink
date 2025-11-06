@@ -9,26 +9,26 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
+    <header className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-        <h1 className="text-base sm:text-2xl font-semibold text-gray-900 dark:text-white">
+        <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}
-        </h1>
+        </div>
         <span className="rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide">
           {isFree ? t("dashboard_header_free") : t("dashboard_header_pro")}
         </span>
       </div>
-      <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center justify-end gap-2 flex-shrink-0">
         {isFree ? (
           <button
-            className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-3 py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
+            className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
             onClick={goToCheckout}
           >
             {t("dashboard_header_upgrade")}
           </button>
         ) : (
           <button
-            className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-3 py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
+            className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
             onClick={goToPortal}
           >
             {t("dashboard_header_manage_billing")}
