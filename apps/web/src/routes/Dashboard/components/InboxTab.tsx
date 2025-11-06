@@ -7,16 +7,12 @@ interface InboxTabProps {
   submissions: SubmissionRow[];
 }
 
-// Fake notification items with subtle purple/white gradients
+// Fake notification items
 const fakeNotifications = [
   {
     id: "fake-1",
     icon: Upload,
-    gradient: "from-purple-500 to-pink-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-pink-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-pink-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-purple-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "New File Upload:...",
     description: "Submitted to your 'Project Briefs' link.",
     timestamp: "5m ago",
@@ -24,11 +20,7 @@ const fakeNotifications = [
   {
     id: "fake-2",
     icon: TrendingUp,
-    gradient: "from-purple-500 to-indigo-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-indigo-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-indigo-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-indigo-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "Link Click: Portfolio",
     description: "Your link was viewed 25 times today.",
     timestamp: "2h ago",
@@ -36,11 +28,7 @@ const fakeNotifications = [
   {
     id: "fake-3",
     icon: Upload,
-    gradient: "from-purple-500 to-pink-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-pink-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-pink-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-purple-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "New Document Upload",
     description: "Resume submitted to your 'Careers' drop.",
     timestamp: "3h ago",
@@ -48,11 +36,7 @@ const fakeNotifications = [
   {
     id: "fake-4",
     icon: TrendingUp,
-    gradient: "from-purple-500 to-indigo-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-indigo-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-indigo-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-indigo-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "Analytics Update",
     description: "Your profile was viewed 50 times this week.",
     timestamp: "5h ago",
@@ -60,11 +44,7 @@ const fakeNotifications = [
   {
     id: "fake-5",
     icon: Upload,
-    gradient: "from-purple-500 to-pink-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-pink-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-pink-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-purple-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "Image Upload Complete",
     description: "3 images submitted to your 'Gallery' link.",
     timestamp: "1d ago",
@@ -72,11 +52,7 @@ const fakeNotifications = [
   {
     id: "fake-6",
     icon: TrendingUp,
-    gradient: "from-purple-500 to-indigo-500",
-    bgGradient:
-      "from-white via-purple-50/50 to-indigo-50/50 dark:from-gray-800 dark:via-purple-950/20 dark:to-indigo-950/20",
-    iconBg: "bg-linear-to-br from-purple-500 to-indigo-600",
-    shadow: "shadow-purple-100/50 dark:shadow-purple-900/20",
+    iconBg: "bg-gray-900 dark:bg-gray-700",
     title: "Engagement Report",
     description: "Your links received 120 total clicks.",
     timestamp: "2d ago",
@@ -86,47 +62,36 @@ const fakeNotifications = [
 export function InboxTab({ submissions }: InboxTabProps) {
   const { t } = useTranslation();
 
-  const isNew = (timestamp: string) => {
-    const itemDate = new Date(timestamp);
-    const now = new Date();
-    const hoursDiff = (now.getTime() - itemDate.getTime()) / (1000 * 60 * 60);
-    return hoursDiff < 24;
-  };
-
   return (
     <section>
       <ul className="grid gap-3">
         {/* Fake notifications */}
-        {fakeNotifications.map((notif) => {
+        {fakeNotifications.map((notif, idx) => {
           const Icon = notif.icon;
-          // Fake items are always "new" for demo
-          const showNew = true;
+          // First two items show purple dot
+          const showDot = idx < 2;
           return (
             <li
               key={notif.id}
               className="group relative rounded-xl bg-gray-50 dark:bg-gray-800 p-4 hover:bg-gray-100 dark:hover:bg-gray-750 transition-all duration-200 border border-gray-200 dark:border-gray-700"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex items-center gap-3">
                 <div
-                  className={`shrink-0 w-10 h-10 rounded-xl ${notif.iconBg} flex items-center justify-center shadow-sm`}
+                  className={`shrink-0 w-8 h-8 rounded-lg ${notif.iconBg} flex items-center justify-center relative`}
                 >
-                  <Icon className="w-5 h-5 text-white" />
+                  <Icon className="w-4 h-4 text-white" />
+                  {showDot && (
+                    <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-purple-600 ring-2 ring-white dark:ring-gray-800"></span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {notif.title}
-                    </p>
-                    {showNew && (
-                      <span className="rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-                        NEW
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="font-medium text-gray-900 dark:text-white text-sm">
+                    {notif.title}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                     {notif.description}
                   </p>
-                  <span className="text-xs font-medium text-gray-500 dark:text-gray-400 mt-2 block">
+                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1.5 block">
                     {notif.timestamp}
                   </span>
                 </div>
@@ -137,28 +102,20 @@ export function InboxTab({ submissions }: InboxTabProps) {
 
         {/* Real submissions */}
         {submissions.map((s) => {
-          const showNew = isNew(s.created_at);
           return (
             <li
               key={s.submission_id}
               className="group relative rounded-xl bg-gray-50 dark:bg-gray-800 p-4 hover:bg-gray-100 dark:hover:bg-gray-750 transition-all duration-200 border border-gray-200 dark:border-gray-700"
             >
-              <div className="flex items-start gap-3">
-                <div className="shrink-0 w-10 h-10 rounded-xl bg-linear-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-sm">
-                  <Upload className="w-5 h-5 text-white" />
+              <div className="flex items-center gap-3">
+                <div className="shrink-0 w-8 h-8 rounded-lg bg-gray-900 dark:bg-gray-700 flex items-center justify-center">
+                  <Upload className="w-4 h-4 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-gray-900 dark:text-white">
-                      {s.drop_label ?? t("dashboard_inbox_drop")}
-                    </p>
-                    {showNew && (
-                      <span className="rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide">
-                        NEW
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  <p className="font-medium text-gray-900 dark:text-white text-sm">
+                    {s.drop_label ?? t("dashboard_inbox_drop")}
+                  </p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
                     {new Date(s.created_at).toLocaleString()}
                   </p>
                   <div className="mt-2 grid gap-1 text-sm">

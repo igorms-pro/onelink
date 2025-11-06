@@ -65,41 +65,40 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors relative overflow-hidden">
-      <div className="relative z-10">
-        <Header onSettingsClick={() => setIsSettingsOpen(true)} />
-        <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8 pb-20 sm:pb-4">
-          <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 transition-colors">
+      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+      <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
 
-          <TabNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            submissionCount={submissions.length}
-          />
+      <main className="flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-[140px] sm:pt-6 pb-20 sm:pb-4 overflow-y-auto">
+        <TabNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          submissionCount={submissions.length}
+        />
 
-          {/* Tab Content */}
-          <div className="transition-opacity duration-200">
-            {activeTab === "inbox" && <InboxTab submissions={submissions} />}
-            {activeTab === "content" && (
-              <ContentTab
-                profileId={profileId}
-                links={links}
-                setLinks={setLinks}
-                drops={drops}
-                setDrops={setDrops}
-                isFree={isFree}
-                freeLimit={FREE_LIMIT}
-              />
-            )}
-            {activeTab === "account" && (
-              <AccountTab
-                profileId={profileId}
-                profileFormInitial={profileFormInitial}
-              />
-            )}
-          </div>
-        </main>
-      </div>
+        {/* Tab Content */}
+        <div className="transition-opacity duration-200">
+          {activeTab === "inbox" && <InboxTab submissions={submissions} />}
+          {activeTab === "content" && (
+            <ContentTab
+              profileId={profileId}
+              links={links}
+              setLinks={setLinks}
+              drops={drops}
+              setDrops={setDrops}
+              isFree={isFree}
+              freeLimit={FREE_LIMIT}
+            />
+          )}
+          {activeTab === "account" && (
+            <AccountTab
+              profileId={profileId}
+              profileFormInitial={profileFormInitial}
+            />
+          )}
+        </div>
+      </main>
+
       <BottomNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}

@@ -17,15 +17,36 @@ export function BottomNavigation({
   onClearAll,
 }: BottomNavigationProps) {
   const { t } = useTranslation();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [isScrolling, setIsScrolling] = useState(false);
+  const [isScrollable, setIsScrollable] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+    let scrollTimeout: ReturnType<typeof setTimeout>;
+
+    const checkScrollable = () => {
+      setIsScrollable(document.body.scrollHeight > window.innerHeight);
     };
+
+    const handleScroll = () => {
+      if (!isScrollable) return;
+
+      setIsScrolling(true);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        setIsScrolling(false);
+      }, 150);
+    };
+
+    checkScrollable();
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    window.addEventListener("resize", checkScrollable);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", checkScrollable);
+      clearTimeout(scrollTimeout);
+    };
+  }, [isScrollable]);
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden">
@@ -35,7 +56,7 @@ export function BottomNavigation({
           <button
             onClick={onClearAll}
             className={`p-2.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-700 transition-all shadow-md ${
-              isScrolled ? "opacity-40" : "opacity-100"
+              isScrolling && isScrollable ? "opacity-40" : "opacity-100"
             }`}
             aria-label="Clear all"
           >
@@ -56,10 +77,8 @@ export function BottomNavigation({
                   : "text-gray-500 dark:text-gray-400"
               }`}
             />
-            {submissionCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 rounded-full bg-purple-600 text-white text-[9px] font-semibold flex items-center justify-center px-1">
-                {submissionCount}
-              </span>
+            {submissionCount > 0 && activeTab !== "inbox" && (
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-600"></span>
             )}
           </div>
           <span

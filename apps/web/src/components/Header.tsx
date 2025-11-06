@@ -20,7 +20,7 @@ export function Header({ onSettingsClick }: HeaderProps) {
   const appTitle = i18n.exists("app_title") ? t("app_title") : "OneLink";
 
   return (
-    <header className="w-full flex items-center justify-between p-4 md:p-6 lg:p-8 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 sticky top-0 z-50 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 sm:sticky w-full flex items-center justify-between p-4 md:p-6 lg:p-8 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 shadow-sm">
       <div
         className={`mx-auto ${isDashboard ? "max-w-4xl" : ""} w-full flex items-center justify-between`}
       >

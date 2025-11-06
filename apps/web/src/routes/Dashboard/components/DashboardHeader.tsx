@@ -9,7 +9,7 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
   return (
-    <header className="flex flex-row items-center justify-between gap-2 sm:gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
+    <header className="fixed top-[73px] left-0 right-0 sm:static z-40 bg-gray-50 dark:bg-gray-900 flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 py-3 sm:px-0 sm:mb-6 sm:pb-6 sm:pt-0 border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
         <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}
@@ -18,7 +18,7 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
           {isFree ? t("dashboard_header_free") : t("dashboard_header_pro")}
         </span>
       </div>
-      <div className="flex items-center justify-end gap-2 flex-shrink-0">
+      <div className="flex items-center justify-end gap-2 shrink-0">
         {isFree ? (
           <button
             className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
