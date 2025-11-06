@@ -42,24 +42,10 @@ export default function Auth() {
           <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
             {t("app_tagline")}
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:justify-center mb-8">
-            <a
-              className="w-full sm:w-auto rounded-xl bg-purple-200/60 dark:bg-purple-300/20 text-purple-700 dark:text-purple-300 px-8 py-3.5 text-base font-medium hover:bg-purple-200/80 dark:hover:bg-purple-300/30 transition-all"
-              href="/auth"
-            >
-              {t("sign_in")}
-            </a>
-            <a
-              className="hidden sm:block w-auto rounded-xl border border-purple-200 dark:border-purple-600/30 bg-white/50 dark:bg-gray-800/50 px-8 py-3.5 text-base font-medium hover:bg-white/70 dark:hover:bg-gray-800/70 transition-colors text-gray-700 dark:text-gray-300"
-              href="/igor"
-            >
-              {t("view_sample")}
-            </a>
-          </div>
 
           {/* Sign-in form */}
           <form
-            className="grid gap-3 max-w-sm mx-auto"
+            className="grid gap-3 max-w-sm mx-auto w-full"
             onSubmit={handleSubmit(async (values) => {
               setLoading(true);
               const res = await signInWithEmail(values.email);
@@ -77,14 +63,14 @@ export default function Auth() {
               type="email"
               required
               placeholder={t("auth_email_placeholder")}
-              className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
+              className="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-8 py-3.5 text-base placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
               disabled={loading}
               {...register("email")}
             />
             <button
               type="submit"
               disabled={loading}
-              className="rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white px-4 py-2.5 text-sm font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
+              className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
             >
               {loading ? t("auth_sending") : t("auth_send_link")}
             </button>
