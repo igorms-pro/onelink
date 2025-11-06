@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
 import { SettingsModal } from "@/components/SettingsModal";
@@ -6,6 +7,7 @@ import { useDashboardData } from "./hooks/useDashboardData";
 import {
   DashboardHeader,
   TabNavigation,
+  BottomNavigation,
   InboxTab,
   ContentTab,
   AccountTab,
@@ -15,6 +17,7 @@ import type { TabId } from "./types";
 const FREE_LIMIT = 3;
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -37,7 +40,7 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6 text-gray-900 dark:text-white">
-          Loading…
+          {t("dashboard_loading")}
         </main>
       </div>
     );
@@ -48,13 +51,13 @@ export default function Dashboard() {
       <div className="min-h-screen bg-white dark:bg-gray-900">
         <main className="mx-auto max-w-md p-6">
           <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-            Please sign in
+            {t("dashboard_please_sign_in")}
           </h1>
           <a
-            className="text-blue-600 dark:text-blue-400 underline"
+            className="text-blue-600 dark:text-blue-300 underline"
             href="/auth"
           >
-            Go to sign in
+            {t("dashboard_go_to_sign_in")}
           </a>
         </main>
       </div>
@@ -62,59 +65,63 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 transition-colors relative overflow-hidden">
-      {/* Subtle background pattern */}
-      <div className="absolute inset-0 opacity-30 dark:opacity-10 pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(0,0,0,0.05) 1px, transparent 0)`,
-            backgroundSize: "24px 24px",
-          }}
-        ></div>
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
+      {/* Gradient blobs background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300/5 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-pink-300/5 dark:bg-pink-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-blue-300/5 dark:bg-blue-600/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-purple-200/5 dark:bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10">
-        <Header />
-        <main className="flex-1 mx-auto max-w-4xl w-full p-4 md:p-6 lg:p-8">
-          <DashboardHeader
-            isFree={isFree}
-            onSettingsClick={() => setIsSettingsOpen(true)}
-            onSignOut={() => signOut()}
-          />
+      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+      <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
 
-          <TabNavigation
-            activeTab={activeTab}
-            onTabChange={setActiveTab}
-            submissionCount={submissions.length}
-          />
+      <main className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-[140px] sm:pt-6 pb-20 sm:pb-4 overflow-y-auto">
+        <TabNavigation
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          submissionCount={submissions.length}
+        />
 
-          {/* Tab Content */}
-          <div className="transition-opacity duration-200">
-            {activeTab === "inbox" && <InboxTab submissions={submissions} />}
-            {activeTab === "content" && (
-              <ContentTab
-                profileId={profileId}
-                links={links}
-                setLinks={setLinks}
-                drops={drops}
-                setDrops={setDrops}
-                isFree={isFree}
-                freeLimit={FREE_LIMIT}
-              />
-            )}
-            {activeTab === "account" && (
-              <AccountTab
-                profileId={profileId}
-                profileFormInitial={profileFormInitial}
-              />
-            )}
-          </div>
-        </main>
-      </div>
+        {/* Tab Content */}
+        <div className="transition-opacity duration-200">
+          {activeTab === "inbox" && <InboxTab submissions={submissions} />}
+          {activeTab === "content" && (
+            <ContentTab
+              profileId={profileId}
+              links={links}
+              setLinks={setLinks}
+              drops={drops}
+              setDrops={setDrops}
+              isFree={isFree}
+              freeLimit={FREE_LIMIT}
+            />
+          )}
+          {activeTab === "account" && (
+            <AccountTab
+              profileId={profileId}
+              profileFormInitial={profileFormInitial}
+            />
+          )}
+        </div>
+      </main>
+
+      <BottomNavigation
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        submissionCount={submissions.length + 6}
+        onClearAll={() => {
+          if (confirm("Clear all inbox items? This cannot be undone.")) {
+            // TODO: Implement actual clear functionality with database
+            console.log("Clear all clicked");
+          }
+        }}
+      />
       <SettingsModal
         isOpen={isSettingsOpen}
         onClose={() => setIsSettingsOpen(false)}
+        onSignOut={() => signOut()}
       />
     </div>
   );

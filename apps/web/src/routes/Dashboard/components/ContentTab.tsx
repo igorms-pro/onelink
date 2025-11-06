@@ -23,7 +23,7 @@ export function ContentTab({
   freeLimit,
 }: ContentTabProps) {
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 mt-2">
       <LinksSection
         profileId={profileId}
         links={links}
@@ -32,6 +32,7 @@ export function ContentTab({
         isFree={isFree}
         freeLimit={freeLimit}
       />
+      <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
       <DropsSection
         profileId={profileId}
         drops={drops}

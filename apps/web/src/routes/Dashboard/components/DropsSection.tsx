@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import type { DropRow } from "../types";
 import { DropForm } from "./DropForm";
 import { DropList } from "./DropList";
@@ -19,6 +20,7 @@ export function DropsSection({
   isFree,
   freeLimit,
 }: DropsSectionProps) {
+  const { t } = useTranslation();
   const handleDropCreated = (newDrop: DropRow) => {
     const nextOrder = drops.length
       ? Math.max(...drops.map((d) => d.order)) + 1
@@ -31,12 +33,12 @@ export function DropsSection({
   };
 
   return (
-    <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
+    <section>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-        Drops
+        {t("dashboard_content_drops_title")}
       </h2>
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-        Create file inboxes for people to submit files
+        {t("dashboard_content_drops_description")}
       </p>
       <DropForm
         profileId={profileId}

@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import {
   ProfileEditor,
@@ -15,18 +16,19 @@ interface AccountTabProps {
 }
 
 export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
+  const { t } = useTranslation();
   const profileEditorRef = useRef<ProfileEditorRef>(null);
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 mt-2">
       {/* Profile editor */}
-      <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          Profile
+      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+          {t("dashboard_account_profile_title")}
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Manage your public profile settings
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          {t("dashboard_account_profile_description")}
         </p>
         <ProfileEditor
           ref={profileEditorRef}
@@ -54,33 +56,33 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
                   error.message?.includes("unique") ||
                   error.message?.toLowerCase().includes("slug"))
               ) {
-                const errorMessage =
-                  "This slug is already taken. Please choose another.";
+                const errorMessage = t("dashboard_account_slug_taken");
                 profileEditorRef.current?.setError("slug", errorMessage);
                 toast.error(errorMessage);
               } else {
-                toast.error("Failed to update profile");
+                toast.error(t("dashboard_account_profile_update_failed"));
               }
               return;
             }
-            toast.success("Profile updated successfully");
+            toast.success(t("dashboard_account_profile_update_success"));
             setProfileUpdatedAt(data?.updated_at ?? new Date().toISOString());
           }}
         />
         {profileUpdatedAt && (
           <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Updated at {new Date(profileUpdatedAt).toLocaleString()}
+            {t("dashboard_account_profile_updated")}{" "}
+            {new Date(profileUpdatedAt).toLocaleString()}
           </p>
         )}
       </section>
 
       {/* Analytics */}
-      <section className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-6 shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-shadow">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
-          Analytics
+      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+          {t("dashboard_account_analytics_title")}
         </h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
-          Track your link clicks and submissions
+        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">
+          {t("dashboard_account_analytics_description")}
         </p>
         <AnalyticsCard profileId={profileId} />
         <SubmissionCountsCard profileId={profileId} />

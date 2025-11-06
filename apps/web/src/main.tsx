@@ -7,7 +7,7 @@ import "./lib/i18n";
 import App from "./routes/App";
 import Profile from "./routes/Profile";
 import Auth from "./routes/Auth";
-import Dashboard from "./routes/Dashboard";
+import Dashboard from "./routes/Dashboard/index";
 import { AuthProvider } from "./lib/AuthProvider";
 
 // Initialize theme on app load

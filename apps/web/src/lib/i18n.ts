@@ -21,7 +21,18 @@ if (!i18n.isInitialized) {
     .use(initReactI18next)
     .init({
       // Available languages (same as neodash-ui)
-      supportedLngs: ["en", "fr", "es", "pt", "pt-BR", "ja", "zh", "de", "it", "ru"],
+      supportedLngs: [
+        "en",
+        "fr",
+        "es",
+        "pt",
+        "pt-BR",
+        "ja",
+        "zh",
+        "de",
+        "it",
+        "ru",
+      ],
 
       // Default language
       fallbackLng: "en",
@@ -30,6 +41,7 @@ if (!i18n.isInitialized) {
       detection: {
         order: ["localStorage", "navigator", "htmlTag"],
         caches: ["localStorage"],
+        lookupLocalStorage: "lang", // Use "lang" key in localStorage
       },
 
       // Interpolation options
@@ -79,10 +91,14 @@ if (!i18n.isInitialized) {
 }
 
 export function setLanguage(lang: string) {
-  i18n.changeLanguage(lang);
+  // Save to localStorage first (before changeLanguage)
   localStorage.setItem("lang", lang);
+  // Change language - this will automatically trigger re-renders in all components
+  // using useTranslation() via react-i18next's React Context
+  // The promise resolves when the language change is complete
+  i18n.changeLanguage(lang).catch((err) => {
+    console.error("Error changing language:", err);
+  });
 }
 
 export default i18n;
-
-

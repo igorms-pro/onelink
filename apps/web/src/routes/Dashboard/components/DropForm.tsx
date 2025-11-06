@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import type { DropRow } from "../types";
@@ -18,28 +19,26 @@ export function DropForm({
   freeLimit,
   totalItems,
 }: DropFormProps) {
+  const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
   return (
     <form
-      className="mt-4 grid gap-3 rounded-lg border border-gray-200/60 dark:border-gray-700/60 bg-linear-to-br from-gray-50/80 to-white/80 dark:from-gray-900/50 dark:to-gray-950/50 backdrop-blur-sm p-4 shadow-sm"
+      className="grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4"
       onSubmit={async (e) => {
         e.preventDefault();
         if (!profileId) return;
         if (isFree && totalItems >= freeLimit) {
           toast.error(
-            `Free plan limit reached (${freeLimit} actions). Remove one or upgrade.`,
+            t("dashboard_content_drops_limit_reached", { limit: freeLimit }),
           );
           return;
         }
         const form = e.currentTarget as HTMLFormElement;
         const fd = new FormData(form);
         const label = String(fd.get("label") || "").trim();
-        const emoji = (String(fd.get("emoji") || "").trim() || null) as
-          | string
-          | null;
         if (!label) {
-          toast.error("Label is required");
+          toast.error(t("common_label_required"));
           return;
         }
         setBusy(true);
@@ -50,7 +49,7 @@ export function DropForm({
               {
                 profile_id: profileId,
                 label,
-                emoji,
+                emoji: null,
                 order: 1, // Order will be recalculated by parent
               },
             ])
@@ -59,34 +58,29 @@ export function DropForm({
           if (error) throw error;
           onDropCreated(data as DropRow);
           form.reset();
-          toast.success("Drop created successfully");
+          toast.success(t("dashboard_content_drops_create_success"));
         } catch (e) {
           console.error(e);
-          toast.error("Failed to create drop");
+          toast.error(t("dashboard_content_drops_create_failed"));
         } finally {
           setBusy(false);
         }
       }}
     >
-      <div className="grid grid-cols-3 gap-2">
+      <div>
         <input
           name="label"
-          placeholder="Label (e.g. Upload assets)"
-          className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 col-span-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
-        />
-        <input
-          name="emoji"
-          placeholder="Emoji (optional)"
-          className="rounded border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400"
+          placeholder={t("dashboard_content_drops_label_placeholder")}
+          className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
         />
       </div>
       <div>
         <button
           type="submit"
           disabled={busy}
-          className="rounded border border-gray-300 dark:border-gray-600 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-1 text-sm font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-1.5 text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
         >
-          Add Drop
+          {t("dashboard_content_drops_add_button")}
         </button>
       </div>
     </form>
