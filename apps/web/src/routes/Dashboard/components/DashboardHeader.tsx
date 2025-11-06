@@ -11,7 +11,7 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   return (
     <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 pb-6 border-b border-gray-200 dark:border-gray-800">
       <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
           {t("dashboard_header_title")}
         </h1>
         <span className="rounded-full border border-purple-200/80 dark:border-purple-700/80 bg-gradient-to-r from-purple-50 to-purple-100 dark:from-purple-950/30 dark:to-purple-900/30 backdrop-blur-sm text-purple-700 dark:text-purple-300 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide shadow-sm">
