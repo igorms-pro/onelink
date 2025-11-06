@@ -53,7 +53,7 @@ export function LinksList({
         )}
       </div>
       {links.length === 0 ? (
-        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-8 text-center">
+        <div className="mt-4 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center">
           <p className="text-gray-500 dark:text-gray-400 text-sm">
             {t("dashboard_content_links_empty")}
           </p>
@@ -63,7 +63,7 @@ export function LinksList({
           {links.map((l, idx) => (
             <li
               key={l.id}
-              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 hover:shadow-md transition-all cursor-move group"
+              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:shadow-md transition-all cursor-move group"
               draggable
               onDragStart={() => {
                 dragIndex.current = idx;

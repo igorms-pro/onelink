@@ -28,7 +28,7 @@ export function LinksSection({
   const [busy, setBusy] = useState(false);
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
+    <section>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
         {t("dashboard_content_links_title")}
       </h2>
