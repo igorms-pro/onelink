@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { MoreVertical, Pencil, Trash2 } from "lucide-react";
 
 export type LinkRow = {
   id: string;
@@ -25,6 +25,25 @@ export function LinksList({
   const dragIndex = useRef<number | null>(null);
   const overIndex = useRef<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const menuRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+
+  // Close menu on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (openMenuId) {
+        const menuRef = menuRefs.current[openMenuId];
+        if (menuRef && !menuRef.contains(event.target as Node)) {
+          setOpenMenuId(null);
+        }
+      }
+    };
+    if (openMenuId) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () =>
+        document.removeEventListener("mousedown", handleClickOutside);
+    }
+  }, [openMenuId]);
 
   return (
     <>
@@ -99,57 +118,84 @@ export function LinksList({
                   {l.url}
                 </a>
               </div>
-              <div className="flex items-center gap-2 ml-4">
+              <div
+                className="relative ml-4"
+                ref={(el) => {
+                  menuRefs.current[l.id] = el;
+                }}
+              >
                 <button
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 sm:px-3 sm:py-1.5 sm:text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
-                  onClick={async (e) => {
+                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 p-2 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+                  onClick={(e) => {
                     e.stopPropagation();
-                    const newLabel = prompt(t("common_new_label"), l.label);
-                    if (!newLabel) return;
-                    const { error } = await supabase
-                      .from("links")
-                      .update({ label: newLabel })
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_update_failed"));
-                      return;
-                    }
-                    setLinks(
-                      links.map((x) =>
-                        x.id === l.id ? { ...x, label: newLabel } : x,
-                      ),
-                    );
-                    toast.success(t("dashboard_content_links_update_success"));
+                    setOpenMenuId(openMenuId === l.id ? null : l.id);
                   }}
-                  aria-label={t("common_edit")}
+                  aria-label="More options"
                 >
-                  <Pencil className="w-4 h-4 sm:hidden" />
-                  <span className="hidden sm:inline">{t("common_edit")}</span>
+                  <MoreVertical className="w-4 h-4" />
                 </button>
-                <button
-                  className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-red-600 dark:text-red-300 p-2 sm:px-3 sm:py-1.5 sm:text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    if (!confirm(t("dashboard_content_links_delete_confirm")))
-                      return;
-                    const { error } = await supabase
-                      .from("links")
-                      .delete()
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_delete_failed"));
-                      return;
-                    }
-                    setLinks(links.filter((x) => x.id !== l.id));
-                    toast.success(t("dashboard_content_links_delete_success"));
-                  }}
-                  aria-label={t("common_delete")}
-                >
-                  <Trash2 className="w-4 h-4 sm:hidden" />
-                  <span className="hidden sm:inline">{t("common_delete")}</span>
-                </button>
+
+                {/* Dropdown Menu */}
+                {openMenuId === l.id && (
+                  <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[160px] overflow-hidden">
+                    <button
+                      className="w-full px-4 py-2.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 text-gray-700 dark:text-gray-300"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
+                        const newLabel = prompt(t("common_new_label"), l.label);
+                        if (!newLabel) return;
+                        const { error } = await supabase
+                          .from("links")
+                          .update({ label: newLabel })
+                          .eq("id", l.id)
+                          .eq("profile_id", profileId);
+                        if (error) {
+                          toast.error(t("common_update_failed"));
+                          return;
+                        }
+                        setLinks(
+                          links.map((x) =>
+                            x.id === l.id ? { ...x, label: newLabel } : x,
+                          ),
+                        );
+                        toast.success(
+                          t("dashboard_content_links_update_success"),
+                        );
+                      }}
+                    >
+                      <Pencil className="w-4 h-4" />
+                      <span className="text-sm">{t("common_edit")}</span>
+                    </button>
+                    <button
+                      className="w-full px-4 py-2.5 text-left hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors flex items-center gap-2 text-red-600 dark:text-red-300"
+                      onClick={async (e) => {
+                        e.stopPropagation();
+                        setOpenMenuId(null);
+                        if (
+                          !confirm(t("dashboard_content_links_delete_confirm"))
+                        )
+                          return;
+                        const { error } = await supabase
+                          .from("links")
+                          .delete()
+                          .eq("id", l.id)
+                          .eq("profile_id", profileId);
+                        if (error) {
+                          toast.error(t("common_delete_failed"));
+                          return;
+                        }
+                        setLinks(links.filter((x) => x.id !== l.id));
+                        toast.success(
+                          t("dashboard_content_links_delete_success"),
+                        );
+                      }}
+                    >
+                      <Trash2 className="w-4 h-4" />
+                      <span className="text-sm">{t("common_delete")}</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </li>
           ))}
