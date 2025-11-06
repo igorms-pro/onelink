@@ -39,7 +39,7 @@ export function SubmissionCountsCard({
 
   if (rows.length === 0) {
     return (
-      <div className="mt-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 text-center">
+      <div className="mt-3 rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center">
         <p className="text-sm text-gray-500 dark:text-gray-400">
           No drop submissions yet.
         </p>
@@ -48,34 +48,24 @@ export function SubmissionCountsCard({
   }
 
   return (
-    <div className="mt-3 overflow-x-auto rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-      <table className="min-w-full text-sm">
-        <thead>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <th className="text-left p-3 font-semibold text-gray-700 dark:text-gray-300 w-2/3">
-              Drop
-            </th>
-            <th className="text-right p-3 font-semibold text-gray-700 dark:text-gray-300 w-1/3">
-              Submissions
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((r) => (
-            <tr
-              key={r.drop_id}
-              className="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
-            >
-              <td className="p-3 text-gray-900 dark:text-white w-2/3">
-                {r.drop_label ?? r.drop_id}
-              </td>
-              <td className="p-3 text-gray-700 dark:text-gray-300 font-medium text-right w-1/3">
-                {r.submissions}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="mt-3 space-y-2">
+      <div className="flex justify-between items-center px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-300">
+        <span>Drop</span>
+        <span>Submissions</span>
+      </div>
+      {rows.map((r) => (
+        <div
+          key={r.drop_id}
+          className="flex justify-between items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-3 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
+        >
+          <span className="text-gray-900 dark:text-white text-sm">
+            {r.drop_label ?? r.drop_id}
+          </span>
+          <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
+            {r.submissions}
+          </span>
+        </div>
+      ))}
     </div>
   );
 }
