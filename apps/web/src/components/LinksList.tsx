@@ -59,7 +59,7 @@ export function LinksList({
           </p>
         </div>
       ) : (
-        <ul className="mt-2 grid gap-2">
+        <ul className="mt-2 grid gap-4">
           {links.map((l, idx) => (
             <li
               key={l.id}
