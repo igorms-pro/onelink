@@ -78,7 +78,7 @@ export function DropForm({
         <button
           type="submit"
           disabled={busy}
-          className="rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-1.5 text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
+          className="w-full rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-1.5 text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
         >
           {t("dashboard_content_drops_add_button")}
         </button>
