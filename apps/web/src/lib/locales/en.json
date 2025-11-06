@@ -54,7 +54,7 @@
   "settings_two_factor": "Two-factor authentication",
   "settings_delete_account": "Delete account",
   "profile_powered_by": "Powered by OneLink",
-  "dashboard_content_links_title": "Links",
+  "dashboard_content_links_title": "Routes",
   "dashboard_content_links_description": "Create buttons that link to your content",
   "dashboard_content_links_limit_reached": "Free plan limit reached ({limit} actions total: {links} links + {drops} drops)",
   "dashboard_content_links_limit_hint": "Remove one or upgrade to Pro for unlimited actions.",
