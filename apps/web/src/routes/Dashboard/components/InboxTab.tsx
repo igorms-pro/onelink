@@ -63,7 +63,7 @@ export function InboxTab({ submissions }: InboxTabProps) {
   const { t } = useTranslation();
 
   return (
-    <section className="mt-4">
+    <section className="mt-2">
       <ul className="grid gap-3">
         {/* Fake notifications */}
         {fakeNotifications.map((notif, idx) => {
