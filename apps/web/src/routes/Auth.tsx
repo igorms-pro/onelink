@@ -24,7 +24,7 @@ export default function Auth() {
       }}
     >
       <HeaderMobileSignIn />
-      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center">
+      <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800">
         <div className="rounded-xl border border-gray-200/50 dark:border-gray-800 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm p-8 shadow-lg">
           <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
             {t("auth_sign_in_title")}
