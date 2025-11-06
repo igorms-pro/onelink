@@ -10,12 +10,20 @@ export default function App() {
   const { t } = useTranslation();
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(() => {
+    // Check onboarding state immediately on mount
+    if (typeof window !== "undefined" && !user) {
+      return shouldShowOnboarding();
+    }
+    return false;
+  });
 
   useEffect(() => {
-    // Check if onboarding should be shown
+    // Check if onboarding should be shown when auth state changes
     if (!loading && !user) {
       setShowOnboarding(shouldShowOnboarding());
+    } else if (user) {
+      setShowOnboarding(false);
     }
   }, [loading, user]);
 
