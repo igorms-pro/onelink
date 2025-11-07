@@ -130,9 +130,10 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
         </button>
       </div>
 
-      {/* Carousel */}
-      <div className="flex-1 flex items-center justify-center px-6 relative z-10">
-        <Carousel setApi={setApi} className="w-full max-w-sm">
+      {/* Main content container */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 relative z-10 w-full max-w-md mx-auto">
+        {/* Carousel */}
+        <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {slides.map((slide, index) => (
               <CarouselItem key={index}>
@@ -165,34 +166,34 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
             ))}
           </CarouselContent>
         </Carousel>
-      </div>
 
-      {/* Dots indicator */}
-      <div className="flex justify-center gap-2 mb-8 relative z-10">
-        {slides.map((_, index) => (
+        {/* Dots indicator */}
+        <div className="flex justify-center gap-2 my-8">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => api?.scrollTo(index)}
+              className={`h-2 rounded-full transition-all ${
+                index + 1 === current
+                  ? "bg-purple-600 w-8"
+                  : "bg-gray-300 dark:bg-gray-600 w-2"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Next/Get Started button */}
+        <div className="w-full pb-8">
           <button
-            key={index}
-            onClick={() => api?.scrollTo(index)}
-            className={`h-2 rounded-full transition-all ${
-              index + 1 === current
-                ? "bg-purple-600 w-8"
-                : "bg-gray-300 dark:bg-gray-600 w-2"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Next/Get Started button */}
-      <div className="px-6 pb-8 relative z-10">
-        <button
-          onClick={handleNext}
-          className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
-        >
-          {current === count
-            ? t("onboarding_getstarted_button")
-            : t("onboarding_next")}
-        </button>
+            onClick={handleNext}
+            className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
+          >
+            {current === count
+              ? t("onboarding_getstarted_button")
+              : t("onboarding_next")}
+          </button>
+        </div>
       </div>
     </div>
   );
