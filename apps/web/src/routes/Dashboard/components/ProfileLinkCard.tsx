@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Copy, ExternalLink, QrCode } from "lucide-react";
+import { Copy, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 
 interface ProfileLinkCardProps {
@@ -32,11 +32,6 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
     window.open(profileUrl, "_blank", "noopener,noreferrer");
   };
 
-  const handleQRCode = () => {
-    // TODO: Implement QR code modal/page
-    toast.info(t("dashboard_account_profile_qr_coming_soon"));
-  };
-
   return (
     <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
@@ -64,20 +59,13 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex justify-end">
         <button
           onClick={handlePreview}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1 min-w-0"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
         >
           <ExternalLink className="w-4 h-4" />
           {t("dashboard_account_profile_link_preview")}
-        </button>
-        <button
-          onClick={handleQRCode}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1 min-w-0"
-        >
-          <QrCode className="w-4 h-4" />
-          {t("dashboard_account_profile_link_qr")}
         </button>
       </div>
     </section>
