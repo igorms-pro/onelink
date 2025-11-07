@@ -108,7 +108,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
 
       {/* Header container with max-width */}
       <div className="absolute top-0 left-0 right-0 z-50">
-        <div className="max-w-md mx-auto w-full flex items-center justify-between p-4 md:p-6">
+        <div className="max-w-3xl mx-auto w-full flex items-center justify-between p-4 md:p-6 lg:p-8">
           {/* Logo */}
           <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
             <img
