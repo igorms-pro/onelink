@@ -29,29 +29,29 @@ export default function Profile() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
       {/* Background image - light mode */}
       <div
-        className="absolute inset-0 pointer-events-none dark:hidden"
+        className="fixed inset-0 pointer-events-none dark:hidden z-0"
         style={{
           backgroundImage: "url(/screen.png)",
-          backgroundSize: "contain",
+          backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
       ></div>
 
       {/* Background image - dark mode */}
       <div
-        className="absolute inset-0 pointer-events-none hidden dark:block"
+        className="fixed inset-0 pointer-events-none hidden dark:block z-0"
         style={{
           backgroundImage: "url(/screen-dark.png)",
-          backgroundSize: "contain",
+          backgroundSize: "cover",
           backgroundRepeat: "no-repeat",
         }}
       ></div>
 
       {/* Gradient blobs background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300/5 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
         <div className="absolute top-1/4 right-1/4 w-80 h-80 bg-pink-300/5 dark:bg-pink-600/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/3 w-72 h-72 bg-blue-300/5 dark:bg-blue-600/5 rounded-full blur-3xl"></div>

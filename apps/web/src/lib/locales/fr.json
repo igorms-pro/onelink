@@ -140,8 +140,8 @@
   "profile_drop_submission_or_drag_drop": "ou glissez-déposez",
   "profile_drop_submission_max_size": "Max {size}Mo par fichier",
   "profile_drop_submission_send": "Envoyer",
-  "profile_section_routes": "Routes",
-  "profile_section_drops": "Drops",
+  "profile_section_routes": "Liens",
+  "profile_section_drops": "Fichiers",
   "aria_change_language": "Changer la langue",
   "aria_toggle_theme": "Basculer le thème"
 }

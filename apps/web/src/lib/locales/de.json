@@ -141,7 +141,7 @@
   "profile_drop_submission_max_size": "Max. {size}MB pro Datei",
   "profile_drop_submission_send": "Senden",
   "profile_section_routes": "Routen",
-  "profile_section_drops": "Drops",
+  "profile_section_drops": "Dateien",
   "aria_change_language": "Sprache ändern",
   "aria_toggle_theme": "Design ändern"
 }
