@@ -24,7 +24,6 @@ export default function Auth() {
         style={{
           backgroundImage: "url(/screen.png)",
           backgroundSize: "cover",
-          backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
         }}
       ></div>

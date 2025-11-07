@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import "./index.css";
 import "./lib/i18n";
 import App from "./routes/App";
-import Profile from "./routes/Profile";
+import Profile from "./routes/Profile/index";
 import Auth from "./routes/Auth";
 import Dashboard from "./routes/Dashboard/index";
 import { AuthProvider } from "./lib/AuthProvider";

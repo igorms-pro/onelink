@@ -1,7 +1,7 @@
 import { Languages } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { setLanguage } from "../lib/i18n";
+import { setLanguage } from "@/lib/i18n";
 
 const languages = [
   { code: "EN", name: "English", flag: "🇬🇧" },
@@ -16,7 +16,7 @@ const languages = [
   { code: "RU", name: "Русский", flag: "🇷🇺" },
 ];
 
-export function LanguageToggleButton() {
+export function ProfileLanguageToggleButton() {
   const { i18n, t } = useTranslation();
   const [isLangOpen, setIsLangOpen] = useState(false);
   const langDropdownRef = useRef<HTMLDivElement>(null);
@@ -52,9 +52,9 @@ export function LanguageToggleButton() {
         <Languages className="w-5 h-5" />
       </button>
 
-      {/* Language Dropdown */}
+      {/* Language Dropdown - Opens upward (bottom-full mb-2) */}
       {isLangOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[180px] max-h-[320px] overflow-y-auto pointer-events-auto">
+        <div className="absolute right-0 bottom-full mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[180px] max-h-[320px] overflow-y-auto pointer-events-auto">
           {languages.map((lang) => {
             const actualLangCode = lang.langCode || lang.code.toLowerCase();
             return (
