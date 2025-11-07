@@ -46,7 +46,7 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
         {t("dashboard_account_profile_link_description")}
       </p>
 
-      <div className="flex items-center gap-2 p-3 rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 mb-4">
+      <div className="flex items-center gap-2 p-3 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 mb-4">
         <input
           type="text"
           readOnly
@@ -55,11 +55,11 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
         />
         <button
           onClick={handleCopy}
-          className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+          className="p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800/40 transition-colors"
           aria-label={t("dashboard_account_profile_link_copy")}
         >
           <Copy
-            className={`w-4 h-4 ${copied ? "text-green-600 dark:text-green-400" : "text-gray-600 dark:text-gray-400"}`}
+            className={`w-4 h-4 ${copied ? "text-green-600 dark:text-green-400" : "text-purple-600 dark:text-purple-400"}`}
           />
         </button>
       </div>
