@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "Gestisci le impostazioni del tuo profilo pubblico",
   "dashboard_account_analytics_title": "Analisi",
   "dashboard_account_analytics_description": "Monitora i clic sui tuoi link e i caricamenti",
+  "dashboard_account_analytics_links": "Route",
+  "dashboard_account_analytics_drops": "File",
   "dashboard_account_profile_updated": "Aggiornato il",
   "dashboard_account_slug_taken": "Questo slug è già in uso. Per favore scegli un altro.",
   "dashboard_account_profile_update_failed": "Impossibile aggiornare il profilo",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "Invia",
   "profile_section_routes": "Route",
   "profile_section_drops": "File",
+  "common_expand": "Espandi",
+  "common_collapse": "Comprimi",
   "aria_change_language": "Cambia lingua",
   "aria_toggle_theme": "Cambia tema"
 }

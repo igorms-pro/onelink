@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "公開プロフィール設定を管理",
   "dashboard_account_analytics_title": "分析",
   "dashboard_account_analytics_description": "リンクのクリックと提出を追跡",
+  "dashboard_account_analytics_links": "ルート",
+  "dashboard_account_analytics_drops": "ドロップ",
   "dashboard_account_profile_updated": "更新日時",
   "dashboard_account_slug_taken": "このスラッグは既に使用されています。別のものを選択してください。",
   "dashboard_account_profile_update_failed": "プロフィールの更新に失敗しました",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "送信",
   "profile_section_routes": "ルート",
   "profile_section_drops": "ドロップ",
+  "common_expand": "展開",
+  "common_collapse": "折りたたむ",
   "aria_change_language": "言語を変更",
   "aria_toggle_theme": "テーマを切り替え"
 }

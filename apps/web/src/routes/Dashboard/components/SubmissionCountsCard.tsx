@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "@/lib/supabase"; // Temporarily commented for dummy data
 import type { CountRow } from "../types";
@@ -9,8 +10,10 @@ export function SubmissionCountsCard({
 }: {
   profileId: string | null;
 }) {
+  const { t } = useTranslation();
   const [rows, setRows] = useState<Array<CountRow>>([]);
   const [loading, setLoading] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     if (!profileId) return;
@@ -75,57 +78,76 @@ export function SubmissionCountsCard({
     );
   }
 
-  if (rows.length === 0) {
-    return (
-      <div className="mt-3 rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          No drop submissions yet.
-        </p>
-      </div>
-    );
-  }
-
   return (
-    <div className="mt-3 space-y-2">
-      <div className="flex justify-between items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
-        <button
-          onClick={() => handleSort("label")}
-          className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-        >
-          <span>Drop</span>
-          {sortField === "label" &&
-            (sortDirection === "asc" ? (
-              <ChevronUp className="w-3 h-3" />
-            ) : (
-              <ChevronDown className="w-3 h-3" />
-            ))}
-        </button>
-        <button
-          onClick={() => handleSort("submissions")}
-          className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-        >
-          <span>Submissions</span>
-          {sortField === "submissions" &&
-            (sortDirection === "asc" ? (
-              <ChevronUp className="w-3 h-3" />
-            ) : (
-              <ChevronDown className="w-3 h-3" />
-            ))}
-        </button>
-      </div>
-      {sortedRows.map((r) => (
-        <div
-          key={r.drop_id}
-          className="flex justify-between items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-3 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
-        >
-          <span className="text-gray-900 dark:text-white text-sm">
-            {r.drop_label ?? r.drop_id}
-          </span>
-          <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
-            {r.submissions}
-          </span>
-        </div>
-      ))}
+    <div className="mt-3">
+      {/* Header with expand/collapse */}
+      <button
+        onClick={() => setIsExpanded(!isExpanded)}
+        className="w-full flex items-center justify-between mb-3 text-left"
+        aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
+      >
+        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+          {t("dashboard_account_analytics_drops")}
+        </h3>
+        {isExpanded ? (
+          <ChevronUp className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0 ml-2" />
+        ) : (
+          <ChevronDown className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0 ml-2" />
+        )}
+      </button>
+      {isExpanded && (
+        <>
+          {rows.length === 0 ? (
+            <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                No drop submissions yet.
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <div className="flex justify-between items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
+                <button
+                  onClick={() => handleSort("label")}
+                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <span>Name</span>
+                  {sortField === "label" &&
+                    (sortDirection === "asc" ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    ))}
+                </button>
+                <button
+                  onClick={() => handleSort("submissions")}
+                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                >
+                  <span>Submissions</span>
+                  {sortField === "submissions" &&
+                    (sortDirection === "asc" ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    ))}
+                </button>
+              </div>
+              {sortedRows.map((r) => (
+                <div
+                  key={r.drop_id}
+                  className="flex justify-between items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-3 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
+                >
+                  <span className="text-gray-900 dark:text-white text-sm">
+                    {r.drop_label ?? r.drop_id}
+                  </span>
+                  <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
+                    {r.submissions}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }

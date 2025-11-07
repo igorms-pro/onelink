@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "管理您的公开个人资料设置",
   "dashboard_account_analytics_title": "分析",
   "dashboard_account_analytics_description": "跟踪您的链接点击和提交",
+  "dashboard_account_analytics_links": "路由",
+  "dashboard_account_analytics_drops": "文件",
   "dashboard_account_profile_updated": "更新于",
   "dashboard_account_slug_taken": "此别名已被使用。请选择另一个。",
   "dashboard_account_profile_update_failed": "更新个人资料失败",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "发送",
   "profile_section_routes": "路由",
   "profile_section_drops": "文件",
+  "common_expand": "展开",
+  "common_collapse": "折叠",
   "aria_change_language": "更改语言",
   "aria_toggle_theme": "切换主题"
 }

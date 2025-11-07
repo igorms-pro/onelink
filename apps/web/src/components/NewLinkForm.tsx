@@ -70,7 +70,7 @@ export function NewLinkForm({
         </button>
       </form>
       {limitReached && (
-        <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">
+        <p className="mt-2 sm:mt-4 text-sm text-red-600 dark:text-red-400 font-medium">
           {t("dashboard_content_links_limit_reached_upgrade")}
         </p>
       )}

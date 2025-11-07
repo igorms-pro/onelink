@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "Управление настройками вашего публичного профиля",
   "dashboard_account_analytics_title": "Аналитика",
   "dashboard_account_analytics_description": "Отслеживание кликов по вашим ссылкам и загрузок",
+  "dashboard_account_analytics_links": "Маршруты",
+  "dashboard_account_analytics_drops": "Дропы",
   "dashboard_account_profile_updated": "Обновлено",
   "dashboard_account_slug_taken": "Этот слаг уже занят. Пожалуйста, выберите другой.",
   "dashboard_account_profile_update_failed": "Не удалось обновить профиль",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "Отправить",
   "profile_section_routes": "Маршруты",
   "profile_section_drops": "Дропы",
+  "common_expand": "Развернуть",
+  "common_collapse": "Свернуть",
   "aria_change_language": "Изменить язык",
   "aria_toggle_theme": "Переключить тему"
 }

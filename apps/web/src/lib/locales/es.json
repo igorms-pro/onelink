@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "Gestiona la configuración de tu perfil público",
   "dashboard_account_analytics_title": "Analíticas",
   "dashboard_account_analytics_description": "Rastrea los clics en tus enlaces y envíos",
+  "dashboard_account_analytics_links": "Rutas",
+  "dashboard_account_analytics_drops": "Archivos",
   "dashboard_account_profile_updated": "Actualizado el",
   "dashboard_account_slug_taken": "Este slug ya está en uso. Por favor elige otro.",
   "dashboard_account_profile_update_failed": "Error al actualizar el perfil",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "Enviar",
   "profile_section_routes": "Rutas",
   "profile_section_drops": "Archivos",
+  "common_expand": "Expandir",
+  "common_collapse": "Contraer",
   "aria_change_language": "Cambiar idioma",
   "aria_toggle_theme": "Cambiar tema"
 }

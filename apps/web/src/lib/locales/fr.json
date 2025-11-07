@@ -50,6 +50,8 @@
   "dashboard_account_profile_description": "Gérez les paramètres de votre profil public",
   "dashboard_account_analytics_title": "Analytiques",
   "dashboard_account_analytics_description": "Suivez les clics sur vos liens et les soumissions",
+  "dashboard_account_analytics_links": "Liens",
+  "dashboard_account_analytics_drops": "Fichiers",
   "dashboard_account_profile_updated": "Mis à jour le",
   "dashboard_account_slug_taken": "Ce slug est déjà pris. Veuillez en choisir un autre.",
   "dashboard_account_profile_update_failed": "Échec de la mise à jour du profil",
@@ -144,6 +146,8 @@
   "profile_drop_submission_send": "Envoyer",
   "profile_section_routes": "Liens",
   "profile_section_drops": "Fichiers",
+  "common_expand": "Développer",
+  "common_collapse": "Réduire",
   "aria_change_language": "Changer la langue",
   "aria_toggle_theme": "Basculer le thème"
 }

@@ -48,6 +48,8 @@
   "dashboard_account_profile_description": "Verwalten Sie Ihre öffentlichen Profileinstellungen",
   "dashboard_account_analytics_title": "Analysen",
   "dashboard_account_analytics_description": "Verfolgen Sie Ihre Link-Klicks und Übermittlungen",
+  "dashboard_account_analytics_links": "Routen",
+  "dashboard_account_analytics_drops": "Dateien",
   "dashboard_account_profile_updated": "Aktualisiert am",
   "dashboard_account_slug_taken": "Dieser Slug ist bereits vergeben. Bitte wählen Sie einen anderen.",
   "dashboard_account_profile_update_failed": "Profil konnte nicht aktualisiert werden",
@@ -142,6 +144,8 @@
   "profile_drop_submission_send": "Senden",
   "profile_section_routes": "Routen",
   "profile_section_drops": "Dateien",
+  "common_expand": "Erweitern",
+  "common_collapse": "Einklappen",
   "aria_change_language": "Sprache ändern",
   "aria_toggle_theme": "Design ändern"
 }

@@ -50,6 +50,8 @@
   "dashboard_account_profile_description": "Manage your public profile settings",
   "dashboard_account_analytics_title": "Analytics",
   "dashboard_account_analytics_description": "Track your link clicks and submissions",
+  "dashboard_account_analytics_links": "Links",
+  "dashboard_account_analytics_drops": "Drops",
   "dashboard_account_profile_updated": "Updated at",
   "dashboard_account_slug_taken": "This slug is already taken. Please choose another.",
   "dashboard_account_profile_update_failed": "Failed to update profile",
@@ -150,6 +152,8 @@
   "profile_section_drops": "Drops",
   "dashboard_content_links_empty": "No links yet. Create your first link above!",
   "dashboard_content_links_saving_order": "Saving order…",
+  "common_expand": "Expand",
+  "common_collapse": "Collapse",
   "aria_change_language": "Change language",
   "aria_toggle_theme": "Toggle theme"
 }
