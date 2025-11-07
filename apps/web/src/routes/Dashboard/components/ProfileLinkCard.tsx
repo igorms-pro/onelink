@@ -66,22 +66,15 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
 
       <div className="flex flex-wrap gap-2">
         <button
-          onClick={handleCopy}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium transition-colors"
-        >
-          <Copy className="w-4 h-4" />
-          {t("dashboard_account_profile_link_copy")}
-        </button>
-        <button
           onClick={handlePreview}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1 min-w-0"
         >
           <ExternalLink className="w-4 h-4" />
           {t("dashboard_account_profile_link_preview")}
         </button>
         <button
           onClick={handleQRCode}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1 min-w-0"
         >
           <QrCode className="w-4 h-4" />
           {t("dashboard_account_profile_link_qr")}
