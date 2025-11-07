@@ -106,32 +106,31 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
         }}
       ></div>
 
-      {/* Logo */}
-      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 z-50">
-        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
-          <img
-            src="/logo.png"
-            alt="OneLink"
-            className="w-full h-full object-contain"
-          />
-        </div>
-      </div>
+      {/* Header container with max-width */}
+      <div className="absolute top-0 left-0 right-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
+          {/* Logo */}
+          <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
+            <img
+              src="/logo.png"
+              alt="OneLink"
+              className="w-full h-full object-contain"
+            />
+          </div>
 
-      {/* Theme, Language toggles, and Skip button */}
-      <div className="absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-1.5 sm:gap-2 z-50">
-        <div className="scale-90 sm:scale-100">
-          <ThemeToggleButton />
+          {/* Theme, Language toggles, and Skip button */}
+          <div className="flex items-center gap-2">
+            <ThemeToggleButton />
+            <LanguageToggleButton />
+            <button
+              onClick={handleSkip}
+              className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
+              aria-label={t("onboarding_skip")}
+            >
+              {t("onboarding_skip")}
+            </button>
+          </div>
         </div>
-        <div className="scale-90 sm:scale-100">
-          <LanguageToggleButton />
-        </div>
-        <button
-          onClick={handleSkip}
-          className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
-          aria-label={t("onboarding_skip")}
-        >
-          {t("onboarding_skip")}
-        </button>
       </div>
 
       {/* Main content container */}
