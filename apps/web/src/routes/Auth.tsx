@@ -1,14 +1,17 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../lib/AuthProvider";
 import { toast } from "sonner";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
+import { setOnboardingIncomplete } from "../lib/onboarding";
 
 type FormValues = { email: string };
 
 export default function Auth() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { signInWithEmail } = useAuth();
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
@@ -40,6 +43,17 @@ export default function Auth() {
       <HeaderMobileSignIn />
       <main className="flex-1 mx-auto max-w-md w-full p-6 flex flex-col justify-center relative z-10">
         <div className="flex flex-col justify-center text-center">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <div className="w-24 h-24 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-4">
+              <img
+                src="/logo.png"
+                alt="OneLink"
+                className="w-full h-full object-contain"
+              />
+            </div>
+          </div>
+
           <h1 className="text-5xl sm:text-6xl font-bold bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
             {t("app_title")}
           </h1>
@@ -79,6 +93,17 @@ export default function Auth() {
               {loading ? t("auth_sending") : t("auth_send_link")}
             </button>
           </form>
+
+          {/* Link to onboarding */}
+          <button
+            onClick={() => {
+              setOnboardingIncomplete();
+              navigate("/");
+            }}
+            className="mt-4 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors underline underline-offset-2"
+          >
+            {t("auth_view_onboarding")}
+          </button>
         </div>
       </main>
     </div>

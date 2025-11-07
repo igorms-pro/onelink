@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { X } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -107,20 +106,29 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
         }}
       ></div>
 
-      {/* Theme and Language toggles */}
-      <div className="absolute top-4 left-4 flex items-center gap-2 z-50">
-        <ThemeToggleButton />
-        <LanguageToggleButton />
+      {/* Logo */}
+      <div className="absolute top-4 left-4 z-50">
+        <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
+          <img
+            src="/logo.png"
+            alt="OneLink"
+            className="w-full h-full object-contain"
+          />
+        </div>
       </div>
 
-      {/* Skip button */}
-      <button
-        onClick={handleSkip}
-        className="absolute top-4 right-4 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors z-50"
-        aria-label="Skip onboarding"
-      >
-        <X className="w-5 h-5" />
-      </button>
+      {/* Theme, Language toggles, and Skip button */}
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
+        <ThemeToggleButton />
+        <LanguageToggleButton />
+        <button
+          onClick={handleSkip}
+          className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
+          aria-label={t("onboarding_skip")}
+        >
+          {t("onboarding_skip")}
+        </button>
+      </div>
 
       {/* Carousel */}
       <div className="flex-1 flex items-center justify-center px-6 relative z-10">

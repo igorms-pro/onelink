@@ -29,6 +29,7 @@
   "auth_send_link": "リンクを送信",
   "auth_sending": "送信中...",
   "auth_magic_link_sent": "マジックリンクを送信しました！メールを確認してください。",
+  "auth_view_onboarding": "初めてですか？OneLinkの使い方を学ぶ",
   "dashboard_loading": "読み込み中…",
   "dashboard_please_sign_in": "サインインしてください",
   "dashboard_go_to_sign_in": "サインインに移動",

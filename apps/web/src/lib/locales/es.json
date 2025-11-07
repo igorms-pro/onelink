@@ -29,6 +29,7 @@
   "auth_send_link": "Enviar enlace",
   "auth_sending": "Enviando...",
   "auth_magic_link_sent": "¡Enlace mágico enviado! Revisa tu correo electrónico.",
+  "auth_view_onboarding": "¿Nuevo aquí? Aprende cómo funciona OneLink",
   "dashboard_loading": "Cargando…",
   "dashboard_please_sign_in": "Por favor inicia sesión",
   "dashboard_go_to_sign_in": "Ir a iniciar sesión",

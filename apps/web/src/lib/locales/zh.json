@@ -29,6 +29,7 @@
   "auth_send_link": "发送链接",
   "auth_sending": "发送中...",
   "auth_magic_link_sent": "魔法链接已发送！请检查您的电子邮件。",
+  "auth_view_onboarding": "新用户？了解 OneLink 的工作原理",
   "dashboard_loading": "加载中…",
   "dashboard_please_sign_in": "请登录",
   "dashboard_go_to_sign_in": "前往登录",

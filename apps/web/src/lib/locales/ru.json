@@ -29,6 +29,7 @@
   "auth_send_link": "Отправить ссылку",
   "auth_sending": "Отправка...",
   "auth_magic_link_sent": "Волшебная ссылка отправлена! Проверьте свою электронную почту.",
+  "auth_view_onboarding": "Впервые здесь? Узнайте, как работает OneLink",
   "dashboard_loading": "Загрузка…",
   "dashboard_please_sign_in": "Пожалуйста, войдите",
   "dashboard_go_to_sign_in": "Перейти к входу",
