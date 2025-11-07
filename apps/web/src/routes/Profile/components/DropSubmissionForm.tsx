@@ -43,7 +43,13 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
   };
 
   return (
-    <div className="rounded-xl border border-gray-200/80 dark:border-gray-800/80 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-all">
+    <div
+      className={`rounded-xl border border-gray-200/80 dark:border-gray-800/80 backdrop-blur-sm shadow-lg shadow-gray-200/50 dark:shadow-black/20 hover:shadow-xl transition-all ${
+        isExpanded
+          ? "bg-purple-50 dark:bg-gray-800/80"
+          : "bg-white dark:bg-gray-800/80"
+      }`}
+    >
       {/* Collapsible Header */}
       <button
         type="button"
@@ -195,8 +201,8 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
             relative rounded-lg border-2 border-dashed transition-all cursor-pointer
             ${
               isDragging
-                ? "border-purple-500 bg-purple-50/50 dark:bg-purple-900/20"
-                : "border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 bg-gray-50/50 dark:bg-gray-900/50"
+                ? "border-purple-500 bg-purple-100 dark:bg-purple-900/20"
+                : "border-gray-300 dark:border-gray-600 hover:border-purple-400 dark:hover:border-purple-500 bg-purple-50 dark:bg-gray-900/50"
             }
           `}
             >

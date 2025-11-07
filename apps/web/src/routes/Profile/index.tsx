@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
@@ -19,6 +20,62 @@ export default function Profile() {
     slug,
     host,
   );
+
+  // SEO Meta Tags
+  useEffect(() => {
+    if (!profile) return;
+
+    const profileUrl = `${window.location.origin}/${slug}`;
+    const displayName = profile.display_name || profile.slug || "Profile";
+    const description = profile.bio || `${displayName}'s OneLink profile`;
+    const ogImage = profile.avatar_url || `${window.location.origin}/logo.png`;
+
+    // Update title
+    document.title = `${displayName} | OneLink`;
+
+    // Update or create meta tags
+    const updateMetaTag = (
+      property: string,
+      content: string,
+      isProperty = false,
+    ) => {
+      const selector = isProperty
+        ? `meta[property="${property}"]`
+        : `meta[name="${property}"]`;
+      let meta = document.querySelector(selector) as HTMLMetaElement;
+      if (!meta) {
+        meta = document.createElement("meta");
+        if (isProperty) {
+          meta.setAttribute("property", property);
+        } else {
+          meta.setAttribute("name", property);
+        }
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute("content", content);
+    };
+
+    // Basic meta tags
+    updateMetaTag("description", description);
+    updateMetaTag("og:title", `${displayName} | OneLink`, true);
+    updateMetaTag("og:description", description, true);
+    updateMetaTag("og:type", "profile", true);
+    updateMetaTag("og:url", profileUrl, true);
+    updateMetaTag("og:image", ogImage, true);
+    updateMetaTag("og:image:width", "1200", true);
+    updateMetaTag("og:image:height", "630", true);
+
+    // Twitter Card tags
+    updateMetaTag("twitter:card", "summary", true);
+    updateMetaTag("twitter:title", `${displayName} | OneLink`, true);
+    updateMetaTag("twitter:description", description, true);
+    updateMetaTag("twitter:image", ogImage, true);
+
+    // Cleanup function
+    return () => {
+      document.title = "OneLink";
+    };
+  }, [profile, slug]);
 
   if (isLoading) {
     return <LoadingState />;
@@ -62,12 +119,29 @@ export default function Profile() {
         <main className="flex-1 mx-auto max-w-2xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           {profile && (
             <>
-              <ProfileHeader profile={profile} />
+              <ProfileHeader profile={profile} links={links} />
               <LinksSection links={links} />
               <DropsSection drops={drops} />
               {isBaseHost(host) && plan !== "pro" && (
-                <footer className="mt-12 text-center text-sm text-gray-500 dark:text-gray-400">
-                  {t("profile_slogan")}
+                <footer className="mt-12 text-center space-y-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {t("profile_slogan")}
+                  </p>
+                  <div className="flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
+                    <a
+                      href="/privacy"
+                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                    >
+                      PP
+                    </a>
+                    <span>•</span>
+                    <a
+                      href="/terms"
+                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                    >
+                      ToS
+                    </a>
+                  </div>
                 </footer>
               )}
             </>

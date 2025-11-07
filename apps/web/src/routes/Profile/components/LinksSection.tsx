@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { PublicLink } from "../types";
 import { LinkCard } from "./LinkCard";
+import { isSocialLink } from "../utils/socialDetection.tsx";
 
 interface LinksSectionProps {
   links: PublicLink[];
@@ -12,7 +13,10 @@ export function LinksSection({ links }: LinksSectionProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
 
-  if (links.length === 0) {
+  // Filter out social links (they're shown in ProfileHeader)
+  const nonSocialLinks = links.filter((link) => !isSocialLink(link.url));
+
+  if (nonSocialLinks.length === 0) {
     return null;
   }
 
@@ -33,7 +37,7 @@ export function LinksSection({ links }: LinksSectionProps) {
       </button>
       {isExpanded && (
         <div className="grid gap-3 sm:gap-4">
-          {links.map((link) => (
+          {nonSocialLinks.map((link) => (
             <LinkCard key={link.link_id} link={link} />
           ))}
         </div>

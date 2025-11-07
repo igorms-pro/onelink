@@ -61,10 +61,10 @@ export function LinkCard({ link }: LinkCardProps) {
       className={`
         group relative overflow-hidden
         rounded-xl border border-gray-200/80 dark:border-gray-700/80
-        bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm
+        bg-purple-50 dark:bg-gray-800/80 backdrop-blur-sm
         px-6 py-4
         transition-all duration-200 ease-out
-        hover:scale-[1.02] hover:shadow-lg hover:shadow-gray-200/50 dark:hover:shadow-black/30
+        hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-200/50 dark:hover:shadow-black/30
         active:scale-[0.98]
         ${isPressed ? "shadow-md" : ""}
       `}
