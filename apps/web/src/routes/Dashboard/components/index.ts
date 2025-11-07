@@ -5,6 +5,7 @@ export { SubmissionCountsCard } from "./SubmissionCountsCard";
 export { InboxTab } from "./InboxTab";
 export { ContentTab } from "./ContentTab";
 export { AccountTab } from "./AccountTab";
+export { ProfileLinkCard } from "./ProfileLinkCard";
 export { LinksSection } from "./LinksSection";
 export { DropsSection } from "./DropsSection";
 export { DropForm } from "./DropForm";

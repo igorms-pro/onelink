@@ -21,10 +21,11 @@ export function DropForm({
 }: DropFormProps) {
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
+  const limitReached = isFree && totalItems >= freeLimit;
 
   return (
     <form
-      className="grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4"
+      className={`grid gap-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4 ${limitReached ? "opacity-50 pointer-events-none" : ""}`}
       onSubmit={async (e) => {
         e.preventDefault();
         if (!profileId) return;
@@ -71,18 +72,24 @@ export function DropForm({
         <input
           name="label"
           placeholder={t("dashboard_content_drops_label_placeholder")}
+          disabled={limitReached}
           className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
         />
       </div>
       <div>
         <button
           type="submit"
-          disabled={busy}
+          disabled={busy || limitReached}
           className="w-full rounded-md bg-gradient-to-r from-purple-600 to-purple-700 text-white px-3 py-1.5 text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100"
         >
           {t("dashboard_content_drops_add_button")}
         </button>
       </div>
+      {limitReached && (
+        <p className="mt-2 text-sm text-red-600 dark:text-red-400 font-medium">
+          {t("dashboard_content_drops_limit_reached_upgrade")}
+        </p>
+      )}
     </form>
   );
 }

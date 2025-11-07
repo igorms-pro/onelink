@@ -27,6 +27,11 @@ export function LinksSection({
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
 
+  // Button should only be disabled by form validation, not free limit
+  // Free limit check happens on submit
+  const isDisabled = busy || !profileId;
+  const limitReached = isFree && links.length + drops.length >= freeLimit;
+
   return (
     <section>
       <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
@@ -37,12 +42,21 @@ export function LinksSection({
       </p>
       <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 mb-4">
         <NewLinkForm
-          disabled={
-            busy ||
-            !profileId ||
-            (isFree && links.length + drops.length >= freeLimit)
-          }
+          disabled={isDisabled}
+          limitReached={limitReached}
           onCreate={async (input) => {
+            // Check free limit before submitting (backup check)
+            if (limitReached) {
+              toast.error(
+                t("dashboard_content_links_limit_reached", {
+                  limit: freeLimit,
+                  links: links.length,
+                  drops: drops.length,
+                }),
+              );
+              return;
+            }
+
             setBusy(true);
             try {
               if (!isSafeHttpUrl(input.url)) {

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
@@ -18,6 +19,7 @@ const FREE_LIMIT = 3;
 
 export default function Dashboard() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -36,6 +38,13 @@ export default function Dashboard() {
 
   const isFree = plan !== "pro";
 
+  // Redirect to /auth if not logged in
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth", { replace: true });
+    }
+  }, [loading, user, navigate]);
+
   if (loading || dataLoading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -47,21 +56,7 @@ export default function Dashboard() {
   }
 
   if (!user) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <main className="mx-auto max-w-md p-6">
-          <h1 className="text-xl font-semibold text-gray-900 dark:text-white">
-            {t("dashboard_please_sign_in")}
-          </h1>
-          <a
-            className="text-blue-600 dark:text-blue-300 underline"
-            href="/auth"
-          >
-            {t("dashboard_go_to_sign_in")}
-          </a>
-        </main>
-      </div>
-    );
+    return null; // Will redirect via useEffect
   }
 
   return (
@@ -102,6 +97,7 @@ export default function Dashboard() {
             <AccountTab
               profileId={profileId}
               profileFormInitial={profileFormInitial}
+              isFree={isFree}
             />
           )}
         </div>

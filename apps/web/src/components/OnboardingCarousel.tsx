@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import {
   Carousel,
   CarouselContent,
@@ -8,6 +8,8 @@ import {
   type CarouselApi,
 } from "@/components/ui/carousel";
 import { setOnboardingCompleted } from "@/lib/onboarding";
+import { ThemeToggleButton } from "./ThemeToggleButton";
+import { LanguageToggleButton } from "./LanguageToggleButton";
 
 interface OnboardingCarouselProps {
   onComplete: () => void;
@@ -15,32 +17,34 @@ interface OnboardingCarouselProps {
 
 export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
 
   const slides = [
     {
-      title: "Welcome to OneLink",
-      description: "Share a single link. Route by intent.",
+      title: t("onboarding_welcome_title"),
+      description: t("onboarding_welcome_description"),
       icon: "🔗",
     },
     {
-      title: "Create Routes",
-      description:
-        "Add multiple links and organize them by intent. Visitors choose where to go based on their needs.",
+      title: t("onboarding_routes_title"),
+      description: t("onboarding_routes_description"),
       icon: "✨",
+      exampleLabel: t("onboarding_routes_example"),
+      exampleText: t("onboarding_routes_example_text"),
     },
     {
-      title: "Receive Files",
-      description:
-        "Create file drops where visitors can submit files directly to you without logging in.",
+      title: t("onboarding_files_title"),
+      description: t("onboarding_files_description"),
       icon: "📁",
+      usecaseLabel: t("onboarding_files_usecase"),
+      usecaseText: t("onboarding_files_usecase_text"),
     },
     {
-      title: "Get Started",
-      description:
-        "Sign in to create your OneLink profile and start sharing your single link everywhere.",
+      title: t("onboarding_getstarted_title"),
+      description: t("onboarding_getstarted_description"),
       icon: "🚀",
     },
   ];
@@ -77,18 +81,57 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-white dark:bg-gray-900 flex flex-col">
-      {/* Skip button */}
-      <button
-        onClick={handleSkip}
-        className="absolute top-4 right-4 p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors z-10"
-        aria-label="Skip onboarding"
-      >
-        <X className="w-5 h-5" />
-      </button>
+    <div className="fixed inset-0 z-50 flex flex-col">
+      {/* Background image - light mode */}
+      <div
+        className="fixed inset-0 dark:hidden pointer-events-none"
+        style={{
+          backgroundImage: "url(/screen.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          zIndex: 0,
+        }}
+      ></div>
+
+      {/* Background image - dark mode */}
+      <div
+        className="fixed inset-0 hidden dark:block pointer-events-none"
+        style={{
+          backgroundImage: "url(/screen-dark.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          zIndex: 0,
+        }}
+      ></div>
+
+      {/* Logo */}
+      <div className="absolute top-4 left-4 z-50">
+        <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
+          <img
+            src="/logo.png"
+            alt="OneLink"
+            className="w-full h-full object-contain"
+          />
+        </div>
+      </div>
+
+      {/* Theme, Language toggles, and Skip button */}
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
+        <ThemeToggleButton />
+        <LanguageToggleButton />
+        <button
+          onClick={handleSkip}
+          className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
+          aria-label={t("onboarding_skip")}
+        >
+          {t("onboarding_skip")}
+        </button>
+      </div>
 
       {/* Carousel */}
-      <div className="flex-1 flex items-center justify-center px-6">
+      <div className="flex-1 flex items-center justify-center px-6 relative z-10">
         <Carousel setApi={setApi} className="w-full max-w-sm">
           <CarouselContent>
             {slides.map((slide, index) => (
@@ -101,19 +144,19 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
                   <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
                     {slide.description}
                   </p>
-                  {index === 1 && (
+                  {slide.exampleLabel && slide.exampleText && (
                     <div className="mt-6 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
                       <p className="text-sm text-purple-700 dark:text-purple-300">
-                        <strong>Example:</strong> Link to your calendar,
-                        portfolio, or contact form - all from one URL!
+                        <strong>{slide.exampleLabel}</strong>{" "}
+                        {slide.exampleText}
                       </p>
                     </div>
                   )}
-                  {index === 2 && (
+                  {slide.usecaseLabel && slide.usecaseText && (
                     <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                       <p className="text-sm text-blue-700 dark:text-blue-300">
-                        <strong>Use case:</strong> Collect resumes, design
-                        files, or documents without email attachments.
+                        <strong>{slide.usecaseLabel}</strong>{" "}
+                        {slide.usecaseText}
                       </p>
                     </div>
                   )}
@@ -125,7 +168,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Dots indicator */}
-      <div className="flex justify-center gap-2 mb-8">
+      <div className="flex justify-center gap-2 mb-8 relative z-10">
         {slides.map((_, index) => (
           <button
             key={index}
@@ -141,12 +184,14 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Next/Get Started button */}
-      <div className="px-6 pb-8">
+      <div className="px-6 pb-8 relative z-10">
         <button
           onClick={handleNext}
           className="w-full rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
         >
-          {current === count ? "Get Started" : "Next"}
+          {current === count
+            ? t("onboarding_getstarted_button")
+            : t("onboarding_next")}
         </button>
       </div>
     </div>
