@@ -134,18 +134,18 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Main content container */}
-      <div className="flex-1 flex flex-col items-center justify-center md:justify-start md:pt-24 px-6 pt-20 relative z-10 w-full max-w-md sm:max-w-lg mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-center px-6 pt-20 md:pt-0 relative z-10 w-full max-w-md sm:max-w-lg mx-auto">
         {/* Carousel */}
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {slides.map((slide, index) => (
               <CarouselItem key={index}>
-                <div className="text-center px-4">
-                  <div className="text-6xl mb-6">{slide.icon}</div>
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                <div className="text-center px-4 flex flex-col gap-y-4 md:gap-y-8">
+                  <div className="text-6xl">{slide.icon}</div>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                     {slide.title}
                   </h2>
-                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
                     {slide.description}
                   </p>
                   {slide.exampleLabel && slide.exampleText && (

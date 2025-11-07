@@ -72,7 +72,7 @@ export default function Dashboard() {
       <Header onSettingsClick={() => setIsSettingsOpen(true)} />
       <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
 
-      <main className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-[140px] sm:pt-6 pb-20 sm:pb-4 overflow-y-auto">
+      <main className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-[104px] sm:pt-4 pb-20 sm:pb-4 overflow-y-auto">
         <TabNavigation
           activeTab={activeTab}
           onTabChange={setActiveTab}
