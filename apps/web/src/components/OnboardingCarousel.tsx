@@ -134,7 +134,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
       </div>
 
       {/* Main content container */}
-      <div className="flex-1 flex flex-col items-center justify-center px-6 pt-20 md:pt-0 relative z-10 w-full max-w-md sm:max-w-lg mx-auto">
+      <div className="flex-1 flex flex-col items-center justify-center md:justify-start md:pt-24 px-6 pt-20 relative z-10 w-full max-w-md sm:max-w-lg mx-auto">
         {/* Carousel */}
         <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
