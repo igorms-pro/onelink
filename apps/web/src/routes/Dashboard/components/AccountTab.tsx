@@ -8,6 +8,7 @@ import {
 } from "@/components/ProfileEditor";
 import { AnalyticsCard } from "@/components/AnalyticsCard";
 import { SubmissionCountsCard } from "./SubmissionCountsCard";
+import { ProfileLinkCard } from "./ProfileLinkCard";
 import { toast } from "sonner";
 
 interface AccountTabProps {
@@ -22,6 +23,9 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
 
   return (
     <div className="space-y-6 mt-2">
+      {/* Profile Link */}
+      <ProfileLinkCard slug={profileFormInitial?.slug ?? null} />
+
       {/* Profile editor */}
       <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
