@@ -1,15 +1,25 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, ExternalLink, QrCode } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { goToCheckout } from "@/lib/billing";
 
 interface ProfileLinkCardProps {
   slug: string | null;
+  isFree: boolean;
 }
 
-export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
+export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
   const { t } = useTranslation();
   const [copied, setCopied] = useState(false);
+  const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
 
   if (!slug) {
     return null;
@@ -33,8 +43,12 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
   };
 
   const handleQRCode = () => {
-    // TODO: Implement QR code modal/page
-    toast.info(t("dashboard_account_profile_qr_coming_soon"));
+    if (isFree) {
+      toast.info(t("dashboard_account_profile_qr_pro_feature"));
+      goToCheckout();
+      return;
+    }
+    setIsQRCodeOpen(true);
   };
 
   return (
@@ -65,13 +79,27 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
       </div>
 
       <div className="flex gap-2">
-        <button
-          onClick={handleQRCode}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1"
-        >
-          <QrCode className="w-4 h-4" />
-          {t("dashboard_account_profile_link_qr")}
-        </button>
+        <div className="flex-1 relative">
+          {isFree && (
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
+              <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-purple-600 text-white rounded-full">
+                Pro
+              </span>
+            </div>
+          )}
+          <button
+            onClick={handleQRCode}
+            disabled={isFree}
+            className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium transition-colors ${
+              isFree
+                ? "opacity-50 cursor-not-allowed text-gray-400 dark:text-gray-500"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+            }`}
+          >
+            <QrCode className="w-4 h-4" />
+            {t("dashboard_account_profile_link_qr")}
+          </button>
+        </div>
         <button
           onClick={handlePreview}
           className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1"
@@ -80,6 +108,23 @@ export function ProfileLinkCard({ slug }: ProfileLinkCardProps) {
           {t("dashboard_account_profile_link_preview")}
         </button>
       </div>
+
+      {/* QR Code Modal */}
+      <Dialog open={isQRCodeOpen} onOpenChange={setIsQRCodeOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>{t("dashboard_account_profile_qr_title")}</DialogTitle>
+          </DialogHeader>
+          <div className="flex flex-col items-center gap-4 py-4">
+            <div className="p-4 bg-white rounded-lg">
+              <QRCodeSVG value={profileUrl} size={200} />
+            </div>
+            <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+              {t("dashboard_account_profile_qr_description")}
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }

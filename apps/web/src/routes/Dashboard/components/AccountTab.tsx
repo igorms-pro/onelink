@@ -14,9 +14,14 @@ import { toast } from "sonner";
 interface AccountTabProps {
   profileId: string | null;
   profileFormInitial: ProfileForm | null;
+  isFree: boolean;
 }
 
-export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
+export function AccountTab({
+  profileId,
+  profileFormInitial,
+  isFree,
+}: AccountTabProps) {
   const { t } = useTranslation();
   const profileEditorRef = useRef<ProfileEditorRef>(null);
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
@@ -24,7 +29,10 @@ export function AccountTab({ profileId, profileFormInitial }: AccountTabProps) {
   return (
     <div className="space-y-6 mt-2">
       {/* Profile Link */}
-      <ProfileLinkCard slug={profileFormInitial?.slug ?? null} />
+      <ProfileLinkCard
+        slug={profileFormInitial?.slug ?? null}
+        isFree={isFree}
+      />
 
       {/* Profile editor */}
       <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">

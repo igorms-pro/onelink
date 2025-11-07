@@ -97,6 +97,7 @@ export default function Dashboard() {
             <AccountTab
               profileId={profileId}
               profileFormInitial={profileFormInitial}
+              isFree={isFree}
             />
           )}
         </div>
