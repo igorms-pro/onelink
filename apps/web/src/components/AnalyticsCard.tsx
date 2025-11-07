@@ -135,7 +135,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   onClick={() => handleSort("label")}
                   className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
                 >
-                  <span>Name</span>
+                  <span>{t("dashboard_account_analytics_name")}</span>
                   {sortField === "label" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp className="w-3 h-3" />
@@ -147,7 +147,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   onClick={() => handleSort("clicks")}
                   className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
                 >
-                  <span>Clicks</span>
+                  <span>{t("dashboard_account_analytics_clicks")}</span>
                   {sortField === "clicks" &&
                     (sortDirection === "asc" ? (
                       <ChevronUp className="w-3 h-3" />
