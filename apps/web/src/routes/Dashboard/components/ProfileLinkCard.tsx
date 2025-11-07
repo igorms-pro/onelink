@@ -79,9 +79,9 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
       </div>
 
       <div className="flex gap-2">
-        <div className="flex-1 relative flex items-center justify-center">
+        <div className="flex-1 relative">
           {isFree && (
-            <div className="absolute -top-2 z-10">
+            <div className="absolute -top-2 left-1/2 -translate-x-1/2 z-10">
               <span className="px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-purple-600 text-white rounded-full">
                 Pro
               </span>
