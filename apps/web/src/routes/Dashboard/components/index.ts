@@ -1,4 +1,5 @@
 export { DashboardHeader } from "./DashboardHeader";
+export { DashboardSubHeader } from "./DashboardSubHeader";
 export { TabNavigation } from "./TabNavigation";
 export { BottomNavigation } from "./BottomNavigation";
 export { SubmissionCountsCard } from "./SubmissionCountsCard";

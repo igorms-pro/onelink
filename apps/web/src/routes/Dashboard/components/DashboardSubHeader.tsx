@@ -1,16 +1,19 @@
 import { useTranslation } from "react-i18next";
 import { goToCheckout, goToPortal } from "@/lib/billing";
 
-interface DashboardHeaderProps {
+interface DashboardSubHeaderProps {
   isFree: boolean;
   onSignOut: () => void;
 }
 
-export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
+export function DashboardSubHeader({
+  isFree,
+  onSignOut,
+}: DashboardSubHeaderProps) {
   const { t } = useTranslation();
   return (
-    <header className="fixed top-[56px] left-0 right-0 sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
-      <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-2 sm:mb-4 sm:pb-4 sm:pt-0">
+    <header className="fixed top-[56px] left-0 right-0 sm:sticky sm:top-[56px] z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+      <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-4 ">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_header_title")}

@@ -44,6 +44,8 @@
   "dashboard_inbox_email": "E-mail :",
   "dashboard_inbox_note": "Note :",
   "dashboard_inbox_files": "Fichiers",
+  "dashboard_inbox_clear_all": "Tout effacer",
+  "dashboard_inbox_clear_all_confirm": "Êtes-vous sûr de vouloir effacer tous les éléments de la boîte de réception ? Cette action ne peut pas être annulée.",
   "dashboard_account_profile_title": "Profil",
   "dashboard_account_profile_description": "Gérez les paramètres de votre profil public",
   "dashboard_account_analytics_title": "Analytiques",

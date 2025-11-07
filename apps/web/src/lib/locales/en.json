@@ -44,6 +44,8 @@
   "dashboard_inbox_email": "Email:",
   "dashboard_inbox_note": "Note:",
   "dashboard_inbox_files": "Files",
+  "dashboard_inbox_clear_all": "Clear all",
+  "dashboard_inbox_clear_all_confirm": "Are you sure you want to clear all inbox items? This action cannot be undone.",
   "dashboard_account_profile_title": "Profile",
   "dashboard_account_profile_description": "Manage your public profile settings",
   "dashboard_account_analytics_title": "Analytics",
