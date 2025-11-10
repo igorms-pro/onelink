@@ -74,7 +74,9 @@ export function SubmissionCountsCard({
 
   if (loading) {
     return (
-      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">Loading…</p>
+      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+        {t("dashboard_loading")}
+      </p>
     );
   }
 
@@ -100,7 +102,7 @@ export function SubmissionCountsCard({
           {rows.length === 0 ? (
             <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center">
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                No drop submissions yet.
+                {t("dashboard_account_analytics_no_submissions")}
               </p>
             </div>
           ) : (

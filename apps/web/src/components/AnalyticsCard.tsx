@@ -65,7 +65,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
   if (!profileId)
     return (
       <p className="text-sm text-gray-500 dark:text-gray-400">
-        Profile not ready.
+        {t("dashboard_account_analytics_profile_not_ready")}
       </p>
     );
 
@@ -84,7 +84,9 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
-              {loading && days === 7 ? "..." : "7 days"}
+              {loading && days === 7
+                ? "..."
+                : t("dashboard_account_analytics_days_7")}
             </button>
             <button
               onClick={() => setDays(30)}
@@ -95,7 +97,9 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
-              {loading && days === 30 ? "..." : "30 days"}
+              {loading && days === 30
+                ? "..."
+                : t("dashboard_account_analytics_days_30")}
             </button>
             <button
               onClick={() => setDays(90)}
@@ -106,7 +110,9 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
               }`}
             >
-              {loading && days === 90 ? "..." : "90 days"}
+              {loading && days === 90
+                ? "..."
+                : t("dashboard_account_analytics_days_90")}
             </button>
           </div>
         </>
@@ -158,7 +164,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
               </div>
               {sortedRows.length === 0 ? (
                 <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
-                  No clicks yet
+                  {t("dashboard_account_analytics_no_clicks")}
                 </div>
               ) : (
                 sortedRows.map((r) => (
