@@ -8,18 +8,17 @@ type ClickRow = { link_id: string; clicks: number; label?: string };
 
 export function LinksAnalyticsCard({
   profileId,
+  days,
 }: {
   profileId: string | null;
+  days: 7 | 30 | 90;
 }) {
   const { t } = useTranslation();
   const [rows, setRows] = useState<Array<ClickRow>>([]);
-  const [loading, setLoading] = useState(false);
-  const [days, setDays] = useState<7 | 30 | 90>(7);
   const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     if (!profileId) return;
-    setLoading(true);
 
     // Dummy data for testing
     const dummyData: ClickRow[] = [
@@ -32,7 +31,6 @@ export function LinksAnalyticsCard({
 
     setTimeout(() => {
       setRows(dummyData);
-      setLoading(false);
     }, 300);
 
     // Real API call (commented out for now)
@@ -75,52 +73,6 @@ export function LinksAnalyticsCard({
 
   return (
     <div className="mt-2">
-      {isExpanded && (
-        <>
-          {/* Toggle buttons - Above title */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            <button
-              onClick={() => setDays(7)}
-              disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
-                days === 7
-                  ? "bg-gray-900 dark:bg-gray-700 text-white"
-                  : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              }`}
-            >
-              {loading && days === 7
-                ? "..."
-                : t("dashboard_account_analytics_days_7")}
-            </button>
-            <button
-              onClick={() => setDays(30)}
-              disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
-                days === 30
-                  ? "bg-gray-900 dark:bg-gray-700 text-white"
-                  : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              }`}
-            >
-              {loading && days === 30
-                ? "..."
-                : t("dashboard_account_analytics_days_30")}
-            </button>
-            <button
-              onClick={() => setDays(90)}
-              disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
-                days === 90
-                  ? "bg-gray-900 dark:bg-gray-700 text-white"
-                  : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-              }`}
-            >
-              {loading && days === 90
-                ? "..."
-                : t("dashboard_account_analytics_days_90")}
-            </button>
-          </div>
-        </>
-      )}
       {/* Header with expand/collapse */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
