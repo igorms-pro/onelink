@@ -120,7 +120,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
       {/* Header with expand/collapse */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between mb-3 text-left cursor-pointer"
+        className="w-full flex items-center  mb-3 text-left cursor-pointer"
         aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
       >
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
