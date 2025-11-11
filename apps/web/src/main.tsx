@@ -8,6 +8,7 @@ import App from "./routes/App";
 import Profile from "./routes/Profile/index";
 import Auth from "./routes/Auth";
 import Dashboard from "./routes/Dashboard/index";
+import Settings from "./routes/Settings/index";
 import { AuthProvider } from "./lib/AuthProvider";
 
 // Initialize theme on app load
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/auth", element: <Auth /> },
   { path: "/dashboard", element: <Dashboard /> },
+  { path: "/settings", element: <Settings /> },
   { path: "/:slug", element: <Profile /> },
 ]);
 
