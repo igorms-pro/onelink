@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "@/lib/supabase"; // Temporarily commented for dummy data
@@ -87,14 +87,6 @@ export function DropsAnalyticsCard({
 
   if (!profileId) return null;
 
-  if (loading) {
-    return (
-      <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
-        {t("dashboard_loading")}
-      </p>
-    );
-  }
-
   return (
     <div className="mt-3">
       {/* Header with expand/collapse */}
@@ -114,55 +106,67 @@ export function DropsAnalyticsCard({
       </button>
       {isExpanded && (
         <>
-          {rows.length === 0 ? (
-            <div className="rounded-lg bg-teal-50 dark:bg-teal-900/20 p-4 text-center">
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                {t("dashboard_account_analytics_no_submissions")}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-2">
-              <div className="flex justify-between items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
-                <button
-                  onClick={() => handleSort("label")}
-                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-                >
-                  <span>{t("dashboard_account_analytics_name")}</span>
-                  {sortField === "label" &&
-                    (sortDirection === "asc" ? (
-                      <ChevronUp className="w-3 h-3" />
-                    ) : (
-                      <ChevronDown className="w-3 h-3" />
-                    ))}
-                </button>
-                <button
-                  onClick={() => handleSort("submissions")}
-                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
-                >
-                  <span>{t("dashboard_account_analytics_submissions")}</span>
-                  {sortField === "submissions" &&
-                    (sortDirection === "asc" ? (
-                      <ChevronUp className="w-3 h-3" />
-                    ) : (
-                      <ChevronDown className="w-3 h-3" />
-                    ))}
-                </button>
-              </div>
-              {sortedRows.map((r) => (
-                <div
-                  key={r.drop_id}
-                  className="flex justify-between items-center rounded-lg bg-teal-50 dark:bg-teal-900/20 p-3 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors"
-                >
-                  <span className="text-gray-900 dark:text-white text-sm">
-                    {r.drop_label ?? r.drop_id}
-                  </span>
-                  <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
-                    {r.submissions}
-                  </span>
+          <div className="relative">
+            {loading && (
+              <div className="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center min-h-[100px]">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="w-6 h-6 text-gray-600 dark:text-gray-400 animate-spin" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t("dashboard_loading")}
+                  </p>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )}
+            {rows.length === 0 ? (
+              <div className="rounded-lg bg-teal-50 dark:bg-teal-900/20 p-4 text-center">
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  {t("dashboard_account_analytics_no_submissions")}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex justify-between items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
+                  <button
+                    onClick={() => handleSort("label")}
+                    className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span>{t("dashboard_account_analytics_name")}</span>
+                    {sortField === "label" &&
+                      (sortDirection === "asc" ? (
+                        <ChevronUp className="w-3 h-3" />
+                      ) : (
+                        <ChevronDown className="w-3 h-3" />
+                      ))}
+                  </button>
+                  <button
+                    onClick={() => handleSort("submissions")}
+                    className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                  >
+                    <span>{t("dashboard_account_analytics_submissions")}</span>
+                    {sortField === "submissions" &&
+                      (sortDirection === "asc" ? (
+                        <ChevronUp className="w-3 h-3" />
+                      ) : (
+                        <ChevronDown className="w-3 h-3" />
+                      ))}
+                  </button>
+                </div>
+                {sortedRows.map((r) => (
+                  <div
+                    key={r.drop_id}
+                    className="flex justify-between items-center rounded-lg bg-teal-50 dark:bg-teal-900/20 p-3 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors"
+                  >
+                    <span className="text-gray-900 dark:text-white text-sm">
+                      {r.drop_label ?? r.drop_id}
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
+                      {r.submissions}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </>
       )}
     </div>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ChevronUp, ChevronDown } from "lucide-react";
+import { ChevronUp, ChevronDown, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "../lib/supabase"; // Temporarily commented for dummy data
@@ -15,10 +15,12 @@ export function LinksAnalyticsCard({
 }) {
   const { t } = useTranslation();
   const [rows, setRows] = useState<Array<ClickRow>>([]);
+  const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
   useEffect(() => {
     if (!profileId) return;
+    setLoading(true);
 
     // Dummy data for testing
     const dummyData: ClickRow[] = [
@@ -31,6 +33,7 @@ export function LinksAnalyticsCard({
 
     setTimeout(() => {
       setRows(dummyData);
+      setLoading(false);
     }, 300);
 
     // Real API call (commented out for now)
@@ -90,7 +93,17 @@ export function LinksAnalyticsCard({
       </button>
       {isExpanded && (
         <>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto relative">
+            {loading && (
+              <div className="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg z-10 flex items-center justify-center">
+                <div className="flex flex-col items-center gap-2">
+                  <Loader2 className="w-6 h-6 text-gray-600 dark:text-gray-400 animate-spin" />
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    {t("dashboard_loading")}
+                  </p>
+                </div>
+              </div>
+            )}
             <div className="space-y-2 pb-3">
               <div className="flex justify-between items-center px-3 pb-0 mt-2 text-xs font-bold text-gray-700 dark:text-gray-300">
                 <button
