@@ -5,7 +5,7 @@ import { useSortableData } from "@/hooks/useSortableData";
 // import { supabase } from "@/lib/supabase"; // Temporarily commented for dummy data
 import type { CountRow } from "../types";
 
-export function SubmissionCountsCard({
+export function DropsAnalyticsCard({
   profileId,
 }: {
   profileId: string | null;

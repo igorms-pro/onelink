@@ -8,7 +8,7 @@ import {
   type ProfileEditorRef,
 } from "@/components/ProfileEditor";
 import { AnalyticsCard } from "@/components/AnalyticsCard";
-import { SubmissionCountsCard } from "./SubmissionCountsCard";
+import { DropsAnalyticsCard } from "./DropsAnalyticsCard";
 import { ProfileLinkCard } from "./ProfileLinkCard";
 import { toast } from "sonner";
 
@@ -116,7 +116,7 @@ export function AccountTab({
         {isAnalyticsExpanded && (
           <>
             <AnalyticsCard profileId={profileId} />
-            <SubmissionCountsCard profileId={profileId} />
+            <DropsAnalyticsCard profileId={profileId} />
           </>
         )}
       </section>

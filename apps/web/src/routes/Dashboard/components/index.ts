@@ -2,7 +2,7 @@ export { DashboardHeader } from "./DashboardHeader";
 export { DashboardSubHeader } from "./DashboardSubHeader";
 export { TabNavigation } from "./TabNavigation";
 export { BottomNavigation } from "./BottomNavigation";
-export { SubmissionCountsCard } from "./SubmissionCountsCard";
+export { DropsAnalyticsCard } from "./DropsAnalyticsCard";
 export { InboxTab } from "./InboxTab";
 export { ContentTab } from "./ContentTab";
 export { AccountTab } from "./AccountTab";
