@@ -80,6 +80,7 @@ export function ProfileHeader({ profile, links }: ProfileHeaderProps) {
                   transition-all duration-200
                   hover:scale-110 hover:shadow-lg
                   active:scale-95
+                  cursor-pointer
                   ${link.platform!.color}
                 `}
                 aria-label={`Visit ${link.platform!.name}`}

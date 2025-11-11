@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
 import { SettingsModal } from "@/components/SettingsModal";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
-  DashboardHeader,
+  DashboardSubHeader,
   TabNavigation,
   BottomNavigation,
   InboxTab,
@@ -60,7 +61,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
+    <div className="h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">
       {/* Gradient blobs background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-300/5 dark:bg-purple-600/5 rounded-full blur-3xl"></div>
@@ -70,38 +71,58 @@ export default function Dashboard() {
       </div>
 
       <Header onSettingsClick={() => setIsSettingsOpen(true)} />
-      <DashboardHeader isFree={isFree} onSignOut={() => signOut()} />
+      <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
 
-      <main className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-[140px] sm:pt-6 pb-20 sm:pb-4 overflow-y-auto">
+      <div className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-10 sm:pt-0 pb-20 sm:pb-4 flex flex-col min-h-0">
         <TabNavigation
           activeTab={activeTab}
           onTabChange={setActiveTab}
           submissionCount={submissions.length}
         />
 
-        {/* Tab Content */}
-        <div className="transition-opacity duration-200">
-          {activeTab === "inbox" && <InboxTab submissions={submissions} />}
-          {activeTab === "content" && (
-            <ContentTab
-              profileId={profileId}
-              links={links}
-              setLinks={setLinks}
-              drops={drops}
-              setDrops={setDrops}
-              isFree={isFree}
-              freeLimit={FREE_LIMIT}
-            />
-          )}
-          {activeTab === "account" && (
-            <AccountTab
-              profileId={profileId}
-              profileFormInitial={profileFormInitial}
-              isFree={isFree}
-            />
-          )}
+        {/* Clear All button - Desktop only, outside scrollable area */}
+        {activeTab === "inbox" && submissions.length + 6 > 0 && (
+          <div className="hidden sm:flex justify-end  shrink-0">
+            <button
+              onClick={() => {
+                if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
+                  // TODO: Implement actual clear functionality with database
+                  console.log("Clear all clicked");
+                }
+              }}
+              className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
+            >
+              <Trash2 className="w-4 h-4" />
+              {t("dashboard_inbox_clear_all")}
+            </button>
+          </div>
+        )}
+
+        {/* Tab Content - Scrollable */}
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="transition-opacity duration-200">
+            {activeTab === "inbox" && <InboxTab submissions={submissions} />}
+            {activeTab === "content" && (
+              <ContentTab
+                profileId={profileId}
+                links={links}
+                setLinks={setLinks}
+                drops={drops}
+                setDrops={setDrops}
+                isFree={isFree}
+                freeLimit={FREE_LIMIT}
+              />
+            )}
+            {activeTab === "account" && (
+              <AccountTab
+                profileId={profileId}
+                profileFormInitial={profileFormInitial}
+                isFree={isFree}
+              />
+            )}
+          </div>
         </div>
-      </main>
+      </div>
 
       <BottomNavigation
         activeTab={activeTab}

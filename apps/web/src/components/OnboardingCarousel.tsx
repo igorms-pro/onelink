@@ -106,42 +106,46 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
         }}
       ></div>
 
-      {/* Logo */}
-      <div className="absolute top-4 left-4 z-50">
-        <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
-          <img
-            src="/logo.png"
-            alt="OneLink"
-            className="w-full h-full object-contain"
-          />
+      {/* Header container with max-width */}
+      <div className="absolute top-0 left-0 right-0 z-50">
+        <div className="max-w-3xl mx-auto w-full flex items-center justify-between p-4 md:p-6 lg:p-8">
+          {/* Logo */}
+          <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
+            <img
+              src="/logo.png"
+              alt="OneLink"
+              className="w-full h-full object-contain"
+            />
+          </div>
+
+          {/* Theme, Language toggles, and Skip button */}
+          <div className="flex items-center gap-2">
+            <ThemeToggleButton />
+            <LanguageToggleButton />
+            <button
+              onClick={handleSkip}
+              className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
+              aria-label={t("onboarding_skip")}
+            >
+              {t("onboarding_skip")}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Theme, Language toggles, and Skip button */}
-      <div className="absolute top-4 right-4 flex items-center gap-2 z-50">
-        <ThemeToggleButton />
-        <LanguageToggleButton />
-        <button
-          onClick={handleSkip}
-          className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
-          aria-label={t("onboarding_skip")}
-        >
-          {t("onboarding_skip")}
-        </button>
-      </div>
-
-      {/* Carousel */}
-      <div className="flex-1 flex items-center justify-center px-6 relative z-10">
-        <Carousel setApi={setApi} className="w-full max-w-sm">
+      {/* Main content container */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 pt-20 md:pt-0 relative z-10 w-full max-w-md sm:max-w-lg mx-auto">
+        {/* Carousel */}
+        <Carousel setApi={setApi} className="w-full">
           <CarouselContent>
             {slides.map((slide, index) => (
               <CarouselItem key={index}>
-                <div className="text-center px-4">
-                  <div className="text-6xl mb-6">{slide.icon}</div>
-                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+                <div className="text-center px-4 flex flex-col gap-y-4 md:gap-y-8">
+                  <div className="text-6xl">{slide.icon}</div>
+                  <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
                     {slide.title}
                   </h2>
-                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                  <p className="text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
                     {slide.description}
                   </p>
                   {slide.exampleLabel && slide.exampleText && (
@@ -165,34 +169,34 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
             ))}
           </CarouselContent>
         </Carousel>
-      </div>
 
-      {/* Dots indicator */}
-      <div className="flex justify-center gap-2 mb-8 relative z-10">
-        {slides.map((_, index) => (
+        {/* Dots indicator */}
+        <div className="flex justify-center gap-2 my-8">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => api?.scrollTo(index)}
+              className={`h-2 rounded-full transition-all cursor-pointer ${
+                index + 1 === current
+                  ? "bg-purple-600 w-8"
+                  : "bg-gray-300 dark:bg-gray-600 w-2"
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Next/Get Started button */}
+        <div className="w-full pb-8">
           <button
-            key={index}
-            onClick={() => api?.scrollTo(index)}
-            className={`h-2 rounded-full transition-all ${
-              index + 1 === current
-                ? "bg-purple-600 w-8"
-                : "bg-gray-300 dark:bg-gray-600 w-2"
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
-
-      {/* Next/Get Started button */}
-      <div className="px-6 pb-8 relative z-10">
-        <button
-          onClick={handleNext}
-          className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
-        >
-          {current === count
-            ? t("onboarding_getstarted_button")
-            : t("onboarding_next")}
-        </button>
+            onClick={handleNext}
+            className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
+          >
+            {current === count
+              ? t("onboarding_getstarted_button")
+              : t("onboarding_next")}
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -66,6 +66,7 @@ export function LinkCard({ link }: LinkCardProps) {
         transition-all duration-200 ease-out
         hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-200/50 dark:hover:shadow-black/30
         active:scale-[0.98]
+        cursor-pointer
         ${isPressed ? "shadow-md" : ""}
       `}
     >

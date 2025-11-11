@@ -99,7 +99,7 @@ export default function Auth() {
               setOnboardingIncomplete();
               navigate("/");
             }}
-            className="mt-4 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors underline underline-offset-2"
+            className="mt-4 text-sm text-gray-600 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 transition-colors underline underline-offset-2 cursor-pointer"
           >
             {t("auth_view_onboarding")}
           </button>

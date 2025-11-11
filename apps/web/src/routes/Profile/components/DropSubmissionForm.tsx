@@ -54,7 +54,7 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
       <button
         type="button"
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-6 sm:p-8 pb-4 sm:pb-4 text-left"
+        className="w-full flex items-center justify-between p-6 sm:p-8 pb-4 sm:pb-4 text-left cursor-pointer"
       >
         <div className="flex items-center gap-3">
           {drop.emoji && (
@@ -262,7 +262,7 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
                         e.stopPropagation();
                         removeFile(index);
                       }}
-                      className="shrink-0 ml-3 p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                      className="shrink-0 ml-3 p-1.5 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                       aria-label="Remove file"
                     >
                       <X className="w-4 h-4 text-gray-500 dark:text-gray-400" />
@@ -276,7 +276,7 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full rounded-lg bg-linear-to-r from-purple-600 to-purple-700 text-white px-6 py-3.5 text-base font-semibold hover:from-purple-700 hover:to-purple-800 active:scale-[0.98] transition-all shadow-lg shadow-purple-500/20 dark:shadow-purple-500/10"
+            className="w-full rounded-lg bg-linear-to-r from-purple-600 to-purple-700 text-white px-6 py-3.5 text-base font-semibold hover:from-purple-700 hover:to-purple-800 active:scale-[0.98] transition-all shadow-lg shadow-purple-500/20 dark:shadow-purple-500/10 cursor-pointer"
           >
             {t("profile_drop_submission_send")}
           </button>
