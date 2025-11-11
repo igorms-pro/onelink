@@ -7,8 +7,10 @@ import type { CountRow } from "../types";
 
 export function DropsAnalyticsCard({
   profileId,
+  days,
 }: {
   profileId: string | null;
+  days: 7 | 30 | 90;
 }) {
   const { t } = useTranslation();
   const [rows, setRows] = useState<Array<CountRow>>([]);
@@ -48,7 +50,7 @@ export function DropsAnalyticsCard({
       }
     })();
     */
-  }, [profileId]);
+  }, [profileId, days]);
 
   // Map drop_label to label for sorting compatibility
   const mappedRows = rows.map((r) => ({

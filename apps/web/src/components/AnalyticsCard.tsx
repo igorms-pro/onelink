@@ -43,7 +43,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         </button>
       </div>
       <LinksAnalyticsCard profileId={profileId} days={days} />
-      <DropsAnalyticsCard profileId={profileId} />
+      <DropsAnalyticsCard profileId={profileId} days={days} />
     </>
   );
 }
