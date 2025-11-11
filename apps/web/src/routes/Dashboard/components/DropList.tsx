@@ -125,7 +125,7 @@ function DropCard({
           {/* Edit Icon - Mobile: inline with title */}
           <button
             onClick={handleEdit}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors sm:hidden shrink-0"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors sm:hidden shrink-0 cursor-pointer"
             aria-label={t("common_edit")}
           >
             <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -153,7 +153,7 @@ function DropCard({
             />
             <button
               onClick={handleDelete}
-              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
               aria-label={t("common_delete")}
             >
               <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
@@ -166,7 +166,7 @@ function DropCard({
       <div className="hidden sm:flex items-center gap-3 shrink-0">
         <button
           onClick={handleEdit}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
           aria-label={t("common_edit")}
         >
           <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -182,7 +182,7 @@ function DropCard({
         />
         <button
           onClick={handleDelete}
-          className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+          className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
           aria-label={t("common_delete")}
         >
           <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />

@@ -91,7 +91,7 @@ export function LinksList({
                   {l.label}
                 </p>
                 <a
-                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2"
+                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2 cursor-pointer"
                   href={l.url}
                   target="_blank"
                   rel="noreferrer"
@@ -121,7 +121,7 @@ export function LinksList({
                     );
                     toast.success(t("dashboard_content_links_update_success"));
                   }}
-                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                   aria-label={t("common_edit")}
                 >
                   <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
@@ -143,7 +143,7 @@ export function LinksList({
                     setLinks(links.filter((x) => x.id !== l.id));
                     toast.success(t("dashboard_content_links_delete_success"));
                   }}
-                  className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                  className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                   aria-label={t("common_delete")}
                 >
                   <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />

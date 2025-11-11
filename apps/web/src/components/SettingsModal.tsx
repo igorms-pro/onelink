@@ -93,21 +93,21 @@ function SettingsContent({
           </h3>
         </div>
         <div className="space-y-3 pl-7">
-          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline">
+          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer">
             {t("settings_change_password")}
           </button>
-          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline">
+          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer">
             {t("settings_two_factor")}
           </button>
           {isMobile && onSignOut && (
             <button
-              className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline"
+              className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline cursor-pointer"
               onClick={onSignOut}
             >
               {t("dashboard_header_sign_out")}
             </button>
           )}
-          <button className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline">
+          <button className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline cursor-pointer">
             {t("settings_delete_account")}
           </button>
         </div>

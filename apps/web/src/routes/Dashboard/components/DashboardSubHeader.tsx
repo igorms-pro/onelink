@@ -25,21 +25,21 @@ export function DashboardSubHeader({
         <div className="flex items-center justify-end gap-2 shrink-0">
           {isFree ? (
             <button
-              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
+              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
               onClick={goToCheckout}
             >
               {t("dashboard_header_upgrade")}
             </button>
           ) : (
             <button
-              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
+              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
               onClick={goToPortal}
             >
               {t("dashboard_header_manage_billing")}
             </button>
           )}
           <button
-            className="hidden sm:inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap"
+            className="hidden sm:inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap cursor-pointer"
             onClick={onSignOut}
           >
             {t("dashboard_header_sign_out")}

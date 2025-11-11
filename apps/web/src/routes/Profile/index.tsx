@@ -130,14 +130,14 @@ export default function Profile() {
                   <div className="flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
                     <a
                       href="/privacy"
-                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors cursor-pointer"
                     >
                       PP
                     </a>
                     <span>•</span>
                     <a
                       href="/terms"
-                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors"
+                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors cursor-pointer"
                     >
                       ToS
                     </a>

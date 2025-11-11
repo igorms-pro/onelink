@@ -78,7 +78,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
             <button
               onClick={() => setDays(7)}
               disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                 days === 7
                   ? "bg-gray-900 dark:bg-gray-700 text-white"
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -91,7 +91,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
             <button
               onClick={() => setDays(30)}
               disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                 days === 30
                   ? "bg-gray-900 dark:bg-gray-700 text-white"
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -104,7 +104,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
             <button
               onClick={() => setDays(90)}
               disabled={loading}
-              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+              className={`px-3 py-2 text-sm font-medium rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                 days === 90
                   ? "bg-gray-900 dark:bg-gray-700 text-white"
                   : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -120,7 +120,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
       {/* Header with expand/collapse */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between mb-3 text-left"
+        className="w-full flex items-center justify-between mb-3 text-left cursor-pointer"
         aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
       >
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">

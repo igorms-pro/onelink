@@ -69,7 +69,7 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
         />
         <button
           onClick={handleCopy}
-          className="p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800/40 transition-colors"
+          className="p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-800/40 transition-colors cursor-pointer"
           aria-label={t("dashboard_account_profile_link_copy")}
         >
           <Copy
@@ -93,7 +93,7 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
             className={`w-full flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-sm font-medium transition-colors ${
               isFree
                 ? "opacity-50 cursor-not-allowed text-gray-400 dark:text-gray-500"
-                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
             }`}
           >
             <QrCode className="w-4 h-4" />
@@ -102,7 +102,7 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
         </div>
         <button
           onClick={handlePreview}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1"
+          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors flex-1 cursor-pointer"
         >
           <ExternalLink className="w-4 h-4" />
           {t("dashboard_account_profile_link_preview")}

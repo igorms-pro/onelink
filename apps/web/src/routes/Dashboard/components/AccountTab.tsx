@@ -94,7 +94,7 @@ export function AccountTab({
       <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-purple-50 dark:bg-gray-800 p-6 shadow-md hover:shadow-lg transition-shadow">
         <button
           onClick={() => setIsAnalyticsExpanded(!isAnalyticsExpanded)}
-          className="w-full flex items-center justify-between mb-3 text-left"
+          className="w-full flex items-center justify-between mb-3 text-left cursor-pointer"
           aria-label={
             isAnalyticsExpanded ? t("common_collapse") : t("common_expand")
           }

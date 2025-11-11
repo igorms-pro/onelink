@@ -124,7 +124,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
             <LanguageToggleButton />
             <button
               onClick={handleSkip}
-              className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98]"
+              className="px-4 py-2 text-sm font-medium bg-purple-600/90 hover:bg-purple-600 text-white transition-all rounded-lg shadow-md hover:shadow-lg active:scale-[0.98] cursor-pointer"
               aria-label={t("onboarding_skip")}
             >
               {t("onboarding_skip")}
@@ -176,7 +176,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
             <button
               key={index}
               onClick={() => api?.scrollTo(index)}
-              className={`h-2 rounded-full transition-all ${
+              className={`h-2 rounded-full transition-all cursor-pointer ${
                 index + 1 === current
                   ? "bg-purple-600 w-8"
                   : "bg-gray-300 dark:bg-gray-600 w-2"
@@ -190,7 +190,7 @@ export function OnboardingCarousel({ onComplete }: OnboardingCarouselProps) {
         <div className="w-full pb-8">
           <button
             onClick={handleNext}
-            className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg"
+            className="w-full rounded-xl bg-linear-to-r from-purple-500 to-purple-600 text-white px-8 py-3.5 text-base font-medium hover:from-purple-600 hover:to-purple-700 active:scale-[0.98] transition-all shadow-lg cursor-pointer"
           >
             {current === count
               ? t("onboarding_getstarted_button")

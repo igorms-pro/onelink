@@ -46,7 +46,7 @@ export function LanguageToggleButton() {
     <div className="relative" ref={langDropdownRef}>
       <button
         onClick={() => setIsLangOpen(!isLangOpen)}
-        className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1"
+        className="p-2.5 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-gray-700 dark:text-gray-300 flex items-center justify-center gap-1 cursor-pointer"
         aria-label={t("aria_change_language")}
       >
         <Languages className="w-5 h-5" />
@@ -64,7 +64,7 @@ export function LanguageToggleButton() {
                   setLanguage(actualLangCode);
                   setIsLangOpen(false);
                 }}
-                className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 ${
+                className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 cursor-pointer ${
                   currentLangCode === actualLangCode
                     ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
                     : "text-gray-700 dark:text-gray-300"

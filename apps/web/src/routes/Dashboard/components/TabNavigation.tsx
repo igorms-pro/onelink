@@ -18,7 +18,7 @@ export function TabNavigation({
       <button
         onClick={() => onTabChange("inbox")}
         className={`
-          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap cursor-pointer
           ${
             activeTab === "inbox"
               ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"
@@ -36,7 +36,7 @@ export function TabNavigation({
       <button
         onClick={() => onTabChange("content")}
         className={`
-          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap cursor-pointer
           ${
             activeTab === "content"
               ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"
@@ -49,7 +49,7 @@ export function TabNavigation({
       <button
         onClick={() => onTabChange("account")}
         className={`
-          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap
+          relative px-4 py-3 text-sm font-medium transition-all whitespace-nowrap cursor-pointer
           ${
             activeTab === "account"
               ? "text-purple-700 dark:text-purple-300 border-b-2 border-purple-600 dark:border-purple-400"

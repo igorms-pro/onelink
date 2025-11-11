@@ -26,7 +26,7 @@ export function BottomNavigation({
         <div className="absolute -top-12 right-4">
           <button
             onClick={onClearAll}
-            className={`p-2.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-700 transition-all shadow-md ${
+            className={`p-2.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:border-red-300 dark:hover:border-red-700 transition-all shadow-md cursor-pointer ${
               isScrolling && isScrollable ? "opacity-40" : "opacity-100"
             }`}
             aria-label="Clear all"
@@ -38,7 +38,7 @@ export function BottomNavigation({
       <div className="flex items-center justify-around h-14">
         <button
           onClick={() => onTabChange("inbox")}
-          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
+          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
           <div className="relative">
             <Inbox
@@ -65,7 +65,7 @@ export function BottomNavigation({
 
         <button
           onClick={() => onTabChange("content")}
-          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
+          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
           <Link2
             className={`w-5 h-5 transition-colors ${
@@ -87,7 +87,7 @@ export function BottomNavigation({
 
         <button
           onClick={() => onTabChange("account")}
-          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all"
+          className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
           <User
             className={`w-5 h-5 transition-colors ${

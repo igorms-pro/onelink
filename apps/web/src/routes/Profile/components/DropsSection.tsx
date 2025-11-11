@@ -18,7 +18,7 @@ export function DropsSection({ drops }: DropsSectionProps) {
     <section className="mt-8">
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="flex items-center justify-between w-full mb-4 text-left"
+        className="flex items-center justify-between w-full mb-4 text-left cursor-pointer"
       >
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
           {t("profile_section_drops")}
