@@ -39,22 +39,22 @@ export function DropsSection({
     <section>
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center gap-2 mb-2 text-left cursor-pointer"
+        className="w-full mb-2 text-left cursor-pointer"
         aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
       >
-        {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
-        ) : (
-          <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
-        )}
-        <div>
+        <div className="flex items-center gap-2">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_content_drops_title")}
           </h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-            {t("dashboard_content_drops_description")}
-          </p>
+          {isExpanded ? (
+            <ChevronUp className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
+          ) : (
+            <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
+          )}
         </div>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          {t("dashboard_content_drops_description")}
+        </p>
       </button>
       {isExpanded && (
         <>
