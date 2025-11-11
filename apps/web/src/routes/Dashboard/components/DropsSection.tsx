@@ -42,7 +42,7 @@ export function DropsSection({
         className="w-full mb-2 text-left cursor-pointer"
         aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_content_drops_title")}
           </h2>
