@@ -119,14 +119,14 @@ export function LinksAnalyticsCard({
                 </button>
               </div>
               {sortedRows.length === 0 ? (
-                <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
                   {t("dashboard_account_analytics_no_clicks")}
                 </div>
               ) : (
                 sortedRows.map((r) => (
                   <div
                     key={r.link_id}
-                    className="flex justify-between items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-3 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
+                    className="flex justify-between items-center rounded-lg bg-blue-50 dark:bg-blue-900/20 p-3 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
                   >
                     <span className="text-gray-900 dark:text-white text-sm">
                       {r.label ?? r.link_id}

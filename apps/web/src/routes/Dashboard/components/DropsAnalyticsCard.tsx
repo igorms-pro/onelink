@@ -34,12 +34,25 @@ export function DropsAnalyticsCard({
     }, 300);
 
     // Real API call (commented out for now)
+    // NOTE: The SQL function needs to be updated to accept a days parameter
+    // Example SQL update needed:
+    // create or replace function public.get_submission_counts_by_profile(p_profile_id uuid, p_days int)
+    // returns table (...)
+    // as $$
+    //   select d.id as drop_id, d.label as drop_label, count(s.id)::int as submissions
+    //   from public.drops d
+    //   left join public.submissions s on s.drop_id = d.id
+    //     and s.created_at >= now() - make_interval(days => p_days)
+    //   where d.profile_id = p_profile_id and exists (...)
+    //   group by d.id, d.label
+    //   order by submissions desc, d.label asc;
+    // $$;
     /*
     (async () => {
       try {
         const { data } = await supabase.rpc(
           "get_submission_counts_by_profile",
-          { p_profile_id: profileId },
+          { p_profile_id: profileId, p_days: days },
         );
         if (Array.isArray(data)) setRows(data as Array<CountRow>);
         else setRows([]);
@@ -102,7 +115,7 @@ export function DropsAnalyticsCard({
       {isExpanded && (
         <>
           {rows.length === 0 ? (
-            <div className="rounded-lg bg-gray-50 dark:bg-gray-800 p-4 text-center">
+            <div className="rounded-lg bg-teal-50 dark:bg-teal-900/20 p-4 text-center">
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 {t("dashboard_account_analytics_no_submissions")}
               </p>
@@ -138,7 +151,7 @@ export function DropsAnalyticsCard({
               {sortedRows.map((r) => (
                 <div
                   key={r.drop_id}
-                  className="flex justify-between items-center rounded-lg bg-gray-50 dark:bg-gray-800 p-3 hover:bg-gray-100 dark:hover:bg-gray-750 transition-colors"
+                  className="flex justify-between items-center rounded-lg bg-teal-50 dark:bg-teal-900/20 p-3 hover:bg-teal-100 dark:hover:bg-teal-900/30 transition-colors"
                 >
                   <span className="text-gray-900 dark:text-white text-sm">
                     {r.drop_label ?? r.drop_id}
