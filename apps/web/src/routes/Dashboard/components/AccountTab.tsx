@@ -8,7 +8,6 @@ import {
   type ProfileEditorRef,
 } from "@/components/ProfileEditor";
 import { AnalyticsCard } from "@/components/AnalyticsCard";
-import { DropsAnalyticsCard } from "./DropsAnalyticsCard";
 import { ProfileLinkCard } from "./ProfileLinkCard";
 import { toast } from "sonner";
 
@@ -113,12 +112,7 @@ export function AccountTab({
             <ChevronDown className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0 ml-2" />
           )}
         </button>
-        {isAnalyticsExpanded && (
-          <>
-            <AnalyticsCard profileId={profileId} />
-            <DropsAnalyticsCard profileId={profileId} />
-          </>
-        )}
+        {isAnalyticsExpanded && <AnalyticsCard profileId={profileId} />}
       </section>
     </div>
   );
