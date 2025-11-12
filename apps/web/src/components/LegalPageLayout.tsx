@@ -38,7 +38,7 @@ export function LegalPageLayout({
     >
       <HeaderMobileSignIn />
       <div className="relative isolate overflow-hidden bg-linear-to-r from-purple-500/10 via-purple-500/5 to-blue-500/10 dark:from-purple-500/20 dark:via-purple-500/10 dark:to-blue-500/20">
-        <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-gradient-to-l from-purple-500/10 to-transparent blur-3xl"></div>
+        <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-linear-to-l from-purple-500/10 to-transparent blur-3xl"></div>
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 pb-16 pt-10 sm:px-6 lg:px-8 lg:pt-16">
           <Link
             to="/auth"
