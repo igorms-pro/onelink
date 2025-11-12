@@ -238,7 +238,7 @@ export default function CustomDomainPage() {
         <div className="mb-8">
           <div className="flex items-center gap-2 mb-2">
             <Globe className="w-6 h-6 text-gray-700 dark:text-gray-300" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
               {t("settings_custom_domain")}
             </h1>
           </div>

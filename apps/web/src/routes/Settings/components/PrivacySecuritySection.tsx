@@ -17,7 +17,10 @@ export function PrivacySecuritySection() {
 
   return (
     <>
-      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+      <section
+        data-testid="settings-privacy-security-section"
+        className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      >
         <div className="flex items-center gap-2 mb-4">
           <Shield className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -26,18 +29,21 @@ export function PrivacySecuritySection() {
         </div>
         <div className="space-y-3 pl-7">
           <button
+            data-testid="settings-change-password"
             onClick={() => setIsChangePasswordOpen(true)}
             className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
           >
             {t("settings_change_password")}
           </button>
           <button
+            data-testid="settings-two-factor"
             onClick={handle2FA}
             className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
           >
             {t("settings_two_factor")}
           </button>
           <button
+            data-testid="settings-delete-account"
             onClick={() => setIsDeleteModalOpen(true)}
             className="w-full text-left text-sm text-red-600 dark:text-red-300 hover:underline cursor-pointer"
           >

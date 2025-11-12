@@ -45,7 +45,7 @@ export default function Settings() {
           {t("settings_back_to_dashboard")}
         </button>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
             {t("settings_title")}
           </h1>
           <p className="text-gray-500 dark:text-gray-400 mt-2">

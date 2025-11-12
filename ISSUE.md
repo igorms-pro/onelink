@@ -182,6 +182,53 @@ Status: 🔄 TODO
 
 ---
 
+## Settings Implementation
+
+**Status:** ✅ Completed (UI), 🔄 Backend SQL needed
+
+### Completed Features
+- ✅ Settings page (`/settings`) with all sections
+- ✅ Notifications preferences (email notifications, weekly digest)
+- ✅ Email preferences (marketing emails, product updates)
+- ✅ Billing page (`/settings/billing`) - Plan display, payment method, billing history, upgrade/cancel
+- ✅ Custom domain page (`/settings/domain`) - Add/remove domains, DNS instructions (Pro only)
+- ✅ Active sessions page (`/settings/sessions`) - View sessions, revoke sessions, login history
+- ✅ Data export modal - GDPR export (JSON/CSV)
+- ✅ Change password modal - Full form with validation
+- ✅ Two-factor authentication page (`/settings/2fa`) - QR code, backup codes, enable/disable
+- ✅ Delete account modal - Confirmation with password
+- ✅ User preferences hook (`useUserPreferences`) - Auto-save, localStorage fallback
+
+### Backend SQL Needed
+**File:** `supabase/sql/005_settings_tables.sql` (created)
+
+**Tables to create:**
+1. `user_preferences` - Notification and email preferences
+2. `user_sessions` - Active sessions tracking
+3. `login_history` - Login attempts (success/failed)
+4. `user_2fa` - 2FA secrets and backup codes
+
+**RPC Functions:**
+- `get_user_sessions(user_id)` - Get active sessions
+- `revoke_session(session_id)` - Revoke a session
+- `revoke_all_other_sessions(user_id)` - Revoke all except current
+
+**To run:**
+```bash
+# In Supabase SQL Editor or via CLI
+psql <connection_string> -f supabase/sql/005_settings_tables.sql
+```
+
+### Next Steps
+1. Run SQL migration (`005_settings_tables.sql`)
+2. Update `useUserPreferences` hook to use Supabase instead of localStorage
+3. Implement session tracking (on login, create session record)
+4. Implement login history logging (on auth events)
+5. Implement 2FA backend (TOTP generation, verification, encrypted storage)
+6. Connect billing page to Stripe API (invoices, payment methods)
+
+---
+
 ## Missing UI Pages & Features
 
 ### 1. Legal Pages (Privacy Policy & Terms of Service)
@@ -295,48 +342,47 @@ Status: 🔄 TODO
 ---
 
 ### 4. Delete Account Page
-**Status:** 🔄 TODO (Button exists, no functionality)
-**Current:** Button in Settings modal (no action)
-**Missing:**
-- Confirmation page (`/account/delete`) with:
-  - "Are you sure?" warning
-  - Reason dropdown/textarea (why are you leaving?)
-  - Checkbox: "I understand this action cannot be undone"
-  - Final confirmation button
-- Backend API to delete account (cascade delete profile, links, drops, submissions)
-- Email notification to user
-- Success page after deletion
+**Status:** ✅ Completed (UI), 🔄 Backend needed
+**Implementation:**
+- Modal/Drawer responsive (`DeleteAccountModal.tsx`)
+- Warning message with icon
+- Password confirmation field
+- Checkbox "I understand this action is irreversible"
+- Button disabled until validation
+- Route: Accessed from Settings → Privacy & Security section
 
-**Note:** Requires backend work - not UI-only
+**Backend needed:**
+- API to delete account (cascade delete profile, links, drops, submissions)
+- Email notification to user
+- Sign out and redirect after deletion
 
 ---
 
 ### 5. Change Password Page
-**Status:** 🔄 TODO (Button exists, no functionality)
-**Current:** Button in Settings modal (no action)
-**Missing:**
-- Password change form (`/account/password`)
-- Current password field
-- New password field (with strength indicator)
-- Confirm new password field
-- Supabase Auth password update integration
-- Success/error handling
-
-**Note:** Since we use magic links (passwordless), this might be less critical, but still needed for users who want to set a password.
+**Status:** ✅ Completed
+**Implementation:**
+- Modal/Drawer responsive (`ChangePasswordModal.tsx`)
+- Form with current password, new password, confirm password
+- Validation (min 8 chars, must match, must be different)
+- Supabase Auth integration
+- Success/error handling with toasts
+- Route: Accessed from Settings → Privacy & Security section
 
 ---
 
 ### 6. Two-Factor Authentication Page
-**Status:** 🔄 TODO (Button exists, no functionality)
-**Current:** Button in Settings modal (no action)
-**Missing:**
-- 2FA setup page (`/account/2fa`)
-- QR code generation (TOTP)
-- Backup codes display
-- Enable/disable toggle
-- Supabase Auth 2FA integration (if supported) or custom implementation
+**Status:** ✅ Completed
+**Implementation:**
+- Full page at `/settings/2fa` (`TwoFactorPage.tsx`)
+- QR code generation with `qrcode.react`
+- Secret key display with copy
+- Backup codes (10 codes, copy individual/all)
+- Verification code input (6 digits)
+- Enable/disable flow
+- States: disabled, setup, active
+- Route: Accessed from Settings → Privacy & Security section
 
-**Question:** Do we need 2FA if we use magic links? Magic links are already secure. Consider removing this or making it optional for users who want extra security.
+**Note:** Uses mock data for now. Backend integration needed (TOTP library, encrypted storage).
 
 ---
 

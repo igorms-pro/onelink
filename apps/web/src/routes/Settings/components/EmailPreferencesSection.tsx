@@ -9,7 +9,10 @@ export function EmailPreferencesSection() {
 
   if (loading) {
     return (
-      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+      <section
+        data-testid="settings-email-preferences-section"
+        className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      >
         <div className="flex items-center gap-2 mb-4">
           <Mail className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -25,7 +28,10 @@ export function EmailPreferencesSection() {
   }
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section
+      data-testid="settings-email-preferences-section"
+      className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+    >
       <div className="flex items-center gap-2 mb-4">
         <Mail className="w-5 h-5 text-gray-700 dark:text-gray-300" />
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -38,6 +44,7 @@ export function EmailPreferencesSection() {
             {t("settings_marketing_emails")}
           </span>
           <input
+            data-testid="settings-marketing-emails-toggle"
             type="checkbox"
             checked={preferences.marketing_emails}
             onChange={(e) =>
@@ -52,6 +59,7 @@ export function EmailPreferencesSection() {
             {t("settings_product_updates")}
           </span>
           <input
+            data-testid="settings-product-updates-toggle"
             type="checkbox"
             checked={preferences.product_updates}
             onChange={(e) =>

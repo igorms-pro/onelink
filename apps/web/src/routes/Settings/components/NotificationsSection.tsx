@@ -9,7 +9,10 @@ export function NotificationsSection() {
 
   if (loading) {
     return (
-      <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+      <section
+        data-testid="settings-notifications-section"
+        className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      >
         <div className="flex items-center gap-2 mb-4">
           <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -25,7 +28,10 @@ export function NotificationsSection() {
   }
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section
+      data-testid="settings-notifications-section"
+      className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+    >
       <div className="flex items-center gap-2 mb-4">
         <Bell className="w-5 h-5 text-gray-700 dark:text-gray-300" />
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -38,6 +44,7 @@ export function NotificationsSection() {
             {t("settings_email_notifications")}
           </span>
           <input
+            data-testid="settings-email-notifications-toggle"
             type="checkbox"
             checked={preferences.email_notifications}
             onChange={(e) =>
@@ -52,6 +59,7 @@ export function NotificationsSection() {
             {t("settings_weekly_digest")}
           </span>
           <input
+            data-testid="settings-weekly-digest-toggle"
             type="checkbox"
             checked={preferences.weekly_digest}
             onChange={(e) =>
