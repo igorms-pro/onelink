@@ -9,6 +9,10 @@ import Profile from "./routes/Profile/index";
 import Auth from "./routes/Auth";
 import Dashboard from "./routes/Dashboard/index";
 import Settings from "./routes/Settings/index";
+import BillingPage from "./routes/Settings/pages/BillingPage";
+import CustomDomainPage from "./routes/Settings/pages/CustomDomainPage";
+import SessionsPage from "./routes/Settings/pages/SessionsPage";
+import TwoFactorPage from "./routes/Settings/pages/TwoFactorPage";
 import { AuthProvider } from "./lib/AuthProvider";
 
 // Initialize theme on app load
@@ -35,6 +39,10 @@ const router = createBrowserRouter([
   { path: "/auth", element: <Auth /> },
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/settings", element: <Settings /> },
+  { path: "/settings/billing", element: <BillingPage /> },
+  { path: "/settings/domain", element: <CustomDomainPage /> },
+  { path: "/settings/sessions", element: <SessionsPage /> },
+  { path: "/settings/2fa", element: <TwoFactorPage /> },
   { path: "/:slug", element: <Profile /> },
 ]);
 

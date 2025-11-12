@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -7,7 +8,12 @@ interface BillingSectionProps {
 
 export function BillingSection({ plan }: BillingSectionProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const isPro = plan === "pro";
+
+  const handleNavigateToBilling = () => {
+    navigate("/settings/billing");
+  };
 
   return (
     <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
@@ -37,16 +43,25 @@ export function BillingSection({ plan }: BillingSectionProps) {
             <div className="text-xs text-gray-500 dark:text-gray-400">
               {t("settings_renewal_date")}: {t("settings_coming_soon")}
             </div>
-            <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer">
+            <button
+              onClick={handleNavigateToBilling}
+              className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
+            >
               {t("settings_manage_payment")}
             </button>
-            <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer">
+            <button
+              onClick={handleNavigateToBilling}
+              className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
+            >
               {t("settings_billing_history")}
             </button>
           </>
         )}
         {!isPro && (
-          <button className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer">
+          <button
+            onClick={handleNavigateToBilling}
+            className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
+          >
             {t("settings_upgrade_to_pro")}
           </button>
         )}
