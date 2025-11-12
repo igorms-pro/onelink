@@ -180,6 +180,262 @@
   "common_cancel": "Cancel",
   "profile_powered_by": "Powered by OneLink",
   "profile_slogan": "One link. Multiple lives.",
+  "footer_brand_name": "OneLink",
+  "footer_all_rights": "© {{year}} OneLink. All rights reserved.",
+  "footer_privacy": "Privacy Policy",
+  "footer_terms": "Terms of Service",
+  "footer_powered": "Powered by OneLink",
+  "legal_back_to_auth": "Back to sign in",
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "Learn how OneLink collects, uses, and protects your data.",
+    "last_updated": "Last updated: November 12, 2025",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "Introduction",
+        "paragraphs": [
+          "OneLink helps you share a single link connected to multiple destinations, routes, and file drops.",
+          "By using OneLink, you trust us with your information. This policy explains what data we collect, why, and how we protect it."
+        ]
+      },
+      {
+        "id": "information",
+        "title": "Information We Collect",
+        "paragraphs": [
+          "We collect only the data needed to operate OneLink effectively:"
+        ],
+        "items": [
+          "Account information such as your email, display name, avatar, and language preferences",
+          "Content you add to your profile: links, drops, descriptions, and files submitted to you",
+          "Usage analytics, including aggregated link clicks and drop submissions",
+          "Technical data (browser, operating system, IP address) to secure your account and prevent abuse"
+        ]
+      },
+      {
+        "id": "usage",
+        "title": "How We Use Your Information",
+        "paragraphs": ["We use your data to:"],
+        "items": [
+          "Provide and maintain the OneLink service",
+          "Personalize your dashboard experience (language, theme, plan limits)",
+          "Send critical product updates, notifications, or export files you request",
+          "Improve reliability and detect suspicious activity"
+        ]
+      },
+      {
+        "id": "storage",
+        "title": "Data Storage & Security",
+        "paragraphs": [
+          "We rely on Supabase (Postgres + storage) to securely host your data in the EU.",
+          "File uploads are encrypted at rest. Access to internal tooling requires authentication and audit logging.",
+          "We keep your data only as long as necessary to provide the service or until you request deletion."
+        ]
+      },
+      {
+        "id": "sharing",
+        "title": "When We Share Data",
+        "paragraphs": [
+          "We share data only with trusted subprocessors essential to the product:"
+        ],
+        "items": [
+          "Supabase for authentication, database, and storage",
+          "Stripe for secure payments and invoicing (for Pro plans)",
+          "Error monitoring or analytics tools to maintain uptime"
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "Your Rights",
+        "paragraphs": ["You are in control of your account:"],
+        "items": [
+          "Export your data from Settings → Data export",
+          "Update or delete your profile information at any time",
+          "Request account deletion via Settings → Privacy & Security",
+          "Contact support for additional privacy questions"
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies & Local Storage",
+        "paragraphs": [
+          "We use local storage to remember your theme preference, language, and authenticated session.",
+          "We do not use third-party advertising cookies."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "Changes to This Policy",
+        "paragraphs": [
+          "We may update this policy as OneLink evolves. We will post the new version here and update the “Last updated” date."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "paragraphs": [
+          "Questions about privacy? Reach out to support@onelink.app and we will get back to you."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "description": "Please read these terms carefully before using OneLink.",
+    "last_updated": "Last updated: November 12, 2025",
+    "sections": [
+      {
+        "id": "acceptance",
+        "title": "1. Acceptance of Terms",
+        "paragraphs": [
+          "By accessing or using OneLink, you agree to be bound by these Terms and our Privacy Policy.",
+          "If you do not agree, do not use the service."
+        ]
+      },
+      {
+        "id": "service",
+        "title": "2. Service Description",
+        "paragraphs": [
+          "OneLink lets you create a single profile URL with multiple routes, drops, and analytics.",
+          "You are responsible for the content you publish and must comply with applicable laws."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Accounts & Security",
+        "paragraphs": [
+          "You must provide accurate account information and keep it up to date.",
+          "You are responsible for safeguarding your account and notifying us of unauthorized use."
+        ]
+      },
+      {
+        "id": "acceptable_use",
+        "title": "4. Acceptable Use",
+        "paragraphs": ["You agree not to:"],
+        "items": [
+          "Upload malicious content or attempt to breach OneLink's security",
+          "Use OneLink for spam, phishing, or illegal activities",
+          "Misrepresent your identity or impersonate others"
+        ]
+      },
+      {
+        "id": "plans",
+        "title": "5. Plans & Billing",
+        "paragraphs": [
+          "Free accounts have plan limits. Pro subscriptions are billed via Stripe according to the pricing on our website.",
+          "We reserve the right to change prices with notice."
+        ]
+      },
+      {
+        "id": "termination",
+        "title": "6. Termination",
+        "paragraphs": [
+          "You can delete your account at any time in Settings.",
+          "We may suspend or terminate accounts that violate these Terms or applicable laws."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "7. Disclaimer",
+        "paragraphs": [
+          "OneLink is provided “as is” without warranties of any kind. We do not guarantee uninterrupted availability."
+        ]
+      },
+      {
+        "id": "liability",
+        "title": "8. Limitation of Liability",
+        "paragraphs": [
+          "To the maximum extent permitted by law, OneLink is not liable for indirect, incidental, or consequential damages."
+        ]
+      },
+      {
+        "id": "governing_law",
+        "title": "9. Governing Law",
+        "paragraphs": [
+          "These Terms are governed by the laws of France. Disputes will be handled in French courts."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "10. Changes",
+        "paragraphs": [
+          "We may update these Terms. Continued use of OneLink after changes means you accept the revised Terms."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "11. Contact",
+        "paragraphs": ["Need help? Email support@onelink.app."]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Plans & Pricing",
+    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "monthly_label": "Monthly billing",
+    "currency_note": "Prices in USD. Taxes may apply.",
+    "per_month": "per month",
+    "includes": "What's included",
+    "most_popular": "Most popular",
+    "loading": "Redirecting...",
+    "cta_title": "Still unsure?",
+    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
+    "cta_button": "Create your OneLink",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "description": "Perfect to launch your profile and share essential links.",
+        "cta": "Start for free",
+        "features": [
+          "Unlimited routes and drops (within free plan limit)",
+          "Customizable profile with themes",
+          "Email notifications for new submissions",
+          "Basic analytics (7-day history)"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$12",
+        "description": "Unlock advanced analytics, custom domains, and more automations.",
+        "cta": "Upgrade to Pro",
+        "features": [
+          "Unlimited routes and drops",
+          "Advanced analytics with 30 & 90-day history",
+          "Custom domain and branded profile",
+          "Priority support and roadmap influence"
+        ]
+      }
+    },
+    "faq_title": "Frequently asked questions",
+    "faq": [
+      {
+        "question": "Can I switch plans later?",
+        "answer": "Yes. Upgrade or downgrade at any time from the billing page. Changes apply immediately and unused time is prorated."
+      },
+      {
+        "question": "Do you offer refunds?",
+        "answer": "If you experience issues, contact support within 14 days and we'll work with you on a fair solution."
+      },
+      {
+        "question": "Is OneLink GDPR compliant?",
+        "answer": "Yes. Data is hosted in the EU with Supabase. You can export or delete your data at any time from Settings."
+      }
+    ]
+  },
+  "checkout_success": {
+    "title": "You're in!",
+    "subtitle": "Thanks for upgrading to OneLink Pro.",
+    "message": "Your subscription is active. We refreshed your dashboard with Pro features and sent a confirmation email.",
+    "button": "Go to dashboard"
+  },
+  "checkout_cancel": {
+    "title": "Checkout cancelled",
+    "subtitle": "No worries—your account is unchanged.",
+    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
+    "back_to_pricing": "Back to pricing",
+    "contact_support": "Contact support"
+  },
   "dashboard_content_links_title": "Routes",
   "dashboard_content_links_description": "Create buttons that link to your content",
   "dashboard_content_links_add_button": "Add Route",

@@ -180,6 +180,262 @@
   "common_cancel": "Annuler",
   "profile_powered_by": "Propulsé par OneLink",
   "profile_slogan": "Un lien. Plusieurs vies.",
+  "footer_brand_name": "OneLink",
+  "footer_all_rights": "© {{year}} OneLink. Tous droits réservés.",
+  "footer_privacy": "Politique de confidentialité",
+  "footer_terms": "Conditions d'utilisation",
+  "footer_powered": "Propulsé par OneLink",
+  "legal_back_to_auth": "Retour à la connexion",
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "description": "Découvrez comment OneLink collecte, utilise et protège vos données.",
+    "last_updated": "Dernière mise à jour : 12 novembre 2025",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "Introduction",
+        "paragraphs": [
+          "OneLink vous aide à partager un lien unique connecté à plusieurs destinations, routes et dépôts de fichiers.",
+          "En utilisant OneLink, vous nous confiez vos informations. Cette politique explique les données que nous collectons, pourquoi nous le faisons et comment nous les protégeons."
+        ]
+      },
+      {
+        "id": "information",
+        "title": "Données que nous collectons",
+        "paragraphs": [
+          "Nous collectons uniquement les données nécessaires au bon fonctionnement de OneLink :"
+        ],
+        "items": [
+          "Informations de compte telles que votre e-mail, nom d'affichage, avatar et préférences linguistiques",
+          "Contenu ajouté à votre profil : liens, dépôts, descriptions et fichiers qui vous sont envoyés",
+          "Statistiques d'utilisation, y compris les clics agrégés sur les liens et les soumissions de dépôts",
+          "Données techniques (navigateur, système d'exploitation, adresse IP) pour sécuriser votre compte et prévenir les abus"
+        ]
+      },
+      {
+        "id": "usage",
+        "title": "Utilisation de vos données",
+        "paragraphs": ["Nous utilisons vos données pour :"],
+        "items": [
+          "Fournir et maintenir le service OneLink",
+          "Personnaliser votre expérience (langue, thème, limites du plan)",
+          "Envoyer les mises à jour produit importantes, notifications ou exports demandés",
+          "Améliorer la fiabilité et détecter les activités suspectes"
+        ]
+      },
+      {
+        "id": "storage",
+        "title": "Stockage et sécurité",
+        "paragraphs": [
+          "Nous utilisons Supabase (Postgres + storage) pour héberger vos données en toute sécurité dans l'Union européenne.",
+          "Les fichiers importés sont chiffrés au repos. L'accès aux outils internes nécessite une authentification et est journalisé.",
+          "Nous conservons vos données uniquement le temps nécessaire pour fournir le service ou jusqu'à ce que vous demandiez leur suppression."
+        ]
+      },
+      {
+        "id": "sharing",
+        "title": "Partage de données",
+        "paragraphs": [
+          "Nous partageons vos données uniquement avec des sous-traitants de confiance indispensables au produit :"
+        ],
+        "items": [
+          "Supabase pour l'authentification, la base de données et le stockage",
+          "Stripe pour les paiements sécurisés et la facturation (plans Pro)",
+          "Outils de monitoring ou d'analyse pour maintenir la disponibilité"
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "Vos droits",
+        "paragraphs": ["Vous gardez le contrôle sur votre compte :"],
+        "items": [
+          "Exporter vos données depuis Paramètres → Export de données",
+          "Mettre à jour ou supprimer vos informations de profil à tout moment",
+          "Demander la suppression de votre compte via Paramètres → Confidentialité et sécurité",
+          "Nous contacter pour toute question liée à la confidentialité"
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies et stockage local",
+        "paragraphs": [
+          "Nous utilisons le stockage local pour mémoriser votre thème, votre langue et votre session connectée.",
+          "Nous n'utilisons pas de cookies publicitaires tiers."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "Évolutions de cette politique",
+        "paragraphs": [
+          "Nous pouvons mettre à jour cette politique au fur et à mesure que OneLink évolue. Nous publierons la nouvelle version ici et mettrons à jour la date “Dernière mise à jour”."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "paragraphs": [
+          "Des questions ? Écrivez-nous à support@onelink.app et nous reviendrons vers vous rapidement."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Conditions d'utilisation",
+    "description": "Veuillez lire attentivement ces conditions avant d'utiliser OneLink.",
+    "last_updated": "Dernière mise à jour : 12 novembre 2025",
+    "sections": [
+      {
+        "id": "acceptance",
+        "title": "1. Acceptation des conditions",
+        "paragraphs": [
+          "En accédant ou en utilisant OneLink, vous acceptez d'être lié par ces Conditions et notre Politique de confidentialité.",
+          "Si vous n'acceptez pas, n'utilisez pas le service."
+        ]
+      },
+      {
+        "id": "service",
+        "title": "2. Description du service",
+        "paragraphs": [
+          "OneLink vous permet de créer une URL de profil unique avec plusieurs routes, dépôts et statistiques.",
+          "Vous êtes responsable du contenu publié et devez respecter les lois applicables."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Comptes et sécurité",
+        "paragraphs": [
+          "Vous devez fournir des informations de compte exactes et les maintenir à jour.",
+          "Vous êtes responsable de la protection de votre compte et devez nous informer de toute utilisation non autorisée."
+        ]
+      },
+      {
+        "id": "acceptable_use",
+        "title": "4. Utilisation autorisée",
+        "paragraphs": ["Vous vous engagez à ne pas :"],
+        "items": [
+          "Téléverser du contenu malveillant ou tenter de compromettre la sécurité de OneLink",
+          "Utiliser OneLink pour le spam, l'hameçonnage ou des activités illégales",
+          "Usurper l'identité d'autrui ou fournir de fausses informations"
+        ]
+      },
+      {
+        "id": "plans",
+        "title": "5. Abonnements et facturation",
+        "paragraphs": [
+          "Les comptes gratuits ont des limites de plan. Les abonnements Pro sont facturés via Stripe selon les tarifs affichés.",
+          "Nous nous réservons le droit de modifier les prix avec préavis."
+        ]
+      },
+      {
+        "id": "termination",
+        "title": "6. Résiliation",
+        "paragraphs": [
+          "Vous pouvez supprimer votre compte à tout moment depuis Paramètres.",
+          "Nous pouvons suspendre ou résilier un compte en cas de non-respect des Conditions ou de la loi."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "7. Clause de non-responsabilité",
+        "paragraphs": [
+          "OneLink est fourni « tel quel » sans aucune garantie. Nous ne garantissons pas une disponibilité continue."
+        ]
+      },
+      {
+        "id": "liability",
+        "title": "8. Limitation de responsabilité",
+        "paragraphs": [
+          "Dans la limite permise par la loi, OneLink ne pourra être tenu responsable des dommages indirects, incidents ou consécutifs."
+        ]
+      },
+      {
+        "id": "governing_law",
+        "title": "9. Droit applicable",
+        "paragraphs": [
+          "Ces Conditions sont régies par le droit français. Tout litige sera traité devant les tribunaux français."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "10. Modifications",
+        "paragraphs": [
+          "Nous pouvons mettre à jour ces Conditions. En continuant d'utiliser OneLink après une modification, vous acceptez les Conditions révisées."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "11. Contact",
+        "paragraphs": ["Besoin d'aide ? Contactez support@onelink.app."]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Offres et tarifs",
+    "description": "Choisissez l'offre adaptée à votre étape. Commencez gratuitement, passez en Pro quand vous êtes prêt.",
+    "monthly_label": "Facturation mensuelle",
+    "currency_note": "Tarifs en USD. Des taxes peuvent s'appliquer.",
+    "per_month": "par mois",
+    "includes": "Comprend",
+    "most_popular": "Plus populaire",
+    "loading": "Redirection...",
+    "cta_title": "Encore indécis ?",
+    "cta_description": "Notre offre gratuite couvre l'essentiel. Passez en Pro pour débloquer les domaines personnalisés, les statistiques avancées et plus encore.",
+    "cta_button": "Créer mon OneLink",
+    "plans": {
+      "free": {
+        "name": "Gratuit",
+        "price": "0 $",
+        "description": "Idéal pour lancer votre profil et partager vos liens clés.",
+        "cta": "Commencer gratuitement",
+        "features": [
+          "Routes et dépôts illimités (dans les limites du plan gratuit)",
+          "Profil personnalisable avec thèmes",
+          "Notifications e-mail pour les nouvelles soumissions",
+          "Statistiques basiques (historique 7 jours)"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "12 $",
+        "description": "Débloquez les statistiques avancées, le domaine personnalisé et davantage d'automatisation.",
+        "cta": "Passer en Pro",
+        "features": [
+          "Routes et dépôts illimités",
+          "Statistiques avancées avec historique 30 et 90 jours",
+          "Domaine personnalisé et profil brandé",
+          "Support prioritaire et influence sur la roadmap"
+        ]
+      }
+    },
+    "faq_title": "Questions fréquentes",
+    "faq": [
+      {
+        "question": "Puis-je changer d'offre plus tard ?",
+        "answer": "Oui. Vous pouvez changer d'offre à tout moment depuis la page de facturation. Le prorata est géré automatiquement."
+      },
+      {
+        "question": "Proposez-vous des remboursements ?",
+        "answer": "Si vous rencontrez un souci, contactez-nous dans les 14 jours et nous trouverons une solution équitable."
+      },
+      {
+        "question": "OneLink est-il conforme au RGPD ?",
+        "answer": "Oui. Les données sont hébergées dans l'UE via Supabase. Vous pouvez exporter ou supprimer vos données depuis les Paramètres."
+      }
+    ]
+  },
+  "checkout_success": {
+    "title": "Bienvenue parmi les Pro !",
+    "subtitle": "Merci d'avoir choisi OneLink Pro.",
+    "message": "Votre abonnement est actif. Votre tableau de bord a été mis à jour et un e-mail de confirmation vient d'être envoyé.",
+    "button": "Aller au tableau de bord"
+  },
+  "checkout_cancel": {
+    "title": "Paiement annulé",
+    "subtitle": "Pas de panique — rien n'a changé côté compte.",
+    "message": "Vous pouvez réessayer la mise à niveau plus tard ou continuer tranquillement avec l'offre gratuite.",
+    "back_to_pricing": "Retour aux tarifs",
+    "contact_support": "Contacter le support"
+  },
   "dashboard_content_links_title": "Liens",
   "dashboard_content_links_description": "Créez des boutons qui renvoient vers votre contenu",
   "dashboard_content_links_limit_reached": "Limite du plan gratuit atteinte ({limit} actions au total : {links} liens + {drops} drops)",
