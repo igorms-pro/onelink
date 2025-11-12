@@ -57,10 +57,14 @@ export default function Dashboard() {
         <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-purple-200/5 dark:bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <Header onSettingsClick={() => navigate("/settings")} />
-      <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
+      {/* Headers - sticky on mobile, participate in flexbox */}
+      <div className="flex-shrink-0">
+        <Header onSettingsClick={() => navigate("/settings")} />
+        <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
+      </div>
 
-      <div className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-10 sm:pt-0 pb-20 sm:pb-4 flex flex-col min-h-0">
+      {/* Main content area - takes remaining space and scrolls */}
+      <div className="flex-1 min-h-0 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pb-20 sm:pb-4 flex flex-col overflow-hidden">
         <TabNavigation
           activeTab={activeTab}
           onTabChange={setActiveTab}

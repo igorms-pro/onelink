@@ -20,7 +20,7 @@ export function BottomNavigation({
   const { isScrolling, isScrollable } = useScrollState(150);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden">
+    <nav className="sticky bottom-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden flex-shrink-0">
       {/* Clear all button for Inbox */}
       {activeTab === "inbox" && submissionCount > 0 && onClearAll && (
         <div className="absolute -top-12 right-4">
