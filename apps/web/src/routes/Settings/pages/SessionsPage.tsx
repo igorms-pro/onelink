@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   ArrowLeft,
@@ -41,6 +41,7 @@ type LoginHistory = {
 export default function SessionsPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, loading: authLoading } = useAuth();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
@@ -48,6 +49,8 @@ export default function SessionsPage() {
   const [revokingSessionId, setRevokingSessionId] = useState<string | null>(
     null,
   );
+
+  const sectionsReady = !loading;
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -60,6 +63,30 @@ export default function SessionsPage() {
     loadSessions();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  useEffect(() => {
+    if (!sectionsReady) return;
+    const hash = location.hash.replace("#", "");
+    if (!hash) return;
+    const el = document.getElementById(hash);
+    if (!el) return;
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    el.classList.add(
+      "ring-2",
+      "ring-purple-400",
+      "ring-offset-2",
+      "dark:ring-purple-500/60",
+    );
+    const timeout = window.setTimeout(() => {
+      el.classList.remove(
+        "ring-2",
+        "ring-purple-400",
+        "ring-offset-2",
+        "dark:ring-purple-500/60",
+      );
+    }, 1200);
+    return () => window.clearTimeout(timeout);
+  }, [location.hash, sectionsReady]);
 
   const loadSessions = async () => {
     setLoading(true);
@@ -221,7 +248,10 @@ export default function SessionsPage() {
         </div>
 
         {/* Active Sessions Section */}
-        <section className="mb-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <section
+          id="active-sessions"
+          className="mb-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+        >
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
               <Monitor className="w-5 h-5" />
@@ -308,7 +338,10 @@ export default function SessionsPage() {
         </section>
 
         {/* Login History Section */}
-        <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+        <section
+          id="login-history"
+          className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+        >
           <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
             <Clock className="w-5 h-5" />
             {t("sessions_login_history")}

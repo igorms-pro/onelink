@@ -16,13 +16,13 @@ export function ActiveSessionsSection() {
       </div>
       <div className="space-y-3 pl-7">
         <button
-          onClick={() => navigate("/settings/sessions")}
+          onClick={() => navigate("/settings/sessions#active-sessions")}
           className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
         >
           {t("settings_view_sessions")}
         </button>
         <button
-          onClick={() => navigate("/settings/sessions")}
+          onClick={() => navigate("/settings/sessions#login-history")}
           className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
         >
           {t("settings_login_history")}
