@@ -179,7 +179,7 @@ export default function TwoFactorPage() {
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
             <Shield className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
               {t("settings_2fa_title")}
             </h1>
           </div>
