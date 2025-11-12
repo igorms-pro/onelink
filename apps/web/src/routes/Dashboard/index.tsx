@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
-import { SettingsModal } from "@/components/SettingsModal";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
   DashboardSubHeader,
@@ -23,7 +22,6 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { user, loading, signOut } = useAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const {
     profileId,
@@ -34,7 +32,6 @@ export default function Dashboard() {
     setDrops,
     submissions,
     plan,
-    loading: dataLoading,
   } = useDashboardData(user?.id ?? null);
 
   const isFree = plan !== "pro";
@@ -45,16 +42,6 @@ export default function Dashboard() {
       navigate("/auth", { replace: true });
     }
   }, [loading, user, navigate]);
-
-  if (loading || dataLoading) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <main className="mx-auto max-w-md p-6 text-gray-900 dark:text-white">
-          {t("dashboard_loading")}
-        </main>
-      </div>
-    );
-  }
 
   if (!user) {
     return null; // Will redirect via useEffect
@@ -70,7 +57,7 @@ export default function Dashboard() {
         <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-purple-200/5 dark:bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <Header onSettingsClick={() => setIsSettingsOpen(true)} />
+      <Header onSettingsClick={() => navigate("/settings")} />
       <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
 
       <div className="relative flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pt-10 sm:pt-0 pb-20 sm:pb-4 flex flex-col min-h-0">
@@ -134,11 +121,6 @@ export default function Dashboard() {
             console.log("Clear all clicked");
           }
         }}
-      />
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        onSignOut={() => signOut()}
       />
     </div>
   );

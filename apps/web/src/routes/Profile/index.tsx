@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
+import { Footer } from "@/components/Footer";
 import { useProfileData } from "./hooks/useProfileData";
 import {
   LoadingState,
@@ -123,26 +124,12 @@ export default function Profile() {
               <LinksSection links={links} />
               <DropsSection drops={drops} />
               {isBaseHost(host) && plan !== "pro" && (
-                <footer className="mt-12 text-center space-y-2">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    {t("profile_slogan")}
-                  </p>
-                  <div className="flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500">
-                    <a
-                      href="/privacy"
-                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors cursor-pointer"
-                    >
-                      PP
-                    </a>
-                    <span>•</span>
-                    <a
-                      href="/terms"
-                      className="hover:text-gray-600 dark:hover:text-gray-400 transition-colors cursor-pointer"
-                    >
-                      ToS
-                    </a>
-                  </div>
-                </footer>
+                <Footer
+                  className="mt-12"
+                  variant="transparent"
+                  showBranding
+                  brandingText={t("profile_slogan")}
+                />
               )}
             </>
           )}

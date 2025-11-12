@@ -83,18 +83,359 @@
   "dashboard_header_manage_billing": "Gérer la facturation",
   "dashboard_header_sign_out": "Se déconnecter",
   "settings_title": "Paramètres",
+  "settings_description": "Gérez les paramètres et préférences de votre compte",
+  "settings_back_to_dashboard": "Retour au tableau de bord",
   "settings_notifications": "Notifications",
   "settings_email_notifications": "Notifications par e-mail pour les nouvelles soumissions",
   "settings_weekly_digest": "Résumé hebdomadaire",
   "settings_email_preferences": "Préférences e-mail",
   "settings_marketing_emails": "E-mails marketing",
   "settings_product_updates": "Mises à jour produit",
+  "settings_billing": "Facturation",
+  "settings_current_plan": "Plan actuel",
+  "settings_renewal_date": "Date de renouvellement",
+  "settings_manage_payment": "Gérer le moyen de paiement",
+  "settings_billing_history": "Historique de facturation",
+  "settings_upgrade_to_pro": "Passer à Pro",
+  "settings_custom_domain": "Domaine personnalisé",
+  "settings_configure_domain": "Configurer le domaine",
+  "settings_domain_help": "Utilisez votre propre domaine pour votre profil OneLink",
+  "settings_active_sessions": "Sessions actives",
+  "settings_view_sessions": "Voir les sessions actives",
+  "settings_login_history": "Historique de connexion",
+  "settings_data_export": "Export de données",
+  "settings_download_data": "Télécharger mes données",
+  "settings_export_description": "Téléchargez toutes vos données au format JSON (RGPD)",
+  "settings_api_integrations": "API et intégrations",
+  "settings_coming_soon": "Bientôt disponible",
+  "settings_preferences_saved": "Préférences enregistrées avec succès",
+  "settings_preferences_save_error": "Échec de l'enregistrement des préférences. Veuillez réessayer.",
   "settings_privacy_security": "Confidentialité et sécurité",
   "settings_change_password": "Changer le mot de passe",
+  "settings_change_password_title": "Changer le mot de passe",
+  "settings_change_password_description": "Mettez à jour le mot de passe de votre compte pour garder votre compte sécurisé.",
+  "settings_change_password_current_label": "Mot de passe actuel",
+  "settings_change_password_current_placeholder": "Entrez votre mot de passe actuel",
+  "settings_change_password_current_required": "Le mot de passe actuel est requis",
+  "settings_change_password_current_invalid": "Le mot de passe actuel est incorrect",
+  "settings_change_password_new_label": "Nouveau mot de passe",
+  "settings_change_password_new_placeholder": "Entrez votre nouveau mot de passe",
+  "settings_change_password_new_required": "Le nouveau mot de passe est requis",
+  "settings_change_password_confirm_label": "Confirmer le nouveau mot de passe",
+  "settings_change_password_confirm_placeholder": "Confirmez votre nouveau mot de passe",
+  "settings_change_password_confirm_required": "Veuillez confirmer votre nouveau mot de passe",
+  "settings_change_password_min_length": "Le mot de passe doit contenir au moins 8 caractères",
+  "settings_change_password_min_length_hint": "Doit contenir au moins 8 caractères",
+  "settings_change_password_different": "Le nouveau mot de passe doit être différent du mot de passe actuel",
+  "settings_change_password_match": "Les mots de passe ne correspondent pas",
+  "settings_change_password_submit": "Changer le mot de passe",
+  "settings_change_password_updating": "Mise à jour...",
+  "settings_change_password_success": "Mot de passe modifié avec succès",
+  "settings_change_password_update_failed": "Échec de la mise à jour du mot de passe. Veuillez réessayer.",
   "settings_two_factor": "Authentification à deux facteurs",
+  "settings_back_to_settings": "Retour aux paramètres",
+  "settings_2fa_title": "Authentification à deux facteurs",
+  "settings_2fa_description": "Ajoutez une couche de sécurité supplémentaire à votre compte",
+  "settings_2fa_not_enabled": "La 2FA n'est pas activée",
+  "settings_2fa_not_enabled_description": "Protégez votre compte en activant l'authentification à deux facteurs. Vous aurez besoin d'une application d'authentification comme Google Authenticator ou Authy.",
+  "settings_2fa_enable": "Activer la 2FA",
+  "settings_2fa_setting_up": "Configuration en cours...",
+  "settings_2fa_setup_started": "Configuration de la 2FA démarrée",
+  "settings_2fa_setup_failed": "Échec du démarrage de la configuration de la 2FA",
+  "settings_2fa_setup_step1_title": "Étape 1 : Scanner le code QR",
+  "settings_2fa_setup_step1_description": "Scannez ce code QR avec votre application d'authentification pour ajouter votre compte.",
+  "settings_2fa_scan_qr_code": "Scannez avec votre application d'authentification (Google Authenticator, Authy, etc.)",
+  "settings_2fa_secret_key": "Clé secrète",
+  "settings_2fa_secret_key_description": "Impossible de scanner ? Entrez ce code manuellement dans votre application d'authentification.",
+  "settings_2fa_secret_copied": "Clé secrète copiée dans le presse-papiers",
+  "settings_2fa_backup_codes_title": "Codes de sauvegarde",
+  "settings_2fa_backup_codes_description": "Enregistrez ces codes dans un endroit sûr. Vous pouvez les utiliser pour accéder à votre compte si vous perdez votre appareil.",
+  "settings_2fa_copy_all": "Tout copier",
+  "settings_2fa_backup_code_copied": "Code de sauvegarde copié",
+  "settings_2fa_backup_codes_copied": "Tous les codes de sauvegarde copiés",
+  "settings_2fa_verification_code": "Code de vérification",
+  "settings_2fa_verification_code_description": "Entrez le code à 6 chiffres de votre application d'authentification",
+  "settings_2fa_code_invalid": "Veuillez entrer un code à 6 chiffres valide",
+  "settings_2fa_code_incorrect": "Code de vérification incorrect. Veuillez réessayer.",
+  "settings_2fa_verification_failed": "Échec de la vérification du code",
+  "settings_2fa_verifying": "Vérification en cours...",
+  "settings_2fa_verify_and_activate": "Vérifier et activer",
+  "settings_2fa_activated": "La 2FA a été activée avec succès",
+  "settings_2fa_active": "La 2FA est active",
+  "settings_2fa_active_description": "Votre compte est protégé par l'authentification à deux facteurs.",
+  "settings_2fa_show_backup_codes": "Afficher les codes de sauvegarde",
+  "settings_2fa_regenerate_backup_codes": "Régénérer les codes de sauvegarde",
+  "settings_2fa_backup_codes_regenerated": "Codes de sauvegarde régénérés avec succès",
+  "settings_2fa_backup_codes_regenerate_failed": "Échec de la régénération des codes de sauvegarde",
+  "settings_2fa_disable_title": "Désactiver l'authentification à deux facteurs",
+  "settings_2fa_disable_warning": "Désactiver la 2FA rendra votre compte moins sécurisé. Êtes-vous sûr de vouloir continuer ?",
+  "settings_2fa_password_confirm": "Confirmer le mot de passe",
+  "settings_2fa_password_placeholder": "Entrez votre mot de passe pour confirmer",
+  "settings_2fa_password_required": "Le mot de passe est requis pour désactiver la 2FA",
+  "settings_2fa_disable_button": "Désactiver la 2FA",
+  "settings_2fa_disabling": "Désactivation en cours...",
+  "settings_2fa_disabled": "La 2FA a été désactivée avec succès",
+  "settings_2fa_disable_failed": "Échec de la désactivation de la 2FA",
   "settings_delete_account": "Supprimer le compte",
+  "common_cancel": "Annuler",
   "profile_powered_by": "Propulsé par OneLink",
   "profile_slogan": "Un lien. Plusieurs vies.",
+  "footer_brand_name": "OneLink",
+  "footer_all_rights": "© {{year}} OneLink. Tous droits réservés.",
+  "footer_privacy": "Politique de confidentialité",
+  "footer_terms": "Conditions d'utilisation",
+  "footer_powered": "Propulsé par OneLink",
+  "legal_back_to_auth": "Retour à la connexion",
+  "privacy": {
+    "title": "Politique de confidentialité",
+    "description": "Découvrez comment OneLink collecte, utilise et protège vos données.",
+    "last_updated": "Dernière mise à jour : 12 novembre 2025",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "Introduction",
+        "paragraphs": [
+          "OneLink vous aide à partager un lien unique connecté à plusieurs destinations, routes et dépôts de fichiers.",
+          "En utilisant OneLink, vous nous confiez vos informations. Cette politique explique les données que nous collectons, pourquoi nous le faisons et comment nous les protégeons."
+        ]
+      },
+      {
+        "id": "information",
+        "title": "Données que nous collectons",
+        "paragraphs": [
+          "Nous collectons uniquement les données nécessaires au bon fonctionnement de OneLink :"
+        ],
+        "items": [
+          "Informations de compte telles que votre e-mail, nom d'affichage, avatar et préférences linguistiques",
+          "Contenu ajouté à votre profil : liens, dépôts, descriptions et fichiers qui vous sont envoyés",
+          "Statistiques d'utilisation, y compris les clics agrégés sur les liens et les soumissions de dépôts",
+          "Données techniques (navigateur, système d'exploitation, adresse IP) pour sécuriser votre compte et prévenir les abus"
+        ]
+      },
+      {
+        "id": "usage",
+        "title": "Utilisation de vos données",
+        "paragraphs": ["Nous utilisons vos données pour :"],
+        "items": [
+          "Fournir et maintenir le service OneLink",
+          "Personnaliser votre expérience (langue, thème, limites du plan)",
+          "Envoyer les mises à jour produit importantes, notifications ou exports demandés",
+          "Améliorer la fiabilité et détecter les activités suspectes"
+        ]
+      },
+      {
+        "id": "storage",
+        "title": "Stockage et sécurité",
+        "paragraphs": [
+          "Nous utilisons Supabase (Postgres + storage) pour héberger vos données en toute sécurité dans l'Union européenne.",
+          "Les fichiers importés sont chiffrés au repos. L'accès aux outils internes nécessite une authentification et est journalisé.",
+          "Nous conservons vos données uniquement le temps nécessaire pour fournir le service ou jusqu'à ce que vous demandiez leur suppression."
+        ]
+      },
+      {
+        "id": "sharing",
+        "title": "Partage de données",
+        "paragraphs": [
+          "Nous partageons vos données uniquement avec des sous-traitants de confiance indispensables au produit :"
+        ],
+        "items": [
+          "Supabase pour l'authentification, la base de données et le stockage",
+          "Stripe pour les paiements sécurisés et la facturation (plans Pro)",
+          "Outils de monitoring ou d'analyse pour maintenir la disponibilité"
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "Vos droits",
+        "paragraphs": ["Vous gardez le contrôle sur votre compte :"],
+        "items": [
+          "Exporter vos données depuis Paramètres → Export de données",
+          "Mettre à jour ou supprimer vos informations de profil à tout moment",
+          "Demander la suppression de votre compte via Paramètres → Confidentialité et sécurité",
+          "Nous contacter pour toute question liée à la confidentialité"
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies et stockage local",
+        "paragraphs": [
+          "Nous utilisons le stockage local pour mémoriser votre thème, votre langue et votre session connectée.",
+          "Nous n'utilisons pas de cookies publicitaires tiers."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "Évolutions de cette politique",
+        "paragraphs": [
+          "Nous pouvons mettre à jour cette politique au fur et à mesure que OneLink évolue. Nous publierons la nouvelle version ici et mettrons à jour la date “Dernière mise à jour”."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "paragraphs": [
+          "Des questions ? Écrivez-nous à support@onelink.app et nous reviendrons vers vous rapidement."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Conditions d'utilisation",
+    "description": "Veuillez lire attentivement ces conditions avant d'utiliser OneLink.",
+    "last_updated": "Dernière mise à jour : 12 novembre 2025",
+    "sections": [
+      {
+        "id": "acceptance",
+        "title": "1. Acceptation des conditions",
+        "paragraphs": [
+          "En accédant ou en utilisant OneLink, vous acceptez d'être lié par ces Conditions et notre Politique de confidentialité.",
+          "Si vous n'acceptez pas, n'utilisez pas le service."
+        ]
+      },
+      {
+        "id": "service",
+        "title": "2. Description du service",
+        "paragraphs": [
+          "OneLink vous permet de créer une URL de profil unique avec plusieurs routes, dépôts et statistiques.",
+          "Vous êtes responsable du contenu publié et devez respecter les lois applicables."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Comptes et sécurité",
+        "paragraphs": [
+          "Vous devez fournir des informations de compte exactes et les maintenir à jour.",
+          "Vous êtes responsable de la protection de votre compte et devez nous informer de toute utilisation non autorisée."
+        ]
+      },
+      {
+        "id": "acceptable_use",
+        "title": "4. Utilisation autorisée",
+        "paragraphs": ["Vous vous engagez à ne pas :"],
+        "items": [
+          "Téléverser du contenu malveillant ou tenter de compromettre la sécurité de OneLink",
+          "Utiliser OneLink pour le spam, l'hameçonnage ou des activités illégales",
+          "Usurper l'identité d'autrui ou fournir de fausses informations"
+        ]
+      },
+      {
+        "id": "plans",
+        "title": "5. Abonnements et facturation",
+        "paragraphs": [
+          "Les comptes gratuits ont des limites de plan. Les abonnements Pro sont facturés via Stripe selon les tarifs affichés.",
+          "Nous nous réservons le droit de modifier les prix avec préavis."
+        ]
+      },
+      {
+        "id": "termination",
+        "title": "6. Résiliation",
+        "paragraphs": [
+          "Vous pouvez supprimer votre compte à tout moment depuis Paramètres.",
+          "Nous pouvons suspendre ou résilier un compte en cas de non-respect des Conditions ou de la loi."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "7. Clause de non-responsabilité",
+        "paragraphs": [
+          "OneLink est fourni « tel quel » sans aucune garantie. Nous ne garantissons pas une disponibilité continue."
+        ]
+      },
+      {
+        "id": "liability",
+        "title": "8. Limitation de responsabilité",
+        "paragraphs": [
+          "Dans la limite permise par la loi, OneLink ne pourra être tenu responsable des dommages indirects, incidents ou consécutifs."
+        ]
+      },
+      {
+        "id": "governing_law",
+        "title": "9. Droit applicable",
+        "paragraphs": [
+          "Ces Conditions sont régies par le droit français. Tout litige sera traité devant les tribunaux français."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "10. Modifications",
+        "paragraphs": [
+          "Nous pouvons mettre à jour ces Conditions. En continuant d'utiliser OneLink après une modification, vous acceptez les Conditions révisées."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "11. Contact",
+        "paragraphs": ["Besoin d'aide ? Contactez support@onelink.app."]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Offres et tarifs",
+    "description": "Choisissez l'offre adaptée à votre étape. Commencez gratuitement, passez en Pro quand vous êtes prêt.",
+    "monthly_label": "Facturation mensuelle",
+    "currency_note": "Tarifs en USD. Des taxes peuvent s'appliquer.",
+    "per_month": "par mois",
+    "includes": "Comprend",
+    "most_popular": "Plus populaire",
+    "loading": "Redirection...",
+    "cta_title": "Encore indécis ?",
+    "cta_description": "Notre offre gratuite couvre l'essentiel. Passez en Pro pour débloquer les domaines personnalisés, les statistiques avancées et plus encore.",
+    "cta_button": "Créer mon OneLink",
+    "plans": {
+      "free": {
+        "name": "Gratuit",
+        "price": "0 $",
+        "description": "Idéal pour lancer votre profil et partager vos liens clés.",
+        "cta": "Commencer gratuitement",
+        "features": [
+          "Routes et dépôts illimités (dans les limites du plan gratuit)",
+          "Profil personnalisable avec thèmes",
+          "Notifications e-mail pour les nouvelles soumissions",
+          "Statistiques basiques (historique 7 jours)"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "12 $",
+        "description": "Débloquez les statistiques avancées, le domaine personnalisé et davantage d'automatisation.",
+        "cta": "Passer en Pro",
+        "features": [
+          "Routes et dépôts illimités",
+          "Statistiques avancées avec historique 30 et 90 jours",
+          "Domaine personnalisé et profil brandé",
+          "Support prioritaire et influence sur la roadmap"
+        ]
+      }
+    },
+    "faq_title": "Questions fréquentes",
+    "faq": [
+      {
+        "question": "Puis-je changer d'offre plus tard ?",
+        "answer": "Oui. Vous pouvez changer d'offre à tout moment depuis la page de facturation. Le prorata est géré automatiquement."
+      },
+      {
+        "question": "Proposez-vous des remboursements ?",
+        "answer": "Si vous rencontrez un souci, contactez-nous dans les 14 jours et nous trouverons une solution équitable."
+      },
+      {
+        "question": "OneLink est-il conforme au RGPD ?",
+        "answer": "Oui. Les données sont hébergées dans l'UE via Supabase. Vous pouvez exporter ou supprimer vos données depuis les Paramètres."
+      }
+    ]
+  },
+  "checkout_success": {
+    "title": "Bienvenue parmi les Pro !",
+    "subtitle": "Merci d'avoir choisi OneLink Pro.",
+    "message": "Votre abonnement est actif. Votre tableau de bord a été mis à jour et un e-mail de confirmation vient d'être envoyé.",
+    "button": "Aller au tableau de bord"
+  },
+  "checkout_cancel": {
+    "title": "Paiement annulé",
+    "subtitle": "Pas de panique — rien n'a changé côté compte.",
+    "message": "Vous pouvez réessayer la mise à niveau plus tard ou continuer tranquillement avec l'offre gratuite.",
+    "back_to_pricing": "Retour aux tarifs",
+    "contact_support": "Contacter le support"
+  },
   "dashboard_content_links_title": "Liens",
   "dashboard_content_links_description": "Créez des boutons qui renvoient vers votre contenu",
   "dashboard_content_links_limit_reached": "Limite du plan gratuit atteinte ({limit} actions au total : {links} liens + {drops} drops)",
@@ -157,6 +498,114 @@
   "profile_section_drops": "Fichiers",
   "common_expand": "Développer",
   "common_collapse": "Réduire",
+  "common_cancel": "Annuler",
   "aria_change_language": "Changer la langue",
-  "aria_toggle_theme": "Basculer le thème"
+  "aria_toggle_theme": "Basculer le thème",
+  "settings_delete_account_title": "Supprimer le compte",
+  "settings_delete_account_description": "Cette action ne peut pas être annulée. Toutes vos données seront définitivement supprimées.",
+  "settings_delete_account_warning_title": "Avertissement : Cette action est irréversible",
+  "settings_delete_account_warning_description": "La suppression de votre compte supprimera définitivement toutes vos données, y compris votre profil, liens, drops et soumissions. Cette action ne peut pas être annulée.",
+  "settings_delete_account_password_label": "Confirmez votre mot de passe",
+  "settings_delete_account_password_placeholder": "Entrez votre mot de passe",
+  "settings_delete_account_confirm_text": "Je comprends que cette action est irréversible et que toutes mes données seront définitivement supprimées.",
+  "settings_delete_account_button": "Supprimer mon compte",
+  "settings_delete_account_success": "Suppression du compte initiée. Vous serez déconnecté sous peu.",
+  "settings_delete_account_error": "Échec de la suppression du compte. Veuillez vérifier votre mot de passe et réessayer.",
+  "settings_export_format": "Format d'export",
+  "settings_export_data_to_include": "Données à inclure",
+  "settings_export_data_profile": "Profil",
+  "settings_export_data_links": "Liens",
+  "settings_export_data_drops": "Drops",
+  "settings_export_data_submissions": "Soumissions",
+  "settings_export_data_analytics": "Analytiques",
+  "settings_export_gdpr_notice": "Cet export contient toutes vos données personnelles stockées dans OneLink. Vous pouvez utiliser ces données pour les transférer vers un autre service ou les conserver pour vos archives. Le lien de téléchargement sera valide pendant 24 heures.",
+  "settings_export_generating": "Génération de l'export...",
+  "settings_export_ready": "Export prêt !",
+  "settings_export_download_valid_24h": "Lien de téléchargement valide pendant 24 heures",
+  "settings_export_download": "Télécharger",
+  "settings_export_generate": "Générer l'export",
+  "settings_export_no_data_selected": "Veuillez sélectionner au moins un type de données à exporter",
+  "settings_export_generation_success": "Export généré avec succès",
+  "settings_export_generation_failed": "Échec de la génération de l'export. Veuillez réessayer.",
+  "settings_export_download_started": "Téléchargement démarré",
+  "common_close": "Fermer",
+  "settings_back_to_settings": "Retour aux paramètres",
+  "billing_title": "Facturation",
+  "billing_description": "Gérez votre abonnement, vos moyens de paiement et votre historique de facturation",
+  "billing_current_plan": "Plan actuel",
+  "billing_renewal_placeholder": "Bientôt disponible",
+  "billing_usage": "Utilisation",
+  "billing_items": "éléments",
+  "billing_plan_limits": "Plan gratuit : {links} liens + drops au total",
+  "billing_pro_limits": "Liens et drops illimités",
+  "billing_payment_method": "Moyen de paiement",
+  "billing_expires": "Expire",
+  "billing_no_payment_method": "Aucun moyen de paiement enregistré",
+  "billing_add_card": "Ajouter une carte",
+  "billing_no_invoices": "Aucune facture pour le moment",
+  "billing_status_paid": "Payé",
+  "billing_status_pending": "En attente",
+  "billing_status_failed": "Échoué",
+  "billing_download_pdf": "Télécharger PDF",
+  "billing_manage_subscription": "Gérer l'abonnement",
+  "billing_cancel_subscription": "Annuler l'abonnement",
+  "billing_cancel_confirm": "Êtes-vous sûr de vouloir annuler votre abonnement ? Vous perdrez l'accès aux fonctionnalités Pro à la fin de votre période de facturation.",
+  "billing_cancel_coming_soon": "Fonctionnalité d'annulation d'abonnement à venir",
+  "billing_download_coming_soon": "Fonctionnalité de téléchargement de facture à venir",
+  "billing_payment_error": "Échec de la gestion du paiement. Veuillez réessayer.",
+  "billing_upgrade_error": "Échec du démarrage de la mise à niveau. Veuillez réessayer.",
+  "common_loading": "Chargement...",
+  "settings_domain_page_description": "Configurez des domaines personnalisés pour votre profil OneLink",
+  "settings_domain_add_title": "Ajouter un domaine personnalisé",
+  "settings_domain_label": "Domaine",
+  "settings_domain_placeholder": "exemple.com ou sous-domaine.exemple.com",
+  "settings_domain_hint": "Entrez votre domaine sans http:// ou https://",
+  "settings_domain_required": "Le domaine est requis",
+  "settings_domain_invalid_format": "Veuillez entrer un format de domaine valide (ex. : exemple.com)",
+  "settings_domain_list_title": "Domaines configurés",
+  "settings_domain_empty": "Aucun domaine configuré pour le moment. Ajoutez votre premier domaine ci-dessus.",
+  "settings_domain_status_verified": "Vérifié",
+  "settings_domain_status_pending": "En attente",
+  "settings_domain_added": "Domaine ajouté avec succès",
+  "settings_domain_add_failed": "Échec de l'ajout du domaine",
+  "settings_domain_already_exists": "Ce domaine est déjà configuré",
+  "settings_domain_delete_confirm": "Êtes-vous sûr de vouloir supprimer {domain} ?",
+  "settings_domain_delete_failed": "Échec de la suppression du domaine",
+  "settings_domain_deleted": "Domaine supprimé avec succès",
+  "settings_domain_load_failed": "Échec du chargement des domaines",
+  "settings_domain_profile_not_found": "Profil non trouvé",
+  "settings_domain_dns_title": "Guide de configuration DNS",
+  "settings_domain_help_toggle": "Basculer l'aide",
+  "settings_domain_dns_subdomain_title": "Pour les sous-domaines (ex. : sous-domaine.exemple.com)",
+  "settings_domain_dns_subdomain_description": "Ajoutez un enregistrement CNAME pointant vers Vercel :",
+  "settings_domain_dns_apex_title": "Pour les domaines apex/racine (ex. : exemple.com)",
+  "settings_domain_dns_apex_description": "Ajoutez un enregistrement A pointant vers l'IP de Vercel :",
+  "settings_domain_dns_apex_note": "Note : Certains fournisseurs DNS prennent en charge les enregistrements ALIAS ou l'aplatissement CNAME pour les domaines apex. Consultez la documentation de votre fournisseur.",
+  "settings_domain_dns_note": "Après avoir ajouté les enregistrements DNS, il peut falloir quelques minutes à quelques heures pour que les modifications se propagent. Vercel émettra automatiquement un certificat SSL une fois le DNS correctement configuré.",
+  "sessions_page_title": "Sessions actives",
+  "sessions_page_description": "Gérez vos sessions actives et consultez l'historique de connexion",
+  "sessions_active_sessions": "Sessions actives",
+  "sessions_current_session": "Session actuelle",
+  "sessions_revoke": "Révoquer",
+  "sessions_revoking": "Révocation...",
+  "sessions_revoke_all_other": "Révoquer toutes les autres sessions",
+  "sessions_revoke_all_confirm": "Êtes-vous sûr de vouloir révoquer toutes les autres sessions ? Vous serez déconnecté de tous les appareils sauf celui-ci.",
+  "sessions_revoked_success": "Session révoquée avec succès",
+  "sessions_revoke_error": "Échec de la révocation de la session. Veuillez réessayer.",
+  "sessions_revoked_all_success": "Toutes les autres sessions ont été révoquées avec succès",
+  "sessions_revoke_all_error": "Échec de la révocation de toutes les sessions. Veuillez réessayer.",
+  "sessions_cannot_revoke_current": "Impossible de révoquer la session actuelle",
+  "sessions_no_sessions": "Aucune session active",
+  "sessions_login_history": "Historique de connexion",
+  "sessions_no_history": "Aucun historique de connexion",
+  "sessions_status_success": "Succès",
+  "sessions_status_failed": "Échoué",
+  "sessions_just_now": "À l'instant",
+  "sessions_minutes_ago": "Il y a {{count}} minute",
+  "sessions_minutes_ago_plural": "Il y a {{count}} minutes",
+  "sessions_hours_ago": "Il y a {{count}} heure",
+  "sessions_hours_ago_plural": "Il y a {{count}} heures",
+  "sessions_days_ago": "Il y a {{count}} jour",
+  "sessions_days_ago_plural": "Il y a {{count}} jours",
+  "sessions_load_error": "Échec du chargement des sessions. Veuillez réessayer."
 }

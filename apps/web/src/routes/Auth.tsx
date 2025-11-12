@@ -6,6 +6,7 @@ import { useAuth } from "../lib/AuthProvider";
 import { toast } from "sonner";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 import { setOnboardingIncomplete } from "../lib/onboarding";
+import { Footer } from "@/components/Footer";
 
 type FormValues = { email: string };
 
@@ -105,6 +106,7 @@ export default function Auth() {
           </button>
         </div>
       </main>
+      <Footer className="relative z-10" />
     </div>
   );
 }
