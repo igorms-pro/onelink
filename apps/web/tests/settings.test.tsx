@@ -1,5 +1,28 @@
-import React from "react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
+
+// Mock supabase FIRST before any imports that might use it
+vi.mock("../src/lib/supabase", () => ({
+  supabase: {
+    auth: {
+      signOut: vi.fn(),
+      getUser: vi.fn(),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          single: vi.fn(),
+        })),
+      })),
+      insert: vi.fn(),
+      update: vi.fn(),
+      delete: vi.fn(),
+      upsert: vi.fn(),
+    })),
+    rpc: vi.fn(),
+  },
+}));
+
+import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter, useNavigate } from "react-router-dom";
 import Settings from "../src/routes/Settings";
