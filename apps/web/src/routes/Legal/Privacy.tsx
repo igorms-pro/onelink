@@ -1,8 +1,6 @@
 import { useTranslation } from "react-i18next";
-import {
-  LegalPageLayout,
-  LegalSectionContent,
-} from "@/components/LegalPageLayout";
+import { LegalPageLayout } from "@/components/LegalPageLayout";
+import type { LegalSectionContent } from "@/components/LegalPageLayout";
 
 export default function Privacy() {
   const { t } = useTranslation();
