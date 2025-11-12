@@ -44,6 +44,8 @@
   "dashboard_inbox_email": "Correo electrónico:",
   "dashboard_inbox_note": "Nota:",
   "dashboard_inbox_files": "Archivos",
+  "dashboard_inbox_clear_all": "Clear all",
+  "dashboard_inbox_clear_all_confirm": "Are you sure you want to clear all inbox items? This action cannot be undone.",
   "dashboard_account_profile_title": "Perfil",
   "dashboard_account_profile_description": "Gestiona la configuración de tu perfil público",
   "dashboard_account_analytics_title": "Analíticas",
@@ -81,20 +83,352 @@
   "dashboard_header_manage_billing": "Gestionar facturación",
   "dashboard_header_sign_out": "Cerrar sesión",
   "settings_title": "Configuración",
+  "settings_description": "Manage your account settings and preferences",
+  "settings_back_to_dashboard": "Back to dashboard",
   "settings_notifications": "Notificaciones",
   "settings_email_notifications": "Notificaciones por correo para nuevos envíos",
   "settings_weekly_digest": "Resumen semanal",
   "settings_email_preferences": "Preferencias de correo",
   "settings_marketing_emails": "Correos de marketing",
   "settings_product_updates": "Actualizaciones del producto",
+  "settings_billing": "Billing",
+  "settings_current_plan": "Current plan",
+  "settings_renewal_date": "Renewal date",
+  "settings_manage_payment": "Manage payment method",
+  "settings_billing_history": "Billing history",
+  "settings_upgrade_to_pro": "Upgrade to Pro",
+  "settings_custom_domain": "Custom Domain",
+  "settings_configure_domain": "Configure domain",
+  "settings_domain_help": "Use your own domain for your OneLink profile",
+  "settings_active_sessions": "Active Sessions",
+  "settings_view_sessions": "View active sessions",
+  "settings_login_history": "Login history",
+  "settings_data_export": "Data Export",
+  "settings_download_data": "Download my data",
+  "settings_export_description": "Download all your data in JSON format (GDPR)",
+  "settings_api_integrations": "API & Integrations",
+  "settings_coming_soon": "Coming soon",
+  "settings_preferences_saved": "Preferences saved successfully",
+  "settings_preferences_save_error": "Failed to save preferences. Please try again.",
   "settings_privacy_security": "Privacidad y seguridad",
   "settings_change_password": "Cambiar contraseña",
+  "settings_change_password_title": "Change Password",
+  "settings_change_password_description": "Update your account password to keep your account secure.",
+  "settings_change_password_current_label": "Current Password",
+  "settings_change_password_current_placeholder": "Enter your current password",
+  "settings_change_password_current_required": "Current password is required",
+  "settings_change_password_current_invalid": "Current password is incorrect",
+  "settings_change_password_new_label": "New Password",
+  "settings_change_password_new_placeholder": "Enter your new password",
+  "settings_change_password_new_required": "New password is required",
+  "settings_change_password_confirm_label": "Confirm New Password",
+  "settings_change_password_confirm_placeholder": "Confirm your new password",
+  "settings_change_password_confirm_required": "Please confirm your new password",
+  "settings_change_password_min_length": "Password must be at least 8 characters",
+  "settings_change_password_min_length_hint": "Must be at least 8 characters",
+  "settings_change_password_different": "New password must be different from current password",
+  "settings_change_password_match": "Passwords do not match",
+  "settings_change_password_submit": "Change Password",
+  "settings_change_password_updating": "Updating...",
+  "settings_change_password_success": "Password changed successfully",
+  "settings_change_password_update_failed": "Failed to update password. Please try again.",
   "settings_two_factor": "Autenticación de dos factores",
+  "settings_back_to_settings": "Back to settings",
+  "settings_2fa_title": "Two-Factor Authentication",
+  "settings_2fa_description": "Add an extra layer of security to your account",
+  "settings_2fa_not_enabled": "2FA is not enabled",
+  "settings_2fa_not_enabled_description": "Protect your account by enabling two-factor authentication. You'll need an authenticator app like Google Authenticator or Authy.",
+  "settings_2fa_enable": "Enable 2FA",
+  "settings_2fa_setting_up": "Setting up...",
+  "settings_2fa_setup_started": "2FA setup started",
+  "settings_2fa_setup_failed": "Failed to start 2FA setup",
+  "settings_2fa_setup_step1_title": "Step 1: Scan QR Code",
+  "settings_2fa_setup_step1_description": "Scan this QR code with your authenticator app to add your account.",
+  "settings_2fa_scan_qr_code": "Scan with your authenticator app (Google Authenticator, Authy, etc.)",
+  "settings_2fa_secret_key": "Secret Key",
+  "settings_2fa_secret_key_description": "Can't scan? Enter this code manually in your authenticator app.",
+  "settings_2fa_secret_copied": "Secret key copied to clipboard",
+  "settings_2fa_backup_codes_title": "Backup Codes",
+  "settings_2fa_backup_codes_description": "Save these codes in a safe place. You can use them to access your account if you lose your device.",
+  "settings_2fa_copy_all": "Copy all",
+  "settings_2fa_backup_code_copied": "Backup code copied",
+  "settings_2fa_backup_codes_copied": "All backup codes copied",
+  "settings_2fa_verification_code": "Verification Code",
+  "settings_2fa_verification_code_description": "Enter the 6-digit code from your authenticator app",
+  "settings_2fa_code_invalid": "Please enter a valid 6-digit code",
+  "settings_2fa_code_incorrect": "Incorrect verification code. Please try again.",
+  "settings_2fa_verification_failed": "Failed to verify code",
+  "settings_2fa_verifying": "Verifying...",
+  "settings_2fa_verify_and_activate": "Verify and Activate",
+  "settings_2fa_activated": "2FA has been activated successfully",
+  "settings_2fa_active": "2FA is Active",
+  "settings_2fa_active_description": "Your account is protected with two-factor authentication.",
+  "settings_2fa_show_backup_codes": "Show backup codes",
+  "settings_2fa_regenerate_backup_codes": "Regenerate backup codes",
+  "settings_2fa_backup_codes_regenerated": "Backup codes regenerated successfully",
+  "settings_2fa_backup_codes_regenerate_failed": "Failed to regenerate backup codes",
+  "settings_2fa_disable_title": "Disable Two-Factor Authentication",
+  "settings_2fa_disable_warning": "Disabling 2FA will make your account less secure. Are you sure you want to continue?",
+  "settings_2fa_password_confirm": "Confirm Password",
+  "settings_2fa_password_placeholder": "Enter your password to confirm",
+  "settings_2fa_password_required": "Password is required to disable 2FA",
+  "settings_2fa_disable_button": "Disable 2FA",
+  "settings_2fa_disabling": "Disabling...",
+  "settings_2fa_disabled": "2FA has been disabled successfully",
+  "settings_2fa_disable_failed": "Failed to disable 2FA",
   "settings_delete_account": "Eliminar cuenta",
+  "common_cancel": "Cancel",
   "profile_powered_by": "Desarrollado por OneLink",
   "profile_slogan": "Un enlace. Múltiples vidas.",
+  "footer_brand_name": "OneLink",
+  "footer_all_rights": "© {{year}} OneLink. All rights reserved.",
+  "footer_privacy": "Privacy Policy",
+  "footer_terms": "Terms of Service",
+  "footer_powered": "Powered by OneLink",
+  "legal_back_to_auth": "Back to sign in",
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "Learn how OneLink collects, uses, and protects your data.",
+    "last_updated": "Last updated: November 12, 2025",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "Introduction",
+        "paragraphs": [
+          "OneLink helps you share a single link connected to multiple destinations, routes, and file drops.",
+          "By using OneLink, you trust us with your information. This policy explains what data we collect, why, and how we protect it."
+        ]
+      },
+      {
+        "id": "information",
+        "title": "Information We Collect",
+        "paragraphs": [
+          "We collect only the data needed to operate OneLink effectively:"
+        ],
+        "items": [
+          "Account information such as your email, display name, avatar, and language preferences",
+          "Content you add to your profile: links, drops, descriptions, and files submitted to you",
+          "Usage analytics, including aggregated link clicks and drop submissions",
+          "Technical data (browser, operating system, IP address) to secure your account and prevent abuse"
+        ]
+      },
+      {
+        "id": "usage",
+        "title": "How We Use Your Information",
+        "paragraphs": ["We use your data to:"],
+        "items": [
+          "Provide and maintain the OneLink service",
+          "Personalize your dashboard experience (language, theme, plan limits)",
+          "Send critical product updates, notifications, or export files you request",
+          "Improve reliability and detect suspicious activity"
+        ]
+      },
+      {
+        "id": "storage",
+        "title": "Data Storage & Security",
+        "paragraphs": [
+          "We rely on Supabase (Postgres + storage) to securely host your data in the EU.",
+          "File uploads are encrypted at rest. Access to internal tooling requires authentication and audit logging.",
+          "We keep your data only as long as necessary to provide the service or until you request deletion."
+        ]
+      },
+      {
+        "id": "sharing",
+        "title": "When We Share Data",
+        "paragraphs": [
+          "We share data only with trusted subprocessors essential to the product:"
+        ],
+        "items": [
+          "Supabase for authentication, database, and storage",
+          "Stripe for secure payments and invoicing (for Pro plans)",
+          "Error monitoring or analytics tools to maintain uptime"
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "Your Rights",
+        "paragraphs": ["You are in control of your account:"],
+        "items": [
+          "Export your data from Settings → Data export",
+          "Update or delete your profile information at any time",
+          "Request account deletion via Settings → Privacy & Security",
+          "Contact support for additional privacy questions"
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies & Local Storage",
+        "paragraphs": [
+          "We use local storage to remember your theme preference, language, and authenticated session.",
+          "We do not use third-party advertising cookies."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "Changes to This Policy",
+        "paragraphs": [
+          "We may update this policy as OneLink evolves. We will post the new version here and update the “Last updated” date."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "paragraphs": [
+          "Questions about privacy? Reach out to support@onelink.app and we will get back to you."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "description": "Please read these terms carefully before using OneLink.",
+    "last_updated": "Last updated: November 12, 2025",
+    "sections": [
+      {
+        "id": "acceptance",
+        "title": "1. Acceptance of Terms",
+        "paragraphs": [
+          "By accessing or using OneLink, you agree to be bound by these Terms and our Privacy Policy.",
+          "If you do not agree, do not use the service."
+        ]
+      },
+      {
+        "id": "service",
+        "title": "2. Service Description",
+        "paragraphs": [
+          "OneLink lets you create a single profile URL with multiple routes, drops, and analytics.",
+          "You are responsible for the content you publish and must comply with applicable laws."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Accounts & Security",
+        "paragraphs": [
+          "You must provide accurate account information and keep it up to date.",
+          "You are responsible for safeguarding your account and notifying us of unauthorized use."
+        ]
+      },
+      {
+        "id": "acceptable_use",
+        "title": "4. Acceptable Use",
+        "paragraphs": ["You agree not to:"],
+        "items": [
+          "Upload malicious content or attempt to breach OneLink's security",
+          "Use OneLink for spam, phishing, or illegal activities",
+          "Misrepresent your identity or impersonate others"
+        ]
+      },
+      {
+        "id": "plans",
+        "title": "5. Plans & Billing",
+        "paragraphs": [
+          "Free accounts have plan limits. Pro subscriptions are billed via Stripe according to the pricing on our website.",
+          "We reserve the right to change prices with notice."
+        ]
+      },
+      {
+        "id": "termination",
+        "title": "6. Termination",
+        "paragraphs": [
+          "You can delete your account at any time in Settings.",
+          "We may suspend or terminate accounts that violate these Terms or applicable laws."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "7. Disclaimer",
+        "paragraphs": [
+          "OneLink is provided “as is” without warranties of any kind. We do not guarantee uninterrupted availability."
+        ]
+      },
+      {
+        "id": "liability",
+        "title": "8. Limitation of Liability",
+        "paragraphs": [
+          "To the maximum extent permitted by law, OneLink is not liable for indirect, incidental, or consequential damages."
+        ]
+      },
+      {
+        "id": "governing_law",
+        "title": "9. Governing Law",
+        "paragraphs": [
+          "These Terms are governed by the laws of France. Disputes will be handled in French courts."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "10. Changes",
+        "paragraphs": [
+          "We may update these Terms. Continued use of OneLink after changes means you accept the revised Terms."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "11. Contact",
+        "paragraphs": ["Need help? Email support@onelink.app."]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Plans & Pricing",
+    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "monthly_label": "Monthly billing",
+    "currency_note": "Prices in USD. Taxes may apply.",
+    "per_month": "per month",
+    "includes": "What's included",
+    "most_popular": "Most popular",
+    "loading": "Redirecting...",
+    "cta_title": "Still unsure?",
+    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
+    "cta_button": "Create your OneLink",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "description": "Perfect to launch your profile and share essential links.",
+        "cta": "Start for free",
+        "features": []
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$12",
+        "description": "Unlock advanced analytics, custom domains, and more automations.",
+        "cta": "Upgrade to Pro",
+        "features": []
+      }
+    },
+    "faq_title": "Frequently asked questions",
+    "faq": [
+      {
+        "question": "Can I switch plans later?",
+        "answer": "Yes. Upgrade or downgrade at any time from the billing page. Changes apply immediately and unused time is prorated."
+      },
+      {
+        "question": "Do you offer refunds?",
+        "answer": "If you experience issues, contact support within 14 days and we'll work with you on a fair solution."
+      },
+      {
+        "question": "Is OneLink GDPR compliant?",
+        "answer": "Yes. Data is hosted in the EU with Supabase. You can export or delete your data at any time from Settings."
+      }
+    ]
+  },
+  "checkout_success": {
+    "title": "You're in!",
+    "subtitle": "Thanks for upgrading to OneLink Pro.",
+    "message": "Your subscription is active.",
+    "button": "Go to dashboard"
+  },
+  "checkout_cancel": {
+    "title": "Checkout cancelled",
+    "subtitle": "No worries—your account is unchanged.",
+    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
+    "back_to_pricing": "Back to pricing",
+    "contact_support": "Contact support"
+  },
   "dashboard_content_links_title": "Enlaces",
   "dashboard_content_links_description": "Crea botones que enlazan a tu contenido",
+  "dashboard_content_links_add_button": "Add Route",
   "dashboard_content_links_limit_reached": "Límite del plan gratuito alcanzado ({limit} acciones en total: {links} enlaces + {drops} drops)",
   "dashboard_content_links_limit_hint": "Elimina uno o actualiza a Pro para acciones ilimitadas.",
   "dashboard_content_links_limit_reached_upgrade": "Límite del plan gratuito alcanzado. Por favor actualiza a Pro para agregar más rutas.",
@@ -141,6 +475,7 @@
   "profile_form_bio_placeholder": "Biografía",
   "profile_form_show_additional": "Mostrar información adicional",
   "profile_form_hide_additional": "Ocultar información adicional",
+  "profile_form_slug_placeholder": "slug",
   "profile_drop_submission_success": "Enviado exitosamente.",
   "profile_drop_submission_failed": "Error al enviar",
   "profile_drop_submission_name_placeholder": "Tu nombre (opcional)",
@@ -151,72 +486,120 @@
   "profile_drop_submission_or_drag_drop": "o arrastra y suelta",
   "profile_drop_submission_max_size": "Máx. {size}MB por archivo",
   "profile_drop_submission_send": "Enviar",
+  "profile_drop_submission_file_too_large": "File \"{name}\" exceeds {limit}MB limit.",
+  "profile_drop_submission_file_type_blocked": "File type .{ext} is not allowed.",
   "profile_section_routes": "Rutas",
   "profile_section_drops": "Archivos",
+  "dashboard_content_links_empty": "No links yet. Create your first link above!",
+  "dashboard_content_links_saving_order": "Saving order…",
   "common_expand": "Expandir",
   "common_collapse": "Contraer",
   "aria_change_language": "Cambiar idioma",
   "aria_toggle_theme": "Cambiar tema",
-  "footer_brand_name": "OneLink",
-  "footer_all_rights": "© {{year}} OneLink. All rights reserved.",
-  "footer_privacy": "Privacy Policy",
-  "footer_terms": "Terms of Service",
-  "footer_powered": "Powered by OneLink",
-  "legal_back_to_auth": "Back to sign in",
-  "privacy": {
-    "title": "Privacy Policy",
-    "description": "Learn how OneLink collects, uses, and protects your data.",
-    "last_updated": "Last updated: November 12, 2025",
-    "sections": []
-  },
-  "terms": {
-    "title": "Terms of Service",
-    "description": "Please read these terms carefully before using OneLink.",
-    "last_updated": "Last updated: November 12, 2025",
-    "sections": []
-  },
-  "pricing": {
-    "title": "Plans & Pricing",
-    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
-    "monthly_label": "Monthly billing",
-    "currency_note": "Prices in USD. Taxes may apply.",
-    "per_month": "per month",
-    "includes": "What's included",
-    "most_popular": "Most popular",
-    "loading": "Redirecting...",
-    "cta_title": "Still unsure?",
-    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
-    "cta_button": "Create your OneLink",
-    "plans": {
-      "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect to launch your profile and share essential links.",
-        "cta": "Start for free",
-        "features": []
-      },
-      "pro": {
-        "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
-        "cta": "Upgrade to Pro",
-        "features": []
-      }
-    },
-    "faq_title": "Frequently asked questions",
-    "faq": []
-  },
-  "checkout_success": {
-    "title": "You're in!",
-    "subtitle": "Thanks for upgrading to OneLink Pro.",
-    "message": "Your subscription is active.",
-    "button": "Go to dashboard"
-  },
-  "checkout_cancel": {
-    "title": "Checkout cancelled",
-    "subtitle": "No worries—your account is unchanged.",
-    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
-    "back_to_pricing": "Back to pricing",
-    "contact_support": "Contact support"
-  }
+  "settings_delete_account_title": "Delete Account",
+  "settings_delete_account_description": "This action cannot be undone. All your data will be permanently deleted.",
+  "settings_delete_account_warning_title": "Warning: This action is irreversible",
+  "settings_delete_account_warning_description": "Deleting your account will permanently remove all your data, including your profile, links, drops, and submissions. This action cannot be undone.",
+  "settings_delete_account_password_label": "Confirm your password",
+  "settings_delete_account_password_placeholder": "Enter your password",
+  "settings_delete_account_confirm_text": "I understand that this action is irreversible and all my data will be permanently deleted.",
+  "settings_delete_account_button": "Delete my account",
+  "settings_delete_account_success": "Account deletion initiated. You will be signed out shortly.",
+  "settings_delete_account_error": "Failed to delete account. Please check your password and try again.",
+  "settings_export_format": "Export Format",
+  "settings_export_data_to_include": "Data to Include",
+  "settings_export_data_profile": "Profile",
+  "settings_export_data_links": "Links",
+  "settings_export_data_drops": "Drops",
+  "settings_export_data_submissions": "Submissions",
+  "settings_export_data_analytics": "Analytics",
+  "settings_export_gdpr_notice": "This export contains all your personal data stored in OneLink. You can use this data to transfer it to another service or keep it for your records. The download link will be valid for 24 hours.",
+  "settings_export_generating": "Generating export...",
+  "settings_export_ready": "Export ready!",
+  "settings_export_download_valid_24h": "Download link valid for 24 hours",
+  "settings_export_download": "Download",
+  "settings_export_generate": "Generate Export",
+  "settings_export_no_data_selected": "Please select at least one data type to export",
+  "settings_export_generation_success": "Export generated successfully",
+  "settings_export_generation_failed": "Failed to generate export. Please try again.",
+  "settings_export_download_started": "Download started",
+  "common_close": "Close",
+  "billing_title": "Billing",
+  "billing_description": "Manage your subscription, payment methods, and billing history",
+  "billing_current_plan": "Current Plan",
+  "billing_renewal_placeholder": "Coming soon",
+  "billing_usage": "Usage",
+  "billing_items": "items",
+  "billing_plan_limits": "Free plan: {links} links + drops total",
+  "billing_pro_limits": "Unlimited links and drops",
+  "billing_payment_method": "Payment Method",
+  "billing_expires": "Expires",
+  "billing_no_payment_method": "No payment method on file",
+  "billing_add_card": "Add Card",
+  "billing_no_invoices": "No invoices yet",
+  "billing_status_paid": "Paid",
+  "billing_status_pending": "Pending",
+  "billing_status_failed": "Failed",
+  "billing_download_pdf": "Download PDF",
+  "billing_manage_subscription": "Manage Subscription",
+  "billing_cancel_subscription": "Cancel Subscription",
+  "billing_cancel_confirm": "Are you sure you want to cancel your subscription? You will lose access to Pro features at the end of your billing period.",
+  "billing_cancel_coming_soon": "Cancel subscription feature coming soon",
+  "billing_download_coming_soon": "Download invoice feature coming soon",
+  "billing_payment_error": "Failed to manage payment. Please try again.",
+  "billing_upgrade_error": "Failed to start upgrade. Please try again.",
+  "sessions_page_title": "Active Sessions",
+  "sessions_page_description": "Manage your active sessions and view login history",
+  "sessions_active_sessions": "Active Sessions",
+  "sessions_current_session": "Current session",
+  "sessions_revoke": "Revoke",
+  "sessions_revoking": "Revoking...",
+  "sessions_revoke_all_other": "Revoke all other sessions",
+  "sessions_revoke_all_confirm": "Are you sure you want to revoke all other sessions? You will be logged out from all devices except this one.",
+  "sessions_revoked_success": "Session revoked successfully",
+  "sessions_revoke_error": "Failed to revoke session. Please try again.",
+  "sessions_revoked_all_success": "All other sessions revoked successfully",
+  "sessions_revoke_all_error": "Failed to revoke all sessions. Please try again.",
+  "sessions_cannot_revoke_current": "Cannot revoke current session",
+  "sessions_no_sessions": "No active sessions",
+  "sessions_login_history": "Login History",
+  "sessions_no_history": "No login history",
+  "sessions_status_success": "Success",
+  "sessions_status_failed": "Failed",
+  "sessions_just_now": "Just now",
+  "sessions_minutes_ago": "{{count}} minute ago",
+  "sessions_minutes_ago_plural": "{{count}} minutes ago",
+  "sessions_hours_ago": "{{count}} hour ago",
+  "sessions_hours_ago_plural": "{{count}} hours ago",
+  "sessions_days_ago": "{{count}} day ago",
+  "sessions_days_ago_plural": "{{count}} days ago",
+  "sessions_load_error": "Failed to load sessions. Please try again.",
+  "common_loading": "Loading...",
+  "settings_domain_page_description": "Configure custom domains for your OneLink profile",
+  "settings_domain_add_title": "Add Custom Domain",
+  "settings_domain_label": "Domain",
+  "settings_domain_placeholder": "example.com or subdomain.example.com",
+  "settings_domain_hint": "Enter your domain without http:// or https://",
+  "settings_domain_required": "Domain is required",
+  "settings_domain_invalid_format": "Please enter a valid domain format (e.g., example.com)",
+  "settings_domain_list_title": "Configured Domains",
+  "settings_domain_empty": "No domains configured yet. Add your first domain above.",
+  "settings_domain_status_verified": "Verified",
+  "settings_domain_status_pending": "Pending",
+  "settings_domain_added": "Domain added successfully",
+  "settings_domain_add_failed": "Failed to add domain",
+  "settings_domain_already_exists": "This domain is already configured",
+  "settings_domain_delete_confirm": "Are you sure you want to delete {domain}?",
+  "settings_domain_delete_failed": "Failed to delete domain",
+  "settings_domain_deleted": "Domain deleted successfully",
+  "settings_domain_load_failed": "Failed to load domains",
+  "settings_domain_profile_not_found": "Profile not found",
+  "settings_domain_dns_title": "DNS Configuration Guide",
+  "settings_domain_help_toggle": "Toggle help",
+  "settings_domain_dns_subdomain_title": "For Subdomains (e.g., subdomain.example.com)",
+  "settings_domain_dns_subdomain_description": "Add a CNAME record pointing to Vercel:",
+  "settings_domain_dns_apex_title": "For Apex/Root Domains (e.g., example.com)",
+  "settings_domain_dns_apex_description": "Add an A record pointing to Vercel's IP:",
+  "settings_domain_dns_apex_note": "Note: Some DNS providers support ALIAS records or CNAME flattening for apex domains. Check your provider's documentation.",
+  "settings_domain_dns_note": "After adding DNS records, it may take a few minutes to hours for changes to propagate. Vercel will automatically issue an SSL certificate once DNS is configured correctly."
 }
