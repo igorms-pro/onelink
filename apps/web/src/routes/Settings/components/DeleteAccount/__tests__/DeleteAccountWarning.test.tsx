@@ -36,7 +36,7 @@ describe("DeleteAccountWarning", () => {
     });
 
     it("has correct styling classes", () => {
-      const { container: _container } = render(<DeleteAccountWarning />);
+      const { container } = render(<DeleteAccountWarning />);
 
       const warningContainer = container.querySelector(".bg-red-50");
       expect(warningContainer).toHaveClass(
