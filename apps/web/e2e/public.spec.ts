@@ -1,14 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Public Profile", () => {
-  test("onboarding carousel loads on landing page", async ({ page }) => {
+  test("onboarding carousel loads on landing page", async ({ _page }) => {
     await page.goto("/");
     // Check for onboarding content
     await expect(page.locator("text=Welcome to OneLink")).toBeVisible();
     await expect(page.locator("button:has-text('Next')")).toBeVisible();
   });
 
-  test("auth page loads with theme and language toggles", async ({ page }) => {
+  test("auth page loads with theme and language toggles", async ({ _page }) => {
     await page.goto("/auth");
 
     // Check that OneLink title is visible
@@ -24,7 +24,7 @@ test.describe("Public Profile", () => {
     await expect(langButton).toBeVisible();
   });
 
-  test("theme can be changed on auth page", async ({ page }) => {
+  test("theme can be changed on auth page", async ({ _page }) => {
     await page.goto("/auth");
 
     // Click theme toggle button
@@ -47,7 +47,7 @@ test.describe("Public Profile", () => {
   });
 
   // Skipping this test due to z-index overlay issue - language toggle works in manual testing
-  test.skip("language can be changed on auth page", async ({ page }) => {
+  test.skip("language can be changed on auth page", async ({ _page }) => {
     await page.goto("/auth");
 
     // Check initial English text
@@ -83,19 +83,19 @@ test.describe("Public Profile", () => {
   // Note: These tests require seeded data in Supabase
   // Uncomment when you have test data
   /*
-  test("public profile page renders", async ({ page }) => {
+  test("public profile page renders", async ({ _page }) => {
     await page.goto("/test-slug");
     await expect(page.locator("h1")).toBeVisible();
   });
 
-  test("route link is clickable", async ({ page }) => {
+  test("route link is clickable", async ({ _page }) => {
     await page.goto("/test-slug");
     const link = page.locator('a:has-text("Book a Call")');
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute("href", /.+/);
   });
 
-  test("drop submission form works", async ({ page }) => {
+  test("drop submission form works", async ({ _page }) => {
     await page.goto("/test-slug");
     
     const nameInput = page.locator('input[name="name"]');
