@@ -1,14 +1,14 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Public Profile", () => {
-  test("onboarding carousel loads on landing page", async ({ _page }) => {
+  test("onboarding carousel loads on landing page", async ({ page }) => {
     await page.goto("/");
     // Check for onboarding content
     await expect(page.locator("text=Welcome to OneLink")).toBeVisible();
     await expect(page.locator("button:has-text('Next')")).toBeVisible();
   });
 
-  test("auth page loads with theme and language toggles", async ({ _page }) => {
+  test("auth page loads with theme and language toggles", async ({ page }) => {
     await page.goto("/auth");
 
     // Check that OneLink title is visible
@@ -24,7 +24,7 @@ test.describe("Public Profile", () => {
     await expect(langButton).toBeVisible();
   });
 
-  test("theme can be changed on auth page", async ({ _page }) => {
+  test("theme can be changed on auth page", async ({ page }) => {
     await page.goto("/auth");
 
     // Click theme toggle button
@@ -47,7 +47,7 @@ test.describe("Public Profile", () => {
   });
 
   // Skipping this test due to z-index overlay issue - language toggle works in manual testing
-  test.skip("language can be changed on auth page", async ({ _page }) => {
+  test.skip("language can be changed on auth page", async ({ page }) => {
     await page.goto("/auth");
 
     // Check initial English text

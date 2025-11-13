@@ -104,7 +104,7 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("privacy policy link works", async ({ _page }) => {
+  test("privacy policy link works", async ({ page }) => {
     await page.goto("/test-slug");
 
     const privacyLink = page.locator("a:has-text('Privacy Policy')");
@@ -114,7 +114,7 @@ test.describe("Profile Viewing", () => {
     }
   });
 
-  test("terms of service link works", async ({ _page }) => {
+  test("terms of service link works", async ({ page }) => {
     await page.goto("/test-slug");
 
     const termsLink = page.locator("a:has-text('Terms of Service')");

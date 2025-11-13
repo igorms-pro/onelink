@@ -7,9 +7,7 @@ test.describe("Dashboard Navigation", () => {
     // For now, we'll test the structure assuming user is authenticated
   });
 
-  test("dashboard redirects to auth if not authenticated", async ({
-    _page,
-  }) => {
+  test("dashboard redirects to auth if not authenticated", async ({ page }) => {
     await page.goto("/dashboard");
 
     // Should redirect to auth or show sign in message
@@ -50,7 +48,7 @@ test.describe("Dashboard Navigation", () => {
   });
 
   test("mobile bottom navigation is visible on small screens", async ({
-    _page,
+    page,
   }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });

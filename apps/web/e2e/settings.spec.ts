@@ -7,7 +7,7 @@ test.describe("Settings Navigation", () => {
   });
 
   test("settings page redirects to auth if not authenticated", async ({
-    _page,
+    page,
   }) => {
     await page.goto("/settings");
 

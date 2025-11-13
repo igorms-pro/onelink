@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Onboarding Flow", () => {
-  test("onboarding carousel loads on landing page", async ({ _page }) => {
+  test("onboarding carousel loads on landing page", async ({ page }) => {
     await page.goto("/");
 
     // Check for onboarding content
@@ -10,7 +10,7 @@ test.describe("Onboarding Flow", () => {
     await expect(page.locator("button:has-text('Skip')")).toBeVisible();
   });
 
-  test("can navigate through carousel with Next button", async ({ _page }) => {
+  test("can navigate through carousel with Next button", async ({ page }) => {
     await page.goto("/");
 
     // Click Next to go to second slide
@@ -23,10 +23,12 @@ test.describe("Onboarding Flow", () => {
 
     // Click Next to go to final slide
     await page.locator("button:has-text('Next')").click();
-    await expect(page.locator("text=Get Started")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Get Started" }),
+    ).toBeVisible();
   });
 
-  test("can skip onboarding", async ({ _page }) => {
+  test("can skip onboarding", async ({ page }) => {
     await page.goto("/");
 
     const skipButton = page.locator("button:has-text('Skip')");
@@ -37,7 +39,7 @@ test.describe("Onboarding Flow", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("can complete onboarding with Get Started", async ({ _page }) => {
+  test("can complete onboarding with Get Started", async ({ page }) => {
     await page.goto("/");
 
     // Navigate to last slide
@@ -54,7 +56,7 @@ test.describe("Onboarding Flow", () => {
     await expect(page).toHaveURL(/\/auth/);
   });
 
-  test("carousel dots are visible and clickable", async ({ _page }) => {
+  test("carousel dots are visible and clickable", async ({ page }) => {
     await page.goto("/");
 
     // Check that carousel dots are present
@@ -63,7 +65,7 @@ test.describe("Onboarding Flow", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("view sample profile link works", async ({ _page }) => {
+  test("view sample profile link works", async ({ page }) => {
     await page.goto("/");
 
     const sampleLink = page.locator("text=View sample profile");
