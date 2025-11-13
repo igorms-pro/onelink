@@ -128,7 +128,6 @@ describe("useMediaQuery", () => {
       media: "(min-width: 768px)",
       addListener,
       removeListener,
-      // @ts-expect-error - intentionally missing addEventListener for fallback test
       addEventListener: undefined,
     } as any);
     window.matchMedia = matchMediaMock as any;
@@ -173,7 +172,6 @@ describe("useMediaQuery", () => {
         handler = h;
       },
       removeListener,
-      // @ts-expect-error - intentionally missing addEventListener
       addEventListener: undefined,
     } as any);
     window.matchMedia = matchMediaMock as any;
