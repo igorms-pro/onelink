@@ -4,6 +4,15 @@ import userEvent from "@testing-library/user-event";
 import { DropList } from "../DropList";
 import { toast } from "sonner";
 import type { DropRow } from "../../types";
+
+// Mock supabase
+const mockFrom = vi.hoisted(() => vi.fn());
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: mockFrom,
+  },
+}));
+
 import { supabase } from "@/lib/supabase";
 
 // Mock window.confirm and prompt
@@ -23,8 +32,8 @@ describe("DropList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset supabase.from to default mock behavior
-    vi.mocked(supabase.from).mockReset();
-    vi.mocked(supabase.from).mockImplementation(
+    mockFrom.mockClear();
+    mockFrom.mockImplementation(
       () =>
         ({
           select: vi.fn(() => ({
@@ -446,7 +455,7 @@ describe("DropList", () => {
     // Wait for the error toast after confirmation
     await waitFor(
       () => {
-        expect(toast.error).toHaveBeenCalledWith("common_delete_failed");
+        expect(toast.error).toHaveBeenCalledWith("Failed to delete drop.");
       },
       { timeout: 3000 },
     );

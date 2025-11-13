@@ -71,9 +71,7 @@ describe("AccountTab", () => {
     );
 
     // ProfileLinkCard renders actual component, check for "Your Profile Link" text
-    expect(
-      screen.getByText("dashboard_account_profile_link_title"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Your Profile Link")).toBeInTheDocument();
   });
 
   it("should render ProfileEditor", () => {
@@ -133,7 +131,7 @@ describe("AccountTab", () => {
     const analyticsCard = screen.getByTestId("analytics-card");
     expect(analyticsCard).toBeInTheDocument();
 
-    const collapseButton = screen.getByLabelText("common_collapse");
+    const collapseButton = screen.getByLabelText("Collapse");
     await user.click(collapseButton);
 
     expect(screen.queryByTestId("analytics-card")).not.toBeInTheDocument();

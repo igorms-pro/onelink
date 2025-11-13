@@ -4,23 +4,16 @@ import userEvent from "@testing-library/user-event";
 import { LinksList, type LinkRow } from "../LinksList";
 import { toast } from "sonner";
 
-// Note: supabase is mocked globally in vitest.setup.ts
-// We'll override it in individual tests using vi.mocked()
-
-// Mock toast
-vi.mock("sonner", () => ({
-  toast: {
-    error: vi.fn(),
-    success: vi.fn(),
+// Mock supabase
+const mockFrom = vi.hoisted(() => vi.fn());
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: mockFrom,
   },
 }));
 
-// Mock i18n
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
+// Mock toast - already mocked globally, but we can override if needed
+// Mock i18n - using global mock from vitest.setup.ts that returns English translations
 
 // Mock window.confirm
 globalThis.confirm = vi.fn(() => true);
@@ -41,8 +34,7 @@ describe("LinksList", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset supabase.from to default mock behavior
-    vi.mocked(supabase.from).mockReset();
-    vi.mocked(supabase.from).mockImplementation(
+    mockFrom.mockImplementation(
       () =>
         ({
           select: vi.fn(() => ({
@@ -78,7 +70,7 @@ describe("LinksList", () => {
   it("renders empty state when no links", () => {
     render(<LinksList {...defaultProps} />);
     expect(
-      screen.getByText("dashboard_content_links_empty"),
+      screen.getByText("No links yet. Create your first link above!"),
     ).toBeInTheDocument();
   });
 
@@ -124,19 +116,17 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       update: mockUpdate,
     } as unknown as ReturnType<typeof supabase.from>);
 
     render(<LinksList {...defaultProps} links={links} />);
-    const editButtons = screen.getAllByLabelText("common_edit");
+    const editButtons = screen.getAllByLabelText("Edit");
     await user.click(editButtons[0]);
 
     await waitFor(() => {
       expect(mockSetLinks).toHaveBeenCalled();
-      expect(toast.success).toHaveBeenCalledWith(
-        "dashboard_content_links_update_success",
-      );
+      expect(toast.success).toHaveBeenCalledWith("Link updated");
     });
   });
 
@@ -158,16 +148,16 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       update: mockUpdate,
     } as unknown as ReturnType<typeof supabase.from>);
 
     render(<LinksList {...defaultProps} links={links} />);
-    const editButtons = screen.getAllByLabelText("common_edit");
+    const editButtons = screen.getAllByLabelText("Edit");
     await user.click(editButtons[0]);
 
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("common_update_failed");
+      expect(toast.error).toHaveBeenCalledWith("Update failed");
     });
   });
 
@@ -189,20 +179,18 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       delete: mockDelete,
     } as unknown as ReturnType<typeof supabase.from>);
 
     render(<LinksList {...defaultProps} links={links} />);
-    const deleteButtons = screen.getAllByLabelText("common_delete");
+    const deleteButtons = screen.getAllByLabelText("Delete");
     await user.click(deleteButtons[0]);
 
     await waitFor(() => {
       expect(globalThis.confirm).toHaveBeenCalled();
       expect(mockSetLinks).toHaveBeenCalled();
-      expect(toast.success).toHaveBeenCalledWith(
-        "dashboard_content_links_delete_success",
-      );
+      expect(toast.success).toHaveBeenCalledWith("Link deleted");
     });
   });
 
@@ -220,7 +208,7 @@ describe("LinksList", () => {
     ];
 
     render(<LinksList {...defaultProps} links={links} />);
-    const deleteButtons = screen.getAllByLabelText("common_delete");
+    const deleteButtons = screen.getAllByLabelText("Delete");
     await user.click(deleteButtons[0]);
 
     await waitFor(() => {
@@ -249,8 +237,8 @@ describe("LinksList", () => {
     }));
 
     // Override the mock for this specific test - reset first to clear beforeEach mock
-    vi.mocked(supabase.from).mockReset();
-    vi.mocked(supabase.from).mockImplementation((table: string) => {
+    mockFrom.mockClear();
+    mockFrom.mockImplementation((table: string) => {
       if (table === "links") {
         return {
           select: vi.fn(() => ({
@@ -309,12 +297,12 @@ describe("LinksList", () => {
     });
 
     render(<LinksList {...defaultProps} links={links} />);
-    const deleteButtons = screen.getAllByLabelText("common_delete");
+    const deleteButtons = screen.getAllByLabelText("Delete");
     await user.click(deleteButtons[0]);
 
     await waitFor(
       () => {
-        expect(toast.error).toHaveBeenCalledWith("common_delete_failed");
+        expect(toast.error).toHaveBeenCalledWith("Delete failed");
       },
       { timeout: 3000 },
     );
@@ -344,7 +332,7 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       update: mockUpdate,
     } as unknown as ReturnType<typeof supabase.from>);
 
@@ -387,7 +375,7 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       update: mockUpdate,
     } as unknown as ReturnType<typeof supabase.from>);
 
@@ -399,9 +387,7 @@ describe("LinksList", () => {
     fireEvent.drop(linkItems[1]);
 
     await waitFor(() => {
-      expect(
-        screen.getByText("dashboard_content_links_saving_order"),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Saving order…")).toBeInTheDocument();
     });
   });
 
@@ -429,7 +415,7 @@ describe("LinksList", () => {
       })),
     }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       update: mockUpdate,
     } as unknown as ReturnType<typeof supabase.from>);
 

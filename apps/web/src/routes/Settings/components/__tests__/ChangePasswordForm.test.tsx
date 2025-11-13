@@ -22,11 +22,7 @@ vi.mock("sonner", () => ({
   },
 }));
 
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
+// Using global i18n mock from vitest.setup.ts that returns English translations
 
 import { supabase } from "@/lib/supabase";
 
@@ -49,15 +45,9 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      expect(
-        screen.getByLabelText(/settings_change_password_current_label/i),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByLabelText(/settings_change_password_new_label/i),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByLabelText(/settings_change_password_confirm_label/i),
-      ).toBeInTheDocument();
+      expect(screen.getByLabelText("Current Password")).toBeInTheDocument();
+      expect(screen.getByLabelText("New Password")).toBeInTheDocument();
+      expect(screen.getByLabelText("Confirm New Password")).toBeInTheDocument();
     });
 
     it("renders cancel and submit buttons", () => {
@@ -69,10 +59,8 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      expect(screen.getByText(/common_cancel/i)).toBeInTheDocument();
-      expect(
-        screen.getByText(/settings_change_password_submit/i),
-      ).toBeInTheDocument();
+      expect(screen.getByText("Cancel")).toBeInTheDocument();
+      expect(screen.getByText("Change Password")).toBeInTheDocument();
     });
 
     it("shows password hint for new password field", () => {
@@ -85,7 +73,7 @@ describe("ChangePasswordForm", () => {
       );
 
       expect(
-        screen.getByText(/settings_change_password_min_length_hint/i),
+        screen.getByText("Must be at least 8 characters"),
       ).toBeInTheDocument();
     });
 
@@ -100,10 +88,10 @@ describe("ChangePasswordForm", () => {
       );
 
       const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
+        "Current Password",
       ) as HTMLInputElement;
       const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
+        "New Password",
       ) as HTMLInputElement;
 
       fireEvent.change(currentPasswordInput, { target: { value: "old123" } });
@@ -131,10 +119,10 @@ describe("ChangePasswordForm", () => {
       );
 
       const resetCurrentPassword = screen.getByLabelText(
-        /settings_change_password_current_label/i,
+        "Current Password",
       ) as HTMLInputElement;
       const resetNewPassword = screen.getByLabelText(
-        /settings_change_password_new_label/i,
+        "New Password",
       ) as HTMLInputElement;
 
       expect(resetCurrentPassword.value).toBe("");
@@ -154,12 +142,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
       await user.click(submitButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText(/settings_change_password_current_required/i),
+          screen.getByText("Current password is required"),
         ).toBeInTheDocument();
       });
     });
@@ -174,17 +162,15 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "old123");
       await user.click(submitButton);
 
       await waitFor(() => {
         expect(
-          screen.getByText(/settings_change_password_new_required/i),
+          screen.getByText("New password is required"),
         ).toBeInTheDocument();
       });
     });
@@ -199,13 +185,9 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "old123");
       await user.type(newPasswordInput, "short");
@@ -213,7 +195,7 @@ describe("ChangePasswordForm", () => {
 
       await waitFor(() => {
         const errorMessages = screen.getAllByText(
-          /settings_change_password_min_length/i,
+          "Password must be at least 8 characters",
         );
         // Should have both error and hint, but error should be in red
         const errorMessage = errorMessages.find((el) =>
@@ -233,13 +215,9 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "samepassword123");
       await user.type(newPasswordInput, "samepassword123");
@@ -247,7 +225,9 @@ describe("ChangePasswordForm", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/settings_change_password_different/i),
+          screen.getByText(
+            "New password must be different from current password",
+          ),
         ).toBeInTheDocument();
       });
     });
@@ -262,13 +242,9 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "old123");
       await user.type(newPasswordInput, "newpassword123");
@@ -276,7 +252,7 @@ describe("ChangePasswordForm", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/settings_change_password_confirm_required/i),
+          screen.getByText("Please confirm your new password"),
         ).toBeInTheDocument();
       });
     });
@@ -291,16 +267,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "old123");
       await user.type(newPasswordInput, "newpassword123");
@@ -308,9 +280,7 @@ describe("ChangePasswordForm", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/settings_change_password_match/i),
-        ).toBeInTheDocument();
+        expect(screen.getByText("Passwords do not match")).toBeInTheDocument();
       });
     });
   });
@@ -341,16 +311,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -367,7 +333,7 @@ describe("ChangePasswordForm", () => {
           password: "newpassword123",
         });
         expect(toast.success).toHaveBeenCalledWith(
-          "settings_change_password_success",
+          "Password changed successfully",
         );
         expect(mockOnSuccess).toHaveBeenCalled();
       });
@@ -394,16 +360,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "wrongpassword");
       await user.type(newPasswordInput, "newpassword123");
@@ -412,7 +374,7 @@ describe("ChangePasswordForm", () => {
 
       await waitFor(() => {
         expect(
-          screen.getByText(/settings_change_password_current_invalid/i),
+          screen.getByText("Current password is incorrect"),
         ).toBeInTheDocument();
       });
     });
@@ -442,16 +404,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -460,7 +418,7 @@ describe("ChangePasswordForm", () => {
 
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalledWith(
-          "settings_change_password_update_failed",
+          "Failed to update password. Please try again.",
         );
         expect(mockOnSuccess).not.toHaveBeenCalled();
       });
@@ -481,16 +439,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -539,16 +493,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -598,16 +548,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -615,9 +561,7 @@ describe("ChangePasswordForm", () => {
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(
-          screen.getByText(/settings_change_password_updating/i),
-        ).toBeInTheDocument();
+        expect(screen.getByText("Updating...")).toBeInTheDocument();
       });
     });
 
@@ -647,16 +591,12 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
+      const submitButton = screen.getByText("Change Password");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");
@@ -681,7 +621,7 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const cancelButton = screen.getByText(/common_cancel/i);
+      const cancelButton = screen.getByText("Cancel");
       await user.click(cancelButton);
 
       expect(mockOnClose).toHaveBeenCalled();
@@ -704,17 +644,13 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      const currentPasswordInput = screen.getByLabelText(
-        /settings_change_password_current_label/i,
-      );
-      const newPasswordInput = screen.getByLabelText(
-        /settings_change_password_new_label/i,
-      );
+      const currentPasswordInput = screen.getByLabelText("Current Password");
+      const newPasswordInput = screen.getByLabelText("New Password");
       const confirmPasswordInput = screen.getByLabelText(
-        /settings_change_password_confirm_label/i,
+        "Confirm New Password",
       );
-      const submitButton = screen.getByText(/settings_change_password_submit/i);
-      const cancelButton = screen.getByText(/common_cancel/i);
+      const submitButton = screen.getByText("Change Password");
+      const cancelButton = screen.getByText("Cancel");
 
       await user.type(currentPasswordInput, "oldpassword123");
       await user.type(newPasswordInput, "newpassword123");

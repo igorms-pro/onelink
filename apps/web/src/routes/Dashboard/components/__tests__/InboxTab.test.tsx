@@ -77,7 +77,7 @@ describe("InboxTab", () => {
   it("should display file count when files exist", () => {
     render(<InboxTab submissions={mockSubmissions} />);
 
-    expect(screen.getByText(/Files \(1\)/)).toBeInTheDocument();
+    expect(screen.getByText("Files (1)")).toBeInTheDocument();
   });
 
   it("should not display name/email/note when they are null", () => {

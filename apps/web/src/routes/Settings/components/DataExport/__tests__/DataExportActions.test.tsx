@@ -3,13 +3,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DataExportActions } from "../DataExportActions";
 
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
 describe("DataExportActions", () => {
   const defaultProps = {
     isGenerating: false,
@@ -22,22 +15,20 @@ describe("DataExportActions", () => {
 
   it("renders generate button when not ready", () => {
     render(<DataExportActions {...defaultProps} />);
-    expect(screen.getByText("settings_export_generate")).toBeInTheDocument();
+    expect(screen.getByText("Generate Export")).toBeInTheDocument();
   });
 
   it("renders download button when ready", () => {
     render(<DataExportActions {...defaultProps} isReady={true} />);
-    expect(screen.getByText("settings_export_download")).toBeInTheDocument();
-    expect(
-      screen.queryByText("settings_export_generate"),
-    ).not.toBeInTheDocument();
+    expect(screen.getByText("Download")).toBeInTheDocument();
+    expect(screen.queryByText("Generate Export")).not.toBeInTheDocument();
   });
 
   it("calls onGenerate when generate button is clicked", async () => {
     const user = userEvent.setup();
     const onGenerate = vi.fn();
     render(<DataExportActions {...defaultProps} onGenerate={onGenerate} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
     await user.click(generateButton);
     expect(onGenerate).toHaveBeenCalledTimes(1);
   });
@@ -52,7 +43,7 @@ describe("DataExportActions", () => {
         onDownload={onDownload}
       />,
     );
-    const downloadButton = screen.getByText("settings_export_download");
+    const downloadButton = screen.getByText("Download");
     await user.click(downloadButton);
     expect(onDownload).toHaveBeenCalledTimes(1);
   });
@@ -61,42 +52,40 @@ describe("DataExportActions", () => {
     const user = userEvent.setup();
     const onClose = vi.fn();
     render(<DataExportActions {...defaultProps} onClose={onClose} />);
-    const cancelButton = screen.getByText("common_cancel");
+    const cancelButton = screen.getByText("Cancel");
     await user.click(cancelButton);
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 
   it("shows close button text when ready", () => {
     render(<DataExportActions {...defaultProps} isReady={true} />);
-    expect(screen.getByText("common_close")).toBeInTheDocument();
-    expect(screen.queryByText("common_cancel")).not.toBeInTheDocument();
+    expect(screen.getByText("Close")).toBeInTheDocument();
+    expect(screen.queryByText("Cancel")).not.toBeInTheDocument();
   });
 
   it("shows cancel button text when not ready", () => {
     render(<DataExportActions {...defaultProps} isReady={false} />);
-    expect(screen.getByText("common_cancel")).toBeInTheDocument();
-    expect(screen.queryByText("common_close")).not.toBeInTheDocument();
+    expect(screen.getByText("Cancel")).toBeInTheDocument();
+    expect(screen.queryByText("Close")).not.toBeInTheDocument();
   });
 
   it("disables generate button when generating", () => {
     render(<DataExportActions {...defaultProps} isGenerating={true} />);
-    const generateButton = screen.getByText("settings_export_generating");
+    const generateButton = screen.getByText("Generating export...");
     expect(generateButton.closest("button")).toBeDisabled();
   });
 
   it("disables generate button when no data selected", () => {
     render(<DataExportActions {...defaultProps} hasSelectedData={false} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
     expect(generateButton.closest("button")).toBeDisabled();
   });
 
   it("shows loading spinner when generating", () => {
     render(<DataExportActions {...defaultProps} isGenerating={true} />);
-    expect(screen.getByText("settings_export_generating")).toBeInTheDocument();
+    expect(screen.getByText("Generating export...")).toBeInTheDocument();
     // Check for spinner icon
-    const button = screen
-      .getByText("settings_export_generating")
-      .closest("button");
+    const button = screen.getByText("Generating export...").closest("button");
     const spinner = button?.querySelector("svg");
     expect(spinner).toBeInTheDocument();
   });
@@ -109,7 +98,7 @@ describe("DataExportActions", () => {
         isGenerating={false}
       />,
     );
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
     expect(generateButton.closest("button")).not.toBeDisabled();
   });
 });

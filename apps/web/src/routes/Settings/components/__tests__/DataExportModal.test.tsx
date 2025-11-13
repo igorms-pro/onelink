@@ -50,33 +50,33 @@ describe("DataExportModal", () => {
 
   it("renders modal when open", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("settings_data_export")).toBeInTheDocument();
-    expect(screen.getByText("settings_export_description")).toBeInTheDocument();
+    expect(screen.getByText("Data Export")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Download all your data in JSON format/i),
+    ).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
     render(<DataExportModal {...defaultProps} open={false} />);
-    expect(screen.queryByText("settings_data_export")).not.toBeInTheDocument();
+    expect(screen.queryByText("Data Export")).not.toBeInTheDocument();
   });
 
   it("renders DataExportForm", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("settings_export_format")).toBeInTheDocument();
-    expect(
-      screen.getByText("settings_export_data_to_include"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Export Format")).toBeInTheDocument();
+    expect(screen.getByText("Data to Include")).toBeInTheDocument();
   });
 
   it("renders generate button initially", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("settings_export_generate")).toBeInTheDocument();
+    expect(screen.getByText("Generate Export")).toBeInTheDocument();
   });
 
   it("calls onOpenChange when modal is closed", async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
     render(<DataExportModal {...defaultProps} onOpenChange={onOpenChange} />);
-    const cancelButton = screen.getByText("common_cancel");
+    const cancelButton = screen.getByText("Cancel");
     await user.click(cancelButton);
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
@@ -85,7 +85,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
 
     await act(async () => {
       await user.click(generateButton);
@@ -110,7 +110,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
 
     await act(async () => {
       await user.click(generateButton);
@@ -135,7 +135,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
 
     await act(async () => {
       await user.click(generateButton);
@@ -176,7 +176,7 @@ describe("DataExportModal", () => {
       .mockImplementation(() => mockLink as unknown as Node);
 
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
 
     await act(async () => {
       await user.click(generateButton);
@@ -211,7 +211,7 @@ describe("DataExportModal", () => {
     const user = userEvent.setup({ delay: null });
     const onOpenChange = vi.fn();
     render(<DataExportModal {...defaultProps} onOpenChange={onOpenChange} />);
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
 
     await act(async () => {
       await user.click(generateButton);
@@ -247,7 +247,7 @@ describe("DataExportModal", () => {
         await user.click(checkbox);
       }
     }
-    const generateButton = screen.getByText("settings_export_generate");
+    const generateButton = screen.getByText("Generate Export");
     expect(generateButton.closest("button")).toBeDisabled();
   });
 });

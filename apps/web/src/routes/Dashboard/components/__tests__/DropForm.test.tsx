@@ -4,7 +4,14 @@ import userEvent from "@testing-library/user-event";
 import { DropForm } from "../DropForm";
 import { toast } from "sonner";
 import type { DropRow } from "../../types";
-import { supabase } from "@/lib/supabase";
+
+// Mock supabase
+const mockFrom = vi.hoisted(() => vi.fn());
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: mockFrom,
+  },
+}));
 
 describe("DropForm", () => {
   const mockOnDropCreated = vi.fn();
@@ -23,7 +30,7 @@ describe("DropForm", () => {
   it("renders form with input and submit button", () => {
     render(<DropForm {...defaultProps} />);
     expect(
-      screen.getByPlaceholderText(/Label \(e.g. Upload assets\)/),
+      screen.getByPlaceholderText("Label (e.g. Upload assets)"),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Add Drop" }),
@@ -32,7 +39,7 @@ describe("DropForm", () => {
 
   it("disables form when limit is reached for free plan", () => {
     render(<DropForm {...defaultProps} isFree={true} totalItems={3} />);
-    const input = screen.getByPlaceholderText(/Label \(e.g. Upload assets\)/);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
     expect(input).toBeDisabled();
     expect(button).toBeDisabled();
@@ -78,12 +85,12 @@ describe("DropForm", () => {
     const mockSelect = vi.fn(() => ({ single: mockSingle }));
     const mockInsert = vi.fn(() => ({ select: mockSelect }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       insert: mockInsert,
     } as any);
 
     render(<DropForm {...defaultProps} />);
-    const input = screen.getByPlaceholderText(/Label \(e.g. Upload assets\)/);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
 
     await user.type(input, "Test Drop");
@@ -106,12 +113,12 @@ describe("DropForm", () => {
     const mockSelect = vi.fn(() => ({ single: mockSingle }));
     const mockInsert = vi.fn(() => ({ select: mockSelect }));
 
-    vi.mocked(supabase.from).mockReturnValue({
+    mockFrom.mockReturnValueOnce({
       insert: mockInsert,
     } as any);
 
     render(<DropForm {...defaultProps} />);
-    const input = screen.getByPlaceholderText(/Label \(e.g. Upload assets\)/);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
 
     await user.type(input, "Test Drop");
@@ -125,7 +132,7 @@ describe("DropForm", () => {
   it("does not submit when profileId is null", async () => {
     const user = userEvent.setup();
     render(<DropForm {...defaultProps} profileId={null} />);
-    const input = screen.getByPlaceholderText(/Label \(e.g. Upload assets\)/);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
 
     // Button is not disabled by default, but submission is prevented in handler

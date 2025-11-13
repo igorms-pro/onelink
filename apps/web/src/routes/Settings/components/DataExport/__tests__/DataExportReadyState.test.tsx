@@ -1,24 +1,17 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DataExportReadyState } from "../DataExportReadyState";
-
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
 
 describe("DataExportReadyState", () => {
   it("renders ready state message", () => {
     render(<DataExportReadyState />);
-    expect(screen.getByText("settings_export_ready")).toBeInTheDocument();
+    expect(screen.getByText("Export ready!")).toBeInTheDocument();
   });
 
   it("displays expiration notice", () => {
     render(<DataExportReadyState />);
     expect(
-      screen.getByText("settings_export_download_valid_24h"),
+      screen.getByText("Download link valid for 24 hours"),
     ).toBeInTheDocument();
   });
 

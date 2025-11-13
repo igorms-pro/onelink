@@ -74,9 +74,7 @@ describe("ProfileLinkCard", () => {
 
   it("renders profile link card with slug", () => {
     render(<ProfileLinkCard slug="test-user" isFree={false} />);
-    expect(
-      screen.getByText("dashboard_account_profile_link_title"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Your Profile Link")).toBeInTheDocument();
     expect(
       screen.getByDisplayValue("https://example.com/test-user"),
     ).toBeInTheDocument();
@@ -128,9 +126,7 @@ describe("ProfileLinkCard", () => {
       .spyOn(window, "open")
       .mockImplementation(() => null);
     render(<ProfileLinkCard slug="test-user" isFree={false} />);
-    const previewButton = screen.getByText(
-      "dashboard_account_profile_link_preview",
-    );
+    const previewButton = screen.getByText("Preview");
     fireEvent.click(previewButton);
 
     expect(windowOpenSpy).toHaveBeenCalledWith(
@@ -144,7 +140,7 @@ describe("ProfileLinkCard", () => {
   it("shows QR code modal for pro users", async () => {
     const user = userEvent.setup();
     render(<ProfileLinkCard slug="test-user" isFree={false} />);
-    const qrButton = screen.getByText("dashboard_account_profile_link_qr");
+    const qrButton = screen.getByText("QR Code");
     await user.click(qrButton);
 
     await waitFor(() => {
@@ -155,7 +151,7 @@ describe("ProfileLinkCard", () => {
 
   it("shows upgrade message and redirects for free users", async () => {
     render(<ProfileLinkCard slug="test-user" isFree={true} />);
-    const qrButton = screen.getByText("dashboard_account_profile_link_qr");
+    const qrButton = screen.getByText("QR Code");
     expect(qrButton).toBeDisabled();
     // Disabled buttons don't trigger onClick in real browsers, but fireEvent can bypass this
     // However, React's event system respects disabled state, so we test the disabled state instead

@@ -1,18 +1,11 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DataExportProgress } from "../DataExportProgress";
-
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
 
 describe("DataExportProgress", () => {
   it("renders progress display", () => {
     render(<DataExportProgress progress={50} />);
-    expect(screen.getByText("settings_export_generating")).toBeInTheDocument();
+    expect(screen.getByText("Generating export...")).toBeInTheDocument();
     expect(screen.getByText("50%")).toBeInTheDocument();
   });
 

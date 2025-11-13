@@ -87,7 +87,7 @@ describe("DataExportForm", () => {
       <DataExportForm {...defaultProps} onToggleDataType={onToggleDataType} />,
     );
     const dropsCheckbox = screen
-      .getByText("settings_export_data_drops")
+      .getByText("Drops")
       .closest("label")
       ?.querySelector('input[type="checkbox"]') as HTMLInputElement;
     await user.click(dropsCheckbox);

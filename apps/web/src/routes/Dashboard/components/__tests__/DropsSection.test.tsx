@@ -62,7 +62,7 @@ describe("DropsSection", () => {
   it("expands and collapses section", async () => {
     const user = userEvent.setup();
     render(<DropsSection {...defaultProps} />);
-    const toggleButton = screen.getByLabelText("common_collapse");
+    const toggleButton = screen.getByLabelText("Collapse");
     expect(screen.getByTestId("drop-form")).toBeInTheDocument();
     await user.click(toggleButton);
     expect(screen.queryByTestId("drop-form")).not.toBeInTheDocument();

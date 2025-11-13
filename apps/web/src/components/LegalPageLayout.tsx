@@ -42,19 +42,29 @@ export function LegalPageLayout({
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 pb-16 pt-10 sm:px-6 lg:px-8 lg:pt-16">
           <Link
             to="/auth"
+            data-testid="legal-back-to-auth-link"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-purple-700 shadow-sm transition hover:bg-white dark:bg-white/10 dark:text-purple-200 dark:hover:bg-white/20 cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
             {t("legal_back_to_auth")}
           </Link>
           <div className="space-y-4">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
+            <h1
+              data-testid="legal-page-title"
+              className="text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl"
+            >
               {title}
             </h1>
-            <p className="max-w-2xl text-base text-gray-600 dark:text-gray-300">
+            <p
+              data-testid="legal-page-description"
+              className="max-w-2xl text-base text-gray-600 dark:text-gray-300"
+            >
               {description}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p
+              data-testid="legal-page-last-updated"
+              className="text-sm text-gray-500 dark:text-gray-400"
+            >
               {lastUpdated}
             </p>
           </div>
@@ -65,8 +75,15 @@ export function LegalPageLayout({
         <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
           <div className="space-y-12">
             {sections.map((section) => (
-              <section key={section.id} className="scroll-mt-24">
-                <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              <section
+                key={section.id}
+                data-testid={`legal-section-${section.id}`}
+                className="scroll-mt-24"
+              >
+                <h2
+                  data-testid={`legal-section-title-${section.id}`}
+                  className="text-2xl font-semibold text-gray-900 dark:text-white"
+                >
                   {section.title}
                 </h2>
                 <div className="mt-4 space-y-4 text-base leading-relaxed text-gray-600 dark:text-gray-300">

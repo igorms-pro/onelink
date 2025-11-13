@@ -9,14 +9,15 @@ import type { DropRow, SubmissionRow } from "@/routes/Dashboard/types";
 import CustomDomainPage from "../CustomDomainPage";
 
 // Mock dependencies
-
-const mockSupabase: any = {
-  from: vi.fn(),
-};
-
-vi.mock("@/lib/supabase", () => ({
-  supabase: mockSupabase,
-}));
+vi.mock("@/lib/supabase", () => {
+  const mockSupabase = {
+    from: vi.fn(),
+    auth: { signOut: vi.fn(), getUser: vi.fn() },
+  };
+  return {
+    supabase: mockSupabase,
+  };
+});
 
 vi.mock("@/lib/AuthProvider", () => ({
   useAuth: vi.fn(),
@@ -54,6 +55,7 @@ import { useAuth } from "@/lib/AuthProvider";
 import { useDashboardData } from "@/routes/Dashboard/hooks/useDashboardData";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 const mockUser = {
   id: "user-1",
@@ -104,7 +106,7 @@ describe.skip("CustomDomainPage", () => {
     vi.mocked(useAuth).mockReturnValue(createAuthValue());
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     vi.mocked(useDashboardData).mockReturnValue(createDashboardData());
-    mockSupabase.from.mockReset();
+    (supabase.from as ReturnType<typeof vi.fn>).mockClear();
   });
 
   it("should redirect to /settings when not pro plan", async () => {
@@ -141,7 +143,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -149,7 +151,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -187,7 +189,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -195,7 +197,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -218,7 +220,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -226,7 +228,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -265,7 +267,7 @@ describe.skip("CustomDomainPage", () => {
       created_at: new Date().toISOString(),
     };
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -273,7 +275,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -281,7 +283,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -289,7 +291,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       insert: vi.fn(() => ({
         select: vi.fn(() => ({
           single: vi.fn().mockResolvedValue({ data: newDomain }),
@@ -297,7 +299,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     });
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: [newDomain] }),
@@ -328,7 +330,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -336,7 +338,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -344,7 +346,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -352,7 +354,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       insert: vi.fn(() => ({
         select: vi.fn(() => ({
           single: vi.fn().mockRejectedValue({ code: "23505" }),
@@ -392,7 +394,7 @@ describe.skip("CustomDomainPage", () => {
       },
     ];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -400,7 +402,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -432,7 +434,7 @@ describe.skip("CustomDomainPage", () => {
       },
     ];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -440,7 +442,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -448,7 +450,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       delete: vi.fn(() => ({
         eq: vi.fn().mockResolvedValue({ error: null }),
       })),
@@ -476,7 +478,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -484,7 +486,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
@@ -515,7 +517,7 @@ describe.skip("CustomDomainPage", () => {
     const mockProfile = { id: "profile-1" };
     const mockDomains: unknown[] = [];
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           maybeSingle: vi.fn().mockResolvedValue({ data: mockProfile }),
@@ -523,7 +525,7 @@ describe.skip("CustomDomainPage", () => {
       })),
     } as any);
 
-    mockSupabase.from.mockReturnValueOnce({
+    (supabase.from as ReturnType<typeof vi.fn>).mockReturnValueOnce({
       select: vi.fn(() => ({
         eq: vi.fn(() => ({
           order: vi.fn().mockResolvedValue({ data: mockDomains }),
