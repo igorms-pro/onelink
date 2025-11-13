@@ -8,10 +8,8 @@ import type { DropRow } from "../../types";
 import { supabase } from "@/lib/supabase";
 
 // Mock NewLinkForm and LinksList
-let _mockOnCreateCall: ((input: any) => void) | null = null;
 vi.mock("@/components/NewLinkForm", () => ({
   NewLinkForm: ({ onCreate, disabled, limitReached }: any) => {
-    _mockOnCreateCall = onCreate;
     return (
       <div data-testid="new-link-form">
         <form

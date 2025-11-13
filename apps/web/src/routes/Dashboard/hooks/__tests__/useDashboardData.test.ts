@@ -74,7 +74,9 @@ describe("useDashboardData", () => {
         error: null,
       })),
     }));
-    vi.mocked(supabase.from).mockImplementation(defaultMockFrom);
+    vi.mocked(supabase.from).mockImplementation(
+      defaultMockFrom as unknown as typeof supabase.from,
+    );
     (supabase.rpc as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: [],
       error: null,
@@ -135,7 +137,9 @@ describe("useDashboardData", () => {
       return chainable;
     });
 
-    vi.mocked(supabase.from).mockImplementation(mockFrom);
+    vi.mocked(supabase.from).mockImplementation(
+      mockFrom as unknown as typeof supabase.from,
+    );
     (supabase.rpc as ReturnType<typeof vi.fn>).mockResolvedValue({
       data: mockSubmissions,
       error: null,

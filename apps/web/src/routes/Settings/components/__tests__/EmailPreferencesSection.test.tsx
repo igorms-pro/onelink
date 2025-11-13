@@ -101,6 +101,7 @@ describe("EmailPreferencesSection", () => {
       loading: false,
       saving: true,
       updatePreference: mockUpdatePreference,
+      savePreferences: vi.fn(),
     });
     render(<EmailPreferencesSection />);
     const marketingToggle = screen.getByTestId(

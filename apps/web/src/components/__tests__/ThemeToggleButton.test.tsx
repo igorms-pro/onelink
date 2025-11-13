@@ -54,7 +54,6 @@ describe("ThemeToggleButton", () => {
   it("renders the button with sun icon when theme is dark", async () => {
     localStorage.setItem("theme", "dark");
     render(<ThemeToggleButton />);
-    const _button = screen.getByRole("button", { name: /aria_toggle_theme/i });
 
     await waitFor(() => {
       expect(document.documentElement.classList.contains("dark")).toBe(true);
