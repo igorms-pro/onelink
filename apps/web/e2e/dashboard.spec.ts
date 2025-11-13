@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Dashboard Navigation", () => {
-  test.beforeEach(async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test.beforeEach(async ({ page }) => {
     // Note: These tests require authentication
     // In a real scenario, you would set up auth state or use test credentials
     // For now, we'll test the structure assuming user is authenticated
@@ -15,7 +16,8 @@ test.describe("Dashboard Navigation", () => {
     await expect(page.locator("body")).toBeVisible();
   });
 
-  test("dashboard tabs are visible when authenticated", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("dashboard tabs are visible when authenticated", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -27,7 +29,8 @@ test.describe("Dashboard Navigation", () => {
     */
   });
 
-  test("can switch between dashboard tabs", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can switch between dashboard tabs", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -62,7 +65,8 @@ test.describe("Dashboard Navigation", () => {
     */
   });
 
-  test("can create new link from Content tab", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can create new link from Content tab", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -83,7 +87,8 @@ test.describe("Dashboard Navigation", () => {
     */
   });
 
-  test("can create new drop from Content tab", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can create new drop from Content tab", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -106,7 +111,8 @@ test.describe("Dashboard Navigation", () => {
     */
   });
 
-  test("inbox shows submissions when available", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("inbox shows submissions when available", async ({ page }) => {
     // This test requires authentication setup and test data
     // Uncomment when you have test data:
     /*
@@ -121,7 +127,8 @@ test.describe("Dashboard Navigation", () => {
     */
   });
 
-  test("clear all button works in inbox", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("clear all button works in inbox", async ({ page }) => {
     // This test requires authentication setup and test data
     // Uncomment when you have test data:
     /*

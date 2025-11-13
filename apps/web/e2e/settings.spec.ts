@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Settings Navigation", () => {
-  test.beforeEach(async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test.beforeEach(async ({ page }) => {
     // Note: These tests require authentication
     // In a real scenario, you would set up auth state or use test credentials
   });
@@ -16,7 +17,8 @@ test.describe("Settings Navigation", () => {
   });
 
   test("settings page shows all sections when authenticated", async ({
-    _page,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    page,
   }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
@@ -32,7 +34,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can navigate to billing page", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can navigate to billing page", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -46,7 +49,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can navigate to sessions page", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can navigate to sessions page", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -60,7 +64,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can navigate to 2FA page", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can navigate to 2FA page", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -74,7 +79,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can toggle notification preferences", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can toggle notification preferences", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -91,7 +97,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can open change password modal", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can open change password modal", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -106,7 +113,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("can open delete account modal", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can open delete account modal", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*
@@ -121,7 +129,8 @@ test.describe("Settings Navigation", () => {
     */
   });
 
-  test("back to dashboard button works", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("back to dashboard button works", async ({ page }) => {
     // This test requires authentication setup
     // Uncomment when you have test auth credentials:
     /*

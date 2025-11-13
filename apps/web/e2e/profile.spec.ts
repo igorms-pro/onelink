@@ -1,7 +1,8 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Profile Viewing", () => {
-  test("public profile page loads", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("public profile page loads", async ({ page }) => {
     // This test requires a test profile slug
     // Uncomment when you have test data:
     /*
@@ -12,7 +13,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("profile displays user information", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("profile displays user information", async ({ page }) => {
     // This test requires a test profile slug
     // Uncomment when you have test data:
     /*
@@ -24,7 +26,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("route links are clickable", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("route links are clickable", async ({ page }) => {
     // This test requires a test profile slug with links
     // Uncomment when you have test data:
     /*
@@ -45,7 +48,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("drops section is expandable", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("drops section is expandable", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -62,7 +66,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("links section is expandable", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("links section is expandable", async ({ page }) => {
     // This test requires a test profile slug with links
     // Uncomment when you have test data:
     /*
@@ -79,7 +84,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("social links are clickable", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("social links are clickable", async ({ page }) => {
     // This test requires a test profile slug with social links
     // Uncomment when you have test data:
     /*
@@ -92,7 +98,8 @@ test.describe("Profile Viewing", () => {
     */
   });
 
-  test("profile footer is visible", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("profile footer is visible", async ({ page }) => {
     // This test requires a test profile slug
     // Uncomment when you have test data:
     /*

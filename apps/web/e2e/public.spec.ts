@@ -83,19 +83,22 @@ test.describe("Public Profile", () => {
   // Note: These tests require seeded data in Supabase
   // Uncomment when you have test data
   /*
-  test("public profile page renders", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("public profile page renders", async ({ page }) => {
     await page.goto("/test-slug");
     await expect(page.locator("h1")).toBeVisible();
   });
 
-  test("route link is clickable", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("route link is clickable", async ({ page }) => {
     await page.goto("/test-slug");
     const link = page.locator('a:has-text("Book a Call")');
     await expect(link).toBeVisible();
     await expect(link).toHaveAttribute("href", /.+/);
   });
 
-  test("drop submission form works", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("drop submission form works", async ({ page }) => {
     await page.goto("/test-slug");
     
     const nameInput = page.locator('input[name="name"]');

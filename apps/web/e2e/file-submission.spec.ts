@@ -2,7 +2,8 @@ import { test } from "@playwright/test";
 
 test.describe("File Submission", () => {
   test("drop submission form is visible when drop section is expanded", async ({
-    _page,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    page,
   }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
@@ -21,7 +22,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("can fill drop submission form", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can fill drop submission form", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -38,7 +40,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("can upload file to drop", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can upload file to drop", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -61,7 +64,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("can remove uploaded file", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can remove uploaded file", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -88,7 +92,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("can submit drop form with file", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can submit drop form with file", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -118,7 +123,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("form validation works for file size", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("form validation works for file size", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -133,7 +139,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("form validation works for file type", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("form validation works for file type", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
@@ -148,7 +155,8 @@ test.describe("File Submission", () => {
     */
   });
 
-  test("can submit form without optional fields", async ({ _page }) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  test("can submit form without optional fields", async ({ page }) => {
     // This test requires a test profile slug with drops
     // Uncomment when you have test data:
     /*
