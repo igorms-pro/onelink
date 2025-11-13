@@ -367,7 +367,7 @@ describe("DropList", () => {
             data: [],
             error: null,
           })),
-        } as ReturnType<typeof supabase.from>;
+        } as unknown as ReturnType<typeof supabase.from>;
       }
       // For other tables, use the default mock
       return {
@@ -418,7 +418,7 @@ describe("DropList", () => {
           data: [],
           error: null,
         })),
-      } as ReturnType<typeof supabase.from>;
+      } as unknown as ReturnType<typeof supabase.from>;
     });
 
     const { container } = render(<DropList {...defaultProps} drops={drops} />);
