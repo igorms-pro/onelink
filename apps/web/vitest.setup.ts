@@ -77,3 +77,87 @@ vi.mock("sonner", () => ({
     info: vi.fn(),
   },
 }));
+
+// Mock supabase globally to prevent real client creation in CI
+// This must be before any modules import @/lib/supabase
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    auth: {
+      getUser: vi.fn(),
+      signInWithPassword: vi.fn(),
+      signInWithEmail: vi.fn(),
+      signInWithOtp: vi.fn(),
+      signOut: vi.fn(),
+      updateUser: vi.fn(),
+      getSession: vi.fn(),
+      onAuthStateChange: vi.fn(() => ({
+        data: { subscription: { unsubscribe: vi.fn() } },
+      })),
+    },
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          single: vi.fn(),
+          maybeSingle: vi.fn(),
+          order: vi.fn(() => ({
+            data: [],
+            error: null,
+          })),
+          data: [],
+          error: null,
+        })),
+        order: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            single: vi.fn(),
+            data: [],
+            error: null,
+          })),
+          data: [],
+          error: null,
+        })),
+        data: [],
+        error: null,
+      })),
+      insert: vi.fn(() => ({
+        select: vi.fn(() => ({
+          data: [],
+          error: null,
+        })),
+        data: [],
+        error: null,
+      })),
+      update: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          eq: vi.fn().mockResolvedValue({
+            data: [],
+            error: null,
+          }),
+          data: [],
+          error: null,
+        })),
+        data: [],
+        error: null,
+      })),
+      delete: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          eq: vi.fn().mockResolvedValue({
+            data: [],
+            error: null,
+          }),
+          data: [],
+          error: null,
+        })),
+        data: [],
+        error: null,
+      })),
+      upsert: vi.fn(() => ({
+        data: [],
+        error: null,
+      })),
+    })),
+    rpc: vi.fn(() => ({
+      data: [],
+      error: null,
+    })),
+  },
+}));
