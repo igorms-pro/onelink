@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
@@ -8,7 +9,7 @@ import type { DropRow, SubmissionRow } from "@/routes/Dashboard/types";
 import CustomDomainPage from "../CustomDomainPage";
 
 // Mock dependencies
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 const mockSupabase: any = {
   from: vi.fn(),
 };
