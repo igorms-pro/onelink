@@ -3,13 +3,6 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DataExportForm } from "../DataExportForm";
 
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
-}));
-
 describe("DataExportForm", () => {
   const defaultProps = {
     format: "json" as const,
@@ -22,7 +15,7 @@ describe("DataExportForm", () => {
 
   it("renders form with format selection", () => {
     render(<DataExportForm {...defaultProps} />);
-    expect(screen.getByText("settings_export_format")).toBeInTheDocument();
+    expect(screen.getByText("Export Format")).toBeInTheDocument();
     expect(screen.getByLabelText(/JSON/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/CSV/i)).toBeInTheDocument();
   });
@@ -50,20 +43,12 @@ describe("DataExportForm", () => {
 
   it("renders all data type checkboxes", () => {
     render(<DataExportForm {...defaultProps} />);
-    expect(
-      screen.getByText("settings_export_data_to_include"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("settings_export_data_profile"),
-    ).toBeInTheDocument();
-    expect(screen.getByText("settings_export_data_links")).toBeInTheDocument();
-    expect(screen.getByText("settings_export_data_drops")).toBeInTheDocument();
-    expect(
-      screen.getByText("settings_export_data_submissions"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText("settings_export_data_analytics"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("Data to Include")).toBeInTheDocument();
+    expect(screen.getByText("Profile")).toBeInTheDocument();
+    expect(screen.getByText("Links")).toBeInTheDocument();
+    expect(screen.getByText("Drops")).toBeInTheDocument();
+    expect(screen.getByText("Submissions")).toBeInTheDocument();
+    expect(screen.getByText("Analytics")).toBeInTheDocument();
   });
 
   it("displays checked state for selected data types", () => {
@@ -72,11 +57,11 @@ describe("DataExportForm", () => {
     >(["profile", "links"]);
     render(<DataExportForm {...defaultProps} selectedData={selectedData} />);
     const profileCheckbox = screen
-      .getByText("settings_export_data_profile")
+      .getByText("Profile")
       .closest("label")
       ?.querySelector('input[type="checkbox"]');
     const linksCheckbox = screen
-      .getByText("settings_export_data_links")
+      .getByText("Links")
       .closest("label")
       ?.querySelector('input[type="checkbox"]');
     expect(profileCheckbox).toBeChecked();
@@ -89,7 +74,7 @@ describe("DataExportForm", () => {
     >(["profile"]);
     render(<DataExportForm {...defaultProps} selectedData={selectedData} />);
     const dropsCheckbox = screen
-      .getByText("settings_export_data_drops")
+      .getByText("Drops")
       .closest("label")
       ?.querySelector('input[type="checkbox"]');
     expect(dropsCheckbox).not.toBeChecked();
@@ -111,6 +96,10 @@ describe("DataExportForm", () => {
 
   it("displays GDPR notice", () => {
     render(<DataExportForm {...defaultProps} />);
-    expect(screen.getByText("settings_export_gdpr_notice")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /This export contains all your personal data stored in OneLink/i,
+      ),
+    ).toBeInTheDocument();
   });
 });
