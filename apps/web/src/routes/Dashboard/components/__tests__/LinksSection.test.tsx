@@ -94,7 +94,7 @@ describe("LinksSection", () => {
   it("expands and collapses section", async () => {
     const user = userEvent.setup();
     render(<LinksSection {...defaultProps} />);
-    const toggleButton = screen.getByLabelText("Collapse");
+    const toggleButton = screen.getByLabelText("common_collapse");
     expect(screen.getByTestId("new-link-form")).toBeInTheDocument();
     await user.click(toggleButton);
     expect(screen.queryByTestId("new-link-form")).not.toBeInTheDocument();
@@ -116,9 +116,12 @@ describe("LinksSection", () => {
     const mockSelect = vi.fn(() => ({ single: mockSingle }));
     const mockInsert = vi.fn(() => ({ select: mockSelect }));
 
-    vi.mocked(supabase.from).mockReturnValue({
-      insert: mockInsert,
-    } as any);
+    vi.mocked(supabase.from).mockImplementation(
+      () =>
+        ({
+          insert: mockInsert,
+        }) as any,
+    );
 
     render(<LinksSection {...defaultProps} />);
     const createButton = screen.getByTestId("create-link-button");
@@ -177,9 +180,12 @@ describe("LinksSection", () => {
     const mockSelect = vi.fn(() => ({ single: mockSingle }));
     const mockInsert = vi.fn(() => ({ select: mockSelect }));
 
-    vi.mocked(supabase.from).mockReturnValue({
-      insert: mockInsert,
-    } as any);
+    vi.mocked(supabase.from).mockImplementation(
+      () =>
+        ({
+          insert: mockInsert,
+        }) as any,
+    );
 
     render(<LinksSection {...defaultProps} />);
     const createButton = screen.getByTestId("create-link-button");
