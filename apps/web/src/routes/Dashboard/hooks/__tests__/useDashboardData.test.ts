@@ -193,7 +193,7 @@ describe("useDashboardData", () => {
   });
 
   it("should load drops successfully", async () => {
-    const mockFrom = vi.fn((_table: string) => ({
+    const mockFrom = vi.fn((table: string) => ({
       select: vi.fn((_columns?: string) => ({
         eq: vi.fn((_column: string, _value: any) => ({
           order: vi.fn(

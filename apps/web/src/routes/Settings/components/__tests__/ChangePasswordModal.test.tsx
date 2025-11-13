@@ -107,9 +107,10 @@ describe("ChangePasswordModal", () => {
       await user.click(setLoadingButton);
 
       // Try to close via Dialog/Drawer onOpenChange
-      const _dialog = screen.getByRole("dialog", { hidden: true });
+      const dialog = screen.getByRole("dialog", { hidden: true });
       // The modal should prevent closing when submitting
       // This is tested through the form's onLoadingChange callback
+      expect(dialog).toBeInTheDocument();
       expect(screen.getByTestId("change-password-form")).toBeInTheDocument();
     });
   });
@@ -123,7 +124,7 @@ describe("ChangePasswordModal", () => {
       );
 
       // Dialog should be rendered (check for dialog role)
-      const _dialog = screen.getByRole("dialog", { hidden: true });
+      const dialog = screen.getByRole("dialog", { hidden: true });
       expect(dialog).toBeInTheDocument();
     });
 

@@ -28,7 +28,7 @@ describe("DeleteAccountWarning", () => {
     });
 
     it("renders AlertTriangle icon", () => {
-      const { container: _container } = render(<DeleteAccountWarning />);
+      const { container } = render(<DeleteAccountWarning />);
 
       // Check for the icon by looking for the parent div with red styling
       const warningContainer = container.querySelector(".bg-red-50");
