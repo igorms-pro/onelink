@@ -17,6 +17,7 @@ export function DataExportProgress({ progress }: DataExportProgressProps) {
       </div>
       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
         <div
+          data-testid="data-export-progress-bar"
           className="bg-linear-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         />

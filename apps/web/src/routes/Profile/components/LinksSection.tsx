@@ -30,9 +30,15 @@ export function LinksSection({ links }: LinksSectionProps) {
           {t("profile_section_routes")}
         </h2>
         {isExpanded ? (
-          <ChevronUp className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <ChevronUp
+            data-testid="links-section-chevron-up"
+            className="w-5 h-5 text-gray-500 dark:text-gray-400"
+          />
         ) : (
-          <ChevronDown className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+          <ChevronDown
+            data-testid="links-section-chevron-down"
+            className="w-5 h-5 text-gray-500 dark:text-gray-400"
+          />
         )}
       </button>
       {isExpanded && (

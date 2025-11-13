@@ -83,11 +83,13 @@ test.describe("Public Profile", () => {
   // Note: These tests require seeded data in Supabase
   // Uncomment when you have test data
   /*
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test("public profile page renders", async ({ page }) => {
     await page.goto("/test-slug");
     await expect(page.locator("h1")).toBeVisible();
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test("route link is clickable", async ({ page }) => {
     await page.goto("/test-slug");
     const link = page.locator('a:has-text("Book a Call")');
@@ -95,6 +97,7 @@ test.describe("Public Profile", () => {
     await expect(link).toHaveAttribute("href", /.+/);
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test("drop submission form works", async ({ page }) => {
     await page.goto("/test-slug");
     

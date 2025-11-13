@@ -1,0 +1,99 @@
+import { describe, it, expect, vi } from "vitest";
+import { render, screen } from "@testing-library/react";
+import { BrowserRouter } from "react-router-dom";
+import { Footer } from "../Footer";
+
+// Mock react-i18next
+vi.mock("react-i18next", () => ({
+  useTranslation: () => ({
+    t: (key: string, options?: { year?: number; defaultValue?: string }) => {
+      if (key === "footer_all_rights" && options?.year) {
+        return (
+          options.defaultValue ||
+          `© ${options.year} OneLink. All rights reserved.`
+        );
+      }
+      if (key === "footer_brand_name") {
+        return options?.defaultValue || "OneLink";
+      }
+      return key;
+    },
+  }),
+}));
+
+const renderWithRouter = (component: React.ReactElement) => {
+  return render(<BrowserRouter>{component}</BrowserRouter>);
+};
+
+describe("Footer", () => {
+  it("renders brand name", () => {
+    renderWithRouter(<Footer />);
+    expect(screen.getByText("OneLink")).toBeInTheDocument();
+  });
+
+  it("renders current year in copyright", () => {
+    const currentYear = new Date().getFullYear();
+    renderWithRouter(<Footer />);
+    expect(
+      screen.getByText(new RegExp(currentYear.toString())),
+    ).toBeInTheDocument();
+  });
+
+  it("renders privacy link", () => {
+    renderWithRouter(<Footer />);
+    const privacyLink = screen.getByRole("link", { name: /footer_privacy/i });
+    expect(privacyLink).toBeInTheDocument();
+    expect(privacyLink).toHaveAttribute("href", "/privacy");
+  });
+
+  it("renders terms link", () => {
+    renderWithRouter(<Footer />);
+    const termsLink = screen.getByRole("link", { name: /footer_terms/i });
+    expect(termsLink).toBeInTheDocument();
+    expect(termsLink).toHaveAttribute("href", "/terms");
+  });
+
+  it("does not show branding by default", () => {
+    renderWithRouter(<Footer />);
+    expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
+  });
+
+  it("shows branding when showBranding is true", () => {
+    renderWithRouter(<Footer showBranding />);
+    expect(screen.getByText(/footer_powered/i)).toBeInTheDocument();
+  });
+
+  it("shows custom branding text when provided", () => {
+    renderWithRouter(<Footer showBranding brandingText="Custom branding" />);
+    expect(screen.getByText("Custom branding")).toBeInTheDocument();
+    expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
+  });
+
+  it("applies default variant styles", () => {
+    const { container } = renderWithRouter(<Footer />);
+    const footer = container.querySelector("footer");
+    expect(footer).toHaveClass("mt-auto", "w-full");
+  });
+
+  it("applies transparent variant styles", () => {
+    const { container } = renderWithRouter(<Footer variant="transparent" />);
+    const footer = container.querySelector("footer > div");
+    expect(footer).toHaveClass(
+      "border-transparent",
+      "bg-transparent",
+      "backdrop-blur-0",
+    );
+  });
+
+  it("applies custom className", () => {
+    const { container } = renderWithRouter(<Footer className="custom-class" />);
+    const footer = container.querySelector("footer");
+    expect(footer).toHaveClass("custom-class");
+  });
+
+  it("renders links with hover styles", () => {
+    renderWithRouter(<Footer />);
+    const privacyLink = screen.getByRole("link", { name: /footer_privacy/i });
+    expect(privacyLink).toHaveClass("hover:text-purple-600");
+  });
+});
