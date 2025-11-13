@@ -1,16 +1,24 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import type { PublicLink, PublicProfile, PublicDrop } from "../types";
 import Profile from "../index";
 
 // Mock hooks
-const mockProfileData = {
+const mockProfileData: {
+  links: PublicLink[];
+  drops: PublicDrop[];
+  profile: PublicProfile | null;
+  plan: string;
+  isLoading: boolean;
+  errorType: "not_found" | "domain_unverified" | null;
+} = {
   links: [],
   drops: [],
   profile: null,
-  plan: "free" as const,
+  plan: "free",
   isLoading: false,
-  errorType: null as const,
+  errorType: null,
 };
 
 vi.mock("../hooks/useProfileData", () => ({
@@ -70,7 +78,7 @@ describe("Profile", () => {
       profile: null,
       plan: "free" as const,
       isLoading: false,
-      errorType: null as const,
+      errorType: null,
     });
   });
 

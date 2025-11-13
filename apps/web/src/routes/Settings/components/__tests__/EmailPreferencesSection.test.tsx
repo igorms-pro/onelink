@@ -128,6 +128,7 @@ describe("EmailPreferencesSection", () => {
       loading: true,
       saving: false,
       updatePreference: mockUpdatePreference,
+      savePreferences: vi.fn(),
     });
     render(<EmailPreferencesSection />);
     expect(

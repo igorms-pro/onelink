@@ -7,7 +7,9 @@ describe("DataExportForm", () => {
   const defaultProps = {
     format: "json" as const,
     onFormatChange: vi.fn(),
-    selectedData: new Set(["profile", "links"]),
+    selectedData: new Set<
+      "profile" | "links" | "drops" | "submissions" | "analytics"
+    >(["profile", "links"]),
     onToggleDataType: vi.fn(),
   };
 
@@ -50,7 +52,9 @@ describe("DataExportForm", () => {
   });
 
   it("displays checked state for selected data types", () => {
-    const selectedData = new Set(["profile", "links"]);
+    const selectedData = new Set<
+      "profile" | "links" | "drops" | "submissions" | "analytics"
+    >(["profile", "links"]);
     render(<DataExportForm {...defaultProps} selectedData={selectedData} />);
     const profileCheckbox = screen
       .getByText("Profile")
@@ -65,7 +69,9 @@ describe("DataExportForm", () => {
   });
 
   it("displays unchecked state for unselected data types", () => {
-    const selectedData = new Set(["profile"]);
+    const selectedData = new Set<
+      "profile" | "links" | "drops" | "submissions" | "analytics"
+    >(["profile"]);
     render(<DataExportForm {...defaultProps} selectedData={selectedData} />);
     const dropsCheckbox = screen
       .getByText("Drops")
