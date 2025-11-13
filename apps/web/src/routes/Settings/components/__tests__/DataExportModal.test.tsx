@@ -50,33 +50,33 @@ describe("DataExportModal", () => {
 
   it("renders modal when open", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("Data Export")).toBeInTheDocument();
-    expect(
-      screen.getByText(/Download all your data in JSON format/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText("settings_data_export")).toBeInTheDocument();
+    expect(screen.getByText("settings_export_description")).toBeInTheDocument();
   });
 
   it("does not render when closed", () => {
     render(<DataExportModal {...defaultProps} open={false} />);
-    expect(screen.queryByText("Data Export")).not.toBeInTheDocument();
+    expect(screen.queryByText("settings_data_export")).not.toBeInTheDocument();
   });
 
   it("renders DataExportForm", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("Export Format")).toBeInTheDocument();
-    expect(screen.getByText("Data to Include")).toBeInTheDocument();
+    expect(screen.getByText("settings_export_format")).toBeInTheDocument();
+    expect(
+      screen.getByText("settings_export_data_to_include"),
+    ).toBeInTheDocument();
   });
 
   it("renders generate button initially", () => {
     render(<DataExportModal {...defaultProps} />);
-    expect(screen.getByText("Generate Export")).toBeInTheDocument();
+    expect(screen.getByText("settings_export_generate")).toBeInTheDocument();
   });
 
   it("calls onOpenChange when modal is closed", async () => {
     const user = userEvent.setup();
     const onOpenChange = vi.fn();
     render(<DataExportModal {...defaultProps} onOpenChange={onOpenChange} />);
-    const cancelButton = screen.getByText("Cancel");
+    const cancelButton = screen.getByText("common_cancel");
     await user.click(cancelButton);
     expect(onOpenChange).toHaveBeenCalledWith(false);
   });
