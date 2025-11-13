@@ -97,7 +97,9 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.getByText(/Delete Account/i)).toBeInTheDocument();
+      expect(
+        screen.getByText("settings_delete_account_title"),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("delete-account-warning")).toBeInTheDocument();
       expect(screen.getByTestId("delete-account-form")).toBeInTheDocument();
     });
@@ -107,7 +109,9 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={false} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.queryByText(/Delete Account/i)).not.toBeInTheDocument();
+      expect(
+        screen.queryByText("settings_delete_account_title"),
+      ).not.toBeInTheDocument();
     });
 
     it("calls onOpenChange when cancel is clicked", async () => {
@@ -199,7 +203,9 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.getByText(/Delete Account/i)).toBeInTheDocument();
+      expect(
+        screen.getByText("settings_delete_account_title"),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("delete-account-form")).toBeInTheDocument();
     });
 
@@ -210,7 +216,9 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      expect(screen.getByText(/Delete Account/i)).toBeInTheDocument();
+      expect(
+        screen.getByText("settings_delete_account_title"),
+      ).toBeInTheDocument();
       expect(screen.getByTestId("delete-account-form")).toBeInTheDocument();
     });
   });
@@ -386,7 +394,7 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const title = screen.getByText(/Delete Account/i);
+      const title = screen.getByText("settings_delete_account_title");
       expect(title).toBeInTheDocument();
       expect(title).toHaveClass("text-red-600");
     });
@@ -397,7 +405,7 @@ describe("DeleteAccountModal", () => {
       );
 
       expect(
-        screen.getByText(/This action cannot be undone/i),
+        screen.getByText("settings_delete_account_description"),
       ).toBeInTheDocument();
     });
   });

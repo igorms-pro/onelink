@@ -85,7 +85,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
 
     await act(async () => {
       await user.click(generateButton);
@@ -110,7 +110,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
 
     await act(async () => {
       await user.click(generateButton);
@@ -135,7 +135,7 @@ describe("DataExportModal", () => {
     vi.useFakeTimers();
     const user = userEvent.setup({ delay: null });
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
 
     await act(async () => {
       await user.click(generateButton);
@@ -176,7 +176,7 @@ describe("DataExportModal", () => {
       .mockImplementation(() => mockLink as unknown as Node);
 
     render(<DataExportModal {...defaultProps} />);
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
 
     await act(async () => {
       await user.click(generateButton);
@@ -211,7 +211,7 @@ describe("DataExportModal", () => {
     const user = userEvent.setup({ delay: null });
     const onOpenChange = vi.fn();
     render(<DataExportModal {...defaultProps} onOpenChange={onOpenChange} />);
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
 
     await act(async () => {
       await user.click(generateButton);
@@ -247,7 +247,7 @@ describe("DataExportModal", () => {
         await user.click(checkbox);
       }
     }
-    const generateButton = screen.getByText("Generate Export");
+    const generateButton = screen.getByText("settings_export_generate");
     expect(generateButton.closest("button")).toBeDisabled();
   });
 });
