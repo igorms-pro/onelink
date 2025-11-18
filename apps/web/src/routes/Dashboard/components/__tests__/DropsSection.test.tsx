@@ -124,7 +124,6 @@ describe("DropsSection", () => {
             share_token: "token-123",
           },
         ]}
-        freeLimit={3}
       />,
     );
     expect(screen.getByText("Limit Reached")).toBeInTheDocument();
