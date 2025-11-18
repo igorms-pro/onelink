@@ -10,13 +10,12 @@ vi.mock("../LinksSection", () => ({
     profileId,
     links,
     setLinks: _setLinks,
-    drops: _drops,
     isFree,
-    freeLimit,
+    freeLinksLimit,
   }: any) => (
     <div data-testid="links-section">
       Links Section - Profile: {profileId}, Links: {links.length}, Free:{" "}
-      {String(isFree)}, Limit: {freeLimit}
+      {String(isFree)}, Limit: {freeLinksLimit}
     </div>
   ),
 }));
@@ -26,13 +25,12 @@ vi.mock("../DropsSection", () => ({
     profileId,
     drops,
     setDrops: _setDrops,
-    links: _links,
     isFree,
-    freeLimit,
+    freeDropsLimit,
   }: any) => (
     <div data-testid="drops-section">
       Drops Section - Profile: {profileId}, Drops: {drops.length}, Free:{" "}
-      {String(isFree)}, Limit: {freeLimit}
+      {String(isFree)}, Limit: {freeDropsLimit}
     </div>
   ),
 }));

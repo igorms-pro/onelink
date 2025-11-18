@@ -6,7 +6,7 @@ import type { DropRow } from "../../types";
 
 // Mock DropForm and DropList
 vi.mock("../DropForm", () => ({
-  DropForm: ({ onDropCreated, isFree, freeLimit, totalItems }: any) => (
+  DropForm: ({ onDropCreated, isFree, freeDropsLimit, dropsCount }: any) => (
     <div data-testid="drop-form">
       <button
         onClick={() =>
@@ -21,7 +21,9 @@ vi.mock("../DropForm", () => ({
       >
         Create Drop
       </button>
-      {isFree && totalItems >= freeLimit && <div>Limit Reached</div>}
+      {isFree && dropsCount >= freeDropsLimit && (
+        <div>Free plan limit reached</div>
+      )}
     </div>
   ),
 }));
@@ -126,6 +128,6 @@ describe("DropsSection", () => {
         ]}
       />,
     );
-    expect(screen.getByText("Limit Reached")).toBeInTheDocument();
+    expect(screen.getByText(/Free plan limit reached/)).toBeInTheDocument();
   });
 });
