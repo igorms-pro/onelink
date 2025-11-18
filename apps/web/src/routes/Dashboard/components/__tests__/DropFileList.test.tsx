@@ -9,6 +9,19 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
+// Mock supabase
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    storage: {
+      from: vi.fn(() => ({
+        getPublicUrl: vi.fn((path: string) => ({
+          data: { publicUrl: `https://example.com/storage/drops/${path}` },
+        })),
+      })),
+    },
+  },
+}));
+
 const mockFiles: DropFile[] = [
   {
     path: "drop-1/file1.jpg",

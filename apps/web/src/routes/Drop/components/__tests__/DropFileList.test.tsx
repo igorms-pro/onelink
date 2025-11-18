@@ -1,6 +1,19 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { DropFileList, type DropFile } from "../DropFileList";
+
+// Mock supabase
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    storage: {
+      from: vi.fn(() => ({
+        getPublicUrl: vi.fn((path: string) => ({
+          data: { publicUrl: `https://example.com/storage/drops/${path}` },
+        })),
+      })),
+    },
+  },
+}));
 
 const mockFiles: DropFile[] = [
   {
