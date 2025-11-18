@@ -28,7 +28,7 @@ export function AccountTab({
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(true);
 
   return (
-    <div className="space-y-6 mt-2">
+    <div className="space-y-6 mt-2 sm:mt-0">
       {/* Profile Link */}
       <ProfileLinkCard
         slug={profileFormInitial?.slug ?? null}
