@@ -70,7 +70,15 @@ describe("DropsSection", () => {
 
   it("renders DropForm and DropList when expanded", () => {
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
     render(<DropsSection {...defaultProps} drops={drops} />);
     expect(screen.getByTestId("drop-form")).toBeInTheDocument();
@@ -81,7 +89,15 @@ describe("DropsSection", () => {
   it("handles drop creation and updates order", async () => {
     const user = userEvent.setup();
     const existingDrops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
     render(<DropsSection {...defaultProps} drops={existingDrops} />);
     const createButton = screen.getByText("Create Drop");
@@ -100,7 +116,15 @@ describe("DropsSection", () => {
         isFree={true}
         links={[{ id: "1" }, { id: "2" }]}
         drops={[
-          { id: "drop-1", label: "D1", emoji: null, order: 1, is_active: true },
+          {
+            id: "drop-1",
+            label: "D1",
+            emoji: null,
+            order: 1,
+            is_active: true,
+            is_public: true,
+            share_token: "token-123",
+          },
         ]}
         freeLimit={3}
       />,

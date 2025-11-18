@@ -48,7 +48,15 @@ describe("ContentTab", () => {
     },
   ];
   const mockDrops: DropRow[] = [
-    { id: "drop-1", label: "Drop 1", emoji: "📁", order: 1, is_active: true },
+    {
+      id: "drop-1",
+      label: "Drop 1",
+      emoji: "📁",
+      order: 1,
+      is_active: true,
+      is_public: true,
+      share_token: "token-123",
+    },
   ];
   const mockSetLinks = vi.fn();
   const mockSetDrops = vi.fn();

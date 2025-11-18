@@ -98,13 +98,23 @@ describe("DropList", () => {
 
   it("renders list of drops", () => {
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
       {
         id: "drop-2",
         label: "Drop 2",
         emoji: "📁",
         order: 2,
         is_active: false,
+        is_public: true,
+        share_token: "token-123",
       },
     ];
     render(<DropList {...defaultProps} drops={drops} />);
@@ -121,6 +131,8 @@ describe("DropList", () => {
         emoji: null,
         order: 1,
         is_active: true,
+        is_public: true,
+        share_token: "token-123",
       },
     ];
 
@@ -162,6 +174,8 @@ describe("DropList", () => {
         emoji: null,
         order: 1,
         is_active: true,
+        is_public: true,
+        share_token: "token-123",
       },
     ];
 
@@ -196,7 +210,15 @@ describe("DropList", () => {
   it("handles toggle drop active state", async () => {
     const user = userEvent.setup();
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
 
     const mockUpdate = vi.fn(() => ({
@@ -204,7 +226,11 @@ describe("DropList", () => {
         eq: vi.fn(() => ({
           select: vi.fn(() => ({
             single: vi.fn().mockResolvedValue({
-              data: { is_active: false },
+              data: {
+                is_active: false,
+                is_public: true,
+                share_token: "token-123",
+              },
               error: null,
             }),
           })),
@@ -229,7 +255,15 @@ describe("DropList", () => {
   it("handles toggle error", async () => {
     const user = userEvent.setup();
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
 
     const mockUpdate = vi.fn(() => ({
@@ -261,7 +295,15 @@ describe("DropList", () => {
   it("handles delete drop with confirmation", async () => {
     const user = userEvent.setup();
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
 
     const mockDelete = vi.fn(() => ({
@@ -298,7 +340,15 @@ describe("DropList", () => {
     const user = userEvent.setup();
     vi.mocked(globalThis.confirm).mockReturnValue(false);
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
 
     const { container } = render(<DropList {...defaultProps} drops={drops} />);
@@ -322,7 +372,15 @@ describe("DropList", () => {
   it.skip("handles delete error", async () => {
     const user = userEvent.setup();
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
 
     // Create a mock delete chain that returns an error

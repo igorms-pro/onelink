@@ -77,6 +77,8 @@ describe("DropForm", () => {
       emoji: null,
       order: 1,
       is_active: true,
+      is_public: true,
+      share_token: "token-123",
     };
 
     const mockSingle = vi

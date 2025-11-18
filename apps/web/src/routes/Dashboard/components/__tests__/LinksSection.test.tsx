@@ -162,7 +162,15 @@ describe("LinksSection", () => {
           { id: "2", label: "L2", url: "https://2.com", emoji: null, order: 2 },
         ]}
         drops={[
-          { id: "1", label: "D1", emoji: null, order: 1, is_active: true },
+          {
+            id: "1",
+            label: "D1",
+            emoji: null,
+            order: 1,
+            is_active: true,
+            is_public: true,
+            share_token: "token-123",
+          },
         ]}
         freeLimit={3}
       />,

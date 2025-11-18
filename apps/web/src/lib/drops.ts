@@ -61,7 +61,7 @@ export async function getDropByToken(
  * Get shareable link for a drop
  */
 export function getDropShareLink(
-  dropId: string,
+  _dropId: string,
   shareToken: string | null,
 ): string | null {
   if (!shareToken) return null;

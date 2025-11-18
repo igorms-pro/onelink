@@ -8,6 +8,7 @@ import {
   Link2,
   Upload,
   X,
+  File as FileIcon,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
@@ -393,7 +394,7 @@ function DropCard({
           className="flex items-center justify-between w-full text-left cursor-pointer"
         >
           <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <File className="w-4 h-4" />
+            <FileIcon className="w-4 h-4" />
             <span>
               {t("dashboard_content_drops_files_list")} ({files.length})
             </span>
