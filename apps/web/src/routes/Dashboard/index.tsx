@@ -15,7 +15,11 @@ import {
 } from "./components";
 import type { TabId } from "./types";
 
-const FREE_LIMIT = 3;
+import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/profile";
+
+// Get free plan limits (can be easily migrated to DB later)
+const getFreeLinksLimit = () => getPlanLinksLimit("free");
+const getFreeDropsLimit = () => getPlanDropsLimit("free");
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -101,7 +105,8 @@ export default function Dashboard() {
                 drops={drops}
                 setDrops={setDrops}
                 isFree={isFree}
-                freeLimit={FREE_LIMIT}
+                freeLinksLimit={getFreeLinksLimit()}
+                freeDropsLimit={getFreeDropsLimit()}
               />
             )}
             {activeTab === "account" && (

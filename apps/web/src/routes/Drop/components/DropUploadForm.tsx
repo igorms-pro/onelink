@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Upload, X, Loader2 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { toast } from "sonner";
 import type { DropWithVisibility } from "@/lib/drops";
 
 interface DropUploadFormProps {
@@ -60,7 +61,7 @@ export function DropUploadForm({
     // Client-side validation
     for (const f of selectedFiles) {
       if (f.size > maxSizeBytes) {
-        alert(
+        toast.error(
           t("profile_drop_submission_file_too_large", {
             name: f.name,
             limit: maxSizeMB,
@@ -83,7 +84,7 @@ export function DropUploadForm({
         "dmg",
       ];
       if (blocked.includes(ext)) {
-        alert(t("profile_drop_submission_file_type_blocked", { ext }));
+        toast.error(t("profile_drop_submission_file_type_blocked", { ext }));
         return;
       }
     }
@@ -127,13 +128,13 @@ export function DropUploadForm({
       ]);
       if (error) throw error;
 
-      alert(t("profile_drop_submission_success"));
+      toast.success(t("profile_drop_submission_success"));
       formRef.current.reset();
       setSelectedFiles([]);
       onUploadComplete();
     } catch (err) {
       console.error(err);
-      alert(t("profile_drop_submission_failed"));
+      toast.error(t("profile_drop_submission_failed"));
     } finally {
       setUploading(false);
     }

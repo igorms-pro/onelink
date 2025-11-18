@@ -6,24 +6,20 @@ import { isSafeHttpUrl } from "@/lib/domain";
 import { NewLinkForm } from "@/components/NewLinkForm";
 import { LinksList, type LinkRow } from "@/components/LinksList";
 import { toast } from "sonner";
-import type { DropRow } from "../types";
-
 interface LinksSectionProps {
   profileId: string | null;
   links: LinkRow[];
   setLinks: React.Dispatch<React.SetStateAction<LinkRow[]>>;
-  drops: DropRow[];
   isFree: boolean;
-  freeLimit: number;
+  freeLinksLimit: number;
 }
 
 export function LinksSection({
   profileId,
   links,
   setLinks,
-  drops,
   isFree,
-  freeLimit,
+  freeLinksLimit,
 }: LinksSectionProps) {
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
@@ -32,7 +28,7 @@ export function LinksSection({
   // Button should only be disabled by form validation, not free limit
   // Free limit check happens on submit
   const isDisabled = busy || !profileId;
-  const limitReached = isFree && links.length + drops.length >= freeLimit;
+  const limitReached = isFree && links.length >= freeLinksLimit;
 
   return (
     <section>
@@ -66,9 +62,8 @@ export function LinksSection({
                 if (limitReached) {
                   toast.error(
                     t("dashboard_content_links_limit_reached", {
-                      limit: freeLimit,
+                      limit: freeLinksLimit,
                       links: links.length,
-                      drops: drops.length,
                     }),
                   );
                   return;

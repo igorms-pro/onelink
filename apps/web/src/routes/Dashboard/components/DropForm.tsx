@@ -8,20 +8,20 @@ interface DropFormProps {
   profileId: string | null;
   onDropCreated: (drop: DropRow) => void;
   isFree: boolean;
-  freeLimit: number;
-  totalItems: number;
+  freeDropsLimit: number;
+  dropsCount: number;
 }
 
 export function DropForm({
   profileId,
   onDropCreated,
   isFree,
-  freeLimit,
-  totalItems,
+  freeDropsLimit,
+  dropsCount,
 }: DropFormProps) {
   const { t } = useTranslation();
   const [busy, setBusy] = useState(false);
-  const limitReached = isFree && totalItems >= freeLimit;
+  const limitReached = isFree && dropsCount >= freeDropsLimit;
 
   return (
     <form
@@ -29,9 +29,11 @@ export function DropForm({
       onSubmit={async (e) => {
         e.preventDefault();
         if (!profileId) return;
-        if (isFree && totalItems >= freeLimit) {
+        if (isFree && dropsCount >= freeDropsLimit) {
           toast.error(
-            t("dashboard_content_drops_limit_reached", { limit: freeLimit }),
+            t("dashboard_content_drops_limit_reached", {
+              limit: freeDropsLimit,
+            }),
           );
           return;
         }

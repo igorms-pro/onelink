@@ -229,6 +229,48 @@ psql <connection_string> -f supabase/sql/005_settings_tables.sql
 
 ---
 
+## UI Enhancements (Future)
+
+### 1. File Display Modes (List / Card / Grid)
+**Status:** 🔄 TODO
+**Priority:** Low (Nice to have)
+**Category:** UI/UX Enhancement
+
+**Description:**
+Add multiple view modes for displaying files in drops, similar to Windows/Mac file browsers.
+
+**Modes:**
+- **List** (Current) - Compact list view, no thumbnails
+- **Card** - Larger cards with thumbnails for images/PDFs
+- **Grid** (Optional) - Grid layout of cards
+
+**Features:**
+- Toggle button to switch between modes (list/grid icon)
+- Store user preference in `localStorage` or database
+- Generate thumbnails for images/PDFs (via Supabase Storage or thumbnail service)
+- Card view shows:
+  - Thumbnail preview (if image/PDF)
+  - File name
+  - File size + upload date
+  - Actions (download, delete for owner)
+
+**Implementation Notes:**
+- Add view mode state management
+- Create `FileCard` component for card view
+- Create `FileGrid` component for grid view
+- Thumbnail generation: Use Supabase Storage transformations or external service
+- Responsive: Card view on desktop, list on mobile (or user choice)
+
+**Files to Create/Update:**
+- `apps/web/src/routes/Drop/components/FileViewToggle.tsx` - Toggle component
+- `apps/web/src/routes/Drop/components/FileCard.tsx` - Card view component
+- `apps/web/src/routes/Drop/components/FileGrid.tsx` - Grid layout component
+- Update `DropFileList.tsx` to support multiple view modes
+
+**Estimated Time:** 4-6 hours (including thumbnail generation)
+
+---
+
 ## Missing UI Pages & Features
 
 ### 1. Legal Pages (Privacy Policy & Terms of Service)
