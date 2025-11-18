@@ -8,7 +8,6 @@ import {
   Link2,
   Upload,
   X,
-  File,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
@@ -23,6 +22,7 @@ import {
 import type { DropRow } from "../types";
 import { ShareDropModal } from "./ShareDropModal";
 import { OwnerFileUpload } from "./OwnerFileUpload";
+import { DropFileList, type DropFile } from "./DropFileList";
 
 interface DropListProps {
   profileId: string | null;
@@ -72,16 +72,7 @@ function DropCard({
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
-  const [files, setFiles] = useState<
-    Array<{
-      path: string;
-      size: number;
-      content_type: string | null;
-      submission_id: string;
-      created_at: string;
-      uploaded_by: string | null;
-    }>
-  >([]);
+  const [files, setFiles] = useState<DropFile[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
   const handleEdit = async () => {
@@ -206,28 +197,6 @@ function DropCard({
     if (showFiles) {
       loadFiles();
     }
-  };
-
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + " " + sizes[i];
-  };
-
-  const formatDate = (dateString: string): string => {
-    const date = new Date(dateString);
-    return (
-      date.toLocaleDateString() +
-      " " +
-      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    );
-  };
-
-  const getFileUrl = (path: string): string => {
-    const { data } = supabase.storage.from("drops").getPublicUrl(path);
-    return data.publicUrl;
   };
 
   return (
@@ -436,59 +405,8 @@ function DropCard({
           )}
         </button>
         {showFiles && (
-          <div className="mt-3 space-y-2">
-            {isLoadingFiles ? (
-              <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-                {t("common_loading")}
-              </div>
-            ) : files.length === 0 ? (
-              <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
-                {t("dashboard_content_drops_no_files")}
-              </div>
-            ) : (
-              files.map((file, index) => (
-                <div
-                  key={`${file.submission_id}-${index}`}
-                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
-                >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    <File className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
-                    <div className="min-w-0 flex-1">
-                      <a
-                        href={getFileUrl(file.path)}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline truncate block"
-                      >
-                        {file.path.split("/").pop()}
-                      </a>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatFileSize(file.size)}
-                        </p>
-                        <span className="text-xs text-gray-400 dark:text-gray-500">
-                          •
-                        </span>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          {formatDate(file.created_at)}
-                        </p>
-                        {file.uploaded_by && (
-                          <>
-                            <span className="text-xs text-gray-400 dark:text-gray-500">
-                              •
-                            </span>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              {t("dashboard_content_drops_uploaded_by")}{" "}
-                              {file.uploaded_by}
-                            </p>
-                          </>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))
-            )}
+          <div className="mt-3">
+            <DropFileList files={files} isLoading={isLoadingFiles} />
           </div>
         )}
       </div>
