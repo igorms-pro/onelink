@@ -101,7 +101,7 @@ describe("ContentTab", () => {
     expect(linksSection).toHaveTextContent("Profile: profile-1");
     expect(linksSection).toHaveTextContent("Links: 1");
     expect(linksSection).toHaveTextContent("Free: true");
-    expect(linksSection).toHaveTextContent("Limit: 3");
+    expect(linksSection).toHaveTextContent("Limit: 4");
   });
 
   it("should pass correct props to DropsSection", () => {
@@ -122,7 +122,7 @@ describe("ContentTab", () => {
     expect(dropsSection).toHaveTextContent("Profile: profile-1");
     expect(dropsSection).toHaveTextContent("Drops: 1");
     expect(dropsSection).toHaveTextContent("Free: false");
-    expect(dropsSection).toHaveTextContent("Limit: 3");
+    expect(dropsSection).toHaveTextContent("Limit: 2");
   });
 
   it("should handle null profileId", () => {
