@@ -115,6 +115,7 @@ describe("DropsSection", () => {
       <DropsSection
         {...defaultProps}
         isFree={true}
+        freeDropsLimit={2}
         drops={[
           {
             id: "drop-1",
@@ -124,6 +125,15 @@ describe("DropsSection", () => {
             is_active: true,
             is_public: true,
             share_token: "token-123",
+          },
+          {
+            id: "drop-2",
+            label: "D2",
+            emoji: null,
+            order: 2,
+            is_active: true,
+            is_public: true,
+            share_token: "token-456",
           },
         ]}
       />,
