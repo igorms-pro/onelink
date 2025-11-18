@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Pencil,
@@ -181,15 +181,7 @@ function DropCard({
 
   const shareLink = getDropShareLink(d.id, d.share_token);
 
-  // Load files when showing files section
-  useEffect(() => {
-    if (showFiles && files.length === 0 && !isLoadingFiles) {
-      loadFiles();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [showFiles]);
-
-  const loadFiles = async () => {
+  const loadFiles = useCallback(async () => {
     setIsLoadingFiles(true);
     try {
       const dropFiles = await getDropFiles(d.id);
@@ -200,7 +192,14 @@ function DropCard({
     } finally {
       setIsLoadingFiles(false);
     }
-  };
+  }, [d.id, t]);
+
+  // Load files when showing files section
+  useEffect(() => {
+    if (showFiles && files.length === 0 && !isLoadingFiles) {
+      loadFiles();
+    }
+  }, [showFiles, files.length, isLoadingFiles, loadFiles]);
 
   const handleUploadComplete = () => {
     // Reload files after upload
@@ -408,7 +407,6 @@ function DropCard({
         <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
           <OwnerFileUpload
             dropId={d.id}
-            dropLabel={d.label}
             onUploadComplete={handleUploadComplete}
           />
         </div>

@@ -6,7 +6,6 @@ import { toast } from "sonner";
 
 interface OwnerFileUploadProps {
   dropId: string;
-  dropLabel?: string;
   onUploadComplete?: () => void;
 }
 
