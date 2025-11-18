@@ -74,7 +74,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -91,7 +92,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -111,7 +113,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={false}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -131,7 +134,8 @@ describe("ContentTab", () => {
         drops={[]}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -149,7 +153,8 @@ describe("ContentTab", () => {
         drops={[]}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 

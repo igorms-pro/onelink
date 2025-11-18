@@ -42,9 +42,8 @@ describe("DropsSection", () => {
     profileId: "profile-1",
     drops: [] as DropRow[],
     setDrops: mockSetDrops,
-    links: [] as Array<{ id: string }>,
     isFree: false,
-    freeLimit: 3,
+    freeDropsLimit: 2,
   };
 
   beforeEach(() => {
@@ -114,7 +113,6 @@ describe("DropsSection", () => {
       <DropsSection
         {...defaultProps}
         isFree={true}
-        links={[{ id: "1" }, { id: "2" }]}
         drops={[
           {
             id: "drop-1",

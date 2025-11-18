@@ -19,8 +19,8 @@ describe("DropForm", () => {
     profileId: "profile-1",
     onDropCreated: mockOnDropCreated,
     isFree: false,
-    freeLimit: 3,
-    totalItems: 0,
+    freeDropsLimit: 2,
+    dropsCount: 0,
   };
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe("DropForm", () => {
   });
 
   it("disables form when limit is reached for free plan", () => {
-    render(<DropForm {...defaultProps} isFree={true} totalItems={3} />);
+    render(<DropForm {...defaultProps} isFree={true} dropsCount={2} />);
     const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
     expect(input).toBeDisabled();
@@ -61,7 +61,7 @@ describe("DropForm", () => {
   it("shows error when free limit is reached on submit", async () => {
     // When limit is reached, form is disabled (pointer-events-none)
     // So we can't actually submit. The test should verify the form is disabled.
-    render(<DropForm {...defaultProps} isFree={true} totalItems={3} />);
+    render(<DropForm {...defaultProps} isFree={true} dropsCount={2} />);
     const button = screen.getByRole("button", { name: "Add Drop" });
     const form = button.closest("form");
     expect(form).toHaveClass("pointer-events-none");
