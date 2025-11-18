@@ -9,17 +9,32 @@ export type ProfileRow = {
   avatar_url: string | null;
 };
 
+/**
+ * Free plan limit for total items (routes + drops)
+ */
+export const FREE_DROP_LIMIT = 3;
+
+/**
+ * Get drop limit for a given plan
+ * @param plan - Plan type ("free" | "pro" | string)
+ * @returns Limit number (3 for free, Infinity for pro/unlimited)
+ */
+export function getDropLimit(plan: "free" | "pro" | string): number {
+  if (plan === "pro") {
+    return Infinity;
+  }
+  return FREE_DROP_LIMIT;
+}
+
 export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
   // First, ensure public.users row exists (trigger should create it, but just in case)
-  const { error: userError } = await supabase
-    .from("users")
-    .upsert(
-      {
-        id: userId,
-        email: (await supabase.auth.getUser()).data.user?.email ?? "",
-      },
-      { onConflict: "id" },
-    );
+  const { error: userError } = await supabase.from("users").upsert(
+    {
+      id: userId,
+      email: (await supabase.auth.getUser()).data.user?.email ?? "",
+    },
+    { onConflict: "id" },
+  );
   if (userError) console.warn("Failed to ensure users row:", userError);
 
   // Check if profile exists

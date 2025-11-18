@@ -18,6 +18,7 @@ import Privacy from "./routes/Legal/Privacy";
 import Terms from "./routes/Legal/Terms";
 import CheckoutSuccess from "./routes/Checkout/Success";
 import CheckoutCancel from "./routes/Checkout/Cancel";
+import Drop from "./routes/Drop/index";
 import { AuthProvider } from "./lib/AuthProvider";
 
 // Initialize theme on app load
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
   { path: "/terms", element: <Terms /> },
   { path: "/checkout/success", element: <CheckoutSuccess /> },
   { path: "/checkout/cancel", element: <CheckoutCancel /> },
+  { path: "/drop/:token", element: <Drop /> },
   { path: "/:slug", element: <Profile /> },
 ]);
 

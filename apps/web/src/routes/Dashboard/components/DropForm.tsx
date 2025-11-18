@@ -52,9 +52,10 @@ export function DropForm({
                 label,
                 emoji: null,
                 order: 1, // Order will be recalculated by parent
+                is_public: true, // Default to public
               },
             ])
-            .select("id,label,emoji,order,is_active")
+            .select("id,label,emoji,order,is_active,is_public,share_token")
             .single();
           if (error) throw error;
           onDropCreated(data as DropRow);

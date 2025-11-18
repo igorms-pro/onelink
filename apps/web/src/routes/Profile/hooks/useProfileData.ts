@@ -80,6 +80,8 @@ export function useProfileData(slug: string | undefined, host: string) {
     const { data } = await supabase.rpc("get_links_by_slug", { p_slug: s });
     setLinks(Array.isArray(data) ? (data as PublicLink[]) : []);
 
+    // Fetch drops - RPC filters by is_public = true and is_active = true
+    // Only public drops are returned for the public profile page
     const dropsRes = await supabase.rpc("get_drops_by_slug", { p_slug: s });
     setDrops(
       Array.isArray(dropsRes.data) ? (dropsRes.data as PublicDrop[]) : [],
@@ -124,6 +126,8 @@ export function useProfileData(slug: string | undefined, host: string) {
     const { data } = await supabase.rpc("get_links_by_slug", { p_slug: s });
     setLinks(Array.isArray(data) ? (data as PublicLink[]) : []);
 
+    // Fetch drops - RPC filters by is_public = true and is_active = true
+    // Only public drops are returned for the public profile page
     const dropsRes = await supabase.rpc("get_drops_by_slug", { p_slug: s });
     setDrops(
       Array.isArray(dropsRes.data) ? (dropsRes.data as PublicDrop[]) : [],
