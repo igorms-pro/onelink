@@ -3,23 +3,37 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Footer } from "../Footer";
 
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string, options?: { year?: number; defaultValue?: string }) => {
-      if (key === "footer_all_rights" && options?.year) {
-        return (
-          options.defaultValue ||
-          `© ${options.year} OneLink. All rights reserved.`
-        );
-      }
-      if (key === "footer_brand_name") {
-        return options?.defaultValue || "OneLink";
-      }
-      return key;
-    },
-  }),
+// Mock ThemeToggleButton and ProfileLanguageToggleButton
+vi.mock("../ThemeToggleButton", () => ({
+  ThemeToggleButton: () => <button>Theme</button>,
 }));
+
+vi.mock("@/routes/Profile/components/ProfileLanguageToggleButton", () => ({
+  ProfileLanguageToggleButton: () => <button>Language</button>,
+}));
+
+// Mock react-i18next
+vi.mock("react-i18next", async () => {
+  const actual =
+    await vi.importActual<typeof import("react-i18next")>("react-i18next");
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string, options?: { year?: number; defaultValue?: string }) => {
+        if (key === "footer_all_rights" && options?.year) {
+          return (
+            options.defaultValue ||
+            `© ${options.year} OneLink. All rights reserved.`
+          );
+        }
+        if (key === "footer_brand_name") {
+          return options?.defaultValue || "OneLink";
+        }
+        return key;
+      },
+    }),
+  };
+});
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
