@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/lib/AuthProvider";
 import { ChangePasswordModal } from "./ChangePasswordModal";
 import { DeleteAccountModal } from "./DeleteAccountModal";
 
 export function PrivacySecuritySection() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
@@ -42,6 +44,17 @@ export function PrivacySecuritySection() {
           >
             {t("settings_two_factor")}
           </button>
+          <button
+            data-testid="settings-sign-out"
+            onClick={async () => {
+              await signOut();
+              navigate("/auth");
+            }}
+            className="w-full text-left text-sm text-gray-900 dark:text-gray-100 hover:underline cursor-pointer"
+          >
+            {t("dashboard_header_sign_out")}
+          </button>
+          <div className="pt-2"></div>
           <button
             data-testid="settings-delete-account"
             onClick={() => setIsDeleteModalOpen(true)}
