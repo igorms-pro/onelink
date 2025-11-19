@@ -9,21 +9,20 @@ interface DropsSectionProps {
   profileId: string | null;
   drops: DropRow[];
   setDrops: React.Dispatch<React.SetStateAction<DropRow[]>>;
-  links: Array<{ id: string }>;
   isFree: boolean;
-  freeLimit: number;
+  freeDropsLimit: number;
 }
 
 export function DropsSection({
   profileId,
   drops,
   setDrops,
-  links,
   isFree,
-  freeLimit,
+  freeDropsLimit,
 }: DropsSectionProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
+
   const handleDropCreated = (newDrop: DropRow) => {
     const nextOrder = drops.length
       ? Math.max(...drops.map((d) => d.order)) + 1
@@ -62,8 +61,8 @@ export function DropsSection({
             profileId={profileId}
             onDropCreated={handleDropCreated}
             isFree={isFree}
-            freeLimit={freeLimit}
-            totalItems={links.length + drops.length}
+            freeDropsLimit={freeDropsLimit}
+            dropsCount={drops.length}
           />
           <DropList profileId={profileId} drops={drops} setDrops={setDrops} />
         </>

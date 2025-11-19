@@ -46,10 +46,10 @@ export function useDashboardData(userId: string | null) {
       if (linksError) console.error(linksError);
       setLinks(linksData ?? []);
 
-      // Load drops
+      // Load drops (include visibility fields)
       const { data: dropsData, error: dropsError } = await supabase
         .from("drops")
-        .select("id,label,emoji,order,is_active")
+        .select("id,label,emoji,order,is_active,is_public,share_token")
         .eq("profile_id", prof.id)
         .order("order", { ascending: true });
       if (!mounted) return;

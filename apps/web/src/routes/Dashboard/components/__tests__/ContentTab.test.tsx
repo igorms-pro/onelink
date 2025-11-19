@@ -10,13 +10,12 @@ vi.mock("../LinksSection", () => ({
     profileId,
     links,
     setLinks: _setLinks,
-    drops: _drops,
     isFree,
-    freeLimit,
+    freeLinksLimit,
   }: any) => (
     <div data-testid="links-section">
       Links Section - Profile: {profileId}, Links: {links.length}, Free:{" "}
-      {String(isFree)}, Limit: {freeLimit}
+      {String(isFree)}, Limit: {freeLinksLimit}
     </div>
   ),
 }));
@@ -26,13 +25,12 @@ vi.mock("../DropsSection", () => ({
     profileId,
     drops,
     setDrops: _setDrops,
-    links: _links,
     isFree,
-    freeLimit,
+    freeDropsLimit,
   }: any) => (
     <div data-testid="drops-section">
       Drops Section - Profile: {profileId}, Drops: {drops.length}, Free:{" "}
-      {String(isFree)}, Limit: {freeLimit}
+      {String(isFree)}, Limit: {freeDropsLimit}
     </div>
   ),
 }));
@@ -48,7 +46,15 @@ describe("ContentTab", () => {
     },
   ];
   const mockDrops: DropRow[] = [
-    { id: "drop-1", label: "Drop 1", emoji: "📁", order: 1, is_active: true },
+    {
+      id: "drop-1",
+      label: "Drop 1",
+      emoji: "📁",
+      order: 1,
+      is_active: true,
+      is_public: true,
+      share_token: "token-123",
+    },
   ];
   const mockSetLinks = vi.fn();
   const mockSetDrops = vi.fn();
@@ -66,7 +72,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -83,7 +90,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -91,7 +99,7 @@ describe("ContentTab", () => {
     expect(linksSection).toHaveTextContent("Profile: profile-1");
     expect(linksSection).toHaveTextContent("Links: 1");
     expect(linksSection).toHaveTextContent("Free: true");
-    expect(linksSection).toHaveTextContent("Limit: 3");
+    expect(linksSection).toHaveTextContent("Limit: 4");
   });
 
   it("should pass correct props to DropsSection", () => {
@@ -103,7 +111,8 @@ describe("ContentTab", () => {
         drops={mockDrops}
         setDrops={mockSetDrops}
         isFree={false}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -111,7 +120,7 @@ describe("ContentTab", () => {
     expect(dropsSection).toHaveTextContent("Profile: profile-1");
     expect(dropsSection).toHaveTextContent("Drops: 1");
     expect(dropsSection).toHaveTextContent("Free: false");
-    expect(dropsSection).toHaveTextContent("Limit: 3");
+    expect(dropsSection).toHaveTextContent("Limit: 2");
   });
 
   it("should handle null profileId", () => {
@@ -123,7 +132,8 @@ describe("ContentTab", () => {
         drops={[]}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 
@@ -141,7 +151,8 @@ describe("ContentTab", () => {
         drops={[]}
         setDrops={mockSetDrops}
         isFree={true}
-        freeLimit={3}
+        freeLinksLimit={4}
+        freeDropsLimit={2}
       />,
     );
 

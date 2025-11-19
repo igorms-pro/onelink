@@ -4,7 +4,6 @@ import userEvent from "@testing-library/user-event";
 import { LinksSection } from "../LinksSection";
 import { toast } from "sonner";
 import type { LinkRow } from "@/components/LinksList";
-import type { DropRow } from "../../types";
 
 // Mock supabase
 const mockFrom = vi.hoisted(() => vi.fn());
@@ -81,9 +80,8 @@ describe("LinksSection", () => {
     profileId: "profile-1",
     links: [] as LinkRow[],
     setLinks: mockSetLinks,
-    drops: [] as DropRow[],
     isFree: false,
-    freeLimit: 3,
+    freeLinksLimit: 4,
   };
 
   beforeEach(() => {
@@ -160,11 +158,10 @@ describe("LinksSection", () => {
         links={[
           { id: "1", label: "L1", url: "https://1.com", emoji: null, order: 1 },
           { id: "2", label: "L2", url: "https://2.com", emoji: null, order: 2 },
+          { id: "3", label: "L3", url: "https://3.com", emoji: null, order: 3 },
+          { id: "4", label: "L4", url: "https://4.com", emoji: null, order: 4 },
         ]}
-        drops={[
-          { id: "1", label: "D1", emoji: null, order: 1, is_active: true },
-        ]}
-        freeLimit={3}
+        freeLinksLimit={4}
       />,
     );
     // Limit reached: 2 links + 1 drop = 3 (at limit)

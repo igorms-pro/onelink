@@ -24,7 +24,11 @@ type PaymentMethod = {
   expYear: number;
 };
 
-const FREE_LIMIT = 3;
+import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/profile";
+
+// Get free plan limits (can be easily migrated to DB later)
+const getFreeLinksLimit = () => getPlanLinksLimit("free");
+const getFreeDropsLimit = () => getPlanDropsLimit("free");
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -79,10 +83,12 @@ export default function BillingPage() {
     return null; // Will redirect via useEffect
   }
 
-  const totalItems = links.length + drops.length;
-  const usagePercent = isPro
+  const linksUsagePercent = isPro
     ? 0
-    : Math.min((totalItems / FREE_LIMIT) * 100, 100);
+    : Math.min((links.length / getFreeLinksLimit()) * 100, 100);
+  const dropsUsagePercent = isPro
+    ? 0
+    : Math.min((drops.length / getFreeDropsLimit()) * 100, 100);
 
   const handleManagePayment = async () => {
     try {
@@ -199,31 +205,59 @@ export default function BillingPage() {
 
                 {/* Usage Progress Bar (Free plan) */}
                 {!isPro && (
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-700 dark:text-gray-300">
-                        {t("billing_usage")}
-                      </span>
-                      <span className="text-gray-500 dark:text-gray-400">
-                        {totalItems} / {FREE_LIMIT} {t("billing_items")}
-                      </span>
+                  <div className="space-y-4">
+                    {/* Links Usage */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {t("billing_links_usage")}
+                        </span>
+                        <span className="text-gray-500 dark:text-gray-400">
+                          {links.length} / {getFreeLinksLimit()}{" "}
+                          {t("billing_links")}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all ${
+                            linksUsagePercent >= 100
+                              ? "bg-red-500"
+                              : linksUsagePercent >= 80
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                          }`}
+                          style={{ width: `${linksUsagePercent}%` }}
+                        ></div>
+                      </div>
                     </div>
-                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                      <div
-                        className={`h-2 rounded-full transition-all ${
-                          usagePercent >= 100
-                            ? "bg-red-500"
-                            : usagePercent >= 80
-                              ? "bg-yellow-500"
-                              : "bg-green-500"
-                        }`}
-                        style={{ width: `${usagePercent}%` }}
-                      ></div>
+                    {/* Drops Usage */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {t("billing_drops_usage")}
+                        </span>
+                        <span className="text-gray-500 dark:text-gray-400">
+                          {drops.length} / {getFreeDropsLimit()}{" "}
+                          {t("billing_drops")}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                        <div
+                          className={`h-2 rounded-full transition-all ${
+                            dropsUsagePercent >= 100
+                              ? "bg-red-500"
+                              : dropsUsagePercent >= 80
+                                ? "bg-yellow-500"
+                                : "bg-green-500"
+                          }`}
+                          style={{ width: `${dropsUsagePercent}%` }}
+                        ></div>
+                      </div>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t("billing_plan_limits", {
-                        links: FREE_LIMIT,
-                        defaultValue: `Free plan: ${FREE_LIMIT} links + drops total`,
+                      {t("billing_plan_limits_separate", {
+                        links: getFreeLinksLimit(),
+                        drops: getFreeDropsLimit(),
                       })}
                     </p>
                   </div>
@@ -232,9 +266,7 @@ export default function BillingPage() {
                 {/* Pro plan limits */}
                 {isPro && (
                   <div className="text-sm text-gray-500 dark:text-gray-400">
-                    {t("billing_pro_limits", {
-                      defaultValue: "Unlimited links and drops",
-                    })}
+                    {t("billing_pro_limits")}
                   </div>
                 )}
               </div>

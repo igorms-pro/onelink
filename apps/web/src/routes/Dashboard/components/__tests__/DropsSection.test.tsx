@@ -6,7 +6,7 @@ import type { DropRow } from "../../types";
 
 // Mock DropForm and DropList
 vi.mock("../DropForm", () => ({
-  DropForm: ({ onDropCreated, isFree, freeLimit, totalItems }: any) => (
+  DropForm: ({ onDropCreated, isFree, freeDropsLimit, dropsCount }: any) => (
     <div data-testid="drop-form">
       <button
         onClick={() =>
@@ -21,7 +21,9 @@ vi.mock("../DropForm", () => ({
       >
         Create Drop
       </button>
-      {isFree && totalItems >= freeLimit && <div>Limit Reached</div>}
+      {isFree && dropsCount >= freeDropsLimit && (
+        <div>Free plan limit reached</div>
+      )}
     </div>
   ),
 }));
@@ -42,9 +44,8 @@ describe("DropsSection", () => {
     profileId: "profile-1",
     drops: [] as DropRow[],
     setDrops: mockSetDrops,
-    links: [] as Array<{ id: string }>,
     isFree: false,
-    freeLimit: 3,
+    freeDropsLimit: 2,
   };
 
   beforeEach(() => {
@@ -70,7 +71,15 @@ describe("DropsSection", () => {
 
   it("renders DropForm and DropList when expanded", () => {
     const drops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
     render(<DropsSection {...defaultProps} drops={drops} />);
     expect(screen.getByTestId("drop-form")).toBeInTheDocument();
@@ -81,7 +90,15 @@ describe("DropsSection", () => {
   it("handles drop creation and updates order", async () => {
     const user = userEvent.setup();
     const existingDrops: DropRow[] = [
-      { id: "drop-1", label: "Drop 1", emoji: null, order: 1, is_active: true },
+      {
+        id: "drop-1",
+        label: "Drop 1",
+        emoji: null,
+        order: 1,
+        is_active: true,
+        is_public: true,
+        share_token: "token-123",
+      },
     ];
     render(<DropsSection {...defaultProps} drops={existingDrops} />);
     const createButton = screen.getByText("Create Drop");
@@ -98,13 +115,29 @@ describe("DropsSection", () => {
       <DropsSection
         {...defaultProps}
         isFree={true}
-        links={[{ id: "1" }, { id: "2" }]}
+        freeDropsLimit={2}
         drops={[
-          { id: "drop-1", label: "D1", emoji: null, order: 1, is_active: true },
+          {
+            id: "drop-1",
+            label: "D1",
+            emoji: null,
+            order: 1,
+            is_active: true,
+            is_public: true,
+            share_token: "token-123",
+          },
+          {
+            id: "drop-2",
+            label: "D2",
+            emoji: null,
+            order: 2,
+            is_active: true,
+            is_public: true,
+            share_token: "token-456",
+          },
         ]}
-        freeLimit={3}
       />,
     );
-    expect(screen.getByText("Limit Reached")).toBeInTheDocument();
+    expect(screen.getByText(/Free plan limit reached/)).toBeInTheDocument();
   });
 });

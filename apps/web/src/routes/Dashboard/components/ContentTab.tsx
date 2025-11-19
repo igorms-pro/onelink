@@ -10,7 +10,8 @@ interface ContentTabProps {
   drops: DropRow[];
   setDrops: React.Dispatch<React.SetStateAction<DropRow[]>>;
   isFree: boolean;
-  freeLimit: number;
+  freeLinksLimit: number;
+  freeDropsLimit: number;
 }
 
 export function ContentTab({
@@ -20,26 +21,25 @@ export function ContentTab({
   drops,
   setDrops,
   isFree,
-  freeLimit,
+  freeLinksLimit,
+  freeDropsLimit,
 }: ContentTabProps) {
   return (
-    <div className="space-y-6 mt-2">
+    <div className="space-y-6 mt-2 sm:mt-0">
       <LinksSection
         profileId={profileId}
         links={links}
         setLinks={setLinks}
-        drops={drops}
         isFree={isFree}
-        freeLimit={freeLimit}
+        freeLinksLimit={freeLinksLimit}
       />
       <div className="border-t border-gray-200 dark:border-gray-700 my-6"></div>
       <DropsSection
         profileId={profileId}
         drops={drops}
         setDrops={setDrops}
-        links={links}
         isFree={isFree}
-        freeLimit={freeLimit}
+        freeDropsLimit={freeDropsLimit}
       />
     </div>
   );

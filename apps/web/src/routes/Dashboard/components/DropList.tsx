@@ -1,9 +1,29 @@
+import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Pencil, Trash2 } from "lucide-react";
+import {
+  Pencil,
+  Trash2,
+  Globe,
+  Lock,
+  Link2,
+  Upload,
+  X,
+  File as FileIcon,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
+import {
+  toggleDropVisibility,
+  getDropShareLink,
+  getDropFiles,
+} from "@/lib/drops";
 import type { DropRow } from "../types";
+import { ShareDropModal } from "./ShareDropModal";
+import { OwnerFileUpload } from "./OwnerFileUpload";
+import { DropFileList, type DropFile } from "./DropFileList";
 
 interface DropListProps {
   profileId: string | null;
@@ -50,6 +70,11 @@ function DropCard({
   setDrops: React.Dispatch<React.SetStateAction<DropRow[]>>;
 }) {
   const { t } = useTranslation();
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showFiles, setShowFiles] = useState(false);
+  const [files, setFiles] = useState<DropFile[]>([]);
+  const [isLoadingFiles, setIsLoadingFiles] = useState(false);
 
   const handleEdit = async () => {
     const newLabel = prompt(t("common_new_label"), d.label);
@@ -111,83 +136,291 @@ function DropCard({
     toast.success(t("dashboard_content_drops_delete_success"));
   };
 
+  const handleToggleVisibility = async () => {
+    const newVisibility = !d.is_public;
+    const success = await toggleDropVisibility(d.id, newVisibility);
+    if (success) {
+      setDrops(
+        drops.map((x) =>
+          x.id === d.id ? { ...x, is_public: newVisibility } : x,
+        ),
+      );
+    }
+  };
+
+  const handleCopyLink = async () => {
+    const shareLink = getDropShareLink(d.id, d.share_token);
+    if (!shareLink) {
+      toast.error(t("dashboard_content_drops_no_share_token"));
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(shareLink);
+      toast.success(t("dashboard_content_drops_link_copied"));
+    } catch {
+      toast.error(t("dashboard_content_drops_link_copy_failed"));
+    }
+  };
+
+  const handleShare = () => {
+    const shareLink = getDropShareLink(d.id, d.share_token);
+    if (!shareLink) {
+      toast.error(t("dashboard_content_drops_no_share_token"));
+      return;
+    }
+    setIsShareModalOpen(true);
+  };
+
+  const shareLink = getDropShareLink(d.id, d.share_token);
+
+  const loadFiles = useCallback(async () => {
+    setIsLoadingFiles(true);
+    try {
+      const dropFiles = await getDropFiles(d.id);
+      setFiles(dropFiles);
+    } catch (error) {
+      console.error("Failed to load files:", error);
+      toast.error(t("dashboard_content_drops_files_load_failed"));
+    } finally {
+      setIsLoadingFiles(false);
+    }
+  }, [d.id, t]);
+
+  // Load files when showing files section
+  useEffect(() => {
+    if (showFiles && files.length === 0 && !isLoadingFiles) {
+      loadFiles();
+    }
+  }, [showFiles, files.length, isLoadingFiles, loadFiles]);
+
+  const handleUploadComplete = () => {
+    // Reload files after upload
+    if (showFiles) {
+      loadFiles();
+    }
+  };
+
   return (
-    <li className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 sm:p-6 hover:shadow-md transition-all">
-      {/* Left side: Title + Status (desktop: stacked, mobile: separate) */}
-      <div className="min-w-0 flex-1">
-        {/* Mobile: Title + Edit on same line */}
-        {/* Desktop: Title only */}
-        <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-0 mb-2 sm:mb-0">
-          <p className="font-medium truncate text-gray-900 dark:text-white">
-            {d.emoji ? `${d.emoji} ` : ""}
-            {d.label}
-          </p>
-          {/* Edit Icon - Mobile: inline with title */}
+    <li className="flex flex-col gap-3 sm:gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 sm:p-6 hover:shadow-md transition-all">
+      {/* Top section: Title + Actions */}
+      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+        {/* Left side: Title + Badge + Status */}
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-0 mb-2 sm:mb-0">
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <p className="font-medium truncate text-gray-900 dark:text-white">
+                {d.emoji ? `${d.emoji} ` : ""}
+                {d.label}
+              </p>
+              {/* Visibility Badge */}
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium shrink-0 ${
+                  d.is_public
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300"
+                }`}
+              >
+                {d.is_public ? (
+                  <>
+                    <Globe className="w-3 h-3" />
+                    {t("dashboard_content_drops_public")}
+                  </>
+                ) : (
+                  <>
+                    <Lock className="w-3 h-3" />
+                    {t("dashboard_content_drops_private")}
+                  </>
+                )}
+              </span>
+            </div>
+            {/* Edit Icon - Mobile: inline with title */}
+            <button
+              onClick={handleEdit}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors sm:hidden shrink-0 cursor-pointer"
+              aria-label={t("common_edit")}
+            >
+              <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            </button>
+          </div>
+          {/* Status */}
+          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-0">
+            <p className="text-sm text-gray-600 dark:text-gray-400 sm:mt-2">
+              {t("dashboard_content_drops_order_status", {
+                order: d.order,
+                status: d.is_active ? t("common_active") : t("common_off"),
+              })}
+            </p>
+            {/* Switch + Delete - Mobile: inline with status */}
+            <div className="flex items-center gap-2 sm:hidden shrink-0">
+              <Switch
+                checked={d.is_active}
+                onCheckedChange={handleToggle}
+                aria-label={
+                  d.is_active
+                    ? t("dashboard_content_drops_turn_off")
+                    : t("dashboard_content_drops_turn_on")
+                }
+              />
+              <button
+                onClick={handleDelete}
+                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+                aria-label={t("common_delete")}
+              >
+                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop: Edit + Switch + Delete aligned to right */}
+        <div className="hidden sm:flex items-center gap-3 shrink-0">
           <button
             onClick={handleEdit}
-            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors sm:hidden shrink-0 cursor-pointer"
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
             aria-label={t("common_edit")}
           >
             <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
           </button>
-        </div>
-        {/* Mobile: Status + Switch + Delete on same line */}
-        {/* Desktop: Status only */}
-        <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-0">
-          <p className="text-sm text-gray-600 dark:text-gray-400 sm:mt-2">
-            {t("dashboard_content_drops_order_status", {
-              order: d.order,
-              status: d.is_active ? t("common_active") : t("common_off"),
-            })}
-          </p>
-          {/* Switch + Delete - Mobile: inline with status */}
-          <div className="flex items-center gap-2 sm:hidden shrink-0">
-            <Switch
-              checked={d.is_active}
-              onCheckedChange={handleToggle}
-              aria-label={
-                d.is_active
-                  ? t("dashboard_content_drops_turn_off")
-                  : t("dashboard_content_drops_turn_on")
-              }
-            />
-            <button
-              onClick={handleDelete}
-              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
-              aria-label={t("common_delete")}
-            >
-              <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-            </button>
-          </div>
+          <Switch
+            checked={d.is_active}
+            onCheckedChange={handleToggle}
+            aria-label={
+              d.is_active
+                ? t("dashboard_content_drops_turn_off")
+                : t("dashboard_content_drops_turn_on")
+            }
+          />
+          <button
+            onClick={handleDelete}
+            className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+            aria-label={t("common_delete")}
+          >
+            <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+          </button>
         </div>
       </div>
 
-      {/* Desktop: Edit + Switch + Delete aligned to right */}
-      <div className="hidden sm:flex items-center gap-3 shrink-0">
+      {/* Share Link Section */}
+      {shareLink && (
+        <div className="flex items-center gap-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+          <Link2 className="w-4 h-4 text-gray-600 dark:text-gray-400 shrink-0" />
+          <input
+            type="text"
+            readOnly
+            value={shareLink}
+            className="flex-1 text-xs text-gray-600 dark:text-gray-400 bg-transparent border-none outline-none truncate"
+          />
+        </div>
+      )}
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap items-center gap-2">
+        {/* Toggle Visibility */}
         <button
-          onClick={handleEdit}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-          aria-label={t("common_edit")}
+          onClick={handleToggleVisibility}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300"
         >
-          <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+          {d.is_public ? (
+            <>
+              <Lock className="w-4 h-4" />
+              {t("dashboard_content_drops_make_private")}
+            </>
+          ) : (
+            <>
+              <Globe className="w-4 h-4" />
+              {t("dashboard_content_drops_make_public")}
+            </>
+          )}
         </button>
-        <Switch
-          checked={d.is_active}
-          onCheckedChange={handleToggle}
-          aria-label={
-            d.is_active
-              ? t("dashboard_content_drops_turn_off")
-              : t("dashboard_content_drops_turn_on")
-          }
-        />
+
+        {/* Copy Link */}
         <button
-          onClick={handleDelete}
-          className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
-          aria-label={t("common_delete")}
+          onClick={handleCopyLink}
+          disabled={!shareLink}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+          <Link2 className="w-4 h-4" />
+          {t("dashboard_content_drops_copy_link")}
+        </button>
+
+        {/* Share with QR */}
+        <button
+          onClick={handleShare}
+          disabled={!shareLink}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <Link2 className="w-4 h-4" />
+          {t("dashboard_content_drops_share")}
+        </button>
+
+        {/* Upload Files */}
+        <button
+          onClick={() => setShowUpload(!showUpload)}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300"
+        >
+          {showUpload ? (
+            <>
+              <X className="w-4 h-4" />
+              {t("common_hide")}
+            </>
+          ) : (
+            <>
+              <Upload className="w-4 h-4" />
+              {t("dashboard_content_drops_upload_files")}
+            </>
+          )}
         </button>
       </div>
+
+      {/* Owner File Upload Section */}
+      {showUpload && (
+        <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+          <OwnerFileUpload
+            dropId={d.id}
+            onUploadComplete={handleUploadComplete}
+          />
+        </div>
+      )}
+
+      {/* Files List Section */}
+      <div className="pt-3 border-t border-gray-200 dark:border-gray-700">
+        <button
+          onClick={() => {
+            setShowFiles(!showFiles);
+            if (!showFiles && files.length === 0) {
+              loadFiles();
+            }
+          }}
+          className="flex items-center justify-between w-full text-left cursor-pointer"
+        >
+          <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+            <FileIcon className="w-4 h-4" />
+            <span>
+              {t("dashboard_content_drops_files_list")} ({files.length})
+            </span>
+          </div>
+          {showFiles ? (
+            <ChevronUp className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          ) : (
+            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          )}
+        </button>
+        {showFiles && (
+          <div className="mt-3">
+            <DropFileList files={files} isLoading={isLoadingFiles} />
+          </div>
+        )}
+      </div>
+
+      {/* Share Modal */}
+      {shareLink && (
+        <ShareDropModal
+          open={isShareModalOpen}
+          onOpenChange={setIsShareModalOpen}
+          shareLink={shareLink}
+          dropLabel={d.label}
+        />
+      )}
     </li>
   );
 }

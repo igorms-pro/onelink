@@ -95,6 +95,8 @@ const createDrop = (overrides: Partial<DropRow> = {}): DropRow => ({
   emoji: null,
   order: 0,
   is_active: true,
+  is_public: true,
+  share_token: "token-123",
   ...overrides,
 });
 

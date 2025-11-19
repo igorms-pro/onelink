@@ -6,6 +6,8 @@ export type DropRow = {
   emoji: string | null;
   order: number;
   is_active: boolean;
+  is_public: boolean;
+  share_token: string | null;
 };
 
 export type SubmissionRow = {
