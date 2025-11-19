@@ -28,7 +28,8 @@ export function LegalPageLayout({
   className,
 }: LegalPageLayoutProps) {
   const { t, i18n } = useTranslation();
-  const appTitle = i18n.exists("app_title") ? t("app_title") : "OneLink";
+  const appTitle =
+    i18n?.exists && i18n.exists("app_title") ? t("app_title") : "OneLink";
 
   return (
     <div
