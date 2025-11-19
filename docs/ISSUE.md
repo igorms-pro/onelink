@@ -383,7 +383,29 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 ---
 
-### 4. Delete Account Page
+### 4. Google Analytics Integration (Pro Feature)
+**Status:** 🔄 TODO (Code exists, not configured)
+**Current:** 
+- Code exists in `apps/web/src/routes/Profile/utils/analytics.ts`
+- Function `maybeInjectGA()` injects GA script for Pro plans only
+- Already integrated in Profile pages
+
+**Missing:**
+- Create Google Analytics account (GA4)
+- Get Measurement ID (format: `G-XXXXXXXXXX`)
+- Add `VITE_GA_ID=G-XXXXXXXXXX` to `.env.local` (dev) and environment variables (prod)
+- Test injection on Pro profiles
+- Verify tracking works in GA dashboard
+
+**Files:**
+- `apps/web/src/routes/Profile/utils/analytics.ts` - Already implemented
+- `apps/web/src/routes/Profile/hooks/useProfileData.ts` - Already calls `maybeInjectGA()`
+
+**Note:** Code is ready, just needs Google Analytics account setup and environment variable configuration.
+
+---
+
+### 5. Delete Account Page
 **Status:** ✅ Completed (UI), 🔄 Backend needed
 **Implementation:**
 - Modal/Drawer responsive (`DeleteAccountModal.tsx`)
@@ -400,7 +422,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 ---
 
-### 5. Change Password Page
+### 6. Change Password Page
 **Status:** ✅ Completed
 **Implementation:**
 - Modal/Drawer responsive (`ChangePasswordModal.tsx`)
@@ -412,7 +434,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 ---
 
-### 6. Two-Factor Authentication Page
+### 7. Two-Factor Authentication Page
 **Status:** ✅ Completed
 **Implementation:**
 - Full page at `/settings/2fa` (`TwoFactorPage.tsx`)
@@ -439,9 +461,10 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 ### Phase 2: Pages Requiring Backend Work
 1. Upgrade to Pro / Stripe Checkout pages
-2. Delete Account page
-3. Change Password page
-4. Two-Factor Authentication page (or remove if not needed)
+2. Google Analytics Integration (Pro Feature)
+3. Delete Account page
+4. Change Password page
+5. Two-Factor Authentication page (or remove if not needed)
 
 **Note:** These require backend/BA/SQL work and should be planned separately.
 

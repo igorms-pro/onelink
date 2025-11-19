@@ -1,5 +1,5 @@
 import { supabase } from "./supabase";
-import { PlanType, getDefaultPlan } from "./types/plan";
+import { getDefaultPlan } from "./types/plan";
 import type { PlanTypeValue } from "./types/plan";
 
 export type ProfileRow = {
@@ -10,75 +10,6 @@ export type ProfileRow = {
   bio: string | null;
   avatar_url: string | null;
 };
-
-/**
- * Free plan limits (separate for links and drops)
- *
- * NOTE: Currently hardcoded, but can be easily migrated to DB later if needed.
- * To migrate: create a plan_limits table and fetch from DB here.
- */
-export const FREE_PLAN_LINKS_LIMIT = 4;
-export const FREE_PLAN_DROPS_LIMIT = 2;
-
-/**
- * Get links limit for a given plan
- * @param plan - Plan type (PlanType enum or string)
- * @returns Limit number (4 for free, Infinity for pro/unlimited)
- *
- * Future: Can be modified to fetch from DB if dynamic limits are needed
- */
-export function getPlanLinksLimit(plan: PlanTypeValue): number {
-  if (plan === PlanType.PRO) {
-    return Infinity;
-  }
-  return FREE_PLAN_LINKS_LIMIT;
-}
-
-/**
- * Get drops limit for a given plan
- * @param plan - Plan type (PlanType enum or string)
- * @returns Limit number (2 for free, Infinity for pro/unlimited)
- *
- * Future: Can be modified to fetch from DB if dynamic limits are needed
- */
-export function getPlanDropsLimit(plan: PlanTypeValue): number {
-  if (plan === PlanType.PRO) {
-    return Infinity;
-  }
-  return FREE_PLAN_DROPS_LIMIT;
-}
-
-/**
- * @deprecated Use getPlanLinksLimit and getPlanDropsLimit instead
- * Kept for backward compatibility
- */
-export const FREE_PLAN_ITEM_LIMIT =
-  FREE_PLAN_LINKS_LIMIT + FREE_PLAN_DROPS_LIMIT;
-
-/**
- * @deprecated Use getPlanLinksLimit and getPlanDropsLimit instead
- * Kept for backward compatibility
- */
-export function getPlanItemLimit(plan: PlanTypeValue): number {
-  if (plan === PlanType.PRO) {
-    return Infinity;
-  }
-  return FREE_PLAN_ITEM_LIMIT;
-}
-
-/**
- * @deprecated Use getPlanItemLimit instead
- * Kept for backward compatibility
- */
-export const FREE_DROP_LIMIT = FREE_PLAN_ITEM_LIMIT;
-
-/**
- * @deprecated Use getPlanItemLimit instead
- * Kept for backward compatibility
- */
-export function getDropLimit(plan: PlanTypeValue): number {
-  return getPlanItemLimit(plan);
-}
 
 export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
   // First, ensure public.users row exists (trigger should create it, but just in case)
