@@ -7,6 +7,9 @@ import { LegalPageLayout } from "../LegalPageLayout";
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
+    i18n: {
+      exists: () => false,
+    },
   }),
 }));
 
