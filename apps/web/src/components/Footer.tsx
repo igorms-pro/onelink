@@ -33,8 +33,9 @@ export function Footer({
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-2 sm:py-4 text-sm text-gray-600 dark:text-gray-400">
           {/* Main footer content */}
           <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Left side: Logo + Slogan */}
-            <div className="flex items-center">
+            {/* Mobile: Logo + Slogan + Language/Theme on same line */}
+            {/* Desktop: Logo + Slogan on left */}
+            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               {showBranding && brandingText ? (
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
@@ -53,42 +54,34 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-            </div>
-            {/* Right side: Privacy/Terms + Controls */}
-            <div className="flex items-center gap-4 sm:gap-6">
-              <div className="flex items-center gap-4">
-                <Link
-                  to="/privacy"
-                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-                >
-                  {t("footer_privacy")}
-                </Link>
-                <Link
-                  to="/terms"
-                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-                >
-                  {t("footer_terms")}
-                </Link>
-              </div>
-              {/* Language & Theme Controls - always on right */}
+              {/* Language & Theme Controls - same line as slogan on mobile */}
               {showControls && (
-                <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex items-center gap-2">
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     <ProfileLanguageToggleButton />
-                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
-                      {t("language")}
-                    </span>
                   </div>
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-1">
                     <ThemeToggleButton />
-                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
-                      {t("theme")}
-                    </span>
                   </div>
                 </div>
               )}
+            </div>
+            {/* Privacy & Terms - separate line on mobile, right side on desktop */}
+            <div className="flex items-center gap-4">
+              <Link
+                to="/privacy"
+                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+              >
+                {t("footer_privacy")}
+              </Link>
+              <Link
+                to="/terms"
+                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+              >
+                {t("footer_terms")}
+              </Link>
             </div>
           </div>
         </div>
