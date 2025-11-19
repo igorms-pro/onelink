@@ -115,8 +115,8 @@ export default function Profile() {
         <div className="absolute bottom-0 right-1/3 w-64 h-64 bg-purple-200/5 dark:bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
 
-      <div className="relative z-10 flex-1">
-        <main className="flex-1 mx-auto max-w-2xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-24 sm:pb-12">
+      <div className="relative z-10 flex-1 flex flex-col">
+        <main className="flex-1 mx-auto max-w-2xl w-full px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pb-8">
           {profile && (
             <>
               <ProfileHeader profile={profile} links={links} />
@@ -125,18 +125,19 @@ export default function Profile() {
             </>
           )}
         </main>
-      </div>
 
-      {/* Unified Footer with controls */}
-      <Footer
-        className="sticky bottom-0 z-50 mt-auto"
-        variant={isBaseHost(host) && plan !== "pro" ? "transparent" : "default"}
-        showBranding={isBaseHost(host) && plan !== "pro"}
-        brandingText={
-          isBaseHost(host) && plan !== "pro" ? t("profile_slogan") : undefined
-        }
-        showControls
-      />
+        {/* Unified Footer with controls - naturally at bottom */}
+        <Footer
+          variant={
+            isBaseHost(host) && plan !== "pro" ? "transparent" : "default"
+          }
+          showBranding={isBaseHost(host) && plan !== "pro"}
+          brandingText={
+            isBaseHost(host) && plan !== "pro" ? t("profile_slogan") : undefined
+          }
+          showControls
+        />
+      </div>
     </div>
   );
 }
