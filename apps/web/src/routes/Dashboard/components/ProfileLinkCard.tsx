@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { goToCheckout } from "@/lib/billing";
+import { goToCheckout, BillingError } from "@/lib/billing";
 
 interface ProfileLinkCardProps {
   slug: string | null;
@@ -42,10 +42,26 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
     window.open(profileUrl, "_blank", "noopener,noreferrer");
   };
 
-  const handleQRCode = () => {
+  const handleQRCode = async () => {
     if (isFree) {
       toast.info(t("dashboard_account_profile_qr_pro_feature"));
-      goToCheckout();
+      try {
+        await goToCheckout();
+      } catch (error) {
+        if (error instanceof BillingError) {
+          if (error.code === "AUTH_REQUIRED") {
+            toast.error(
+              t("billing_auth_required", {
+                defaultValue: "Please sign in to upgrade",
+              }),
+            );
+          } else {
+            toast.error(t("billing_upgrade_error"));
+          }
+        } else {
+          toast.error(t("billing_upgrade_error"));
+        }
+      }
       return;
     }
     setIsQRCodeOpen(true);

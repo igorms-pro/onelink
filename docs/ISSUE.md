@@ -155,22 +155,19 @@ Status: ✅ Completed
 - Maintained original colors for light theme
 
 ### 4. Refactor Plan Types to Use Enums/Constants
-Status: 🔄 TODO
-- Replace string literals (`"free"`, `"pro"`) with TypeScript enum or constants
-- Update all plan checks (`plan !== "pro"` → `plan !== PlanType.PRO`)
-- Files to update:
-  - `apps/web/src/lib/profile.ts` - `getSelfPlan`, `getPlanBySlug` return types
-  - `apps/web/src/routes/Dashboard/index.tsx` - `isFree` check
-  - `apps/web/src/routes/Dashboard/hooks/useDashboardData.ts` - plan state
-  - `apps/web/src/routes/Profile/index.tsx` - plan checks
-  - `apps/web/src/routes/Profile.tsx` - plan state
-  - `apps/web/src/routes/Profile/hooks/useProfileData.ts` - plan state
-  - `apps/web/src/routes/Profile/utils/analytics.ts` - plan check
-- Benefits:
+Status: ✅ Completed
+- Replaced string literals with TypeScript const object (`PlanType`)
+- Updated all plan checks to use `PlanType.PRO` and `PlanType.FREE`
+- Created `lib/types/plan.ts` for centralized plan type definitions
+- Created `lib/plan-limits.ts` for plan limit logic (extracted from `profile.ts`)
+- Eliminated code duplication (getFreeLinksLimit, getFreeDropsLimit)
+- Removed deprecated code (getPlanItemLimit, getDropLimit, etc.)
+- Benefits achieved:
   - Type safety
   - Autocomplete support
   - Easier refactoring
   - Prevents typos
+  - Better separation of concerns (SRP)
 
 ---
 
@@ -274,7 +271,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ## Missing UI Pages & Features
 
 ### 1. Legal Pages (Privacy Policy & Terms of Service)
-**Status:** 🔄 TODO
+**Status:** ✅ Completed
 
 #### Privacy Policy Page
 **Route:** `/privacy`
@@ -347,7 +344,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ---
 
 ### 2. Footer Component (Optional Enhancement)
-**Status:** 🔄 TODO
+**Status:** ✅ Completed
 **Purpose:** Add footer links to Privacy and Terms pages across the app
 
 **Features:**
@@ -370,16 +367,24 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ---
 
 ### 3. Upgrade to Pro / Stripe Checkout Pages
-**Status:** 🔄 TODO (Backend exists, UI missing)
-**Current:** `goToCheckout()` redirects to Stripe Checkout (works)
-**Missing:**
-- Loading state while redirecting
-- Error handling if checkout fails
-- Success/cancel callback pages (`/checkout/success`, `/checkout/cancel`)
-- Pricing page (`/pricing`) showing plan features comparison
-- Upgrade confirmation modal/page before redirect
+**Status:** ✅ Completed (UI improvements)
+**Current:** 
+- ✅ `goToCheckout()` redirects to Stripe Checkout (works)
+- ✅ Loading state while redirecting
+- ✅ Error handling if checkout fails (network, API, auth errors)
+- ✅ Success/cancel callback pages (`/checkout/success`, `/checkout/cancel`)
+- ✅ Pricing page (`/pricing`) showing plan features comparison
+- ✅ Upgrade confirmation modal before redirect
 
-**Note:** Requires backend/BA/SQL work - not UI-only
+**Improvements Made:**
+- Created `BillingError` class for better error handling
+- Added comprehensive error handling in `goToCheckout()` and `goToPortal()`
+- Created `UpgradeConfirmationModal` component (responsive, mobile drawer support)
+- Integrated modal in Pricing, BillingPage, and DashboardSubHeader
+- Added toast notifications for all error scenarios
+- Added translations for upgrade confirmation modal
+
+**Note:** Backend/BA/SQL work may still be needed for full Stripe integration features
 
 ---
 

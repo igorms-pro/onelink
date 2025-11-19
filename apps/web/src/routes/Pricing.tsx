@@ -3,10 +3,12 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Check, ArrowRight } from "lucide-react";
 import clsx from "clsx";
+import { toast } from "sonner";
 import { HeaderMobileSignIn } from "@/components/HeaderMobileSignIn";
 import { Footer } from "@/components/Footer";
+import { UpgradeConfirmationModal } from "@/components/UpgradeConfirmationModal";
 import { PlanType } from "@/lib/types/plan";
-import { goToCheckout } from "@/lib/billing";
+import { goToCheckout, BillingError } from "@/lib/billing";
 
 interface PricingPlanContent {
   name: string;
@@ -25,6 +27,7 @@ export default function Pricing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const freePlan = t("pricing.plans.free", {
     returnObjects: true,
@@ -45,13 +48,8 @@ export default function Pricing() {
       id: PlanType.PRO,
       ...proPlan,
       highlight: true,
-      onClick: async () => {
-        setLoadingPlan(PlanType.PRO);
-        try {
-          await goToCheckout();
-        } finally {
-          setLoadingPlan(null);
-        }
+      onClick: () => {
+        setIsUpgradeModalOpen(true);
       },
     },
   ];
@@ -197,6 +195,33 @@ export default function Pricing() {
         </section>
       </main>
       <Footer />
+      <UpgradeConfirmationModal
+        open={isUpgradeModalOpen}
+        onOpenChange={setIsUpgradeModalOpen}
+        onConfirm={async () => {
+          setLoadingPlan(PlanType.PRO);
+          try {
+            await goToCheckout();
+          } catch (error) {
+            setLoadingPlan(null);
+            if (error instanceof BillingError) {
+              if (error.code === "AUTH_REQUIRED") {
+                toast.error(
+                  t("billing_auth_required", {
+                    defaultValue: "Please sign in to upgrade",
+                  }),
+                );
+                navigate("/auth");
+              } else {
+                toast.error(t("billing_upgrade_error"));
+              }
+            } else {
+              toast.error(t("billing_upgrade_error"));
+            }
+            throw error; // Re-throw to keep modal open
+          }
+        }}
+      />
     </div>
   );
 }

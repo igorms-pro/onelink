@@ -26,6 +26,8 @@ type PaymentMethod = {
 
 import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
 import { isProPlan } from "@/lib/types/plan";
+import { BillingError } from "@/lib/billing";
+import { UpgradeConfirmationModal } from "@/components/UpgradeConfirmationModal";
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -43,6 +45,7 @@ export default function BillingPage() {
   );
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
+  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const isPro = isProPlan(plan);
   const isLoading = authLoading || dataLoading;
@@ -90,24 +93,68 @@ export default function BillingPage() {
   const handleManagePayment = async () => {
     try {
       await goToPortal();
-    } catch {
-      toast.error(t("billing_payment_error"));
+    } catch (error) {
+      if (error instanceof BillingError) {
+        if (error.code === "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_auth_required", {
+              defaultValue: "Please sign in to manage payment",
+            }),
+          );
+          navigate("/auth");
+        } else {
+          toast.error(t("billing_payment_error"));
+        }
+      } else {
+        toast.error(t("billing_payment_error"));
+      }
     }
   };
 
   const handleAddCard = async () => {
     try {
       await goToPortal();
-    } catch {
-      toast.error(t("billing_payment_error"));
+    } catch (error) {
+      if (error instanceof BillingError) {
+        if (error.code === "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_auth_required", {
+              defaultValue: "Please sign in to add payment method",
+            }),
+          );
+          navigate("/auth");
+        } else {
+          toast.error(t("billing_payment_error"));
+        }
+      } else {
+        toast.error(t("billing_payment_error"));
+      }
     }
   };
 
-  const handleUpgrade = async () => {
+  const handleUpgrade = () => {
+    setIsUpgradeModalOpen(true);
+  };
+
+  const handleConfirmUpgrade = async () => {
     try {
       await goToCheckout();
-    } catch {
-      toast.error(t("billing_upgrade_error"));
+    } catch (error) {
+      if (error instanceof BillingError) {
+        if (error.code === "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_auth_required", {
+              defaultValue: "Please sign in to upgrade",
+            }),
+          );
+          navigate("/auth");
+        } else {
+          toast.error(t("billing_upgrade_error"));
+        }
+      } else {
+        toast.error(t("billing_upgrade_error"));
+      }
+      throw error; // Re-throw to keep modal open
     }
   };
 
@@ -425,6 +472,11 @@ export default function BillingPage() {
           </div>
         )}
       </main>
+      <UpgradeConfirmationModal
+        open={isUpgradeModalOpen}
+        onOpenChange={setIsUpgradeModalOpen}
+        onConfirm={handleConfirmUpgrade}
+      />
     </div>
   );
 }
