@@ -5,6 +5,7 @@ import { Check, ArrowRight } from "lucide-react";
 import clsx from "clsx";
 import { HeaderMobileSignIn } from "@/components/HeaderMobileSignIn";
 import { Footer } from "@/components/Footer";
+import { PlanType } from "@/lib/types/plan";
 import { goToCheckout } from "@/lib/billing";
 
 interface PricingPlanContent {
@@ -35,17 +36,17 @@ export default function Pricing() {
 
   const plans = [
     {
-      id: "free",
+      id: PlanType.FREE,
       ...freePlan,
       highlight: false,
       onClick: () => navigate("/auth"),
     },
     {
-      id: "pro",
+      id: PlanType.PRO,
       ...proPlan,
       highlight: true,
       onClick: async () => {
-        setLoadingPlan("pro");
+        setLoadingPlan(PlanType.PRO);
         try {
           await goToCheckout();
         } finally {
@@ -102,7 +103,7 @@ export default function Pricing() {
                       <span className="text-4xl font-bold text-gray-900 dark:text-white">
                         {plan.price}
                       </span>
-                      {plan.id === "free" ? (
+                      {plan.id === PlanType.FREE ? (
                         <span className="text-sm text-gray-500 dark:text-gray-400">
                           {t("pricing.per_month")}
                         </span>

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { renderHook, waitFor, act } from "@testing-library/react";
+import { PlanType } from "@/lib/types/plan";
 import { useDashboardData } from "../useDashboardData";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateProfile, getSelfPlan } from "@/lib/profile";
@@ -84,7 +85,7 @@ describe("useDashboardData", () => {
     (getOrCreateProfile as ReturnType<typeof vi.fn>).mockResolvedValue(
       mockProfile,
     );
-    (getSelfPlan as ReturnType<typeof vi.fn>).mockResolvedValue("free");
+    (getSelfPlan as ReturnType<typeof vi.fn>).mockResolvedValue(PlanType.FREE);
   });
 
   it("should return loading state initially", async () => {
@@ -237,7 +238,7 @@ describe("useDashboardData", () => {
   });
 
   it("should load plan successfully", async () => {
-    (getSelfPlan as ReturnType<typeof vi.fn>).mockResolvedValue("pro");
+    (getSelfPlan as ReturnType<typeof vi.fn>).mockResolvedValue(PlanType.PRO);
 
     const mockFrom = vi.fn((_table: string) => ({
       select: vi.fn((_columns?: string) => ({
@@ -268,7 +269,7 @@ describe("useDashboardData", () => {
       expect(result.current.loading).toBe(false);
     });
 
-    expect(result.current.plan).toBe("pro");
+    expect(result.current.plan).toBe(PlanType.PRO);
   });
 
   it("should load submissions successfully", async () => {

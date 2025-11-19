@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
 import { Footer } from "@/components/Footer";
+import { isProPlan } from "@/lib/types/plan";
 import { useProfileData } from "./hooks/useProfileData";
 import {
   LoadingState,
@@ -129,11 +130,13 @@ export default function Profile() {
         {/* Unified Footer with controls - naturally at bottom */}
         <Footer
           variant={
-            isBaseHost(host) && plan !== "pro" ? "transparent" : "default"
+            isBaseHost(host) && !isProPlan(plan) ? "transparent" : "default"
           }
-          showBranding={isBaseHost(host) && plan !== "pro"}
+          showBranding={isBaseHost(host) && !isProPlan(plan)}
           brandingText={
-            isBaseHost(host) && plan !== "pro" ? t("profile_slogan") : undefined
+            isBaseHost(host) && !isProPlan(plan)
+              ? t("profile_slogan")
+              : undefined
           }
           showControls
         />

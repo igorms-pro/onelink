@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PlanType, PlanTypeValue } from "@/lib/types/plan";
 import Settings from "../index";
 
 // Mock dependencies - use the same structure as vitest.setup.ts but with getUser
@@ -81,7 +82,7 @@ vi.mock("@/lib/supabase", () => {
         })),
         upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
       })),
-      rpc: vi.fn().mockResolvedValue({ data: "free", error: null }),
+      rpc: vi.fn().mockResolvedValue({ data: PlanType.FREE, error: null }),
     },
   };
 });
@@ -114,7 +115,7 @@ vi.mock("../components", () => ({
       Email Preferences
     </section>
   ),
-  BillingSection: ({ plan }: { plan: "free" | "pro" | null }) => (
+  BillingSection: ({ plan }: { plan: PlanTypeValue | null }) => (
     <section data-testid="settings-billing-section">Billing {plan}</section>
   ),
   CustomDomainSection: () => (
@@ -184,7 +185,7 @@ describe("Settings", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
       loading: false,
     });
   });
@@ -278,7 +279,7 @@ describe("Settings", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "pro",
+      plan: PlanType.PRO,
       loading: false,
     });
 
@@ -304,7 +305,7 @@ describe("Settings", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "pro",
+      plan: PlanType.PRO,
       loading: false,
     });
 

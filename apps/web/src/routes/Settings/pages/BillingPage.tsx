@@ -25,10 +25,11 @@ type PaymentMethod = {
 };
 
 import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/profile";
+import { PlanType, isProPlan } from "@/lib/types/plan";
 
 // Get free plan limits (can be easily migrated to DB later)
-const getFreeLinksLimit = () => getPlanLinksLimit("free");
-const getFreeDropsLimit = () => getPlanDropsLimit("free");
+const getFreeLinksLimit = () => getPlanLinksLimit(PlanType.FREE);
+const getFreeDropsLimit = () => getPlanDropsLimit(PlanType.FREE);
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -47,7 +48,7 @@ export default function BillingPage() {
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
 
-  const isPro = plan === "pro";
+  const isPro = isProPlan(plan);
   const isLoading = authLoading || dataLoading;
 
   // Redirect to /auth if not logged in

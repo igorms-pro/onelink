@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { isBaseHost } from "@/lib/domain";
 import { getPlanBySlug } from "@/lib/profile";
+import { PlanTypeValue, getDefaultPlan } from "@/lib/types/plan";
 import { maybeInjectGA } from "../utils/analytics";
 import type { PublicLink, PublicProfile, PublicDrop } from "../types";
 
@@ -9,7 +10,7 @@ export function useProfileData(slug: string | undefined, host: string) {
   const [links, setLinks] = useState<PublicLink[]>([]);
   const [drops, setDrops] = useState<PublicDrop[]>([]);
   const [profile, setProfile] = useState<PublicProfile | null>(null);
-  const [plan, setPlan] = useState<string>("free");
+  const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
   const [isLoading, setIsLoading] = useState(true);
   const [errorType, setErrorType] = useState<
     "not_found" | "domain_unverified" | null

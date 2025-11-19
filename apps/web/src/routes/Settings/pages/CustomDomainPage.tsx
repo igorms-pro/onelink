@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
+import { isProPlan } from "@/lib/types/plan";
 import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -64,7 +65,7 @@ export default function CustomDomainPage() {
 
   // Redirect if not Pro
   useEffect(() => {
-    if (!authLoading && !planLoading && plan !== "pro") {
+    if (!authLoading && !planLoading && !isProPlan(plan)) {
       navigate("/settings", { replace: true });
     }
   }, [authLoading, planLoading, plan, navigate]);
@@ -219,7 +220,7 @@ export default function CustomDomainPage() {
     }
   };
 
-  if (authLoading || planLoading || !user || plan !== "pro") {
+  if (authLoading || planLoading || !user || !isProPlan(plan)) {
     return null; // Will redirect via useEffect
   }
 

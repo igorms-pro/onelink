@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
+import { PlanTypeValue, isProPlan } from "@/lib/types/plan";
 import { useDashboardData } from "../Dashboard/hooks/useDashboardData";
 import {
   NotificationsSection,
@@ -56,8 +57,8 @@ export default function Settings() {
         <div className="space-y-6">
           <NotificationsSection />
           <EmailPreferencesSection />
-          <BillingSection plan={plan as "free" | "pro" | null} />
-          {plan === "pro" && <CustomDomainSection />}
+          <BillingSection plan={plan as PlanTypeValue | null} />
+          {isProPlan(plan) && <CustomDomainSection />}
           <ActiveSessionsSection />
           <DataExportSection />
           <ApiIntegrationsSection />

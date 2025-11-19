@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PlanType } from "@/lib/types/plan";
 import type { Dispatch, SetStateAction } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { LinkRow } from "@/components/LinksList";
@@ -84,7 +85,7 @@ const createDashboardData = (
   drops: [],
   setDrops: createDispatch<DropRow[]>(),
   submissions: emptySubmissions,
-  plan: "pro",
+  plan: PlanType.PRO,
   loading: false,
   ...overrides,
 });
@@ -111,7 +112,7 @@ describe.skip("CustomDomainPage", () => {
 
   it("should redirect to /settings when not pro plan", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "free" }),
+      createDashboardData({ plan: PlanType.FREE }),
     );
 
     render(

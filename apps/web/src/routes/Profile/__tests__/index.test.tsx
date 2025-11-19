@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PlanType, PlanTypeValue } from "@/lib/types/plan";
 import type { PublicLink, PublicProfile, PublicDrop } from "../types";
 import Profile from "../index";
 
@@ -9,14 +10,14 @@ const mockProfileData: {
   links: PublicLink[];
   drops: PublicDrop[];
   profile: PublicProfile | null;
-  plan: string;
+  plan: PlanTypeValue;
   isLoading: boolean;
   errorType: "not_found" | "domain_unverified" | null;
 } = {
   links: [],
   drops: [],
   profile: null,
-  plan: "free",
+  plan: PlanType.FREE,
   isLoading: false,
   errorType: null,
 };
@@ -76,7 +77,7 @@ describe("Profile", () => {
       links: [],
       drops: [],
       profile: null,
-      plan: "free" as const,
+      plan: PlanType.FREE,
       isLoading: false,
       errorType: null,
     });
@@ -180,7 +181,7 @@ describe("Profile", () => {
       bio: null,
       avatar_url: null,
     };
-    mockProfileData.plan = "free";
+    mockProfileData.plan = PlanType.FREE;
 
     render(
       <MemoryRouter initialEntries={["/test-user"]}>
@@ -199,7 +200,7 @@ describe("Profile", () => {
       bio: null,
       avatar_url: null,
     };
-    mockProfileData.plan = "pro";
+    mockProfileData.plan = PlanType.PRO;
 
     render(
       <MemoryRouter initialEntries={["/test-user"]}>
