@@ -34,7 +34,7 @@ export function Footer({
           {/* Main footer content */}
           <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Mobile: Logo + Slogan + Language/Theme on same line */}
-            {/* Desktop: Logo + Slogan on left, Privacy/Terms/Controls on right */}
+            {/* Desktop: Logo + Slogan on left */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               {/* Logo + Slogan (replaces brand name) */}
               {showBranding && brandingText ? (
@@ -55,27 +55,21 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-              {/* Language & Theme Controls - same line as slogan on mobile */}
+              {/* Language & Theme Controls - same line as slogan on mobile, hidden on desktop */}
               {showControls && (
-                <div className="flex items-center gap-2 sm:gap-3">
+                <div className="flex sm:hidden items-center gap-2">
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1 sm:gap-1.5">
+                  <div className="flex items-center gap-1">
                     <ProfileLanguageToggleButton />
-                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
-                      {t("language")}
-                    </span>
                   </div>
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1 sm:gap-1.5">
+                  <div className="flex items-center gap-1">
                     <ThemeToggleButton />
-                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
-                      {t("theme")}
-                    </span>
                   </div>
                 </div>
               )}
             </div>
-            {/* Privacy & Terms - right side on desktop */}
+            {/* Privacy & Terms + Controls (desktop) - right side */}
             <div className="flex items-center gap-3 sm:gap-4">
               <Link
                 to="/privacy"
@@ -89,7 +83,7 @@ export function Footer({
               >
                 {t("footer_terms")}
               </Link>
-              {/* Desktop separator before controls */}
+              {/* Desktop: Controls on right side */}
               {showControls && (
                 <div className="hidden sm:flex items-center gap-2 sm:gap-3">
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
