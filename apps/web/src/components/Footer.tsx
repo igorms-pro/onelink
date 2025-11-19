@@ -36,9 +36,25 @@ export function Footer({
           {/* Main footer content */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex flex-col gap-2">
-              <span className="font-medium text-gray-800 dark:text-gray-100">
-                {t("footer_brand_name", { defaultValue: "OneLink" })}
-              </span>
+              {/* Logo + Slogan (replaces brand name) */}
+              {showBranding && brandingText ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 flex-shrink-0">
+                    <img
+                      src="/logo.png"
+                      alt="OneLink"
+                      className="w-full h-full object-contain"
+                    />
+                  </div>
+                  <span className="font-medium text-gray-800 dark:text-gray-100 text-sm sm:text-base">
+                    {brandingText}
+                  </span>
+                </div>
+              ) : (
+                <span className="font-medium text-gray-800 dark:text-gray-100">
+                  {t("footer_brand_name", { defaultValue: "OneLink" })}
+                </span>
+              )}
               <span className="text-xs text-gray-500 dark:text-gray-500">
                 {t("footer_all_rights", {
                   year,
@@ -82,12 +98,6 @@ export function Footer({
               )}
             </div>
           </div>
-          {/* Branding text */}
-          {showBranding && (brandingText || t("footer_powered")) && (
-            <div className="text-xs text-gray-500 dark:text-gray-500 pt-2 border-t border-gray-200/50 dark:border-gray-800/50">
-              {brandingText || t("footer_powered")}
-            </div>
-          )}
         </div>
       </div>
     </footer>
