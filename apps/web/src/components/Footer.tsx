@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
@@ -21,7 +20,6 @@ export function Footer({
   showControls = false,
 }: FooterProps) {
   const { t } = useTranslation();
-  const year = useMemo(() => new Date().getFullYear(), []);
 
   const containerClasses = clsx(
     "w-full border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm",
@@ -32,10 +30,10 @@ export function Footer({
   return (
     <footer className={clsx("mt-auto w-full", className)}>
       <div className={containerClasses}>
-        <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-4 sm:py-6 text-sm text-gray-600 dark:text-gray-400">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-2 sm:py-4 text-sm text-gray-600 dark:text-gray-400">
           {/* Main footer content */}
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-col gap-2">
+            <div className="flex items-center">
               {/* Logo + Slogan (replaces brand name) */}
               {showBranding && brandingText ? (
                 <div className="flex items-center gap-2">
@@ -55,12 +53,6 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-              <span className="text-xs text-gray-500 dark:text-gray-500">
-                {t("footer_all_rights", {
-                  year,
-                  defaultValue: `© ${year} OneLink. All rights reserved.`,
-                })}
-              </span>
             </div>
             <div className="flex flex-wrap items-center gap-4">
               <Link

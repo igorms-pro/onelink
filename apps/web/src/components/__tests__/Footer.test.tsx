@@ -45,14 +45,6 @@ describe("Footer", () => {
     expect(screen.getByText("OneLink")).toBeInTheDocument();
   });
 
-  it("renders current year in copyright", () => {
-    const currentYear = new Date().getFullYear();
-    renderWithRouter(<Footer />);
-    expect(
-      screen.getByText(new RegExp(currentYear.toString())),
-    ).toBeInTheDocument();
-  });
-
   it("renders privacy link", () => {
     renderWithRouter(<Footer />);
     const privacyLink = screen.getByRole("link", { name: /footer_privacy/i });
