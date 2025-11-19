@@ -1,12 +1,12 @@
 import { supabase } from "./supabase";
 
 export class BillingError extends Error {
-  constructor(
-    message: string,
-    public code?: string,
-  ) {
+  code?: string;
+
+  constructor(message: string, code?: string) {
     super(message);
     this.name = "BillingError";
+    this.code = code;
   }
 }
 
