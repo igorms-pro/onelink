@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { LegalPageLayout } from "../LegalPageLayout";
 
@@ -150,11 +151,42 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    const header = document.querySelector("header");
+    const header = screen.getByTestId("legal-header");
     expect(header).toBeInTheDocument();
     expect(header).toHaveClass("sticky", "top-0");
+    expect(screen.getByTestId("legal-header-logo-link")).toBeInTheDocument();
     expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
     expect(screen.getByTestId("language-toggle")).toBeInTheDocument();
+  });
+
+  it("header logo link navigates to home", () => {
+    renderWithRouter(
+      <LegalPageLayout
+        title="Test Title"
+        description="Test Description"
+        lastUpdated="2024-01-01"
+        sections={mockSections}
+      />,
+    );
+    const logoLink = screen.getByTestId("legal-header-logo-link");
+    expect(logoLink).toHaveAttribute("href", "/");
+  });
+
+  it("back button is clickable", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(
+      <LegalPageLayout
+        title="Test Title"
+        description="Test Description"
+        lastUpdated="2024-01-01"
+        sections={mockSections}
+      />,
+    );
+
+    const backButton = screen.getByTestId("legal-back-button");
+    expect(backButton).toBeInTheDocument();
+    await user.click(backButton);
+    // Button should be clickable (actual navigation tested in E2E)
   });
 
   it("applies custom className", () => {
