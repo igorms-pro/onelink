@@ -22,6 +22,10 @@ vi.mock("../../lib/billing", () => ({
   goToCheckout: vi.fn(),
 }));
 
+vi.mock("../../hooks/use-media-query", () => ({
+  useMediaQuery: vi.fn(() => false), // Desktop by default
+}));
+
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Pricing from "../Pricing";
@@ -162,7 +166,7 @@ describe("Pricing", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/auth");
   });
 
-  it("calls goToCheckout when pro plan button is clicked", async () => {
+  it("opens upgrade confirmation modal when pro plan button is clicked", async () => {
     render(
       <MemoryRouter>
         <Pricing />
@@ -173,16 +177,14 @@ describe("Pricing", () => {
     fireEvent.click(proButton);
 
     await waitFor(() => {
-      expect(goToCheckout).toHaveBeenCalled();
+      // Check for modal dialog
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toBeInTheDocument();
     });
   });
 
-  it("shows loading state when pro plan button is clicked", async () => {
-    let resolveCheckout: () => void;
-    const checkoutPromise = new Promise<void>((resolve) => {
-      resolveCheckout = resolve;
-    });
-    vi.mocked(goToCheckout).mockReturnValue(checkoutPromise);
+  it("calls goToCheckout when modal confirm button is clicked", async () => {
+    vi.mocked(goToCheckout).mockResolvedValue(undefined);
 
     render(
       <MemoryRouter>
@@ -194,13 +196,21 @@ describe("Pricing", () => {
     fireEvent.click(proButton);
 
     await waitFor(() => {
-      expect(screen.getByText(/redirecting/i)).toBeInTheDocument();
-      expect(proButton).toBeDisabled();
+      const dialog = screen.getByRole("dialog");
+      expect(dialog).toBeInTheDocument();
     });
 
-    resolveCheckout!();
+    // Find confirm button - it should be in the dialog
+    const dialog = screen.getByRole("dialog");
+    const buttons = dialog.querySelectorAll("button");
+    const confirmButton = Array.from(buttons).find((btn) =>
+      btn.textContent?.toLowerCase().includes("continue"),
+    );
+    expect(confirmButton).toBeInTheDocument();
+    fireEvent.click(confirmButton!);
+
     await waitFor(() => {
-      expect(screen.getByText(/upgrade to pro/i)).toBeInTheDocument();
+      expect(goToCheckout).toHaveBeenCalled();
     });
   });
 
