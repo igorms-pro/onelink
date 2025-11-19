@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
 import { LegalPageLayout } from "../LegalPageLayout";
 
@@ -7,17 +8,21 @@ import { LegalPageLayout } from "../LegalPageLayout";
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
     t: (key: string) => key,
+    i18n: {
+      exists: () => false,
+    },
   }),
 }));
 
-// Mock HeaderMobileSignIn
-vi.mock("../HeaderMobileSignIn", () => ({
-  HeaderMobileSignIn: () => <div data-testid="header-mobile">Header</div>,
+// Mock ThemeToggleButton and LanguageToggleButton
+vi.mock("../ThemeToggleButton", () => ({
+  ThemeToggleButton: () => <button data-testid="theme-toggle">Theme</button>,
 }));
 
-// Mock Footer
-vi.mock("../Footer", () => ({
-  Footer: () => <div data-testid="footer">Footer</div>,
+vi.mock("../LanguageToggleButton", () => ({
+  LanguageToggleButton: () => (
+    <button data-testid="language-toggle">Language</button>
+  ),
 }));
 
 const mockSections = [
@@ -123,7 +128,7 @@ describe("LegalPageLayout", () => {
     expect(screen.getByText("Item 4")).toBeInTheDocument();
   });
 
-  it("renders back to auth link", () => {
+  it("renders back button", () => {
     renderWithRouter(
       <LegalPageLayout
         title="Test Title"
@@ -132,12 +137,12 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    const backLink = screen.getByRole("link", { name: /legal_back_to_auth/i });
-    expect(backLink).toBeInTheDocument();
-    expect(backLink).toHaveAttribute("href", "/auth");
+    const backButton = screen.getByTestId("legal-back-button");
+    expect(backButton).toBeInTheDocument();
+    expect(backButton).toHaveTextContent("back");
   });
 
-  it("renders HeaderMobileSignIn", () => {
+  it("renders sticky header with logo", () => {
     renderWithRouter(
       <LegalPageLayout
         title="Test Title"
@@ -146,10 +151,15 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    expect(screen.getByTestId("header-mobile")).toBeInTheDocument();
+    const header = screen.getByTestId("legal-header");
+    expect(header).toBeInTheDocument();
+    expect(header).toHaveClass("sticky", "top-0");
+    expect(screen.getByTestId("legal-header-logo-link")).toBeInTheDocument();
+    expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
+    expect(screen.getByTestId("language-toggle")).toBeInTheDocument();
   });
 
-  it("renders Footer", () => {
+  it("header logo link navigates to home", () => {
     renderWithRouter(
       <LegalPageLayout
         title="Test Title"
@@ -158,7 +168,25 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    const logoLink = screen.getByTestId("legal-header-logo-link");
+    expect(logoLink).toHaveAttribute("href", "/");
+  });
+
+  it("back button is clickable", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(
+      <LegalPageLayout
+        title="Test Title"
+        description="Test Description"
+        lastUpdated="2024-01-01"
+        sections={mockSections}
+      />,
+    );
+
+    const backButton = screen.getByTestId("legal-back-button");
+    expect(backButton).toBeInTheDocument();
+    await user.click(backButton);
+    // Button should be clickable (actual navigation tested in E2E)
   });
 
   it("applies custom className", () => {

@@ -189,7 +189,7 @@
   "privacy": {
     "title": "Privacy Policy",
     "description": "Learn how OneLink collects, uses, and protects your data.",
-    "last_updated": "Last updated: November 12, 2025",
+    "last_updated": "Last updated: January 15, 2025",
     "sections": [
       {
         "id": "introduction",
@@ -224,12 +224,36 @@
         ]
       },
       {
+        "id": "legal_basis",
+        "title": "Legal Basis for Processing",
+        "paragraphs": [
+          "Under GDPR (Article 6), we process your personal data based on:"
+        ],
+        "items": [
+          "**Contractual necessity**: To provide OneLink services (account creation, profile management, file storage)",
+          "**Consent**: For optional features like marketing emails (you can withdraw at any time)",
+          "**Legitimate interests**: For security, fraud prevention, service improvement, and analytics",
+          "**Legal obligation**: For tax, accounting, and compliance requirements"
+        ]
+      },
+      {
         "id": "storage",
         "title": "Data Storage & Security",
         "paragraphs": [
           "We rely on Supabase (Postgres + storage) to securely host your data in the EU.",
-          "File uploads are encrypted at rest. Access to internal tooling requires authentication and audit logging.",
-          "We keep your data only as long as necessary to provide the service or until you request deletion."
+          "File uploads are encrypted at rest. Access to internal tooling requires authentication and audit logging."
+        ]
+      },
+      {
+        "id": "retention",
+        "title": "Data Retention",
+        "paragraphs": ["We retain your data only as long as necessary:"],
+        "items": [
+          "**Active accounts**: Until you delete your account or request deletion",
+          "**Inactive accounts**: 2 years after last activity, then automatic deletion",
+          "**Files in drops**: Until the drop is deleted or your account is deleted",
+          "**Analytics data**: Aggregated and anonymized after 2 years",
+          "**Legal requirements**: As required by law (e.g., invoices for 10 years for tax purposes)"
         ]
       },
       {
@@ -245,29 +269,94 @@
         ]
       },
       {
+        "id": "international_transfers",
+        "title": "International Data Transfers",
+        "paragraphs": [
+          "Your data is primarily stored in the EU (Supabase). If we transfer data outside the EU:",
+          "We use Standard Contractual Clauses (SCCs) approved by the European Commission.",
+          "We ensure adequate protection levels and comply with GDPR transfer requirements (Articles 44-49).",
+          "All transfers are documented and subject to appropriate safeguards."
+        ]
+      },
+      {
         "id": "rights",
-        "title": "Your Rights",
-        "paragraphs": ["You are in control of your account:"],
+        "title": "Your GDPR Rights",
+        "paragraphs": [
+          "Under GDPR (Articles 15-22), you have the following rights:"
+        ],
         "items": [
-          "Export your data from Settings → Data export",
-          "Update or delete your profile information at any time",
-          "Request account deletion via Settings → Privacy & Security",
-          "Contact support for additional privacy questions"
+          "**Right of Access (Article 15)**: Request a copy of all personal data we hold about you",
+          "**Right to Rectification (Article 16)**: Correct inaccurate or incomplete data",
+          "**Right to Erasure (Article 17)**: \"Right to be forgotten\" - request deletion of your data",
+          "**Right to Restriction (Article 18)**: Limit how we process your data in certain circumstances",
+          "**Right to Data Portability (Article 20)**: Receive your data in a structured, machine-readable format",
+          "**Right to Object (Article 21)**: Object to processing based on legitimate interests",
+          "**Right to Withdraw Consent**: Withdraw consent at any time (where consent is the legal basis)"
+        ]
+      },
+      {
+        "id": "rights_exercise",
+        "title": "How to Exercise Your Rights",
+        "paragraphs": [
+          "To exercise any of these rights:",
+          "• Use Settings → Data export for data access and portability",
+          "• Use Settings → Privacy & Security → Delete Account for erasure",
+          "• Email support@onelink.app for any other requests",
+          "We will respond within 30 days as required by GDPR."
         ]
       },
       {
         "id": "cookies",
-        "title": "Cookies & Local Storage",
+        "title": "Cookies & Tracking",
+        "paragraphs": ["We use the following technologies:"],
+        "items": [
+          "**Essential cookies/storage**: Session management and authentication (required, no consent needed)",
+          "**Functional storage**: Theme and language preferences via localStorage (required for service functionality)",
+          "**Analytics**: Aggregated usage statistics (if applicable, requires consent)"
+        ]
+      },
+      {
+        "id": "cookies_details",
+        "title": "What We Do NOT Use",
         "paragraphs": [
-          "We use local storage to remember your theme preference, language, and authenticated session.",
-          "We do not use third-party advertising cookies."
+          "We do NOT use:",
+          "• Third-party advertising cookies",
+          "• Social media tracking pixels",
+          "• Cross-site tracking",
+          "• Behavioral advertising"
+        ]
+      },
+      {
+        "id": "children",
+        "title": "Children's Privacy",
+        "paragraphs": [
+          "OneLink is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13.",
+          "If you are a parent or guardian and believe your child has provided us with personal information, please contact us at support@onelink.app and we will delete such information."
+        ]
+      },
+      {
+        "id": "breach",
+        "title": "Data Breach Notification",
+        "paragraphs": [
+          "In case of a data breach affecting your personal data:",
+          "• We will notify the relevant supervisory authority within 72 hours (GDPR Article 33)",
+          "• We will notify affected users without undue delay if the breach poses a high risk (GDPR Article 34)",
+          "• We will provide details about the breach, affected data, and mitigation steps taken"
+        ]
+      },
+      {
+        "id": "automated",
+        "title": "Automated Decision-Making",
+        "paragraphs": [
+          "We do not use automated decision-making or profiling that produces legal effects or significantly affects you (GDPR Article 22)."
         ]
       },
       {
         "id": "changes",
         "title": "Changes to This Policy",
         "paragraphs": [
-          "We may update this policy as OneLink evolves. We will post the new version here and update the “Last updated” date."
+          "We may update this policy as OneLink evolves. We will post the new version here and update the \"Last updated\" date.",
+          "Material changes will be communicated via email or in-app notification."
         ]
       },
       {
@@ -282,7 +371,7 @@
   "terms": {
     "title": "Terms of Service",
     "description": "Please read these terms carefully before using OneLink.",
-    "last_updated": "Last updated: November 12, 2025",
+    "last_updated": "Last updated: January 15, 2025",
     "sections": [
       {
         "id": "acceptance",
@@ -313,17 +402,39 @@
         "title": "4. Acceptable Use",
         "paragraphs": ["You agree not to:"],
         "items": [
-          "Upload malicious content or attempt to breach OneLink's security",
-          "Use OneLink for spam, phishing, or illegal activities",
-          "Misrepresent your identity or impersonate others"
+          "Upload malicious content, viruses, or attempt to breach OneLink's security",
+          "Use OneLink for spam, phishing, harassment, or illegal activities",
+          "Misrepresent your identity or impersonate others",
+          "Violate any applicable laws, regulations, or third-party rights",
+          "Interfere with or disrupt the service or servers",
+          "Use automated systems to access the service without authorization"
+        ]
+      },
+      {
+        "id": "content_ownership",
+        "title": "5. Content Ownership & Intellectual Property",
+        "paragraphs": [
+          "You retain ownership of all content you upload to OneLink (links, files, profile information).",
+          "By uploading content, you grant OneLink a limited, non-exclusive license to store, display, and process your content solely to provide the service.",
+          "You are responsible for ensuring you have the right to upload any content you submit.",
+          "OneLink's trademarks, logos, and service marks are our property and may not be used without permission."
         ]
       },
       {
         "id": "plans",
-        "title": "5. Plans & Billing",
+        "title": "6. Plans & Billing",
         "paragraphs": [
-          "Free accounts have plan limits. Pro subscriptions are billed via Stripe according to the pricing on our website.",
-          "We reserve the right to change prices with notice."
+          "Free accounts have plan limits (4 links max, 2 drops max). Pro subscriptions are billed monthly or annually via Stripe according to the pricing on our website.",
+          "We reserve the right to change prices with 30 days notice. Price changes will not affect your current billing period."
+        ]
+      },
+      {
+        "id": "refunds",
+        "title": "7. Refund Policy",
+        "paragraphs": [
+          "Pro plan subscriptions are billed in advance. Refunds are available within 14 days of initial purchase or renewal.",
+          "To request a refund, contact support@onelink.app. Refunds will be processed to the original payment method within 5-10 business days.",
+          "No refunds are available for partial billing periods or after 14 days from purchase."
         ]
       },
       {
@@ -478,7 +589,6 @@
   "common_uploading": "上传中...",
   "common_remove": "删除",
   "common_loading": "加载中...",
-  "common_hide": "隐藏",
   "dashboard_content_drops_public": "公开",
   "dashboard_content_drops_private": "私有",
   "dashboard_content_drops_make_public": "设为公开",
@@ -599,7 +709,6 @@
   "sessions_days_ago": "{{count}} day ago",
   "sessions_days_ago_plural": "{{count}} days ago",
   "sessions_load_error": "Failed to load sessions. Please try again.",
-  "common_loading": "加载中...",
   "settings_domain_page_description": "Configure custom domains for your OneLink profile",
   "settings_domain_add_title": "Add Custom Domain",
   "settings_domain_label": "Domain",

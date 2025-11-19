@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ChangePasswordModal } from "./ChangePasswordModal";
 import { DeleteAccountModal } from "./DeleteAccountModal";
 
@@ -49,6 +49,20 @@ export function PrivacySecuritySection() {
           >
             {t("settings_delete_account")}
           </button>
+          <div className="pt-2 mt-2 border-t border-gray-200 dark:border-gray-700 flex flex-wrap items-center gap-4">
+            <Link
+              to="/privacy"
+              className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+            >
+              {t("footer_privacy")}
+            </Link>
+            <Link
+              to="/terms"
+              className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+            >
+              {t("footer_terms")}
+            </Link>
+          </div>
         </div>
       </section>
       <ChangePasswordModal

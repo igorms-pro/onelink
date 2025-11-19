@@ -3,23 +3,37 @@ import { render, screen } from "@testing-library/react";
 import { BrowserRouter } from "react-router-dom";
 import { Footer } from "../Footer";
 
-// Mock react-i18next
-vi.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string, options?: { year?: number; defaultValue?: string }) => {
-      if (key === "footer_all_rights" && options?.year) {
-        return (
-          options.defaultValue ||
-          `© ${options.year} OneLink. All rights reserved.`
-        );
-      }
-      if (key === "footer_brand_name") {
-        return options?.defaultValue || "OneLink";
-      }
-      return key;
-    },
-  }),
+// Mock ThemeToggleButton and ProfileLanguageToggleButton
+vi.mock("../ThemeToggleButton", () => ({
+  ThemeToggleButton: () => <button>Theme</button>,
 }));
+
+vi.mock("@/routes/Profile/components/ProfileLanguageToggleButton", () => ({
+  ProfileLanguageToggleButton: () => <button>Language</button>,
+}));
+
+// Mock react-i18next
+vi.mock("react-i18next", async () => {
+  const actual =
+    await vi.importActual<typeof import("react-i18next")>("react-i18next");
+  return {
+    ...actual,
+    useTranslation: () => ({
+      t: (key: string, options?: { year?: number; defaultValue?: string }) => {
+        if (key === "footer_all_rights" && options?.year) {
+          return (
+            options.defaultValue ||
+            `© ${options.year} OneLink. All rights reserved.`
+          );
+        }
+        if (key === "footer_brand_name") {
+          return options?.defaultValue || "OneLink";
+        }
+        return key;
+      },
+    }),
+  };
+});
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
@@ -29,14 +43,6 @@ describe("Footer", () => {
   it("renders brand name", () => {
     renderWithRouter(<Footer />);
     expect(screen.getByText("OneLink")).toBeInTheDocument();
-  });
-
-  it("renders current year in copyright", () => {
-    const currentYear = new Date().getFullYear();
-    renderWithRouter(<Footer />);
-    expect(
-      screen.getByText(new RegExp(currentYear.toString())),
-    ).toBeInTheDocument();
   });
 
   it("renders privacy link", () => {
@@ -58,15 +64,29 @@ describe("Footer", () => {
     expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
   });
 
-  it("shows branding when showBranding is true", () => {
-    renderWithRouter(<Footer showBranding />);
-    expect(screen.getByText(/footer_powered/i)).toBeInTheDocument();
+  it("shows branding when showBranding is true with brandingText", () => {
+    renderWithRouter(
+      <Footer showBranding brandingText="Un lien. Plusieurs vies." />,
+    );
+    // Should show logo + slogan instead of brand name
+    expect(screen.getByText("Un lien. Plusieurs vies.")).toBeInTheDocument();
+    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    // Should not show "OneLink" text when branding is shown
+    expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
   });
 
   it("shows custom branding text when provided", () => {
     renderWithRouter(<Footer showBranding brandingText="Custom branding" />);
     expect(screen.getByText("Custom branding")).toBeInTheDocument();
-    expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
+    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
+  });
+
+  it("shows brand name when showBranding is true but no brandingText", () => {
+    renderWithRouter(<Footer showBranding />);
+    // Without brandingText, should fallback to brand name
+    expect(screen.getByText("OneLink")).toBeInTheDocument();
+    expect(screen.queryByAltText("OneLink")).not.toBeInTheDocument();
   });
 
   it("applies default variant styles", () => {

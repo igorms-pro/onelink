@@ -191,7 +191,7 @@ describe("Profile", () => {
     expect(screen.getByTestId("footer")).toBeInTheDocument();
   });
 
-  it("does not render footer for pro plan", () => {
+  it("renders footer for pro plan (without branding)", () => {
     mockProfileData.isLoading = false;
     mockProfileData.profile = {
       slug: "test-user",
@@ -207,6 +207,9 @@ describe("Profile", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.queryByTestId("footer")).not.toBeInTheDocument();
+    // Footer is always rendered now, but without branding for Pro
+    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    // Branding should not be shown for Pro
+    expect(screen.queryByText(/profile_slogan/i)).not.toBeInTheDocument();
   });
 });

@@ -61,15 +61,15 @@ describe("Privacy", () => {
     ).toHaveTextContent(/introduction/i);
   });
 
-  it("renders back to auth link", () => {
+  it("renders back button", () => {
     render(
       <MemoryRouter>
         <Privacy />
       </MemoryRouter>,
     );
 
-    const backLink = screen.getByTestId("legal-back-to-auth-link");
-    expect(backLink).toBeInTheDocument();
-    expect(backLink).toHaveTextContent(/back to sign in/i);
+    const backButton = screen.getByTestId("legal-back-button");
+    expect(backButton).toBeInTheDocument();
+    expect(backButton).toHaveTextContent(/back/i);
   });
 });
