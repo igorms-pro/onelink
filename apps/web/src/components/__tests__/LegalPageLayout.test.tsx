@@ -10,14 +10,15 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
-// Mock HeaderMobileSignIn
-vi.mock("../HeaderMobileSignIn", () => ({
-  HeaderMobileSignIn: () => <div data-testid="header-mobile">Header</div>,
+// Mock ThemeToggleButton and LanguageToggleButton
+vi.mock("../ThemeToggleButton", () => ({
+  ThemeToggleButton: () => <button data-testid="theme-toggle">Theme</button>,
 }));
 
-// Mock Footer
-vi.mock("../Footer", () => ({
-  Footer: () => <div data-testid="footer">Footer</div>,
+vi.mock("../LanguageToggleButton", () => ({
+  LanguageToggleButton: () => (
+    <button data-testid="language-toggle">Language</button>
+  ),
 }));
 
 const mockSections = [
@@ -123,7 +124,7 @@ describe("LegalPageLayout", () => {
     expect(screen.getByText("Item 4")).toBeInTheDocument();
   });
 
-  it("renders back to auth link", () => {
+  it("renders back button", () => {
     renderWithRouter(
       <LegalPageLayout
         title="Test Title"
@@ -132,12 +133,12 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    const backLink = screen.getByRole("link", { name: /legal_back_to_auth/i });
-    expect(backLink).toBeInTheDocument();
-    expect(backLink).toHaveAttribute("href", "/auth");
+    const backButton = screen.getByTestId("legal-back-button");
+    expect(backButton).toBeInTheDocument();
+    expect(backButton).toHaveTextContent("back");
   });
 
-  it("renders HeaderMobileSignIn", () => {
+  it("renders sticky header with logo", () => {
     renderWithRouter(
       <LegalPageLayout
         title="Test Title"
@@ -146,19 +147,11 @@ describe("LegalPageLayout", () => {
         sections={mockSections}
       />,
     );
-    expect(screen.getByTestId("header-mobile")).toBeInTheDocument();
-  });
-
-  it("renders Footer", () => {
-    renderWithRouter(
-      <LegalPageLayout
-        title="Test Title"
-        description="Test Description"
-        lastUpdated="2024-01-01"
-        sections={mockSections}
-      />,
-    );
-    expect(screen.getByTestId("footer")).toBeInTheDocument();
+    const header = document.querySelector("header");
+    expect(header).toBeInTheDocument();
+    expect(header).toHaveClass("sticky", "top-0");
+    expect(screen.getByTestId("theme-toggle")).toBeInTheDocument();
+    expect(screen.getByTestId("language-toggle")).toBeInTheDocument();
   });
 
   it("applies custom className", () => {
