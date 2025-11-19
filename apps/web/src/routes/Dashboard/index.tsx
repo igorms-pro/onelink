@@ -59,7 +59,7 @@ export default function Dashboard() {
       </div>
 
       {/* Headers - sticky on mobile, participate in flexbox */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <Header onSettingsClick={() => navigate("/settings")} />
         <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
       </div>
