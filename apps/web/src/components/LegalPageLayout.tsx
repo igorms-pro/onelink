@@ -3,7 +3,6 @@ import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import { HeaderMobileSignIn } from "./HeaderMobileSignIn";
-import { Footer } from "./Footer";
 
 export interface LegalSectionContent {
   id: string;
@@ -39,7 +38,7 @@ export function LegalPageLayout({
       <HeaderMobileSignIn />
       <div className="relative isolate overflow-hidden bg-linear-to-r from-purple-500/10 via-purple-500/5 to-blue-500/10 dark:from-purple-500/20 dark:via-purple-500/10 dark:to-blue-500/20">
         <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-linear-to-l from-purple-500/10 to-transparent blur-3xl"></div>
-        <div className="mx-auto flex w-full max-w-4xl flex-col gap-6 px-4 pb-16 pt-10 sm:px-6 lg:px-8 lg:pt-16">
+        <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 pb-8 pt-6 sm:px-6 sm:pt-8 lg:px-8">
           <Link
             to="/auth"
             data-testid="legal-back-to-auth-link"
@@ -72,7 +71,7 @@ export function LegalPageLayout({
       </div>
 
       <main className="flex-1">
-        <div className="mx-auto w-full max-w-4xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+        <div className="mx-auto w-full max-w-4xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
           <div className="space-y-12">
             {sections.map((section) => (
               <section
@@ -103,7 +102,6 @@ export function LegalPageLayout({
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
