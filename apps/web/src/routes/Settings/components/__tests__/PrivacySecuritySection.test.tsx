@@ -5,6 +5,14 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { PrivacySecuritySection } from "../PrivacySecuritySection";
 
+// Mock useAuth
+const mockSignOut = vi.fn();
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    signOut: mockSignOut,
+  }),
+}));
+
 // Mock react-i18next
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({
@@ -55,6 +63,7 @@ const renderWithRouter = (component: React.ReactElement) => {
 describe("PrivacySecuritySection", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockSignOut.mockResolvedValue(undefined);
   });
 
   it("renders section with title", () => {
@@ -70,6 +79,7 @@ describe("PrivacySecuritySection", () => {
     expect(screen.getByTestId("settings-change-password")).toBeInTheDocument();
     expect(screen.getByTestId("settings-two-factor")).toBeInTheDocument();
     expect(screen.getByTestId("settings-delete-account")).toBeInTheDocument();
+    expect(screen.getByTestId("settings-sign-out")).toBeInTheDocument();
   });
 
   it("opens change password modal when button is clicked", async () => {
@@ -94,5 +104,14 @@ describe("PrivacySecuritySection", () => {
     const twoFactorButton = screen.getByTestId("settings-two-factor");
     await user.click(twoFactorButton);
     expect(mockNavigate).toHaveBeenCalledWith("/settings/2fa");
+  });
+
+  it("calls signOut and navigates when sign out button is clicked", async () => {
+    const user = userEvent.setup();
+    renderWithRouter(<PrivacySecuritySection />);
+    const signOutButton = screen.getByTestId("settings-sign-out");
+    await user.click(signOutButton);
+    expect(mockSignOut).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledWith("/auth");
   });
 });
