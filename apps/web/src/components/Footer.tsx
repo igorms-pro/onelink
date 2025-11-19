@@ -63,17 +63,17 @@ export function Footer({
               {showControls && (
                 <>
                   <div className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="flex items-center gap-1 sm:gap-1.5">
                       <ProfileLanguageToggleButton />
-                      <span className="hidden sm:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
+                      <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
                         {t("language")}
                       </span>
                     </div>
                     <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1 sm:gap-1.5">
                       <ThemeToggleButton />
-                      <span className="hidden sm:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
+                      <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
                         {t("theme")}
                       </span>
                     </div>
