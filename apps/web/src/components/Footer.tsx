@@ -54,9 +54,9 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-              {/* Language & Theme Controls - same line as slogan on mobile */}
+              {/* Language & Theme Controls - same line as slogan on mobile, with space before */}
               {showControls && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 ml-2 sm:ml-4">
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
                   <div className="flex items-center gap-1">
                     <ProfileLanguageToggleButton />
