@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
@@ -62,22 +62,6 @@ export default function Settings() {
           <DataExportSection />
           <ApiIntegrationsSection />
           <PrivacySecuritySection />
-        </div>
-
-        {/* Legal Links */}
-        <div className="mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-wrap items-center gap-4 text-sm">
-          <Link
-            to="/privacy"
-            className="text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-          >
-            {t("footer_privacy")}
-          </Link>
-          <Link
-            to="/terms"
-            className="text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-          >
-            {t("footer_terms")}
-          </Link>
         </div>
       </main>
     </div>
