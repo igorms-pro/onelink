@@ -1,4 +1,5 @@
-import { PlanType, PlanTypeValue } from "@/lib/types/plan";
+import { PlanType } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 
 export function maybeInjectGA(plan: PlanTypeValue) {
   const gaId = import.meta.env.VITE_GA_ID as string | undefined;

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateProfile, getSelfPlan } from "@/lib/profile";
-import { PlanTypeValue, getDefaultPlan } from "@/lib/types/plan";
+import { getDefaultPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 import type { ProfileForm } from "@/components/ProfileEditor";
 import type { LinkRow } from "@/components/LinksList";
 import type { DropRow, SubmissionRow } from "../types";

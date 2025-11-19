@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { PlanTypeValue, isProPlan } from "@/lib/types/plan";
+import { isProPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 
 interface BillingSectionProps {
   plan: PlanTypeValue | null;

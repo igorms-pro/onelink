@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
-import { PlanType, PlanTypeValue, getDefaultPlan } from "./types/plan";
+import { PlanType, getDefaultPlan } from "./types/plan";
+import type { PlanTypeValue } from "./types/plan";
 
 export type ProfileRow = {
   id: string;

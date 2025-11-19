@@ -4,7 +4,8 @@ import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
-import { PlanTypeValue, isProPlan } from "@/lib/types/plan";
+import { isProPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 import { useDashboardData } from "../Dashboard/hooks/useDashboardData";
 import {
   NotificationsSection,

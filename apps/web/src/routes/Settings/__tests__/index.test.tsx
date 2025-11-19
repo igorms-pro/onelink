@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { PlanType, PlanTypeValue } from "@/lib/types/plan";
+import { PlanType } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 import Settings from "../index";
 
 // Mock dependencies - use the same structure as vitest.setup.ts but with getUser

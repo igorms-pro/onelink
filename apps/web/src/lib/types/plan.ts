@@ -1,11 +1,13 @@
 /**
- * Plan types enum
+ * Plan types constants
  * Centralized definition for all plan types in the application
  */
-export enum PlanType {
-  FREE = "free",
-  PRO = "pro",
-}
+export const PlanType = {
+  FREE: "free",
+  PRO: "pro",
+} as const;
+
+export type PlanType = (typeof PlanType)[keyof typeof PlanType];
 
 /**
  * Type alias for plan type (allows enum or string for backward compatibility)
@@ -29,6 +31,6 @@ export function isFreePlan(plan: PlanTypeValue | null | undefined): boolean {
 /**
  * Helper function to get default plan (Free)
  */
-export function getDefaultPlan(): PlanType {
+export function getDefaultPlan(): typeof PlanType.FREE {
   return PlanType.FREE;
 }

@@ -3,12 +3,8 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { isBaseHost } from "../lib/domain";
 import { getPlanBySlug } from "../lib/profile";
-import {
-  PlanType,
-  PlanTypeValue,
-  getDefaultPlan,
-  isProPlan,
-} from "../lib/types/plan";
+import { PlanType, getDefaultPlan, isProPlan } from "../lib/types/plan";
+import type { PlanTypeValue } from "../lib/types/plan";
 
 type PublicLink = {
   link_id: string;
