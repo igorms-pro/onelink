@@ -2,6 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { BrowserRouter } from "react-router-dom";
+import { PlanType } from "@/lib/types/plan";
 import Dashboard from "../index";
 
 // Mock dependencies
@@ -109,7 +110,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
       loading: false,
     });
 
@@ -139,7 +140,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(
@@ -171,7 +172,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [{ submission_id: "sub-1" }],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(
@@ -216,7 +217,7 @@ describe("Dashboard", () => {
       ],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(
@@ -253,7 +254,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "pro",
+      plan: PlanType.PRO,
     });
 
     render(
@@ -289,7 +290,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(
@@ -320,7 +321,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(
@@ -353,7 +354,7 @@ describe("Dashboard", () => {
       drops: [],
       setDrops: vi.fn(),
       submissions: [],
-      plan: "free",
+      plan: PlanType.FREE,
     });
 
     render(

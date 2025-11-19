@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateProfile, getSelfPlan } from "@/lib/profile";
+import { getDefaultPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 import type { ProfileForm } from "@/components/ProfileEditor";
 import type { LinkRow } from "@/components/LinksList";
 import type { DropRow, SubmissionRow } from "../types";
@@ -12,7 +14,7 @@ export function useDashboardData(userId: string | null) {
   const [links, setLinks] = useState<LinkRow[]>([]);
   const [drops, setDrops] = useState<DropRow[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionRow[]>([]);
-  const [plan, setPlan] = useState<string>("free");
+  const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

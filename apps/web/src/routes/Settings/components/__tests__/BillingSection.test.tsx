@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import React from "react";
 import { BrowserRouter } from "react-router-dom";
+import { PlanType } from "@/lib/types/plan";
 import { BillingSection } from "../BillingSection";
 
 // Mock react-i18next
@@ -32,31 +33,31 @@ describe("BillingSection", () => {
   });
 
   it("renders section with title", () => {
-    renderWithRouter(<BillingSection plan="free" />);
+    renderWithRouter(<BillingSection plan={PlanType.FREE} />);
     expect(screen.getByTestId("settings-billing-section")).toBeInTheDocument();
     expect(screen.getByText("settings_billing")).toBeInTheDocument();
   });
 
   it("displays Free badge for free plan", () => {
-    renderWithRouter(<BillingSection plan="free" />);
+    renderWithRouter(<BillingSection plan={PlanType.FREE} />);
     const badge = screen.getByTestId("settings-current-plan-badge");
     expect(badge).toHaveTextContent("Free");
   });
 
   it("displays Pro badge for pro plan", () => {
-    renderWithRouter(<BillingSection plan="pro" />);
+    renderWithRouter(<BillingSection plan={PlanType.PRO} />);
     const badge = screen.getByTestId("settings-current-plan-badge");
     expect(badge).toHaveTextContent("Pro");
   });
 
   it("shows upgrade button for free plan", () => {
-    renderWithRouter(<BillingSection plan="free" />);
+    renderWithRouter(<BillingSection plan={PlanType.FREE} />);
     expect(screen.getByTestId("settings-upgrade-to-pro")).toBeInTheDocument();
     expect(screen.getByText("settings_upgrade_to_pro")).toBeInTheDocument();
   });
 
   it("shows manage payment and billing history for pro plan", () => {
-    renderWithRouter(<BillingSection plan="pro" />);
+    renderWithRouter(<BillingSection plan={PlanType.PRO} />);
     expect(screen.getByTestId("settings-manage-payment")).toBeInTheDocument();
     expect(screen.getByTestId("settings-billing-history")).toBeInTheDocument();
     expect(
@@ -66,7 +67,7 @@ describe("BillingSection", () => {
 
   it("navigates to billing page when upgrade button is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<BillingSection plan="free" />);
+    renderWithRouter(<BillingSection plan={PlanType.FREE} />);
     const upgradeButton = screen.getByTestId("settings-upgrade-to-pro");
     await user.click(upgradeButton);
     expect(mockNavigate).toHaveBeenCalledWith("/settings/billing");
@@ -74,7 +75,7 @@ describe("BillingSection", () => {
 
   it("navigates to billing page when manage payment is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<BillingSection plan="pro" />);
+    renderWithRouter(<BillingSection plan={PlanType.PRO} />);
     const managePaymentButton = screen.getByTestId("settings-manage-payment");
     await user.click(managePaymentButton);
     expect(mockNavigate).toHaveBeenCalledWith("/settings/billing");
@@ -82,7 +83,7 @@ describe("BillingSection", () => {
 
   it("navigates to billing page when billing history is clicked", async () => {
     const user = userEvent.setup();
-    renderWithRouter(<BillingSection plan="pro" />);
+    renderWithRouter(<BillingSection plan={PlanType.PRO} />);
     const billingHistoryButton = screen.getByTestId("settings-billing-history");
     await user.click(billingHistoryButton);
     expect(mockNavigate).toHaveBeenCalledWith("/settings/billing");

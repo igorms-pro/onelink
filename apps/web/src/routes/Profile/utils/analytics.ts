@@ -1,6 +1,9 @@
-export function maybeInjectGA(plan: string) {
+import { PlanType } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
+
+export function maybeInjectGA(plan: PlanTypeValue) {
   const gaId = import.meta.env.VITE_GA_ID as string | undefined;
-  if (plan !== "pro" || !gaId) return;
+  if (plan !== PlanType.PRO || !gaId) return;
   if (document.getElementById("ga-script")) return;
 
   const s = document.createElement("script");

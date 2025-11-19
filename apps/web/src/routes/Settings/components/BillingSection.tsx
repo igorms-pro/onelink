@@ -1,15 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { isProPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 
 interface BillingSectionProps {
-  plan: "free" | "pro" | null;
+  plan: PlanTypeValue | null;
 }
 
 export function BillingSection({ plan }: BillingSectionProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const isPro = plan === "pro";
+  const isPro = isProPlan(plan);
 
   const handleNavigateToBilling = () => {
     navigate("/settings/billing");

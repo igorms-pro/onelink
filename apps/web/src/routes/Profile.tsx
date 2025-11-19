@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { isBaseHost } from "../lib/domain";
 import { getPlanBySlug } from "../lib/profile";
+import { PlanType, getDefaultPlan, isProPlan } from "../lib/types/plan";
+import type { PlanTypeValue } from "../lib/types/plan";
 
 type PublicLink = {
   link_id: string;
@@ -22,7 +24,7 @@ export default function Profile() {
   const { slug } = useParams();
   const [links, setLinks] = useState<PublicLink[]>([]);
   const [profile, setProfile] = useState<PublicProfile | null>(null);
-  const [plan, setPlan] = useState<string>("free");
+  const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
   const host = window.location.host;
 
   useEffect(() => {
@@ -100,9 +102,9 @@ export default function Profile() {
     return s;
   }
 
-  function maybeInjectGA(p: string) {
+  function maybeInjectGA(p: PlanTypeValue) {
     const gaId = import.meta.env.VITE_GA_ID as string | undefined;
-    if (p !== "pro" || !gaId) return;
+    if (p !== PlanType.PRO || !gaId) return;
     if (document.getElementById("ga-script")) return;
     const s = document.createElement("script");
     s.id = "ga-script";
@@ -151,7 +153,7 @@ export default function Profile() {
         ))}
       </div>
 
-      {isBaseHost(host) && plan !== "pro" && (
+      {isBaseHost(host) && !isProPlan(plan) && (
         <footer className="mt-8 text-center text-sm text-gray-500">
           Powered by OneMeet
         </footer>

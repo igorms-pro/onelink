@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { PlanType } from "@/lib/types/plan";
 import type { Dispatch, SetStateAction } from "react";
 import type { User } from "@supabase/supabase-js";
 import type { LinkRow } from "@/components/LinksList";
@@ -112,7 +113,7 @@ const createDashboardData = (
   drops: [],
   setDrops: createDispatch<DropRow[]>(),
   submissions: emptySubmissions,
-  plan: "free",
+  plan: PlanType.FREE,
   loading: false,
   ...overrides,
 });
@@ -200,7 +201,7 @@ describe.skip("BillingPage", () => {
 
   it("should display pro plan badge for pro users", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -289,7 +290,7 @@ describe.skip("BillingPage", () => {
 
   it("should show payment method section for pro users", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -307,7 +308,7 @@ describe.skip("BillingPage", () => {
 
   it("should show no payment method message when no card is on file", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -325,7 +326,7 @@ describe.skip("BillingPage", () => {
 
   it("should call goToPortal when add card button is clicked", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
     vi.mocked(goToPortal).mockResolvedValue(undefined);
 
@@ -349,7 +350,7 @@ describe.skip("BillingPage", () => {
 
   it("should show cancel subscription button for pro users", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -369,7 +370,7 @@ describe.skip("BillingPage", () => {
     window.confirm = vi.fn(() => true);
 
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -390,7 +391,7 @@ describe.skip("BillingPage", () => {
 
   it("should show billing history section for pro users", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(
@@ -408,7 +409,7 @@ describe.skip("BillingPage", () => {
 
   it("should show no invoices message when no invoices exist", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: "pro" }),
+      createDashboardData({ plan: PlanType.PRO }),
     );
 
     render(

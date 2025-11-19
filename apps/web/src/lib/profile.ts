@@ -1,4 +1,6 @@
 import { supabase } from "./supabase";
+import { PlanType, getDefaultPlan } from "./types/plan";
+import type { PlanTypeValue } from "./types/plan";
 
 export type ProfileRow = {
   id: string;
@@ -20,13 +22,13 @@ export const FREE_PLAN_DROPS_LIMIT = 2;
 
 /**
  * Get links limit for a given plan
- * @param plan - Plan type ("free" | "pro" | string)
+ * @param plan - Plan type (PlanType enum or string)
  * @returns Limit number (4 for free, Infinity for pro/unlimited)
  *
  * Future: Can be modified to fetch from DB if dynamic limits are needed
  */
-export function getPlanLinksLimit(plan: "free" | "pro" | string): number {
-  if (plan === "pro") {
+export function getPlanLinksLimit(plan: PlanTypeValue): number {
+  if (plan === PlanType.PRO) {
     return Infinity;
   }
   return FREE_PLAN_LINKS_LIMIT;
@@ -34,13 +36,13 @@ export function getPlanLinksLimit(plan: "free" | "pro" | string): number {
 
 /**
  * Get drops limit for a given plan
- * @param plan - Plan type ("free" | "pro" | string)
+ * @param plan - Plan type (PlanType enum or string)
  * @returns Limit number (2 for free, Infinity for pro/unlimited)
  *
  * Future: Can be modified to fetch from DB if dynamic limits are needed
  */
-export function getPlanDropsLimit(plan: "free" | "pro" | string): number {
-  if (plan === "pro") {
+export function getPlanDropsLimit(plan: PlanTypeValue): number {
+  if (plan === PlanType.PRO) {
     return Infinity;
   }
   return FREE_PLAN_DROPS_LIMIT;
@@ -57,8 +59,8 @@ export const FREE_PLAN_ITEM_LIMIT =
  * @deprecated Use getPlanLinksLimit and getPlanDropsLimit instead
  * Kept for backward compatibility
  */
-export function getPlanItemLimit(plan: "free" | "pro" | string): number {
-  if (plan === "pro") {
+export function getPlanItemLimit(plan: PlanTypeValue): number {
+  if (plan === PlanType.PRO) {
     return Infinity;
   }
   return FREE_PLAN_ITEM_LIMIT;
@@ -74,7 +76,7 @@ export const FREE_DROP_LIMIT = FREE_PLAN_ITEM_LIMIT;
  * @deprecated Use getPlanItemLimit instead
  * Kept for backward compatibility
  */
-export function getDropLimit(plan: "free" | "pro" | string): number {
+export function getDropLimit(plan: PlanTypeValue): number {
   return getPlanItemLimit(plan);
 }
 
@@ -110,22 +112,18 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
   return inserted.data as ProfileRow;
 }
 
-export async function getSelfPlan(
-  userId: string,
-): Promise<"free" | "pro" | string> {
+export async function getSelfPlan(userId: string): Promise<PlanTypeValue> {
   const { data, error } = await supabase.rpc("get_plan_by_user", {
     p_user_id: userId,
   });
-  if (error) return "free";
-  return (data ?? "free") as "free" | "pro" | string;
+  if (error) return getDefaultPlan();
+  return (data ?? getDefaultPlan()) as PlanTypeValue;
 }
 
-export async function getPlanBySlug(
-  slug: string,
-): Promise<"free" | "pro" | string> {
+export async function getPlanBySlug(slug: string): Promise<PlanTypeValue> {
   const { data, error } = await supabase.rpc("get_plan_by_slug", {
     p_slug: slug,
   });
-  if (error) return "free";
-  return (data ?? "free") as "free" | "pro" | string;
+  if (error) return getDefaultPlan();
+  return (data ?? getDefaultPlan()) as PlanTypeValue;
 }
