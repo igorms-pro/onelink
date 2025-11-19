@@ -72,15 +72,29 @@ describe("Footer", () => {
     expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
   });
 
-  it("shows branding when showBranding is true", () => {
-    renderWithRouter(<Footer showBranding />);
-    expect(screen.getByText(/footer_powered/i)).toBeInTheDocument();
+  it("shows branding when showBranding is true with brandingText", () => {
+    renderWithRouter(
+      <Footer showBranding brandingText="Un lien. Plusieurs vies." />,
+    );
+    // Should show logo + slogan instead of brand name
+    expect(screen.getByText("Un lien. Plusieurs vies.")).toBeInTheDocument();
+    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    // Should not show "OneLink" text when branding is shown
+    expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
   });
 
   it("shows custom branding text when provided", () => {
     renderWithRouter(<Footer showBranding brandingText="Custom branding" />);
     expect(screen.getByText("Custom branding")).toBeInTheDocument();
-    expect(screen.queryByText(/footer_powered/i)).not.toBeInTheDocument();
+    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
+  });
+
+  it("shows brand name when showBranding is true but no brandingText", () => {
+    renderWithRouter(<Footer showBranding />);
+    // Without brandingText, should fallback to brand name
+    expect(screen.getByText("OneLink")).toBeInTheDocument();
+    expect(screen.queryByAltText("OneLink")).not.toBeInTheDocument();
   });
 
   it("applies default variant styles", () => {
