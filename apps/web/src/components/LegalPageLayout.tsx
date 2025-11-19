@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
@@ -28,8 +28,18 @@ export function LegalPageLayout({
   className,
 }: LegalPageLayoutProps) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const appTitle =
     i18n?.exists && i18n.exists("app_title") ? t("app_title") : "OneLink";
+
+  const handleBack = () => {
+    // Try to go back, but if no history, go to home
+    if (window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <div
@@ -70,7 +80,7 @@ export function LegalPageLayout({
         <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-linear-to-l from-purple-500/10 to-transparent blur-3xl"></div>
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 pb-8 pt-6 sm:px-6 sm:pt-8 lg:px-8">
           <button
-            onClick={() => window.history.back()}
+            onClick={handleBack}
             data-testid="legal-back-button"
             className="inline-flex w-fit items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-purple-700 shadow-sm transition hover:bg-white dark:bg-white/10 dark:text-purple-200 dark:hover:bg-white/20 cursor-pointer"
           >
