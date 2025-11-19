@@ -33,8 +33,8 @@ export function Footer({
         <div className="mx-auto flex w-full max-w-5xl flex-col gap-4 px-4 py-2 sm:py-4 text-sm text-gray-600 dark:text-gray-400">
           {/* Main footer content */}
           <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
-            {/* Mobile: Logo + Slogan + Privacy/Terms on same line */}
-            {/* Desktop: Logo + Slogan on left, Privacy/Terms on right */}
+            {/* Mobile: Logo + Slogan + Language/Theme on same line */}
+            {/* Desktop: Logo + Slogan on left, Privacy/Terms/Controls on right */}
             <div className="flex flex-wrap items-center gap-2 sm:gap-4">
               {/* Logo + Slogan (replaces brand name) */}
               {showBranding && brandingText ? (
@@ -55,27 +55,10 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-              {/* Privacy & Terms - same line on mobile */}
-              <div className="flex items-center gap-3 sm:gap-4">
-                <Link
-                  to="/privacy"
-                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-                >
-                  {t("footer_privacy")}
-                </Link>
-                <Link
-                  to="/terms"
-                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-                >
-                  {t("footer_terms")}
-                </Link>
-              </div>
-            </div>
-            {/* Language & Theme Controls (for profile pages) */}
-            {showControls && (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="hidden sm:block h-4 w-px bg-gray-300 dark:bg-gray-700" />
+              {/* Language & Theme Controls - same line as slogan on mobile */}
+              {showControls && (
                 <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
                   <div className="flex items-center gap-1 sm:gap-1.5">
                     <ProfileLanguageToggleButton />
                     <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
@@ -90,8 +73,42 @@ export function Footer({
                     </span>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+            {/* Privacy & Terms - right side on desktop */}
+            <div className="flex items-center gap-3 sm:gap-4">
+              <Link
+                to="/privacy"
+                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+              >
+                {t("footer_privacy")}
+              </Link>
+              <Link
+                to="/terms"
+                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+              >
+                {t("footer_terms")}
+              </Link>
+              {/* Desktop separator before controls */}
+              {showControls && (
+                <div className="hidden sm:flex items-center gap-2 sm:gap-3">
+                  <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <ProfileLanguageToggleButton />
+                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
+                      {t("language")}
+                    </span>
+                  </div>
+                  <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                  <div className="flex items-center gap-1 sm:gap-1.5">
+                    <ThemeToggleButton />
+                    <span className="hidden md:inline text-xs text-gray-600 dark:text-gray-400 font-medium">
+                      {t("theme")}
+                    </span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
