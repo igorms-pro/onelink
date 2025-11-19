@@ -15,12 +15,8 @@ import {
 } from "./components";
 import type { TabId } from "./types";
 
-import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/profile";
-import { PlanType, isProPlan } from "@/lib/types/plan";
-
-// Get free plan limits (can be easily migrated to DB later)
-const getFreeLinksLimit = () => getPlanLinksLimit(PlanType.FREE);
-const getFreeDropsLimit = () => getPlanDropsLimit(PlanType.FREE);
+import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
+import { isProPlan } from "@/lib/types/plan";
 
 export default function Dashboard() {
   const { t } = useTranslation();
