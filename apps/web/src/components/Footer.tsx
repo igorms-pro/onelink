@@ -35,7 +35,7 @@ export function Footer({
           <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Mobile: Logo + Slogan + Language/Theme on same line */}
             {/* Desktop: Logo + Slogan on left */}
-            <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <div className="flex justify-between items-center gap-2 sm:gap-4 sm:justify-start">
               {showBranding && brandingText ? (
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
@@ -54,9 +54,9 @@ export function Footer({
                   {t("footer_brand_name", { defaultValue: "OneLink" })}
                 </span>
               )}
-              {/* Language & Theme Controls - same line as slogan on mobile, with space before */}
+              {/* Language & Theme Controls - same line as slogan on mobile, right side on desktop */}
               {showControls && (
-                <div className="flex items-center gap-2 ml-2 sm:ml-4">
+                <div className="flex items-center gap-2 ml-2 sm:hidden">
                   <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
                   <div className="flex items-center gap-1">
                     <ProfileLanguageToggleButton />
@@ -68,8 +68,8 @@ export function Footer({
                 </div>
               )}
             </div>
-            {/* Privacy & Terms - separate line on mobile, right side on desktop */}
-            <div className="flex items-center gap-4">
+            {/* Privacy & Terms - separate line on mobile, center on desktop */}
+            <div className="flex items-center justify-center gap-4">
               <Link
                 to="/privacy"
                 className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
@@ -83,6 +83,19 @@ export function Footer({
                 {t("footer_terms")}
               </Link>
             </div>
+            {/* Language & Theme Controls - right side on desktop only */}
+            {showControls && (
+              <div className="hidden sm:flex items-center gap-2">
+                <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                <div className="flex items-center gap-1">
+                  <ProfileLanguageToggleButton />
+                </div>
+                <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                <div className="flex items-center gap-1">
+                  <ThemeToggleButton />
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
