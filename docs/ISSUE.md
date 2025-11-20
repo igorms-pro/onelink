@@ -389,78 +389,32 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 - Webhook now saves `stripe_id` (customer ID) in `users` table
 - Added error handling in webhook `updateUserPlan()` function
 
-**Remaining Setup (Manual):**
-1. **Deploy Edge Functions:**
-   ```bash
-   supabase functions deploy stripe-create-checkout
-   supabase functions deploy stripe-portal
-   supabase functions deploy stripe-webhook
-   ```
+**Setup Status:**
+- ✅ Edge Functions déployées
+- ✅ Webhook Stripe configuré
+- ✅ Secrets Supabase configurés (4 Price IDs, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SITE_URL, SUPA_DATABASE_URL, SUPA_DATABASE_SERVICE_ROLE_KEY)
 
-2. **Configure Stripe Webhook in Stripe Dashboard:**
-   - Go to Stripe Dashboard → Developers → Webhooks
-   - Add endpoint: `https://<your-project>.supabase.co/functions/v1/stripe-webhook`
-   - Select events:
-     - `checkout.session.completed`
-     - `customer.subscription.created`
-     - `customer.subscription.updated`
-     - `customer.subscription.deleted`
-   - Copy webhook signing secret
-   - Add `STRIPE_WEBHOOK_SECRET` to Supabase Edge Function secrets
-
-3. **Environment Variables (Supabase Edge Functions):**
-   - `STRIPE_SECRET_KEY` - Stripe secret key
-   - `STRIPE_WEBHOOK_SECRET` - Webhook signing secret (from step 2)
-   - `PRICE_ID` - Stripe Price ID for Pro subscription
-   - `SITE_URL` - Your site URL (e.g., `https://onelink.app`)
-   - `SUPABASE_URL` - Your Supabase project URL
-   - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (for webhook)
-
-**Note:** Code is complete. Only Stripe Dashboard configuration and deployment needed.
+**Remaining:**
+- ⏳ Tester le flow complet de checkout (Starter/Pro, monthly/yearly)
+- ⏳ Vérifier que les webhooks mettent à jour correctement les plans dans la DB
 
 ---
 
-## Stripe Integration Setup (TODO)
+## Stripe Integration Setup
 
-**Status:** 🔄 Configuration manuelle requise
+**Status:** ✅ Configuration terminée
 
-**Problème:** Le code Stripe est complet, mais il manque la configuration dans Stripe Dashboard et le déploiement des Edge Functions.
+**✅ Complété:**
+- Edge Functions déployées
+- Webhook Stripe configuré avec les 4 événements
+- 9 secrets Supabase configurés (4 Price IDs, STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, SITE_URL, SUPA_DATABASE_URL, SUPA_DATABASE_SERVICE_ROLE_KEY)
+- Code corrigé (bug webhook, sauvegarde stripe_id, CORS headers)
 
-**📖 Guide complet :** Voir [`docs/STRIPE_SETUP_GUIDE.md`](./STRIPE_SETUP_GUIDE.md) pour les étapes détaillées.
+**📖 Guide complet :** Voir [`docs/STRIPE_SETUP_GUIDE.md`](./STRIPE_SETUP_GUIDE.md) pour référence.
 
-### Ce qui manque :
-
-1. **Déployer les Edge Functions Supabase:**
-   ```bash
-   supabase functions deploy stripe-create-checkout
-   supabase functions deploy stripe-portal
-   supabase functions deploy stripe-webhook
-   ```
-
-2. **Configurer le Webhook Stripe:**
-   - Aller dans Stripe Dashboard → Developers → Webhooks
-   - Ajouter endpoint: `https://<project-id>.supabase.co/functions/v1/stripe-webhook`
-   - Sélectionner les événements:
-     - `checkout.session.completed`
-     - `customer.subscription.created`
-     - `customer.subscription.updated`
-     - `customer.subscription.deleted`
-   - Copier le "Signing secret"
-   - Ajouter `STRIPE_WEBHOOK_SECRET` dans les secrets Supabase
-
-3. **Variables d'environnement Supabase (Edge Functions):**
-   - `STRIPE_SECRET_KEY` - Clé secrète Stripe
-   - `STRIPE_WEBHOOK_SECRET` - Secret du webhook (depuis Stripe Dashboard)
-   - `PRICE_ID` - ID du prix Stripe pour l'abonnement Pro
-   - `SITE_URL` - URL du site (ex: `https://onelink.app`)
-   - `SUPABASE_URL` - URL du projet Supabase
-   - `SUPABASE_SERVICE_ROLE_KEY` - Clé service role (pour le webhook)
-
-### Code corrigé :
-- ✅ Bug webhook corrigé (`updateUserPlan` filtre maintenant par `userId`)
-- ✅ Sauvegarde `stripe_id` dans la table `users`
-- ✅ CORS headers ajoutés aux Edge Functions
-- ✅ Gestion d'erreurs améliorée
+**⏳ Reste à faire:**
+- Tester le flow complet de checkout (Starter/Pro, monthly/yearly)
+- Vérifier que les webhooks mettent à jour correctement les plans dans la DB
 
 ---
 
