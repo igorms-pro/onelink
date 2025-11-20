@@ -183,8 +183,9 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
-    // Free plan button should navigate to auth
-    const freeButton = screen.getByRole("button", { name: /start for free/i });
+    // Free plan button should navigate to auth - find by text content
+    const freeButton = screen.getByText("Start for free");
+    expect(freeButton).toBeInTheDocument();
     expect(freeButton).not.toBeDisabled();
     fireEvent.click(freeButton);
 
