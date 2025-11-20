@@ -183,8 +183,9 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
-    // Free plan button should navigate to auth - find by text content
-    const freeButton = screen.getByText("Start for free");
+    // Free plan button should navigate to auth - the button text comes from i18n mock
+    // Since the mock returns "Start for free", we should find it
+    const freeButton = screen.getByRole("button", { name: "Start for free" });
     expect(freeButton).toBeInTheDocument();
     expect(freeButton).not.toBeDisabled();
     fireEvent.click(freeButton);
