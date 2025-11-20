@@ -541,6 +541,9 @@
       }
     },
     "faq_title": "Frequently asked questions",
+    "contact_title": "Have questions?",
+    "contact_description": "Get in touch with us for any questions or support.",
+    "contact_email": "support@onelink.app",
     "faq": [
       {
         "question": "Can I switch plans later?",
