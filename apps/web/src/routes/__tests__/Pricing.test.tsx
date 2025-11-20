@@ -30,6 +30,14 @@ vi.mock("../../hooks/use-media-query", () => ({
   useMediaQuery: vi.fn(() => false), // Desktop by default
 }));
 
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: null, // Not authenticated by default
+    loading: false,
+    signOut: vi.fn(),
+  }),
+}));
+
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import Pricing from "../Pricing/index";
