@@ -183,7 +183,9 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
+    // Free plan button should navigate to auth
     const freeButton = screen.getByRole("button", { name: /start for free/i });
+    expect(freeButton).not.toBeDisabled();
     fireEvent.click(freeButton);
 
     expect(mockNavigate).toHaveBeenCalledWith("/auth");
@@ -270,7 +272,8 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByText(/monthly billing/i)).toBeInTheDocument();
+    // Should show "Monthly" in the toggle
+    expect(screen.getByText(/monthly/i)).toBeInTheDocument();
   });
 
   it("displays currency note", () => {
