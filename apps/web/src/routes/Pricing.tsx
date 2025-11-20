@@ -217,6 +217,7 @@ export default function Pricing() {
                   <button
                     onClick={plan.onClick}
                     disabled={loadingPlan === plan.planTier || !plan.planTier}
+                    data-testid={`pricing-plan-${plan.id}-button`}
                     className={clsx(
                       "w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-md transition-all cursor-pointer",
                       plan.highlight
