@@ -40,4 +40,5 @@ lerna-debug.log*
 
 # Docs issues (temporary planning files)
 docs/issues/
+docs/ISSUE.md
 

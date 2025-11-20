@@ -20,11 +20,20 @@ Deno.serve(async (req) => {
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-  const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPA_DATABASE_URL")!;
+  const serviceRole = Deno.env.get("SUPA_DATABASE_SERVICE_ROLE_KEY")!;
 
-  async function updateUserPlan(userId: string, plan: string, status: string, expiresAt?: string | null) {
-    await fetch(new URL("/rest/v1/users", supabaseUrl), {
+  async function updateUserPlan(userId: string, plan: string, status: string, expiresAt?: string | null, stripeId?: string | null) {
+    const url = new URL(`/rest/v1/users?id=eq.${userId}`, supabaseUrl);
+    const updateData: { plan: string; status: string; expires_at?: string | null; stripe_id?: string | null } = {
+      plan,
+      status,
+      expires_at: expiresAt,
+    };
+    if (stripeId) {
+      updateData.stripe_id = stripeId;
+    }
+    const response = await fetch(url.toString(), {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${serviceRole}`,
@@ -32,8 +41,13 @@ Deno.serve(async (req) => {
         "Content-Type": "application/json",
         "Prefer": "return=representation"
       },
-      body: JSON.stringify({ plan, status, expires_at: expiresAt }),
+      body: JSON.stringify(updateData),
     });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`Failed to update user plan: ${response.status} ${errorText}`);
+    }
   }
 
   try {
@@ -41,8 +55,9 @@ Deno.serve(async (req) => {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = (session.metadata as any)?.user_id;
+        const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
         if (userId) {
-          await updateUserPlan(userId, "pro", "active", null);
+          await updateUserPlan(userId, "pro", "active", null, customerId || undefined);
           // Ensure the created subscription is tagged with user_id for future events
           const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
           if (subscriptionId) {

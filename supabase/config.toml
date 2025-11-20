@@ -1,9 +1,6 @@
 # Supabase project configuration
 # Function settings and local development options
 
-[project]
-id = "local"
-
 [functions]
 # Public-facing webhook; JWT verification disabled
 [functions."stripe-webhook"]

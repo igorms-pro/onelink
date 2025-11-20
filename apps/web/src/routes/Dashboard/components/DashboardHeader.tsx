@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { goToCheckout, goToPortal } from "@/lib/billing";
+import { useNavigate } from "react-router-dom";
+import { goToPortal } from "@/lib/billing";
 
 interface DashboardHeaderProps {
   isFree: boolean;
@@ -8,6 +9,12 @@ interface DashboardHeaderProps {
 
 export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleUpgrade = () => {
+    navigate("/pricing");
+  };
+
   return (
     <header className="fixed top-[56px] left-0 right-0 sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
       <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-2 sm:mb-4 sm:pb-4 sm:pt-0">
@@ -23,7 +30,7 @@ export function DashboardHeader({ isFree, onSignOut }: DashboardHeaderProps) {
           {isFree ? (
             <button
               className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap"
-              onClick={goToCheckout}
+              onClick={handleUpgrade}
             >
               {t("dashboard_header_upgrade")}
             </button>
