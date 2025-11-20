@@ -1,9 +1,7 @@
-import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { UpgradeConfirmationModal } from "@/components/UpgradeConfirmationModal";
-import { goToCheckout, goToPortal, BillingError } from "@/lib/billing";
+import { goToPortal, BillingError } from "@/lib/billing";
 
 interface DashboardSubHeaderProps {
   isFree: boolean;
@@ -16,32 +14,9 @@ export function DashboardSubHeader({
 }: DashboardSubHeaderProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const handleUpgrade = () => {
-    setIsUpgradeModalOpen(true);
-  };
-
-  const handleConfirmUpgrade = async () => {
-    try {
-      await goToCheckout();
-    } catch (error) {
-      if (error instanceof BillingError) {
-        if (error.code === "AUTH_REQUIRED") {
-          toast.error(
-            t("billing_auth_required", {
-              defaultValue: "Please sign in to upgrade",
-            }),
-          );
-          navigate("/auth");
-        } else {
-          toast.error(t("billing_upgrade_error"));
-        }
-      } else {
-        toast.error(t("billing_upgrade_error"));
-      }
-      throw error; // Re-throw to keep modal open
-    }
+    navigate("/pricing");
   };
 
   const handleManageBilling = async () => {
@@ -66,7 +41,7 @@ export function DashboardSubHeader({
   };
 
   return (
-    <header className="sticky top-[56px] sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+    <header className="sticky top-[56px] sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0">
       <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-4 ">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
@@ -100,11 +75,6 @@ export function DashboardSubHeader({
           </button>
         </div>
       </div>
-      <UpgradeConfirmationModal
-        open={isUpgradeModalOpen}
-        onOpenChange={setIsUpgradeModalOpen}
-        onConfirm={handleConfirmUpgrade}
-      />
     </header>
   );
 }

@@ -10,7 +10,13 @@ export class BillingError extends Error {
   }
 }
 
-export async function goToCheckout(): Promise<void> {
+export type BillingPeriod = "monthly" | "yearly";
+export type PlanTier = "starter" | "pro";
+
+export async function goToCheckout(
+  plan: PlanTier,
+  period: BillingPeriod = "monthly",
+): Promise<void> {
   const token = (await supabase.auth.getSession()).data.session?.access_token;
 
   if (!token) {
@@ -22,7 +28,11 @@ export async function goToCheckout(): Promise<void> {
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/stripe-create-checkout`,
       {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ plan, period }),
       },
     );
 

@@ -367,7 +367,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ---
 
 ### 3. Upgrade to Pro / Stripe Checkout Pages
-**Status:** ✅ Completed (UI improvements)
+**Status:** ✅ Completed (UI + Backend fixes)
 **Current:** 
 - ✅ `goToCheckout()` redirects to Stripe Checkout (works)
 - ✅ Loading state while redirecting
@@ -375,6 +375,8 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 - ✅ Success/cancel callback pages (`/checkout/success`, `/checkout/cancel`)
 - ✅ Pricing page (`/pricing`) showing plan features comparison
 - ✅ Upgrade confirmation modal before redirect
+- ✅ CORS headers added to `stripe-create-checkout` and `stripe-portal` Edge Functions
+- ✅ Webhook Stripe corrigé (bug du filtre `userId` + sauvegarde `stripe_id`)
 
 **Improvements Made:**
 - Created `BillingError` class for better error handling
@@ -383,8 +385,82 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 - Integrated modal in Pricing, BillingPage, and DashboardSubHeader
 - Added toast notifications for all error scenarios
 - Added translations for upgrade confirmation modal
+- Fixed webhook bug: `updateUserPlan()` now filters by `userId` correctly
+- Webhook now saves `stripe_id` (customer ID) in `users` table
+- Added error handling in webhook `updateUserPlan()` function
 
-**Note:** Backend/BA/SQL work may still be needed for full Stripe integration features
+**Remaining Setup (Manual):**
+1. **Deploy Edge Functions:**
+   ```bash
+   supabase functions deploy stripe-create-checkout
+   supabase functions deploy stripe-portal
+   supabase functions deploy stripe-webhook
+   ```
+
+2. **Configure Stripe Webhook in Stripe Dashboard:**
+   - Go to Stripe Dashboard → Developers → Webhooks
+   - Add endpoint: `https://<your-project>.supabase.co/functions/v1/stripe-webhook`
+   - Select events:
+     - `checkout.session.completed`
+     - `customer.subscription.created`
+     - `customer.subscription.updated`
+     - `customer.subscription.deleted`
+   - Copy webhook signing secret
+   - Add `STRIPE_WEBHOOK_SECRET` to Supabase Edge Function secrets
+
+3. **Environment Variables (Supabase Edge Functions):**
+   - `STRIPE_SECRET_KEY` - Stripe secret key
+   - `STRIPE_WEBHOOK_SECRET` - Webhook signing secret (from step 2)
+   - `PRICE_ID` - Stripe Price ID for Pro subscription
+   - `SITE_URL` - Your site URL (e.g., `https://onelink.app`)
+   - `SUPABASE_URL` - Your Supabase project URL
+   - `SUPABASE_SERVICE_ROLE_KEY` - Service role key (for webhook)
+
+**Note:** Code is complete. Only Stripe Dashboard configuration and deployment needed.
+
+---
+
+## Stripe Integration Setup (TODO)
+
+**Status:** 🔄 Configuration manuelle requise
+
+**Problème:** Le code Stripe est complet, mais il manque la configuration dans Stripe Dashboard et le déploiement des Edge Functions.
+
+**📖 Guide complet :** Voir [`docs/STRIPE_SETUP_GUIDE.md`](./STRIPE_SETUP_GUIDE.md) pour les étapes détaillées.
+
+### Ce qui manque :
+
+1. **Déployer les Edge Functions Supabase:**
+   ```bash
+   supabase functions deploy stripe-create-checkout
+   supabase functions deploy stripe-portal
+   supabase functions deploy stripe-webhook
+   ```
+
+2. **Configurer le Webhook Stripe:**
+   - Aller dans Stripe Dashboard → Developers → Webhooks
+   - Ajouter endpoint: `https://<project-id>.supabase.co/functions/v1/stripe-webhook`
+   - Sélectionner les événements:
+     - `checkout.session.completed`
+     - `customer.subscription.created`
+     - `customer.subscription.updated`
+     - `customer.subscription.deleted`
+   - Copier le "Signing secret"
+   - Ajouter `STRIPE_WEBHOOK_SECRET` dans les secrets Supabase
+
+3. **Variables d'environnement Supabase (Edge Functions):**
+   - `STRIPE_SECRET_KEY` - Clé secrète Stripe
+   - `STRIPE_WEBHOOK_SECRET` - Secret du webhook (depuis Stripe Dashboard)
+   - `PRICE_ID` - ID du prix Stripe pour l'abonnement Pro
+   - `SITE_URL` - URL du site (ex: `https://onelink.app`)
+   - `SUPABASE_URL` - URL du projet Supabase
+   - `SUPABASE_SERVICE_ROLE_KEY` - Clé service role (pour le webhook)
+
+### Code corrigé :
+- ✅ Bug webhook corrigé (`updateUserPlan` filtre maintenant par `userId`)
+- ✅ Sauvegarde `stripe_id` dans la table `users`
+- ✅ CORS headers ajoutés aux Edge Functions
+- ✅ Gestion d'erreurs améliorée
 
 ---
 

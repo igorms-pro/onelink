@@ -1,18 +1,23 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Check, ArrowRight } from "lucide-react";
 import clsx from "clsx";
 import { toast } from "sonner";
 import { HeaderMobileSignIn } from "@/components/HeaderMobileSignIn";
 import { Footer } from "@/components/Footer";
-import { UpgradeConfirmationModal } from "@/components/UpgradeConfirmationModal";
 import { PlanType } from "@/lib/types/plan";
-import { goToCheckout, BillingError } from "@/lib/billing";
+import {
+  goToCheckout,
+  BillingError,
+  type BillingPeriod,
+  type PlanTier,
+} from "@/lib/billing";
 
 interface PricingPlanContent {
   name: string;
-  price: string;
+  priceMonthly: string;
+  priceYearly: string;
   description: string;
   cta: string;
   features: string[];
@@ -26,10 +31,16 @@ interface PricingFaqContent {
 export default function Pricing() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>(
+    (searchParams.get("period") as BillingPeriod) || "monthly",
+  );
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const freePlan = t("pricing.plans.free", {
+    returnObjects: true,
+  }) as PricingPlanContent;
+  const starterPlan = t("pricing.plans.starter", {
     returnObjects: true,
   }) as PricingPlanContent;
   const proPlan = t("pricing.plans.pro", {
@@ -37,22 +48,64 @@ export default function Pricing() {
   }) as PricingPlanContent;
   const faq = t("pricing.faq", { returnObjects: true }) as PricingFaqContent[];
 
+  const handleUpgrade = async (plan: PlanTier) => {
+    setLoadingPlan(plan);
+    try {
+      await goToCheckout(plan, billingPeriod);
+    } catch (error) {
+      setLoadingPlan(null);
+      if (error instanceof BillingError) {
+        if (error.code === "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_auth_required", {
+              defaultValue: "Please sign in to upgrade",
+            }),
+          );
+          navigate("/auth");
+        } else {
+          toast.error(t("billing_upgrade_error"));
+        }
+      } else {
+        toast.error(t("billing_upgrade_error"));
+      }
+    }
+  };
+
   const plans = [
     {
       id: PlanType.FREE,
       ...freePlan,
       highlight: false,
       onClick: () => navigate("/auth"),
+      planTier: null as PlanTier | null,
+    },
+    {
+      id: "starter",
+      ...starterPlan,
+      highlight: false,
+      onClick: () => handleUpgrade("starter"),
+      planTier: "starter" as PlanTier,
     },
     {
       id: PlanType.PRO,
       ...proPlan,
       highlight: true,
-      onClick: () => {
-        setIsUpgradeModalOpen(true);
-      },
+      onClick: () => handleUpgrade("pro"),
+      planTier: "pro" as PlanTier,
     },
   ];
+
+  const getPrice = (plan: (typeof plans)[0]) => {
+    if (plan.id === PlanType.FREE) return plan.priceMonthly || "$0";
+    return billingPeriod === "yearly" ? plan.priceYearly : plan.priceMonthly;
+  };
+
+  const getPriceLabel = (plan: (typeof plans)[0]) => {
+    if (plan.id === PlanType.FREE) return "";
+    return billingPeriod === "yearly"
+      ? t("pricing.per_year")
+      : t("pricing.per_month");
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors flex flex-col">
@@ -62,15 +115,62 @@ export default function Pricing() {
           <div className="absolute inset-y-0 right-0 w-1/2 -translate-y-10 bg-gradient-to-l from-purple-500/20 to-transparent blur-3xl" />
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
             <div className="space-y-6 text-center">
-              <span className="inline-flex items-center justify-center rounded-full bg-white/70 px-4 py-1 text-xs font-medium text-purple-700 shadow-sm dark:bg-white/10 dark:text-purple-200">
-                {t("pricing.monthly_label")}
-              </span>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl">
                 {t("pricing.title")}
               </h1>
               <p className="mx-auto max-w-2xl text-base text-gray-600 dark:text-gray-300 sm:text-lg">
                 {t("pricing.description")}
               </p>
+
+              {/* Billing Period Toggle */}
+              <div className="flex items-center justify-center gap-4">
+                <span
+                  className={clsx(
+                    "text-sm font-medium",
+                    billingPeriod === "monthly"
+                      ? "text-gray-900 dark:text-white"
+                      : "text-gray-500 dark:text-gray-400",
+                  )}
+                >
+                  {t("pricing.monthly_label")}
+                </span>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setBillingPeriod(
+                      billingPeriod === "monthly" ? "yearly" : "monthly",
+                    )
+                  }
+                  className={clsx(
+                    "relative inline-flex h-6 w-11 items-center rounded-full transition-colors",
+                    billingPeriod === "yearly"
+                      ? "bg-purple-600"
+                      : "bg-gray-200 dark:bg-gray-700",
+                  )}
+                >
+                  <span
+                    className={clsx(
+                      "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                      billingPeriod === "yearly"
+                        ? "translate-x-6"
+                        : "translate-x-1",
+                    )}
+                  />
+                </button>
+                <span
+                  className={clsx(
+                    "text-sm font-medium",
+                    billingPeriod === "yearly"
+                      ? "text-gray-900 dark:text-white"
+                      : "text-gray-500 dark:text-gray-400",
+                  )}
+                >
+                  {t("pricing.yearly_label", {
+                    defaultValue: "Annually (save 20%)",
+                  })}
+                </span>
+              </div>
+
               <p className="text-xs text-gray-500 dark:text-gray-500">
                 {t("pricing.currency_note")}
               </p>
@@ -78,14 +178,17 @@ export default function Pricing() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-          <div className="grid gap-8 lg:grid-cols-2">
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+          <div className="grid gap-8 lg:grid-cols-3">
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={
-                  "relative flex h-full flex-col rounded-2xl border border-gray-200 bg-white/90 p-8 shadow-sm transition hover:shadow-lg dark:border-gray-800 dark:bg-gray-900/80"
-                }
+                className={clsx(
+                  "relative flex h-full flex-col rounded-2xl border p-8 shadow-sm transition hover:shadow-lg",
+                  plan.highlight
+                    ? "border-purple-500 bg-white dark:bg-gray-900"
+                    : "border-gray-200 bg-white/90 dark:border-gray-800 dark:bg-gray-900/80",
+                )}
               >
                 {plan.highlight && (
                   <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-linear-to-r from-purple-500 to-purple-600 px-3 py-1 text-xs font-semibold text-white shadow-lg">
@@ -99,15 +202,11 @@ export default function Pricing() {
                     </span>
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-bold text-gray-900 dark:text-white">
-                        {plan.price}
+                        {getPrice(plan)}
                       </span>
-                      {plan.id === PlanType.FREE ? (
+                      {getPriceLabel(plan) && (
                         <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {t("pricing.per_month")}
-                        </span>
-                      ) : (
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {t("pricing.per_month")}
+                          {getPriceLabel(plan)}
                         </span>
                       )}
                     </div>
@@ -117,15 +216,19 @@ export default function Pricing() {
                   </div>
                   <button
                     onClick={plan.onClick}
-                    disabled={loadingPlan === plan.id}
+                    disabled={loadingPlan === plan.planTier || !plan.planTier}
                     className={clsx(
                       "w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-md transition-all cursor-pointer",
                       plan.highlight
                         ? "bg-linear-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 disabled:opacity-60"
-                        : "border border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10 disabled:opacity-60",
+                        : plan.id === PlanType.FREE
+                          ? "border border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10"
+                          : "border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-400/60 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20 disabled:opacity-60",
                     )}
                   >
-                    {loadingPlan === plan.id ? t("pricing.loading") : plan.cta}
+                    {loadingPlan === plan.planTier
+                      ? t("pricing.loading")
+                      : plan.cta}
                   </button>
                 </div>
                 <div className="mt-auto space-y-3">
@@ -195,33 +298,6 @@ export default function Pricing() {
         </section>
       </main>
       <Footer />
-      <UpgradeConfirmationModal
-        open={isUpgradeModalOpen}
-        onOpenChange={setIsUpgradeModalOpen}
-        onConfirm={async () => {
-          setLoadingPlan(PlanType.PRO);
-          try {
-            await goToCheckout();
-          } catch (error) {
-            setLoadingPlan(null);
-            if (error instanceof BillingError) {
-              if (error.code === "AUTH_REQUIRED") {
-                toast.error(
-                  t("billing_auth_required", {
-                    defaultValue: "Please sign in to upgrade",
-                  }),
-                );
-                navigate("/auth");
-              } else {
-                toast.error(t("billing_upgrade_error"));
-              }
-            } else {
-              toast.error(t("billing_upgrade_error"));
-            }
-            throw error; // Re-throw to keep modal open
-          }
-        }}
-      />
     </div>
   );
 }

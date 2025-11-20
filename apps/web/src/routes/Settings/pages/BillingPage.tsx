@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
 import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
-import { goToCheckout, goToPortal } from "@/lib/billing";
+import { goToPortal } from "@/lib/billing";
 
 type Invoice = {
   id: string;
@@ -27,7 +27,6 @@ type PaymentMethod = {
 import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
 import { isProPlan } from "@/lib/types/plan";
 import { BillingError } from "@/lib/billing";
-import { UpgradeConfirmationModal } from "@/components/UpgradeConfirmationModal";
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -45,7 +44,6 @@ export default function BillingPage() {
   );
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
-  const [isUpgradeModalOpen, setIsUpgradeModalOpen] = useState(false);
 
   const isPro = isProPlan(plan);
   const isLoading = authLoading || dataLoading;
@@ -133,29 +131,7 @@ export default function BillingPage() {
   };
 
   const handleUpgrade = () => {
-    setIsUpgradeModalOpen(true);
-  };
-
-  const handleConfirmUpgrade = async () => {
-    try {
-      await goToCheckout();
-    } catch (error) {
-      if (error instanceof BillingError) {
-        if (error.code === "AUTH_REQUIRED") {
-          toast.error(
-            t("billing_auth_required", {
-              defaultValue: "Please sign in to upgrade",
-            }),
-          );
-          navigate("/auth");
-        } else {
-          toast.error(t("billing_upgrade_error"));
-        }
-      } else {
-        toast.error(t("billing_upgrade_error"));
-      }
-      throw error; // Re-throw to keep modal open
-    }
+    navigate("/pricing");
   };
 
   const handleCancelSubscription = async () => {
@@ -184,7 +160,7 @@ export default function BillingPage() {
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/settings")}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
@@ -361,7 +337,7 @@ export default function BillingPage() {
                       </p>
                       <button
                         onClick={handleAddCard}
-                        className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
+                        className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
                       >
                         {t("billing_add_card")}
                       </button>
@@ -462,7 +438,7 @@ export default function BillingPage() {
                 ) : (
                   <button
                     onClick={handleUpgrade}
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
+                    className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
                   >
                     {t("settings_upgrade_to_pro")}
                   </button>
@@ -472,11 +448,6 @@ export default function BillingPage() {
           </div>
         )}
       </main>
-      <UpgradeConfirmationModal
-        open={isUpgradeModalOpen}
-        onOpenChange={setIsUpgradeModalOpen}
-        onConfirm={handleConfirmUpgrade}
-      />
     </div>
   );
 }

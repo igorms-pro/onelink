@@ -492,29 +492,51 @@
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
+    "monthly_label": "Monthly",
+    "yearly_label": "Annually (save 20%)",
+    "per_year": "per year",
     "plans": {
       "free": {
         "name": "Free",
-        "price": "$0",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
         "description": "Perfect to launch your profile and share essential links.",
         "cta": "Start for free",
         "features": [
-          "Unlimited routes and drops (within free plan limit)",
-          "Customizable profile with themes",
-          "Email notifications for new submissions",
+          "4 links, 2 drops max",
+          "50MB per file",
+          "7-day file retention",
+          "Basic analytics (7-day history)",
+          "Customizable profile with themes"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "For creators and small businesses who need file collection.",
+        "cta": "Get started",
+        "features": [
+          "Unlimited links and drops",
+          "Custom domain",
+          "500MB per file",
+          "30-day file retention",
           "Basic analytics (7-day history)"
         ]
       },
       "pro": {
         "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "For professionals who need heavy file uploads and detailed insights.",
         "cta": "Upgrade to Pro",
         "features": [
-          "Unlimited routes and drops",
-          "Advanced analytics with 30 & 90-day history",
-          "Custom domain and branded profile",
-          "Priority support and roadmap influence"
+          "Everything in Starter",
+          "2GB per file",
+          "90-day file retention",
+          "Advanced analytics (30 & 90-day history)",
+          "Google Analytics integration",
+          "Priority support"
         ]
       }
     },
