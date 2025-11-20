@@ -32,7 +32,7 @@ vi.mock("../../hooks/use-media-query", () => ({
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import Pricing from "../Pricing";
+import Pricing from "../Pricing/index";
 import { goToCheckout } from "../../lib/billing";
 import "../../lib/i18n";
 
