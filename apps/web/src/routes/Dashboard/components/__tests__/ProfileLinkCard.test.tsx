@@ -2,9 +2,21 @@ import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { ProfileLinkCard } from "../ProfileLinkCard";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
+
+const mockNavigate = vi.fn();
+
+// Mock react-router-dom
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 // Mock QRCodeSVG
 vi.mock("qrcode.react", () => ({
@@ -67,13 +79,19 @@ describe("ProfileLinkCard", () => {
 
   it("renders nothing when slug is null", () => {
     const { container } = render(
-      <ProfileLinkCard slug={null} isFree={false} />,
+      <MemoryRouter>
+        <ProfileLinkCard slug={null} isFree={false} />
+      </MemoryRouter>,
     );
     expect(container.firstChild).toBeNull();
   });
 
   it("renders profile link card with slug", () => {
-    render(<ProfileLinkCard slug="test-user" isFree={false} />);
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={false} />
+      </MemoryRouter>,
+    );
     expect(screen.getByText("Your Profile Link")).toBeInTheDocument();
     expect(
       screen.getByDisplayValue("https://example.com/test-user"),
@@ -125,7 +143,11 @@ describe("ProfileLinkCard", () => {
     const windowOpenSpy = vi
       .spyOn(window, "open")
       .mockImplementation(() => null);
-    render(<ProfileLinkCard slug="test-user" isFree={false} />);
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={false} />
+      </MemoryRouter>,
+    );
     const previewButton = screen.getByText("Preview");
     fireEvent.click(previewButton);
 
@@ -139,7 +161,11 @@ describe("ProfileLinkCard", () => {
 
   it("shows QR code modal for pro users", async () => {
     const user = userEvent.setup();
-    render(<ProfileLinkCard slug="test-user" isFree={false} />);
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={false} />
+      </MemoryRouter>,
+    );
     const qrButton = screen.getByText("QR Code");
     await user.click(qrButton);
 
@@ -150,7 +176,11 @@ describe("ProfileLinkCard", () => {
   });
 
   it("shows upgrade message and redirects for free users", async () => {
-    render(<ProfileLinkCard slug="test-user" isFree={true} />);
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={true} />
+      </MemoryRouter>,
+    );
     const qrButton = screen.getByText("QR Code");
     expect(qrButton).toBeDisabled();
     // Disabled buttons don't trigger onClick in real browsers, but fireEvent can bypass this
@@ -160,7 +190,11 @@ describe("ProfileLinkCard", () => {
   });
 
   it("shows Pro badge on QR button for free users", () => {
-    render(<ProfileLinkCard slug="test-user" isFree={true} />);
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={true} />
+      </MemoryRouter>,
+    );
     const proBadge = screen.getByText("Pro");
     expect(proBadge).toBeInTheDocument();
   });

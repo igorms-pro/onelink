@@ -1,8 +1,19 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { DashboardSubHeader } from "../DashboardSubHeader";
+
+const mockNavigate = vi.fn();
+
+// Mock react-router-dom
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
 
 // Mock billing functions
 vi.mock("@/lib/billing", () => ({
@@ -20,6 +31,7 @@ describe("DashboardSubHeader", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockClear();
   });
 
   it("should render dashboard title", () => {
@@ -72,7 +84,7 @@ describe("DashboardSubHeader", () => {
     expect(screen.getByText("Manage billing")).toBeInTheDocument();
   });
 
-  it("should open upgrade modal when upgrade button is clicked", async () => {
+  it("should navigate to pricing page when upgrade button is clicked", async () => {
     const user = userEvent.setup();
 
     render(
@@ -84,11 +96,8 @@ describe("DashboardSubHeader", () => {
     const upgradeButton = screen.getByText("Upgrade to Pro");
     await user.click(upgradeButton);
 
-    // Modal should be visible
-    await waitFor(() => {
-      const dialog = screen.getByRole("dialog");
-      expect(dialog).toBeInTheDocument();
-    });
+    // Should navigate to pricing page
+    expect(mockNavigate).toHaveBeenCalledWith("/pricing");
   });
 
   it("should call goToPortal when manage billing button is clicked", async () => {

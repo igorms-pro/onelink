@@ -20,6 +20,16 @@ vi.mock("@/components/AnalyticsCard", () => ({
   ),
 }));
 
+// Mock react-router-dom for ProfileLinkCard
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => mockNavigate,
+  };
+});
+
 vi.mock("./ProfileLinkCard", () => ({
   ProfileLinkCard: ({ slug, isFree }: any) => (
     <div data-testid="profile-link-card">

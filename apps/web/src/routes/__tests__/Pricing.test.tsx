@@ -10,11 +10,15 @@ Object.defineProperty(window, "location", {
   writable: true,
 });
 
+const mockSearchParams = new URLSearchParams();
+const mockSetSearchParams = vi.fn();
+
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
+    useSearchParams: () => [mockSearchParams, mockSetSearchParams],
   };
 });
 
@@ -43,7 +47,8 @@ vi.mock("react-i18next", async () => {
           if (key === "pricing.plans.free") {
             return {
               name: "Free",
-              price: "$0",
+              priceMonthly: "€0",
+              priceYearly: "€0",
               description: "Free plan",
               cta: "Start for free",
               features: [
@@ -53,10 +58,25 @@ vi.mock("react-i18next", async () => {
               ],
             };
           }
+          if (key === "pricing.plans.starter") {
+            return {
+              name: "Starter",
+              priceMonthly: "€6",
+              priceYearly: "€58",
+              description: "Starter plan",
+              cta: "Get started",
+              features: [
+                "Unlimited routes",
+                "Unlimited drops",
+                "Custom domain",
+              ],
+            };
+          }
           if (key === "pricing.plans.pro") {
             return {
               name: "Pro",
-              price: "$10",
+              priceMonthly: "€12",
+              priceYearly: "€115",
               description: "Pro plan",
               cta: "Upgrade to Pro",
               features: [
@@ -79,10 +99,12 @@ vi.mock("react-i18next", async () => {
         const translations: Record<string, string> = {
           "pricing.title": "Plans & Pricing",
           "pricing.description": "Choose the plan",
-          "pricing.monthly_label": "Monthly billing",
+          "pricing.monthly_label": "Monthly",
+          "pricing.yearly_label": "Annually (save 20%)",
           "pricing.currency_note": "Prices in USD",
           "pricing.most_popular": "Most Popular",
           "pricing.per_month": "/month",
+          "pricing.per_year": "/year",
           "pricing.includes": "Includes",
           "pricing.loading": "Redirecting...",
           "pricing.faq_title": "Frequently Asked Questions",
@@ -120,7 +142,7 @@ describe("Pricing", () => {
     expect(screen.getByText(/choose the plan/i)).toBeInTheDocument();
   });
 
-  it("renders both free and pro plans", () => {
+  it("renders all three plans (free, starter, pro)", () => {
     render(
       <MemoryRouter>
         <Pricing />
@@ -128,6 +150,7 @@ describe("Pricing", () => {
     );
 
     expect(screen.getByText("Free")).toBeInTheDocument();
+    expect(screen.getByText("Starter")).toBeInTheDocument();
     expect(screen.getByText("Pro")).toBeInTheDocument();
   });
 
@@ -166,24 +189,7 @@ describe("Pricing", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/auth");
   });
 
-  it("opens upgrade confirmation modal when pro plan button is clicked", async () => {
-    render(
-      <MemoryRouter>
-        <Pricing />
-      </MemoryRouter>,
-    );
-
-    const proButton = screen.getByRole("button", { name: /upgrade to pro/i });
-    fireEvent.click(proButton);
-
-    await waitFor(() => {
-      // Check for modal dialog
-      const dialog = screen.getByRole("dialog");
-      expect(dialog).toBeInTheDocument();
-    });
-  });
-
-  it("calls goToCheckout when modal confirm button is clicked", async () => {
+  it("calls goToCheckout when pro plan button is clicked", async () => {
     vi.mocked(goToCheckout).mockResolvedValue(undefined);
 
     render(
@@ -196,21 +202,25 @@ describe("Pricing", () => {
     fireEvent.click(proButton);
 
     await waitFor(() => {
-      const dialog = screen.getByRole("dialog");
-      expect(dialog).toBeInTheDocument();
+      expect(goToCheckout).toHaveBeenCalledWith("pro", "monthly");
     });
+  });
 
-    // Find confirm button - it should be in the dialog
-    const dialog = screen.getByRole("dialog");
-    const buttons = dialog.querySelectorAll("button");
-    const confirmButton = Array.from(buttons).find((btn) =>
-      btn.textContent?.toLowerCase().includes("continue"),
+  it("calls goToCheckout with yearly period when yearly is selected", async () => {
+    vi.mocked(goToCheckout).mockResolvedValue(undefined);
+    mockSearchParams.set("period", "yearly");
+
+    render(
+      <MemoryRouter>
+        <Pricing />
+      </MemoryRouter>,
     );
-    expect(confirmButton).toBeInTheDocument();
-    fireEvent.click(confirmButton!);
+
+    const proButton = screen.getByRole("button", { name: /upgrade to pro/i });
+    fireEvent.click(proButton);
 
     await waitFor(() => {
-      expect(goToCheckout).toHaveBeenCalled();
+      expect(goToCheckout).toHaveBeenCalledWith("pro", "yearly");
     });
   });
 
