@@ -10,6 +10,7 @@ interface FooterProps {
   brandingText?: string;
   variant?: "default" | "transparent";
   showControls?: boolean; // Show language/theme toggles (for profile pages)
+  showLegalLinks?: boolean; // Show Privacy/Terms links (default: true)
 }
 
 export function Footer({
@@ -18,6 +19,7 @@ export function Footer({
   brandingText,
   variant = "default",
   showControls = false,
+  showLegalLinks = true,
 }: FooterProps) {
   const { t } = useTranslation();
 
@@ -69,20 +71,22 @@ export function Footer({
               )}
             </div>
             {/* Privacy & Terms - separate line on mobile, center on desktop */}
-            <div className="flex items-center justify-center gap-4">
-              <Link
-                to="/privacy"
-                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-              >
-                {t("footer_privacy")}
-              </Link>
-              <Link
-                to="/terms"
-                className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
-              >
-                {t("footer_terms")}
-              </Link>
-            </div>
+            {showLegalLinks && (
+              <div className="flex items-center justify-center gap-4">
+                <Link
+                  to="/privacy"
+                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+                >
+                  {t("footer_privacy")}
+                </Link>
+                <Link
+                  to="/terms"
+                  className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
+                >
+                  {t("footer_terms")}
+                </Link>
+              </div>
+            )}
             {/* Language & Theme Controls - right side on desktop only */}
             {showControls && (
               <div className="hidden sm:flex items-center gap-2">

@@ -81,7 +81,7 @@ export default function Pricing() {
 
         <PricingContact />
       </main>
-      <Footer />
+      <Footer variant="default" showLegalLinks={false} />
     </div>
   );
 }
