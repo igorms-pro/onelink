@@ -127,7 +127,7 @@ const createAuthValue = (overrides: Partial<AuthValue> = {}): AuthValue => ({
   ...overrides,
 });
 
-describe.skip("BillingPage", () => {
+describe("BillingPage", () => {
   const mockNavigate = vi.fn();
 
   beforeEach(() => {

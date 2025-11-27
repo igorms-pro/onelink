@@ -254,7 +254,7 @@ export function useTwoFactor() {
 
       toast.success(t("settings_2fa_backup_codes_regenerated"));
     });
-  }, [user?.id, state, generateBackupCodes, submit, t]);
+  }, [user?.id, state, submit, t]);
 
   return {
     state,

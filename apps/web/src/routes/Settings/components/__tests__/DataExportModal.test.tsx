@@ -18,6 +18,39 @@ vi.mock("sonner", () => ({
   },
 }));
 
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "user-1", email: "test@example.com" },
+    session: null,
+    loading: false,
+    signOut: vi.fn(),
+    signInWithEmail: vi.fn(),
+  }),
+}));
+
+// Mock supabase
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      select: vi.fn(() => ({
+        eq: vi.fn(() => ({
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: { id: "profile-1" },
+            error: null,
+          }),
+          order: vi.fn(() => ({
+            limit: vi.fn().mockResolvedValue({
+              data: [],
+              error: null,
+            }),
+          })),
+        })),
+      })),
+    })),
+  },
+}));
+
 // Mock URL.createObjectURL and revokeObjectURL
 const mockCreateObjectURL = vi.fn(() => "blob:mock-url");
 const mockRevokeObjectURL = vi.fn();

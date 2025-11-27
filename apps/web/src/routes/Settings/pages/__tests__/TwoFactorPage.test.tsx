@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import TwoFactorPage from "../TwoFactorPage";
@@ -20,6 +20,10 @@ vi.mock("@/lib/supabase", () => ({
 
 vi.mock("@/lib/AuthProvider", () => ({
   useAuth: vi.fn(),
+}));
+
+vi.mock("@/hooks/useRequireAuth", () => ({
+  useRequireAuth: vi.fn(),
 }));
 
 vi.mock("@/components/Header", () => ({
@@ -60,6 +64,7 @@ Object.assign(navigator, {
 });
 
 import { useAuth } from "@/lib/AuthProvider";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -72,11 +77,12 @@ const mockUser: User = {
   created_at: new Date().toISOString(),
 } as User;
 
-describe.skip("TwoFactorPage", () => {
+describe("TwoFactorPage", () => {
   const mockNavigate = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+    vi.useFakeTimers();
     vi.mocked(useAuth).mockReturnValue({
       user: mockUser,
       session: null,
@@ -84,8 +90,16 @@ describe.skip("TwoFactorPage", () => {
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
+    vi.mocked(useRequireAuth).mockReturnValue({
+      user: mockUser,
+      loading: false,
+      signOut: vi.fn(),
+    });
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
-    // No fake timers - let setTimeout run naturally
+  });
+
+  afterEach(() => {
+    vi.useRealTimers();
   });
 
   it("should render page title and description", async () => {

@@ -28,6 +28,10 @@ vi.mock("@/lib/AuthProvider", () => ({
   useAuth: vi.fn(),
 }));
 
+vi.mock("@/hooks/useRequireAuth", () => ({
+  useRequireAuth: vi.fn(),
+}));
+
 vi.mock("@/components/Header", () => ({
   Header: ({ onSettingsClick }: { onSettingsClick: () => void }) => (
     <header data-testid="mock-header">
@@ -54,6 +58,7 @@ vi.mock("sonner", () => ({
 }));
 
 import { useAuth } from "@/lib/AuthProvider";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -66,7 +71,7 @@ const mockUser: User = {
   created_at: new Date().toISOString(),
 } as User;
 
-describe.skip("SessionsPage", () => {
+describe("SessionsPage", () => {
   const mockNavigate = vi.fn();
   const mockLocation = {
     hash: "",
@@ -84,6 +89,11 @@ describe.skip("SessionsPage", () => {
       loading: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+    });
+    vi.mocked(useRequireAuth).mockReturnValue({
+      user: mockUser,
+      loading: false,
+      signOut: vi.fn(),
     });
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     vi.mocked(useLocation).mockReturnValue(

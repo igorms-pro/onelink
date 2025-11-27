@@ -63,6 +63,7 @@ export function useChangePassword() {
         await submit(async () => {
           const { data: userData } = await supabase.auth.getUser();
           if (!userData.user?.email) {
+            toast.error(t("settings_change_password_update_failed"));
             throw new Error("User not found");
           }
 
