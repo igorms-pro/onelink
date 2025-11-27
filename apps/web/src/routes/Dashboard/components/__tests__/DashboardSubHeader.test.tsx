@@ -111,8 +111,7 @@ describe("DashboardSubHeader", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/pricing");
   });
 
-  it("should call goToPortal when manage billing button is clicked", async () => {
-    const { goToPortal } = await import("@/lib/billing");
+  it("should navigate to billing page when manage billing button is clicked", async () => {
     const user = userEvent.setup();
 
     render(
@@ -124,7 +123,7 @@ describe("DashboardSubHeader", () => {
     const manageButton = screen.getByText("Manage billing");
     await user.click(manageButton);
 
-    expect(goToPortal).toHaveBeenCalledTimes(1);
+    expect(mockNavigate).toHaveBeenCalledWith("/settings/billing");
   });
 
   it("should call onSignOut when sign out button is clicked", async () => {

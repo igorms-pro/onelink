@@ -1,7 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { goToPortal, BillingError } from "@/lib/billing";
 import { isPaidPlan, getPlanName } from "@/lib/types/plan";
 import type { PlanTypeValue } from "@/lib/types/plan";
 
@@ -23,25 +21,8 @@ export function DashboardSubHeader({
     navigate("/pricing");
   };
 
-  const handleManageBilling = async () => {
-    try {
-      await goToPortal();
-    } catch (error) {
-      if (error instanceof BillingError) {
-        if (error.code === "AUTH_REQUIRED") {
-          toast.error(
-            t("billing_auth_required", {
-              defaultValue: "Please sign in to manage billing",
-            }),
-          );
-          navigate("/auth");
-        } else {
-          toast.error(t("billing_payment_error"));
-        }
-      } else {
-        toast.error(t("billing_payment_error"));
-      }
-    }
+  const handleManageBilling = () => {
+    navigate("/settings/billing");
   };
 
   return (
