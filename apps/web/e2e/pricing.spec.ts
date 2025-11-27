@@ -95,8 +95,8 @@ test.describe("Pricing Page", () => {
       // User not authenticated, redirected to auth - this is expected
       await expect(page).toHaveURL(/\/auth/);
     } else if (checkoutRequested) {
-      // Checkout was requested successfully
-      expect(checkoutRequested).toBe(true);
+      // Checkout was requested successfully (checkoutRequested is true here)
+      // No need to assert, we're already in the true branch
     } else {
       // Loading state might be shown
       const loadingVisible = await page
@@ -147,8 +147,8 @@ test.describe("Pricing Page", () => {
       // User not authenticated, redirected to auth - this is expected
       await expect(page).toHaveURL(/\/auth/);
     } else if (checkoutRequested) {
-      // Checkout was requested successfully
-      expect(checkoutRequested).toBe(true);
+      // Checkout was requested successfully (checkoutRequested is true here)
+      // No need to assert, we're already in the true branch
     } else {
       // Loading state might be shown
       const loadingVisible = await page
