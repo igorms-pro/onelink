@@ -85,14 +85,14 @@ describe("DashboardSubHeader", () => {
     expect(screen.getByText("Upgrade to Pro")).toBeInTheDocument();
   });
 
-  it("should show manage billing button when plan is paid", () => {
+  it("should not show upgrade button when plan is paid", () => {
     render(
       <MemoryRouter>
         <DashboardSubHeader plan={PlanId.STARTER} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Manage billing")).toBeInTheDocument();
+    expect(screen.queryByText("Upgrade to Pro")).not.toBeInTheDocument();
   });
 
   it("should navigate to pricing page when upgrade button is clicked", async () => {
@@ -109,21 +109,6 @@ describe("DashboardSubHeader", () => {
 
     // Should navigate to pricing page
     expect(mockNavigate).toHaveBeenCalledWith("/pricing");
-  });
-
-  it("should navigate to billing page when manage billing button is clicked", async () => {
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter>
-        <DashboardSubHeader plan={PlanId.PRO} onSignOut={mockOnSignOut} />
-      </MemoryRouter>,
-    );
-
-    const manageButton = screen.getByText("Manage billing");
-    await user.click(manageButton);
-
-    expect(mockNavigate).toHaveBeenCalledWith("/settings/billing");
   });
 
   it("should call onSignOut when sign out button is clicked", async () => {

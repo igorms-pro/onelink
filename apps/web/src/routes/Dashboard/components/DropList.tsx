@@ -357,7 +357,7 @@ function DropCard({
 
         {/* Preview Link */}
         <a
-          href={shareLink}
+          href={shareLink ?? "#"}
           target="_blank"
           rel="noopener noreferrer"
           className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 cursor-pointer ${!shareLink ? "opacity-50 pointer-events-none" : ""}`}
