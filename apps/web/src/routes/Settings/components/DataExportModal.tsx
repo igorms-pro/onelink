@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -22,19 +21,16 @@ import {
   DataExportReadyState,
   DataExportActions,
 } from "./DataExport";
+import {
+  useDataExport,
+  type ExportFormat,
+  type ExportDataType,
+} from "./DataExport/useDataExport";
 
 interface DataExportModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-type ExportFormat = "json" | "csv";
-type ExportDataType =
-  | "profile"
-  | "links"
-  | "drops"
-  | "submissions"
-  | "analytics";
 
 export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
   const { t } = useTranslation();
@@ -43,10 +39,15 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
   const [selectedData, setSelectedData] = useState<Set<ExportDataType>>(
     new Set(["profile", "links", "drops", "submissions", "analytics"]),
   );
-  const [isGenerating, setIsGenerating] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
-  const [progress, setProgress] = useState(0);
+
+  const {
+    submitting: isGenerating,
+    progress,
+    downloadUrl,
+    handleGenerate,
+    cleanup,
+  } = useDataExport();
 
   const handleToggleDataType = (type: ExportDataType) => {
     setSelectedData((prev) => {
@@ -60,87 +61,35 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
     });
   };
 
-  const handleGenerate = async () => {
-    if (selectedData.size === 0) {
-      toast.error(t("settings_export_no_data_selected"));
-      return;
-    }
-
-    setIsGenerating(true);
-    setProgress(0);
+  const handleGenerateClick = async () => {
     setIsReady(false);
-    setDownloadUrl(null);
-
-    try {
-      // Simulate progress (will be replaced with actual API call)
-      const progressInterval = setInterval(() => {
-        setProgress((prev) => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 200);
-
-      // TODO: Replace with actual API call
-      // const response = await fetch('/api/export', {
-      //   method: 'POST',
-      //   body: JSON.stringify({ format, dataTypes: Array.from(selectedData) })
-      // });
-      // const blob = await response.blob();
-      // const url = URL.createObjectURL(blob);
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
-      clearInterval(progressInterval);
-      setProgress(100);
-
-      // For now, create a mock download URL
-      // In production, this will come from the API
-      const mockData = {
-        format,
-        dataTypes: Array.from(selectedData),
-        generatedAt: new Date().toISOString(),
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      };
-      const blob = new Blob([JSON.stringify(mockData, null, 2)], {
-        type: format === "json" ? "application/json" : "text/csv",
-      });
-      const url = URL.createObjectURL(blob);
-
-      setDownloadUrl(url);
+    await handleGenerate(format, selectedData);
+    if (downloadUrl) {
       setIsReady(true);
-      toast.success(t("settings_export_generation_success"));
-    } catch (error) {
-      console.error("Export generation failed:", error);
-      toast.error(t("settings_export_generation_failed"));
-      setIsGenerating(false);
-      setProgress(0);
     }
   };
+
+  // Update isReady when downloadUrl changes
+  useEffect(() => {
+    if (downloadUrl && !isGenerating) {
+      setIsReady(true);
+    }
+  }, [downloadUrl, isGenerating]);
 
   const handleDownload = () => {
     if (!downloadUrl) return;
 
     const link = document.createElement("a");
     link.href = downloadUrl;
-    link.download = `onemeet-export-${new Date().toISOString().split("T")[0]}.${format}`;
+    link.download = `onelink-export-${new Date().toISOString().split("T")[0]}.${format}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
-    toast.success(t("settings_export_download_started"));
   };
 
   const handleClose = () => {
-    if (downloadUrl) {
-      URL.revokeObjectURL(downloadUrl);
-    }
+    cleanup();
     setIsReady(false);
-    setDownloadUrl(null);
-    setProgress(0);
     onOpenChange(false);
   };
 
@@ -163,7 +112,7 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
         isGenerating={isGenerating}
         isReady={isReady}
         hasSelectedData={selectedData.size > 0}
-        onGenerate={handleGenerate}
+        onGenerate={handleGenerateClick}
         onDownload={handleDownload}
         onClose={handleClose}
       />

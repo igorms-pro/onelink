@@ -1,14 +1,13 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { supabase } from "@/lib/supabase";
-import { toast } from "sonner";
 import {
   FileDropZone,
   FilePreviewList,
   SubmissionFormFields,
   SubmitButton,
 } from "@/components/upload";
+import { useDropSubmission } from "./useDropSubmission";
 import type { PublicDrop } from "../types";
 
 interface DropSubmissionFormProps {
@@ -19,9 +18,14 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDragging, setIsDragging] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploading, setUploading] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+
+  const {
+    submitting: uploading,
+    selectedFiles,
+    setSelectedFiles,
+    handleSubmit: handleSubmission,
+  } = useDropSubmission(drop);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -57,86 +61,16 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
     const name = (formData.get("name") as string) || null;
     const email = (formData.get("email") as string) || null;
     const note = (formData.get("note") as string) || null;
-    const maxSizeMB = drop.max_file_size_mb ?? 50;
-    const maxSizeBytes = maxSizeMB * 1024 * 1024;
 
-    // Client-side validation
-    for (const f of selectedFiles) {
-      if (f.size > maxSizeBytes) {
-        toast.error(
-          t("profile_drop_submission_file_too_large", {
-            name: f.name,
-            limit: maxSizeMB,
-          }),
-        );
-        return;
-      }
-      const ext = f.name.split(".").pop()?.toLowerCase() || "";
-      const blocked = [
-        "exe",
-        "bat",
-        "cmd",
-        "com",
-        "pif",
-        "scr",
-        "vbs",
-        "js",
-        "jar",
-        "app",
-        "dmg",
-      ];
-      if (blocked.includes(ext)) {
-        toast.error(t("profile_drop_submission_file_type_blocked", { ext }));
-        return;
-      }
-    }
+    const success = await handleSubmission({
+      name,
+      email,
+      note,
+      files: selectedFiles,
+    });
 
-    try {
-      setUploading(true);
-
-      // Upload files to Supabase Storage
-      const uploaded: {
-        path: string;
-        size: number;
-        content_type: string | null;
-      }[] = [];
-      for (const f of selectedFiles) {
-        const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-        const key = `${drop.drop_id}/${Date.now()}-${safeName}`;
-        const { error: upErr } = await supabase.storage
-          .from("drops")
-          .upload(key, f, {
-            contentType: f.type || undefined,
-            upsert: false,
-          });
-        if (upErr) throw upErr;
-        uploaded.push({
-          path: key,
-          size: f.size,
-          content_type: f.type || null,
-        });
-      }
-
-      // Create submission row
-      const { error } = await supabase.from("submissions").insert([
-        {
-          drop_id: drop.drop_id,
-          name,
-          email,
-          note,
-          files: uploaded,
-          user_agent: navigator.userAgent,
-        },
-      ]);
-      if (error) throw error;
-      toast.success(t("profile_drop_submission_success"));
+    if (success && formRef.current) {
       formRef.current.reset();
-      setSelectedFiles([]);
-    } catch (err) {
-      console.error(err);
-      toast.error(t("profile_drop_submission_failed"));
-    } finally {
-      setUploading(false);
     }
   };
 

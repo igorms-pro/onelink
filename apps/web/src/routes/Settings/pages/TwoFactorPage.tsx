@@ -1,10 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Shield } from "lucide-react";
-import { toast } from "sonner";
-import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
   QRCodeDisplay,
   BackupCodesDisplay,
@@ -12,112 +11,53 @@ import {
   DisableTwoFactorSection,
   TwoFactorActiveStatus,
 } from "./TwoFactor";
-
-type TwoFactorState = "disabled" | "setup" | "active";
+import { useTwoFactor } from "./TwoFactor/useTwoFactor";
 
 export default function TwoFactorPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const [state, setState] = useState<TwoFactorState>("disabled");
-  const [loading, setLoading] = useState(true);
+  const { user, loading: authLoading } = useRequireAuth();
   const [verificationCode, setVerificationCode] = useState("");
   const [showBackupCodes, setShowBackupCodes] = useState(false);
-  const [backupCodes, setBackupCodes] = useState<string[]>([]);
-  const [qrCodeData, setQrCodeData] = useState("");
-  const [secret, setSecret] = useState("");
-  const [isDisabling, setIsDisabling] = useState(false);
 
-  useEffect(() => {
-    setTimeout(() => {
-      setState("disabled");
-      setLoading(false);
-    }, 500);
-  }, []);
+  const {
+    state,
+    loading,
+    submitting,
+    secret,
+    backupCodes,
+    qrCodeData,
+    startSetup,
+    verifyAndEnable,
+    disable,
+    regenerateBackupCodes,
+  } = useTwoFactor();
 
-  const handleEnable2FA = async () => {
-    setLoading(true);
-    try {
-      const mockSecret = "JBSWY3DPEHPK3PXP";
-      const mockEmail = user?.email || "user@example.com";
-      const mockIssuer = "OneLink";
-      const mockQrData = `otpauth://totp/${encodeURIComponent(mockIssuer)}:${encodeURIComponent(mockEmail)}?secret=${mockSecret}&issuer=${encodeURIComponent(mockIssuer)}`;
-
-      setSecret(mockSecret);
-      setQrCodeData(mockQrData);
-
-      const codes = Array.from({ length: 10 }, () =>
-        Math.random().toString(36).substring(2, 10).toUpperCase(),
-      );
-      setBackupCodes(codes);
-      setState("setup");
+  const handleVerifyCode = async () => {
+    const success = await verifyAndEnable(verificationCode);
+    if (success) {
+      setVerificationCode("");
       setShowBackupCodes(true);
-      toast.success(t("settings_2fa_setup_started"));
-    } catch (error) {
-      toast.error(t("settings_2fa_setup_failed"));
-      console.error("Failed to enable 2FA:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
-  const handleVerifyCode = async () => {
-    if (!verificationCode.trim() || verificationCode.length !== 6) {
-      toast.error(t("settings_2fa_code_invalid"));
-      return;
-    }
-
-    setLoading(true);
-    try {
-      if (verificationCode.length === 6) {
-        setState("active");
-        toast.success(t("settings_2fa_activated"));
-      } else {
-        toast.error(t("settings_2fa_code_incorrect"));
-      }
-    } catch (error) {
-      toast.error(t("settings_2fa_verification_failed"));
-      console.error("Failed to verify code:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handleEnable2FA = async () => {
+    await startSetup();
+    setShowBackupCodes(true);
   };
 
   const handleDisable2FA = async (password: string) => {
-    if (!password) {
-      toast.error(t("settings_2fa_password_required"));
-      return;
-    }
-
-    setIsDisabling(true);
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setState("disabled");
-      toast.success(t("settings_2fa_disabled"));
-    } catch (error) {
-      toast.error(t("settings_2fa_disable_failed"));
-      console.error("Failed to disable 2FA:", error);
-    } finally {
-      setIsDisabling(false);
-    }
+    await disable(password);
   };
 
   const handleRegenerateBackupCodes = async () => {
-    setLoading(true);
-    try {
-      const codes = Array.from({ length: 10 }, () =>
-        Math.random().toString(36).substring(2, 10).toUpperCase(),
-      );
-      setBackupCodes(codes);
-      setShowBackupCodes(true);
-      toast.success(t("settings_2fa_backup_codes_regenerated"));
-    } catch (error) {
-      toast.error(t("settings_2fa_backup_codes_regenerate_failed"));
-      console.error("Failed to regenerate backup codes:", error);
-    } finally {
-      setLoading(false);
-    }
+    await regenerateBackupCodes();
+    setShowBackupCodes(true);
   };
+
+  if (authLoading || !user) {
+    return null; // Will redirect via useRequireAuth
+  }
 
   if (loading && state === "disabled") {
     return (
@@ -139,7 +79,7 @@ export default function TwoFactorPage() {
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/settings")}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
@@ -170,10 +110,10 @@ export default function TwoFactorPage() {
               </p>
               <button
                 onClick={handleEnable2FA}
-                disabled={loading}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={submitting}
+                className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {loading
+                {submitting
                   ? t("settings_2fa_setting_up")
                   : t("settings_2fa_enable")}
               </button>
@@ -205,7 +145,7 @@ export default function TwoFactorPage() {
                 verificationCode={verificationCode}
                 setVerificationCode={setVerificationCode}
                 onVerify={handleVerifyCode}
-                loading={loading}
+                loading={submitting}
               />
             </div>
           </div>
@@ -221,13 +161,13 @@ export default function TwoFactorPage() {
               showBackupCodes={showBackupCodes}
               setShowBackupCodes={setShowBackupCodes}
               onRegenerate={handleRegenerateBackupCodes}
-              loading={loading}
+              loading={submitting}
               variant="active"
             />
 
             <DisableTwoFactorSection
               onDisable={handleDisable2FA}
-              isDisabling={isDisabling}
+              isDisabling={submitting}
             />
           </div>
         )}
