@@ -154,12 +154,39 @@ Deno.serve(async (req) => {
 
     console.log("[stripe-create-checkout] Looking up Stripe customer...");
     const customers = await stripe.customers.list({ email, limit: 1 });
-    const customer = customers.data[0] || await stripe.customers.create({ email });
+    const customer = customers.data[0] || await stripe.customers.create({ 
+      email,
+      metadata: { user_id } // Link user_id to customer
+    });
     
     console.log("[stripe-create-checkout] Stripe customer:", {
       customerId: customer.id,
       isNew: !customers.data[0],
     });
+
+    // Check if customer already has an active subscription
+    console.log("[stripe-create-checkout] Checking for existing subscriptions...");
+    const existingSubscriptions = await stripe.subscriptions.list({
+      customer: customer.id,
+      status: "active",
+      limit: 1,
+    });
+
+    if (existingSubscriptions.data.length > 0) {
+      console.log("[stripe-create-checkout] Customer already has active subscription:", {
+        subscriptionId: existingSubscriptions.data[0].id,
+      });
+      return new Response(
+        JSON.stringify({ 
+          error: "You already have an active subscription. Please manage it from the billing portal.",
+          code: "SUBSCRIPTION_EXISTS"
+        }), 
+        {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
 
     console.log("[stripe-create-checkout] Creating checkout session...");
     const session = await stripe.checkout.sessions.create({
@@ -168,6 +195,9 @@ Deno.serve(async (req) => {
       line_items: [{ price: priceId, quantity: 1 }],
       success_url: `${siteUrl}/dashboard?upgraded=1`,
       cancel_url: `${siteUrl}/dashboard?canceled=1`,
+      subscription_data: {
+        metadata: { user_id, plan, period }, // Also add metadata to subscription
+      },
       metadata: { user_id, plan, period },
     });
 
