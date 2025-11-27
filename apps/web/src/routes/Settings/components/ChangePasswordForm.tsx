@@ -3,6 +3,9 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import clsx from "clsx";
+import { PasswordInput } from "./PasswordInput";
+import { PasswordStrengthIndicator } from "./PasswordStrengthIndicator";
+import { PasswordValidationRules } from "./PasswordValidationRules";
 
 interface ChangePasswordFormProps {
   open: boolean;
@@ -23,52 +26,6 @@ const INITIAL_FORM = {
   newPassword: "",
   confirmPassword: "",
 };
-
-function PasswordField({
-  id,
-  label,
-  value,
-  onChange,
-  disabled,
-  error,
-  placeholder,
-  hint,
-}: {
-  id: string;
-  label: string;
-  value: string;
-  onChange: (value: string) => void;
-  disabled: boolean;
-  error?: string;
-  placeholder: string;
-  hint?: string;
-}) {
-  return (
-    <div className="space-y-2">
-      <label
-        htmlFor={id}
-        className="text-sm font-medium text-gray-900 dark:text-white"
-      >
-        {label}
-      </label>
-      <input
-        id={id}
-        type="password"
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        disabled={disabled}
-        className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
-        placeholder={placeholder}
-      />
-      {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
-      )}
-      {hint && (
-        <p className="text-xs text-gray-500 dark:text-gray-400">{hint}</p>
-      )}
-    </div>
-  );
-}
 
 export function ChangePasswordForm({
   open,
@@ -192,7 +149,7 @@ export function ChangePasswordForm({
       className={clsx("space-y-6", className)}
       data-testid="settings-change-password-form"
     >
-      <PasswordField
+      <PasswordInput
         id="current-password"
         label={t("settings_change_password_current_label")}
         value={formData.currentPassword}
@@ -202,18 +159,21 @@ export function ChangePasswordForm({
         placeholder={t("settings_change_password_current_placeholder")}
       />
 
-      <PasswordField
-        id="new-password"
-        label={t("settings_change_password_new_label")}
-        value={formData.newPassword}
-        onChange={(value) => updateField("newPassword", value)}
-        disabled={loading}
-        error={errors.newPassword}
-        placeholder={t("settings_change_password_new_placeholder")}
-        hint={t("settings_change_password_min_length_hint")}
-      />
+      <div className="space-y-2">
+        <PasswordInput
+          id="new-password"
+          label={t("settings_change_password_new_label")}
+          value={formData.newPassword}
+          onChange={(value) => updateField("newPassword", value)}
+          disabled={loading}
+          error={errors.newPassword}
+          placeholder={t("settings_change_password_new_placeholder")}
+        />
+        <PasswordStrengthIndicator password={formData.newPassword} />
+        <PasswordValidationRules password={formData.newPassword} />
+      </div>
 
-      <PasswordField
+      <PasswordInput
         id="confirm-password"
         label={t("settings_change_password_confirm_label")}
         value={formData.confirmPassword}

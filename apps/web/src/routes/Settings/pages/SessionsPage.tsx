@@ -1,42 +1,18 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  ArrowLeft,
-  LogOut,
-  Monitor,
-  MapPin,
-  Clock,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import { ArrowLeft, Monitor, Clock } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
 import { toast } from "sonner";
-
-// Types for sessions (will be replaced with real API types later)
-type Session = {
-  id: string;
-  device: {
-    os: string;
-    browser: string;
-  };
-  location: {
-    ip: string;
-    city?: string;
-    country?: string;
-  };
-  lastActivity: string;
-  isCurrent: boolean;
-};
-
-type LoginHistory = {
-  id: string;
-  date: string;
-  status: "success" | "failed";
-  ip: string;
-  device: string;
-};
+import {
+  SessionList,
+  SessionsSkeleton,
+  LoginHistoryList,
+  LoginHistorySkeleton,
+  type Session,
+  type LoginHistory,
+} from "./components";
 
 export default function SessionsPage() {
   const { t } = useTranslation();
@@ -92,9 +68,6 @@ export default function SessionsPage() {
     setLoading(true);
     try {
       // TODO: Replace with actual API call
-      // const { data } = await supabase.rpc("get_user_sessions", { user_id: user.id });
-
-      // Mock data for now
       await new Promise((resolve) => setTimeout(resolve, 1000));
       const mockSessions: Session[] = [
         {
@@ -154,9 +127,6 @@ export default function SessionsPage() {
 
     setRevokingSessionId(sessionId);
     try {
-      // TODO: Replace with actual API call
-      // await supabase.rpc("revoke_session", { session_id: sessionId });
-
       await new Promise((resolve) => setTimeout(resolve, 500));
       setSessions((prev) => prev.filter((s) => s.id !== sessionId));
       toast.success(t("sessions_revoked_success"));
@@ -173,9 +143,6 @@ export default function SessionsPage() {
 
     setRevokingSessionId("all");
     try {
-      // TODO: Replace with actual API call
-      // await supabase.rpc("revoke_all_other_sessions", { user_id: user.id });
-
       await new Promise((resolve) => setTimeout(resolve, 500));
       setSessions((prev) => prev.filter((s) => s.isCurrent));
       toast.success(t("sessions_revoked_all_success"));
@@ -223,7 +190,7 @@ export default function SessionsPage() {
   };
 
   if (!user) {
-    return null; // Will redirect via useEffect
+    return null;
   }
 
   return (
@@ -252,88 +219,24 @@ export default function SessionsPage() {
           id="active-sessions"
           className="mb-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
         >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-              <Monitor className="w-5 h-5" />
-              {t("sessions_active_sessions")}
-            </h2>
-            {sessions.filter((s) => !s.isCurrent).length > 0 && (
-              <button
-                onClick={revokeAllOtherSessions}
-                disabled={revokingSessionId === "all"}
-                className="text-sm text-red-600 dark:text-red-400 hover:underline disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-              >
-                {revokingSessionId === "all"
-                  ? t("sessions_revoking")
-                  : t("sessions_revoke_all_other")}
-              </button>
-            )}
-          </div>
-
           {loading ? (
-            <SessionsSkeleton />
-          ) : sessions.length === 0 ? (
-            <div className="text-center py-12">
-              <Monitor className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">
-                {t("sessions_no_sessions")}
-              </p>
-            </div>
+            <>
+              <div className="flex items-center gap-2 mb-6">
+                <Monitor className="w-5 h-5 text-gray-500" />
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  {t("sessions_active_sessions")}
+                </h2>
+              </div>
+              <SessionsSkeleton />
+            </>
           ) : (
-            <div className="space-y-4">
-              {sessions.map((session) => (
-                <div
-                  key={session.id}
-                  className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4"
-                >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Monitor className="w-5 h-5 text-gray-500 dark:text-gray-400" />
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white">
-                            {session.device.browser} on {session.device.os}
-                          </p>
-                          {session.isCurrent && (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 mt-1">
-                              {t("sessions_current_session")}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-400 ml-8">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-4 h-4" />
-                          <span>
-                            {session.location.city
-                              ? `${session.location.city}, ${session.location.country}`
-                              : session.location.country || session.location.ip}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>
-                            {formatRelativeTime(session.lastActivity)}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                    {!session.isCurrent && (
-                      <button
-                        onClick={() => revokeSession(session.id)}
-                        disabled={revokingSessionId === session.id}
-                        className="ml-4 px-3 py-1.5 rounded-lg border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm font-medium flex items-center gap-1"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        {revokingSessionId === session.id
-                          ? t("sessions_revoking")
-                          : t("sessions_revoke")}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
+            <SessionList
+              sessions={sessions}
+              revokingSessionId={revokingSessionId}
+              onRevoke={revokeSession}
+              onRevokeAll={revokeAllOtherSessions}
+              formatRelativeTime={formatRelativeTime}
+            />
           )}
         </section>
 
@@ -349,101 +252,11 @@ export default function SessionsPage() {
 
           {loading ? (
             <LoginHistorySkeleton />
-          ) : loginHistory.length === 0 ? (
-            <div className="text-center py-12">
-              <Clock className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
-              <p className="text-gray-500 dark:text-gray-400">
-                {t("sessions_no_history")}
-              </p>
-            </div>
           ) : (
-            <div className="space-y-3">
-              {loginHistory.map((entry) => (
-                <div
-                  key={entry.id}
-                  className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
-                >
-                  <div className="flex items-center gap-3 flex-1">
-                    {entry.status === "success" ? (
-                      <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
-                    ) : (
-                      <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-                    )}
-                    <div className="flex-1">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {formatDate(entry.date)}
-                      </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
-                        {entry.device} • {entry.ip}
-                      </p>
-                    </div>
-                  </div>
-                  <span
-                    className={`text-xs font-medium px-2 py-1 rounded ${
-                      entry.status === "success"
-                        ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                        : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
-                    }`}
-                  >
-                    {entry.status === "success"
-                      ? t("sessions_status_success")
-                      : t("sessions_status_failed")}
-                  </span>
-                </div>
-              ))}
-            </div>
+            <LoginHistoryList history={loginHistory} formatDate={formatDate} />
           )}
         </section>
       </main>
-    </div>
-  );
-}
-
-function SessionsSkeleton() {
-  return (
-    <div className="space-y-4">
-      {[1, 2].map((i) => (
-        <div
-          key={i}
-          className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4 animate-pulse"
-        >
-          <div className="flex items-start justify-between">
-            <div className="flex-1">
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-5 h-5 bg-gray-300 dark:bg-gray-700 rounded" />
-                <div className="h-5 w-32 bg-gray-300 dark:bg-gray-700 rounded" />
-              </div>
-              <div className="flex gap-4 ml-8">
-                <div className="h-4 w-24 bg-gray-300 dark:bg-gray-700 rounded" />
-                <div className="h-4 w-20 bg-gray-300 dark:bg-gray-700 rounded" />
-              </div>
-            </div>
-            <div className="h-8 w-20 bg-gray-300 dark:bg-gray-700 rounded" />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function LoginHistorySkeleton() {
-  return (
-    <div className="space-y-3">
-      {[1, 2, 3].map((i) => (
-        <div
-          key={i}
-          className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 animate-pulse"
-        >
-          <div className="flex items-center gap-3 flex-1">
-            <div className="w-5 h-5 bg-gray-300 dark:bg-gray-700 rounded-full" />
-            <div className="flex-1">
-              <div className="h-4 w-32 bg-gray-300 dark:bg-gray-700 rounded mb-2" />
-              <div className="h-3 w-48 bg-gray-300 dark:bg-gray-700 rounded" />
-            </div>
-          </div>
-          <div className="h-6 w-16 bg-gray-300 dark:bg-gray-700 rounded" />
-        </div>
-      ))}
     </div>
   );
 }

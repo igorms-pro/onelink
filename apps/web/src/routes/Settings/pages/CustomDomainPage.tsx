@@ -1,55 +1,20 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  ArrowLeft,
-  Globe,
-  Trash2,
-  CheckCircle2,
-  Clock,
-  HelpCircle,
-} from "lucide-react";
+import { ArrowLeft, Globe } from "lucide-react";
 import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
 import { isProPlan } from "@/lib/types/plan";
 import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
-
-interface CustomDomain {
-  id: string;
-  domain: string;
-  verified: boolean;
-  created_at: string;
-}
-
-function DomainStatusBadge({ verified }: { verified: boolean }) {
-  const { t } = useTranslation();
-  if (verified) {
-    return (
-      <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-        <CheckCircle2 className="w-3 h-3" />
-        {t("settings_domain_status_verified")}
-      </span>
-    );
-  }
-  return (
-    <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
-      <Clock className="w-3 h-3" />
-      {t("settings_domain_status_pending")}
-    </span>
-  );
-}
-
-function DomainSkeleton() {
-  return (
-    <div className="animate-pulse space-y-4">
-      <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-      <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-      <div className="h-24 bg-gray-200 dark:bg-gray-700 rounded-lg" />
-    </div>
-  );
-}
+import {
+  DomainSkeleton,
+  DomainForm,
+  DomainList,
+  DnsInstructions,
+  type CustomDomain,
+} from "./CustomDomain";
 
 export default function CustomDomainPage() {
   const { t } = useTranslation();
@@ -60,7 +25,6 @@ export default function CustomDomainPage() {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [domainInput, setDomainInput] = useState("");
-  const [showHelp, setShowHelp] = useState(false);
   const [errors, setErrors] = useState<{ domain?: string }>({});
 
   // Redirect if not Pro
@@ -252,177 +216,18 @@ export default function CustomDomainPage() {
           <DomainSkeleton />
         ) : (
           <div className="space-y-6">
-            {/* Add Domain Form */}
-            <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                {t("settings_domain_add_title")}
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <label
-                    htmlFor="domain-input"
-                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-                  >
-                    {t("settings_domain_label")}
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      id="domain-input"
-                      type="text"
-                      value={domainInput}
-                      onChange={(e) => {
-                        setDomainInput(e.target.value);
-                        if (errors.domain) setErrors({});
-                      }}
-                      placeholder={t("settings_domain_placeholder")}
-                      className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      disabled={submitting}
-                    />
-                    <button
-                      onClick={handleAddDomain}
-                      disabled={submitting || !domainInput.trim()}
-                      className="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
-                    >
-                      {submitting ? t("common_loading") : t("common_add")}
-                    </button>
-                  </div>
-                  {errors.domain && (
-                    <p className="mt-1 text-sm text-red-600 dark:text-red-400">
-                      {errors.domain}
-                    </p>
-                  )}
-                  <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    {t("settings_domain_hint")}
-                  </p>
-                </div>
-              </div>
-            </section>
+            <DomainForm
+              domainInput={domainInput}
+              setDomainInput={setDomainInput}
+              onSubmit={handleAddDomain}
+              submitting={submitting}
+              error={errors.domain}
+              onClearError={() => setErrors({})}
+            />
 
-            {/* Configured Domains List */}
-            <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-                {t("settings_domain_list_title")}
-              </h2>
-              {domains.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  {t("settings_domain_empty")}
-                </div>
-              ) : (
-                <div className="space-y-3">
-                  {domains.map((domain) => (
-                    <div
-                      key={domain.id}
-                      className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Globe className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-                        <div>
-                          <div className="font-medium text-gray-900 dark:text-white">
-                            {domain.domain}
-                          </div>
-                          <div className="mt-1">
-                            <DomainStatusBadge verified={domain.verified} />
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        onClick={() =>
-                          handleDeleteDomain(domain.id, domain.domain)
-                        }
-                        className="p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
-                        aria-label={t("common_delete")}
-                      >
-                        <Trash2 className="w-5 h-5" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </section>
+            <DomainList domains={domains} onDelete={handleDeleteDomain} />
 
-            {/* DNS Instructions */}
-            <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {t("settings_domain_dns_title")}
-                </h2>
-                <button
-                  onClick={() => setShowHelp(!showHelp)}
-                  className="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                  aria-label={t("settings_domain_help_toggle")}
-                >
-                  <HelpCircle className="w-5 h-5" />
-                </button>
-              </div>
-              {showHelp && (
-                <div className="space-y-4 text-sm text-gray-700 dark:text-gray-300">
-                  <div>
-                    <h3 className="font-semibold mb-2">
-                      {t("settings_domain_dns_subdomain_title")}
-                    </h3>
-                    <p className="mb-2">
-                      {t("settings_domain_dns_subdomain_description")}
-                    </p>
-                    <div className="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg font-mono text-xs">
-                      <div className="mb-1">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Type:
-                        </span>{" "}
-                        CNAME
-                      </div>
-                      <div className="mb-1">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Name:
-                        </span>{" "}
-                        {domainInput || "subdomain.example.com"}
-                      </div>
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Value:
-                        </span>{" "}
-                        cname.vercel-dns.com
-                      </div>
-                    </div>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold mb-2">
-                      {t("settings_domain_dns_apex_title")}
-                    </h3>
-                    <p className="mb-2">
-                      {t("settings_domain_dns_apex_description")}
-                    </p>
-                    <div className="bg-gray-100 dark:bg-gray-900 p-3 rounded-lg font-mono text-xs">
-                      <div className="mb-1">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Type:
-                        </span>{" "}
-                        A
-                      </div>
-                      <div className="mb-1">
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Name:
-                        </span>{" "}
-                        @
-                      </div>
-                      <div>
-                        <span className="text-gray-600 dark:text-gray-400">
-                          Value:
-                        </span>{" "}
-                        76.76.21.21
-                      </div>
-                    </div>
-                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                      {t("settings_domain_dns_apex_note")}
-                    </p>
-                  </div>
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t("settings_domain_dns_note")}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </section>
+            <DnsInstructions domainInput={domainInput} />
           </div>
         )}
       </main>
