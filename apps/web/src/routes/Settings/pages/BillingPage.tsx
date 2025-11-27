@@ -24,8 +24,8 @@ type PaymentMethod = {
   expYear: number;
 };
 
-import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
-import { isProPlan } from "@/lib/types/plan";
+import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/plan-limits";
+import { isPaidPlan, getPlanName } from "@/lib/types/plan";
 import { BillingError } from "@/lib/billing";
 
 export default function BillingPage() {
@@ -45,7 +45,10 @@ export default function BillingPage() {
   const [loadingInvoices, setLoadingInvoices] = useState(false);
   const [loadingPayment, setLoadingPayment] = useState(false);
 
-  const isPro = isProPlan(plan);
+  const hasPaidPlan = isPaidPlan(plan);
+  const planDisplayName = getPlanName(plan);
+  const linksLimit = getPlanLinksLimit(plan);
+  const dropsLimit = getPlanDropsLimit(plan);
   const isLoading = authLoading || dataLoading;
 
   // Redirect to /auth if not logged in
@@ -57,36 +60,38 @@ export default function BillingPage() {
 
   // Load invoices (placeholder - will be replaced with real API)
   useEffect(() => {
-    if (!user || !isPro) return;
+    if (!user || !hasPaidPlan) return;
     setLoadingInvoices(true);
     // TODO: Replace with real API call
     setTimeout(() => {
       setInvoices([]);
       setLoadingInvoices(false);
     }, 500);
-  }, [user, isPro]);
+  }, [user, hasPaidPlan]);
 
   // Load payment method (placeholder - will be replaced with real API)
   useEffect(() => {
-    if (!user || !isPro) return;
+    if (!user || !hasPaidPlan) return;
     setLoadingPayment(true);
     // TODO: Replace with real API call
     setTimeout(() => {
       setPaymentMethod(null);
       setLoadingPayment(false);
     }, 500);
-  }, [user, isPro]);
+  }, [user, hasPaidPlan]);
 
   if (!user) {
     return null; // Will redirect via useEffect
   }
 
-  const linksUsagePercent = isPro
-    ? 0
-    : Math.min((links.length / getFreeLinksLimit()) * 100, 100);
-  const dropsUsagePercent = isPro
-    ? 0
-    : Math.min((drops.length / getFreeDropsLimit()) * 100, 100);
+  const linksUsagePercent =
+    linksLimit === Infinity
+      ? 0
+      : Math.min((links.length / linksLimit) * 100, 100);
+  const dropsUsagePercent =
+    dropsLimit === Infinity
+      ? 0
+      : Math.min((drops.length / dropsLimit) * 100, 100);
 
   const handleManagePayment = async () => {
     try {
@@ -207,24 +212,24 @@ export default function BillingPage() {
                   </span>
                   <span
                     className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      isPro
+                      hasPaidPlan
                         ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
                         : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
                     }`}
                   >
-                    {isPro ? "Pro" : "Free"}
+                    {planDisplayName}
                   </span>
                 </div>
 
-                {isPro && (
+                {hasPaidPlan && (
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("settings_renewal_date")}:{" "}
                     {t("billing_renewal_placeholder")}
                   </div>
                 )}
 
-                {/* Usage Progress Bar (Free plan) */}
-                {!isPro && (
+                {/* Usage Progress Bar */}
+                {linksLimit !== Infinity && (
                   <div className="space-y-4">
                     {/* Links Usage */}
                     <div className="space-y-2">
@@ -233,8 +238,7 @@ export default function BillingPage() {
                           {t("billing_links_usage")}
                         </span>
                         <span className="text-gray-500 dark:text-gray-400">
-                          {links.length} / {getFreeLinksLimit()}{" "}
-                          {t("billing_links")}
+                          {links.length} / {linksLimit} {t("billing_links")}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -257,8 +261,7 @@ export default function BillingPage() {
                           {t("billing_drops_usage")}
                         </span>
                         <span className="text-gray-500 dark:text-gray-400">
-                          {drops.length} / {getFreeDropsLimit()}{" "}
-                          {t("billing_drops")}
+                          {drops.length} / {dropsLimit} {t("billing_drops")}
                         </span>
                       </div>
                       <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
@@ -276,15 +279,15 @@ export default function BillingPage() {
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
                       {t("billing_plan_limits_separate", {
-                        links: getFreeLinksLimit(),
-                        drops: getFreeDropsLimit(),
+                        links: linksLimit,
+                        drops: dropsLimit,
                       })}
                     </p>
                   </div>
                 )}
 
-                {/* Pro plan limits */}
-                {isPro && (
+                {/* Unlimited plan */}
+                {linksLimit === Infinity && (
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     {t("billing_pro_limits")}
                   </div>
@@ -293,7 +296,7 @@ export default function BillingPage() {
             </section>
 
             {/* Payment Method Section */}
-            {isPro && (
+            {hasPaidPlan && (
               <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <CreditCard className="w-5 h-5 text-gray-700 dark:text-gray-300" />
@@ -348,7 +351,7 @@ export default function BillingPage() {
             )}
 
             {/* Billing History Section */}
-            {isPro && (
+            {hasPaidPlan && (
               <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
                 <div className="flex items-center gap-2 mb-4">
                   <Calendar className="w-5 h-5 text-gray-700 dark:text-gray-300" />
@@ -427,7 +430,7 @@ export default function BillingPage() {
                 </h2>
               </div>
               <div className="pl-7 space-y-3">
-                {isPro ? (
+                {hasPaidPlan ? (
                   <button
                     onClick={handleCancelSubscription}
                     className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-300 dark:border-red-700 bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 text-sm font-medium hover:bg-red-100 dark:hover:bg-red-900/30 transition-all cursor-pointer active:scale-[0.98]"
