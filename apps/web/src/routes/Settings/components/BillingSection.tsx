@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { CreditCard } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { isProPlan } from "@/lib/types/plan";
+import { isPaidPlan, getPlanName } from "@/lib/types/plan";
 import type { PlanTypeValue } from "@/lib/types/plan";
 
 interface BillingSectionProps {
@@ -11,7 +11,8 @@ interface BillingSectionProps {
 export function BillingSection({ plan }: BillingSectionProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const isPro = isProPlan(plan);
+  const hasPaidPlan = isPaidPlan(plan);
+  const planDisplayName = getPlanName(plan);
 
   const handleNavigateToBilling = () => {
     navigate("/settings/billing");
@@ -36,15 +37,15 @@ export function BillingSection({ plan }: BillingSectionProps) {
           <span
             data-testid="settings-current-plan-badge"
             className={`px-2 py-1 rounded text-xs font-medium ${
-              isPro
+              hasPaidPlan
                 ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
                 : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
             }`}
           >
-            {isPro ? "Pro" : "Free"}
+            {planDisplayName}
           </span>
         </div>
-        {isPro && (
+        {hasPaidPlan && (
           <>
             <div className="text-xs text-gray-500 dark:text-gray-400">
               {t("settings_renewal_date")}: {t("settings_coming_soon")}
@@ -65,7 +66,7 @@ export function BillingSection({ plan }: BillingSectionProps) {
             </button>
           </>
         )}
-        {!isPro && (
+        {!hasPaidPlan && (
           <button
             data-testid="settings-upgrade-to-pro"
             onClick={handleNavigateToBilling}

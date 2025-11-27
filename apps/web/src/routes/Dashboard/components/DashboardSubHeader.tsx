@@ -2,16 +2,20 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { goToPortal, BillingError } from "@/lib/billing";
+import { isPaidPlan, getPlanName } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 
 interface DashboardSubHeaderProps {
-  isFree: boolean;
+  plan: PlanTypeValue | null;
   onSignOut: () => void;
 }
 
 export function DashboardSubHeader({
-  isFree,
+  plan,
   onSignOut,
 }: DashboardSubHeaderProps) {
+  const hasPaidPlan = isPaidPlan(plan);
+  const planDisplayName = getPlanName(plan);
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -48,11 +52,11 @@ export function DashboardSubHeader({
             {t("dashboard_header_title")}
           </div>
           <span className="rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide">
-            {isFree ? t("dashboard_header_free") : t("dashboard_header_pro")}
+            {planDisplayName}
           </span>
         </div>
         <div className="flex items-center justify-end gap-2 shrink-0">
-          {isFree ? (
+          {!hasPaidPlan ? (
             <button
               className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
               onClick={handleUpgrade}

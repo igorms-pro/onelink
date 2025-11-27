@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { DashboardSubHeader } from "../DashboardSubHeader";
+import { PlanId } from "@/lib/types/plan";
 
 const mockNavigate = vi.fn();
 
@@ -37,47 +38,57 @@ describe("DashboardSubHeader", () => {
   it("should render dashboard title", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 
-  it("should display Free badge when isFree is true", () => {
+  it("should display Free badge when plan is free", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Free")).toBeInTheDocument();
   });
 
-  it("should display Pro badge when isFree is false", () => {
+  it("should display Starter badge when plan is starter", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.STARTER} onSignOut={mockOnSignOut} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Starter")).toBeInTheDocument();
+  });
+
+  it("should display Pro badge when plan is pro", () => {
+    render(
+      <MemoryRouter>
+        <DashboardSubHeader plan={PlanId.PRO} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Pro")).toBeInTheDocument();
   });
 
-  it("should show upgrade button when isFree is true", () => {
+  it("should show upgrade button when plan is free", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Upgrade to Pro")).toBeInTheDocument();
   });
 
-  it("should show manage billing button when isFree is false", () => {
+  it("should show manage billing button when plan is paid", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.STARTER} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
@@ -89,7 +100,7 @@ describe("DashboardSubHeader", () => {
 
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
@@ -106,7 +117,7 @@ describe("DashboardSubHeader", () => {
 
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.PRO} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
@@ -121,7 +132,7 @@ describe("DashboardSubHeader", () => {
 
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 

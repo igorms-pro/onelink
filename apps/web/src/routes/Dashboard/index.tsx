@@ -16,7 +16,7 @@ import {
 import type { TabId } from "./types";
 
 import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
-import { isProPlan } from "@/lib/types/plan";
+import { isPaidPlan } from "@/lib/types/plan";
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -35,7 +35,7 @@ export default function Dashboard() {
     plan,
   } = useDashboardData(user?.id ?? null);
 
-  const isFree = !isProPlan(plan);
+  const isFree = !isPaidPlan(plan);
 
   // Redirect to /auth if not logged in
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Dashboard() {
       {/* Headers - sticky on mobile, participate in flexbox */}
       <div className="shrink-0">
         <Header onSettingsClick={() => navigate("/settings")} />
-        <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
+        <DashboardSubHeader plan={plan} onSignOut={() => signOut()} />
       </div>
 
       {/* Main content area - takes remaining space and scrolls */}
