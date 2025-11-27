@@ -20,22 +20,26 @@ test.describe("Pricing Page", () => {
   test("can toggle between monthly and yearly billing", async ({ page }) => {
     await page.goto("/pricing");
 
-    // Find the toggle button
-    const toggle = page
-      .locator("button[type='button']")
-      .filter({
-        has: page.locator("span"),
-      })
-      .first();
-
     // Check initial state (should be monthly)
-    await expect(page.locator("text=Monthly")).toBeVisible();
+    await expect(page.locator("text=Monthly billing")).toBeVisible();
 
-    // Click toggle to switch to yearly
-    await toggle.click();
+    // Click on the "Annually" button to switch to yearly
+    const yearlyButton = page.getByRole("button", {
+      name: /annually.*save.*20/i,
+    });
+    await yearlyButton.click();
 
     // Should show yearly pricing
     await expect(page.locator("text=Annually (save 20%)")).toBeVisible();
+
+    // Click back to monthly
+    const monthlyButton = page.getByRole("button", {
+      name: /monthly billing/i,
+    });
+    await monthlyButton.click();
+
+    // Should show monthly pricing
+    await expect(page.locator("text=Monthly billing")).toBeVisible();
   });
 
   test("free plan card is visible and shows current plan for unauthenticated users", async ({
@@ -91,8 +95,8 @@ test.describe("Pricing Page", () => {
       // User not authenticated, redirected to auth - this is expected
       await expect(page).toHaveURL(/\/auth/);
     } else if (checkoutRequested) {
-      // Checkout was requested successfully
-      expect(checkoutRequested).toBe(true);
+      // Checkout was requested successfully (checkoutRequested is true here)
+      // No need to assert, we're already in the true branch
     } else {
       // Loading state might be shown
       const loadingVisible = await page
@@ -143,8 +147,8 @@ test.describe("Pricing Page", () => {
       // User not authenticated, redirected to auth - this is expected
       await expect(page).toHaveURL(/\/auth/);
     } else if (checkoutRequested) {
-      // Checkout was requested successfully
-      expect(checkoutRequested).toBe(true);
+      // Checkout was requested successfully (checkoutRequested is true here)
+      // No need to assert, we're already in the true branch
     } else {
       // Loading state might be shown
       const loadingVisible = await page

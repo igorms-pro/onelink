@@ -15,6 +15,7 @@ import { PricingPlanCard } from "./components/PricingPlanCard";
 import { PricingCTA } from "./components/PricingCTA";
 import { PricingFAQ } from "./components/PricingFAQ";
 import { PricingContact } from "./components/PricingContact";
+import { PricingSocialProof } from "./components/PricingSocialProof";
 import { usePricingPlans } from "./hooks/usePricingPlans";
 
 export default function Pricing() {
@@ -94,6 +95,8 @@ export default function Pricing() {
           onBackClick={() => navigate(-1)}
         />
 
+        <PricingSocialProof />
+
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="grid gap-8 lg:grid-cols-3">
             {plans.map((plan: (typeof plans)[0]) => {
@@ -114,6 +117,8 @@ export default function Pricing() {
                   loadingPlan={loadingPlan}
                   isSelected={selectedPlan === plan.id}
                   isCurrentPlan={isCurrentPlan}
+                  isAuthenticated={isAuthenticated}
+                  userCurrentPlan={currentPlan}
                   onClick={() => {
                     if (!isCurrentPlan) {
                       setSelectedPlan(plan.id);

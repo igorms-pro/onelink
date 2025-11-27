@@ -63,7 +63,8 @@ describe("ChangePasswordForm", () => {
       expect(screen.getByText("Change Password")).toBeInTheDocument();
     });
 
-    it("shows password hint for new password field", () => {
+    it("shows password validation rules for new password field", async () => {
+      const user = userEvent.setup();
       render(
         <ChangePasswordForm
           open={true}
@@ -72,9 +73,17 @@ describe("ChangePasswordForm", () => {
         />,
       );
 
-      expect(
-        screen.getByText("Must be at least 8 characters"),
-      ).toBeInTheDocument();
+      const newPasswordInput = screen.getByTestId("new-password-input");
+      await user.type(newPasswordInput, "test");
+
+      await waitFor(() => {
+        expect(
+          screen.getByTestId("password-validation-rules"),
+        ).toBeInTheDocument();
+        expect(
+          screen.getByTestId("password-rule-min_length"),
+        ).toBeInTheDocument();
+      });
     });
 
     it("resets form when open changes to false", () => {

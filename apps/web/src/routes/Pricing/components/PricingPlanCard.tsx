@@ -1,7 +1,8 @@
 import { Check } from "lucide-react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
-import { PlanType } from "@/lib/types/plan";
+import { PlanId, isPaidPlan } from "@/lib/types/plan";
+import type { PlanTypeValue } from "@/lib/types/plan";
 import type { PlanTier } from "@/lib/billing";
 
 interface PricingPlanCardProps {
@@ -18,6 +19,8 @@ interface PricingPlanCardProps {
   loadingPlan: string | null;
   isSelected?: boolean;
   isCurrentPlan?: boolean;
+  isAuthenticated?: boolean;
+  userCurrentPlan?: PlanTypeValue;
   onClick: () => void;
   onButtonClick: () => void;
 }
@@ -36,25 +39,51 @@ export function PricingPlanCard({
   loadingPlan,
   isSelected = false,
   isCurrentPlan = false,
+  isAuthenticated = false,
+  userCurrentPlan,
   onClick,
   onButtonClick,
 }: PricingPlanCardProps) {
   const { t } = useTranslation();
 
   const getPrice = () => {
-    if (id === PlanType.FREE) return priceMonthly || "$0";
+    if (id === PlanId.FREE) return priceMonthly || "$0";
     return billingPeriod === "yearly" ? priceYearly : priceMonthly;
   };
 
   const getPriceLabel = () => {
-    if (id === PlanType.FREE) return "";
+    if (id === PlanId.FREE) return "";
     return billingPeriod === "yearly"
       ? t("pricing.per_year")
       : t("pricing.per_month");
   };
 
+  // Determine button text based on auth state and plan
+  const getButtonText = () => {
+    if (isCurrentPlan) {
+      return t("pricing.current_plan", { defaultValue: "Your current plan" });
+    }
+    if (loadingPlan && loadingPlan === planTier) {
+      return t("pricing.loading");
+    }
+    // Free plan special cases
+    if (id === PlanId.FREE) {
+      if (!isAuthenticated) {
+        return cta; // "Start for free"
+      }
+      // User is authenticated and on a paid plan - show downgrade
+      if (isPaidPlan(userCurrentPlan)) {
+        return t("pricing.downgrade_to_free", {
+          defaultValue: "Downgrade to Free",
+        });
+      }
+    }
+    return cta;
+  };
+
   const price = getPrice();
   const priceLabel = getPriceLabel();
+  const buttonText = getButtonText();
 
   return (
     <div
@@ -117,16 +146,12 @@ export function PricingPlanCard({
                 ? "opacity-50 cursor-not-allowed"
                 : highlight
                   ? "bg-linear-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 disabled:opacity-60 cursor-pointer"
-                  : id === PlanType.FREE
+                  : id === PlanId.FREE
                     ? "border border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10 cursor-pointer"
                     : "border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-400/60 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20 disabled:opacity-60 cursor-pointer",
           )}
         >
-          {isCurrentPlan
-            ? t("pricing.current_plan", { defaultValue: "Your current plan" })
-            : loadingPlan === planTier
-              ? t("pricing.loading")
-              : cta}
+          {buttonText}
         </button>
       </div>
       <div className="mt-auto space-y-3">

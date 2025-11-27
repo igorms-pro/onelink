@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
-import { useAuth } from "@/lib/AuthProvider";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Header } from "@/components/Header";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
@@ -14,14 +14,13 @@ import {
   AccountTab,
 } from "./components";
 import type { TabId } from "./types";
-
 import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
-import { isProPlan } from "@/lib/types/plan";
+import { isPaidPlan } from "@/lib/types/plan";
 
 export default function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { user, signOut } = useRequireAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
 
   const {
@@ -35,17 +34,10 @@ export default function Dashboard() {
     plan,
   } = useDashboardData(user?.id ?? null);
 
-  const isFree = !isProPlan(plan);
-
-  // Redirect to /auth if not logged in
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth", { replace: true });
-    }
-  }, [loading, user, navigate]);
+  const isFree = !isPaidPlan(plan);
 
   if (!user) {
-    return null; // Will redirect via useEffect
+    return null; // Will redirect via useRequireAuth
   }
 
   return (
@@ -61,7 +53,7 @@ export default function Dashboard() {
       {/* Headers - sticky on mobile, participate in flexbox */}
       <div className="shrink-0">
         <Header onSettingsClick={() => navigate("/settings")} />
-        <DashboardSubHeader isFree={isFree} onSignOut={() => signOut()} />
+        <DashboardSubHeader plan={plan} onSignOut={() => signOut()} />
       </div>
 
       {/* Main content area - takes remaining space and scrolls */}

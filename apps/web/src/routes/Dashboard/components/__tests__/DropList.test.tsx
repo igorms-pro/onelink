@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { describe, it, expect, beforeEach, vi, afterEach } from "vitest";
+import { render, screen, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DropList } from "../DropList";
 import { toast } from "sonner";
@@ -29,64 +29,78 @@ describe("DropList", () => {
     setDrops: mockSetDrops,
   };
 
+  afterEach(() => {
+    cleanup();
+  });
+
   beforeEach(() => {
     vi.clearAllMocks();
     // Reset supabase.from to default mock behavior
     mockFrom.mockClear();
-    mockFrom.mockImplementation(
-      () =>
-        ({
+    mockFrom.mockImplementation((table: string) => {
+      // Handle submissions table for file count
+      if (table === "submissions") {
+        return {
           select: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              single: vi.fn(),
-              order: vi.fn(() => ({
-                data: [],
-                error: null,
-              })),
+            eq: vi.fn(() =>
+              Promise.resolve({ count: 0, data: null, error: null }),
+            ),
+          })),
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      // Default for drops table
+      return {
+        select: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            single: vi.fn(),
+            order: vi.fn(() => ({
               data: [],
               error: null,
             })),
             data: [],
             error: null,
           })),
-          insert: vi.fn(() => ({
-            select: vi.fn(() => ({
+          data: [],
+          error: null,
+        })),
+        insert: vi.fn(() => ({
+          select: vi.fn(() => ({
+            data: [],
+            error: null,
+          })),
+          data: [],
+          error: null,
+        })),
+        update: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            eq: vi.fn().mockResolvedValue({
               data: [],
               error: null,
-            })),
+            }),
             data: [],
             error: null,
           })),
-          update: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn().mockResolvedValue({
-                data: [],
-                error: null,
-              }),
+          data: [],
+          error: null,
+        })),
+        delete: vi.fn(() => ({
+          eq: vi.fn(() => ({
+            eq: vi.fn().mockResolvedValue({
               data: [],
               error: null,
-            })),
+            }),
             data: [],
             error: null,
           })),
-          delete: vi.fn(() => ({
-            eq: vi.fn(() => ({
-              eq: vi.fn().mockResolvedValue({
-                data: [],
-                error: null,
-              }),
-              data: [],
-              error: null,
-            })),
-            data: [],
-            error: null,
-          })),
-          upsert: vi.fn(() => ({
-            data: [],
-            error: null,
-          })),
-        }) as unknown as ReturnType<typeof supabase.from>,
-    );
+          data: [],
+          error: null,
+        })),
+        upsert: vi.fn(() => ({
+          data: [],
+          error: null,
+        })),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
   });
 
   it("renders empty state when no drops", () => {
@@ -96,7 +110,7 @@ describe("DropList", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders list of drops", () => {
+  it("renders list of drops", async () => {
     const drops: DropRow[] = [
       {
         id: "drop-1",
@@ -118,8 +132,10 @@ describe("DropList", () => {
       },
     ];
     render(<DropList {...defaultProps} drops={drops} />);
-    expect(screen.getByText("Drop 1")).toBeInTheDocument();
-    expect(screen.getByText("📁 Drop 2")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Drop 1")).toBeInTheDocument();
+      expect(screen.getByText("📁 Drop 2")).toBeInTheDocument();
+    });
   });
 
   it("handles edit drop", async () => {

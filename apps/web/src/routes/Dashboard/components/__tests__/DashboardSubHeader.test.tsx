@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { DashboardSubHeader } from "../DashboardSubHeader";
+import { PlanId } from "@/lib/types/plan";
 
 const mockNavigate = vi.fn();
 
@@ -37,51 +38,61 @@ describe("DashboardSubHeader", () => {
   it("should render dashboard title", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 
-  it("should display Free badge when isFree is true", () => {
+  it("should display Free badge when plan is free", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Free")).toBeInTheDocument();
   });
 
-  it("should display Pro badge when isFree is false", () => {
+  it("should display Starter badge when plan is starter", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.STARTER} onSignOut={mockOnSignOut} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Starter")).toBeInTheDocument();
+  });
+
+  it("should display Pro badge when plan is pro", () => {
+    render(
+      <MemoryRouter>
+        <DashboardSubHeader plan={PlanId.PRO} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Pro")).toBeInTheDocument();
   });
 
-  it("should show upgrade button when isFree is true", () => {
+  it("should show upgrade button when plan is free", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
     expect(screen.getByText("Upgrade to Pro")).toBeInTheDocument();
   });
 
-  it("should show manage billing button when isFree is false", () => {
+  it("should not show upgrade button when plan is paid", () => {
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.STARTER} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
-    expect(screen.getByText("Manage billing")).toBeInTheDocument();
+    expect(screen.queryByText("Upgrade to Pro")).not.toBeInTheDocument();
   });
 
   it("should navigate to pricing page when upgrade button is clicked", async () => {
@@ -89,7 +100,7 @@ describe("DashboardSubHeader", () => {
 
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 
@@ -100,28 +111,12 @@ describe("DashboardSubHeader", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/pricing");
   });
 
-  it("should call goToPortal when manage billing button is clicked", async () => {
-    const { goToPortal } = await import("@/lib/billing");
-    const user = userEvent.setup();
-
-    render(
-      <MemoryRouter>
-        <DashboardSubHeader isFree={false} onSignOut={mockOnSignOut} />
-      </MemoryRouter>,
-    );
-
-    const manageButton = screen.getByText("Manage billing");
-    await user.click(manageButton);
-
-    expect(goToPortal).toHaveBeenCalledTimes(1);
-  });
-
   it("should call onSignOut when sign out button is clicked", async () => {
     const user = userEvent.setup();
 
     render(
       <MemoryRouter>
-        <DashboardSubHeader isFree={true} onSignOut={mockOnSignOut} />
+        <DashboardSubHeader plan={PlanId.FREE} onSignOut={mockOnSignOut} />
       </MemoryRouter>,
     );
 

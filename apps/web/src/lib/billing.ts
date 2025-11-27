@@ -37,11 +37,26 @@ export async function goToCheckout(
     );
 
     if (!res.ok) {
-      const errorText = await res.text();
-      throw new BillingError(
-        errorText || `HTTP ${res.status}: ${res.statusText}`,
-        `HTTP_${res.status}`,
-      );
+      let errorMessage = `HTTP ${res.status}: ${res.statusText}`;
+      let errorCode = `HTTP_${res.status}`;
+
+      try {
+        const errorData = await res.json();
+        if (errorData.error) {
+          errorMessage = errorData.error;
+        }
+        if (errorData.code) {
+          errorCode = errorData.code;
+        }
+      } catch {
+        // If not JSON, try text
+        const errorText = await res.text();
+        if (errorText) {
+          errorMessage = errorText;
+        }
+      }
+
+      throw new BillingError(errorMessage, errorCode);
     }
 
     const data = await res.json();
@@ -101,7 +116,7 @@ export async function goToPortal(): Promise<void> {
       throw new BillingError("No portal URL received from server", "NO_URL");
     }
 
-    window.location.href = data.url;
+    window.open(data.url, "_blank");
   } catch (error) {
     if (error instanceof BillingError) {
       throw error;

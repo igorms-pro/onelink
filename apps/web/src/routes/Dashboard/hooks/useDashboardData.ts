@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateProfile, getSelfPlan } from "@/lib/profile";
 import { getDefaultPlan } from "@/lib/types/plan";
+import { useAsyncOperation } from "@/hooks/useAsyncOperation";
 import type { PlanTypeValue } from "@/lib/types/plan";
 import type { ProfileForm } from "@/components/ProfileEditor";
 import type { LinkRow } from "@/components/LinksList";
@@ -15,20 +16,13 @@ export function useDashboardData(userId: string | null) {
   const [drops, setDrops] = useState<DropRow[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionRow[]>([]);
   const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
-  const [loading, setLoading] = useState(true);
+  const { loading, execute } = useAsyncOperation();
 
   useEffect(() => {
-    if (!userId) {
-      setLoading(false);
-      return;
-    }
+    if (!userId) return;
 
-    let mounted = true;
-    setLoading(true);
-
-    (async () => {
+    execute(async () => {
       const prof = await getOrCreateProfile(userId);
-      if (!mounted) return;
 
       setProfileId(prof.id);
       setProfileFormInitial({
@@ -44,7 +38,6 @@ export function useDashboardData(userId: string | null) {
         .select("id,label,emoji,url,order")
         .eq("profile_id", prof.id)
         .order("order", { ascending: true });
-      if (!mounted) return;
       if (linksError) console.error(linksError);
       setLinks(linksData ?? []);
 
@@ -54,13 +47,11 @@ export function useDashboardData(userId: string | null) {
         .select("id,label,emoji,order,is_active,is_public,share_token")
         .eq("profile_id", prof.id)
         .order("order", { ascending: true });
-      if (!mounted) return;
       if (dropsError) console.error(dropsError);
       setDrops(dropsData ?? []);
 
       // Load plan
       const planValue = await getSelfPlan(userId);
-      if (!mounted) return;
       setPlan(planValue);
 
       // Load submissions
@@ -68,21 +59,14 @@ export function useDashboardData(userId: string | null) {
         await supabase.rpc("get_submissions_by_profile", {
           p_profile_id: prof.id,
         });
-      if (!mounted) return;
       if (submissionsError) console.error(submissionsError);
       setSubmissions(
         Array.isArray(submissionsData)
           ? (submissionsData as SubmissionRow[])
           : [],
       );
-
-      setLoading(false);
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, [userId]);
+    });
+  }, [userId, execute]);
 
   return {
     profileId,

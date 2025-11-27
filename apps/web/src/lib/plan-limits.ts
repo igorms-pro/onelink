@@ -1,57 +1,52 @@
-import { PlanType } from "./types/plan";
-import type { PlanTypeValue } from "./types/plan";
-
 /**
- * Free plan limits (separate for links and drops)
+ * Plan limits - Re-export from centralized plan config
  *
- * NOTE: Currently hardcoded, but can be easily migrated to DB later if needed.
- * To migrate: create a plan_limits table and fetch from DB here.
+ * This file exists for backward compatibility.
+ * New code should import directly from @/lib/types/plan
  */
-export const FREE_PLAN_LINKS_LIMIT = 4;
-export const FREE_PLAN_DROPS_LIMIT = 2;
+
+import {
+  PLANS,
+  PlanId,
+  getLinksLimit,
+  getDropsLimit,
+  type PlanTypeValue,
+} from "./types/plan";
+
+// Legacy constants (for backward compatibility)
+export const FREE_PLAN_LINKS_LIMIT = PLANS[PlanId.FREE].limits.links;
+export const FREE_PLAN_DROPS_LIMIT = PLANS[PlanId.FREE].limits.drops;
 
 /**
  * Get links limit for a given plan
- * @param plan - Plan type (PlanType enum or string)
- * @returns Limit number (4 for free, Infinity for pro/unlimited)
- *
- * Future: Can be modified to fetch from DB if dynamic limits are needed
+ * @deprecated Use getLinksLimit from @/lib/types/plan instead
  */
 export function getPlanLinksLimit(plan: PlanTypeValue): number {
-  if (plan === PlanType.PRO) {
-    return Infinity;
-  }
-  return FREE_PLAN_LINKS_LIMIT;
+  const limit = getLinksLimit(plan);
+  return limit === -1 ? Infinity : limit;
 }
 
 /**
  * Get drops limit for a given plan
- * @param plan - Plan type (PlanType enum or string)
- * @returns Limit number (2 for free, Infinity for pro/unlimited)
- *
- * Future: Can be modified to fetch from DB if dynamic limits are needed
+ * @deprecated Use getDropsLimit from @/lib/types/plan instead
  */
 export function getPlanDropsLimit(plan: PlanTypeValue): number {
-  if (plan === PlanType.PRO) {
-    return Infinity;
-  }
-  return FREE_PLAN_DROPS_LIMIT;
+  const limit = getDropsLimit(plan);
+  return limit === -1 ? Infinity : limit;
 }
 
 /**
  * Get free plan links limit
- * Convenience function to get the links limit for free plan
- * @returns Free plan links limit (4)
+ * @deprecated Use PLANS[PlanId.FREE].limits.links instead
  */
 export function getFreeLinksLimit(): number {
-  return getPlanLinksLimit(PlanType.FREE);
+  return FREE_PLAN_LINKS_LIMIT;
 }
 
 /**
  * Get free plan drops limit
- * Convenience function to get the drops limit for free plan
- * @returns Free plan drops limit (2)
+ * @deprecated Use PLANS[PlanId.FREE].limits.drops instead
  */
 export function getFreeDropsLimit(): number {
-  return getPlanDropsLimit(PlanType.FREE);
+  return FREE_PLAN_DROPS_LIMIT;
 }
