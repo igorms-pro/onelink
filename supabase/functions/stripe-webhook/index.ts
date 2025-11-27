@@ -4,36 +4,59 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import Stripe from "npm:stripe@^16.0.0";
 
-const textDecoder = new TextDecoder();
-
 Deno.serve(async (req) => {
+  console.log("[stripe-webhook] Request received");
+  
   const sig = req.headers.get("stripe-signature") || "";
-  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET")!;
-  const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY")!, { apiVersion: "2024-06-20" });
+  const webhookSecret = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+  const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
+  
+  console.log("[stripe-webhook] Env check:", {
+    hasWebhookSecret: !!webhookSecret,
+    hasStripeKey: !!stripeKey,
+    hasSig: !!sig,
+  });
+  
+  if (!webhookSecret || !stripeKey) {
+    console.error("[stripe-webhook] Missing env vars");
+    return new Response("Server configuration error", { status: 500 });
+  }
+  
+  const stripe = new Stripe(stripeKey, { apiVersion: "2024-06-20" });
 
-  const body = await req.arrayBuffer();
+  const body = await req.text();
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(new Uint8Array(body), sig, webhookSecret);
+    // Use constructEventAsync for Deno/Edge runtime
+    event = await stripe.webhooks.constructEventAsync(body, sig, webhookSecret);
+    console.log("[stripe-webhook] Event verified:", event.type);
   } catch (err: any) {
+    console.error("[stripe-webhook] Signature verification failed:", err.message);
     return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  const supabaseUrl = Deno.env.get("SUPA_DATABASE_URL")!;
-  const serviceRole = Deno.env.get("SUPA_DATABASE_SERVICE_ROLE_KEY")!;
+  const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+  const serviceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+  
+  console.log("[stripe-webhook] Supabase check:", {
+    hasUrl: !!supabaseUrl,
+    hasServiceRole: !!serviceRole,
+  });
 
-  async function updateUserPlan(userId: string, plan: string, status: string, expiresAt?: string | null, stripeId?: string | null) {
-    const url = new URL(`/rest/v1/users?id=eq.${userId}`, supabaseUrl);
-    const updateData: { plan: string; status: string; expires_at?: string | null; stripe_id?: string | null } = {
-      plan,
-      status,
-      expires_at: expiresAt,
-    };
+  async function updateUserPlan(userId: string, plan: string, stripeId?: string | null) {
+    console.log("[stripe-webhook] Updating user plan:", { userId, plan, stripeId });
+    
+    const url = `${supabaseUrl}/rest/v1/profiles?user_id=eq.${userId}`;
+    const updateData: { plan: string; stripe_id?: string | null } = { plan };
     if (stripeId) {
       updateData.stripe_id = stripeId;
     }
-    const response = await fetch(url.toString(), {
+    
+    console.log("[stripe-webhook] PATCH URL:", url);
+    console.log("[stripe-webhook] Update data:", updateData);
+    
+    const response = await fetch(url, {
       method: "PATCH",
       headers: {
         "Authorization": `Bearer ${serviceRole}`,
@@ -44,10 +67,14 @@ Deno.serve(async (req) => {
       body: JSON.stringify(updateData),
     });
     
+    const responseText = await response.text();
+    console.log("[stripe-webhook] Update response:", response.status, responseText);
+    
     if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Failed to update user plan: ${response.status} ${errorText}`);
+      throw new Error(`Failed to update user plan: ${response.status} ${responseText}`);
     }
+    
+    return responseText;
   }
 
   try {
@@ -55,18 +82,24 @@ Deno.serve(async (req) => {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
         const userId = (session.metadata as any)?.user_id;
+        const plan = (session.metadata as any)?.plan || "starter";
         const customerId = typeof session.customer === "string" ? session.customer : session.customer?.id;
+        
+        console.log("[stripe-webhook] checkout.session.completed:", { userId, plan, customerId });
+        
         if (userId) {
-          await updateUserPlan(userId, "pro", "active", null, customerId || undefined);
-          // Ensure the created subscription is tagged with user_id for future events
+          await updateUserPlan(userId, plan, customerId || undefined);
+          
+          // Tag subscription with user_id for future events
           const subscriptionId = typeof session.subscription === "string" ? session.subscription : session.subscription?.id;
           if (subscriptionId) {
             try {
               await stripe.subscriptions.update(subscriptionId, {
-                metadata: { user_id: userId },
+                metadata: { user_id: userId, plan },
               });
-            } catch (_) {
-              // ignore metadata update failures
+              console.log("[stripe-webhook] Subscription metadata updated:", subscriptionId);
+            } catch (e: any) {
+              console.error("[stripe-webhook] Failed to update subscription metadata:", e.message);
             }
           }
         }
@@ -76,25 +109,34 @@ Deno.serve(async (req) => {
       case "customer.subscription.created": {
         const sub = event.data.object as Stripe.Subscription;
         const userId = (sub.metadata as any)?.user_id;
+        const plan = (sub.metadata as any)?.plan || "starter";
         const status = sub.status;
-        const plan = status === "active" || status === "trialing" ? "pro" : "free";
-        const expiresAt = sub.cancel_at ? new Date(sub.cancel_at * 1000).toISOString() : null;
-        if (userId) await updateUserPlan(userId, plan, status, expiresAt);
+        const effectivePlan = status === "active" || status === "trialing" ? plan : "free";
+        
+        console.log("[stripe-webhook] subscription event:", { type: event.type, userId, plan, status, effectivePlan });
+        
+        if (userId) await updateUserPlan(userId, effectivePlan);
         break;
       }
       case "customer.subscription.deleted": {
         const sub = event.data.object as Stripe.Subscription;
         const userId = (sub.metadata as any)?.user_id;
-        if (userId) await updateUserPlan(userId, "free", "canceled", new Date().toISOString());
+        
+        console.log("[stripe-webhook] subscription.deleted:", { userId });
+        
+        if (userId) await updateUserPlan(userId, "free");
         break;
       }
       default:
+        console.log("[stripe-webhook] Unhandled event type:", event.type);
         break;
     }
   } catch (e: any) {
+    console.error("[stripe-webhook] Error handling event:", e.message, e.stack);
     return new Response(e?.message ?? "Webhook handling failed", { status: 500 });
   }
 
+  console.log("[stripe-webhook] Success");
   return new Response("ok", { status: 200 });
 });
 

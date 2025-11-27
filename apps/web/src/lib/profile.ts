@@ -12,16 +12,6 @@ export type ProfileRow = {
 };
 
 export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
-  // First, ensure public.users row exists (trigger should create it, but just in case)
-  const { error: userError } = await supabase.from("users").upsert(
-    {
-      id: userId,
-      email: (await supabase.auth.getUser()).data.user?.email ?? "",
-    },
-    { onConflict: "id" },
-  );
-  if (userError) console.warn("Failed to ensure users row:", userError);
-
   // Check if profile exists
   const existing = await supabase
     .from("profiles")

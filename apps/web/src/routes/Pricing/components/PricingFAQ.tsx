@@ -28,36 +28,38 @@ export function PricingFAQ() {
       <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
         {t("pricing.faq_title")}
       </h2>
-      <div className="mt-6 space-y-4">
+      <div className="mt-6 space-y-3">
         {faq.map((item, index) => {
           const isExpanded = expandedItems.has(index);
           return (
             <div
               key={item.question}
-              className="rounded-2xl border border-gray-200 bg-white/80 shadow-sm dark:border-gray-800 dark:bg-gray-900/70 overflow-hidden"
+              className="rounded-lg border border-gray-200 bg-white/80 shadow-sm dark:border-gray-800 dark:bg-gray-900/70 overflow-hidden"
             >
               <button
                 onClick={() => toggleItem(index)}
-                className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
               >
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white pr-4">
+                <h3 className="text-base font-semibold text-gray-900 dark:text-white pr-4">
                   {item.question}
                 </h3>
                 {isExpanded ? (
-                  <ChevronUp className="h-5 w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                  <ChevronUp className="h-4 w-4 text-gray-500 dark:text-gray-400 shrink-0" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+                  <ChevronDown className="h-4 w-4 text-gray-500 dark:text-gray-400 shrink-0" />
                 )}
               </button>
               <div
                 className={clsx(
-                  "overflow-hidden transition-all duration-300 ease-in-out",
+                  "overflow-hidden transition-all duration-200 ease-in-out",
                   isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
                 )}
               >
-                <p className="px-6 pb-6 text-sm text-gray-600 dark:text-gray-300">
-                  {item.answer}
-                </p>
+                <div className="border-t border-gray-200 dark:border-gray-800">
+                  <p className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">
+                    {item.answer}
+                  </p>
+                </div>
               </div>
             </div>
           );

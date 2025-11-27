@@ -489,6 +489,7 @@
     "includes": "What's included",
     "most_popular": "Most popular",
     "loading": "Redirecting...",
+    "current_plan": "Your current plan",
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
@@ -529,7 +530,7 @@
         "priceMonthly": "€12",
         "priceYearly": "€115",
         "description": "For professionals who need heavy file uploads and detailed insights.",
-        "cta": "Upgrade to Pro",
+        "cta": "Get started",
         "features": [
           "Everything in Starter",
           "2GB per file",

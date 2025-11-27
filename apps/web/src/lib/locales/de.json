@@ -483,29 +483,61 @@
   "pricing": {
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
-    "monthly_label": "Monthly billing",
-    "currency_note": "Prices in USD. Taxes may apply.",
-    "per_month": "per month",
+    "monthly_label": "Monatlich",
+    "currency_note": "Preise in USD. Steuern können anfallen.",
+    "per_month": "pro Monat",
+    "yearly_label": "Jährlich (20% sparen)",
+    "per_year": "pro Jahr",
     "includes": "What's included",
     "most_popular": "Most popular",
     "loading": "Redirecting...",
+    "current_plan": "Ihr aktueller Plan",
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
     "plans": {
       "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect to launch your profile and share essential links.",
-        "cta": "Start for free",
-        "features": []
+        "name": "Kostenlos",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
+        "description": "Perfekt, um Ihr Profil zu starten und wichtige Links zu teilen.",
+        "cta": "Kostenlos starten",
+        "features": [
+          "4 Links, 2 Ablagen max",
+          "50MB pro Datei",
+          "7-Tage Dateiaufbewahrung",
+          "Basis-Analysen (7-Tage-Verlauf)",
+          "Anpassbares Profil mit Themes"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "Für Creator und kleine Unternehmen, die Dateisammlung benötigen.",
+        "cta": "Loslegen",
+        "features": [
+          "Unbegrenzte Links und Ablagen",
+          "Eigene Domain",
+          "500MB pro Datei",
+          "30-Tage Dateiaufbewahrung",
+          "Basis-Analysen (7-Tage-Verlauf)"
+        ]
       },
       "pro": {
         "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
-        "cta": "Upgrade to Pro",
-        "features": []
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "Für Profis, die große Datei-Uploads und detaillierte Einblicke benötigen.",
+        "cta": "Loslegen",
+        "features": [
+          "Alles aus Starter",
+          "2GB pro Datei",
+          "90-Tage Dateiaufbewahrung",
+          "Erweiterte Analysen (30 & 90-Tage-Verlauf)",
+          "Google Analytics Integration",
+          "Prioritäts-Support"
+        ]
       }
     },
     "faq_title": "Frequently asked questions",

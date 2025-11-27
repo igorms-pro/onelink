@@ -16,7 +16,10 @@ interface PricingPlanCardProps {
   planTier: PlanTier | null;
   billingPeriod: "monthly" | "yearly";
   loadingPlan: string | null;
+  isSelected?: boolean;
+  isCurrentPlan?: boolean;
   onClick: () => void;
+  onButtonClick: () => void;
 }
 
 export function PricingPlanCard({
@@ -31,7 +34,10 @@ export function PricingPlanCard({
   planTier,
   billingPeriod,
   loadingPlan,
+  isSelected = false,
+  isCurrentPlan = false,
   onClick,
+  onButtonClick,
 }: PricingPlanCardProps) {
   const { t } = useTranslation();
 
@@ -52,11 +58,16 @@ export function PricingPlanCard({
 
   return (
     <div
+      onClick={!isCurrentPlan ? onClick : undefined}
       className={clsx(
-        "relative flex h-full flex-col rounded-2xl border p-8 shadow-sm transition hover:shadow-lg",
-        highlight
-          ? "border-purple-500 bg-white dark:bg-gray-900"
-          : "border-gray-200 bg-white/90 dark:border-gray-800 dark:bg-gray-900/80",
+        "relative flex h-full flex-col rounded-2xl border p-8 shadow-sm transition",
+        isCurrentPlan
+          ? "border-gray-300 bg-gray-50 dark:border-gray-700 dark:bg-gray-800/50 cursor-default"
+          : isSelected
+            ? "border-purple-600 ring-2 ring-purple-500 ring-offset-2 bg-purple-50/50 dark:bg-purple-900/20 hover:shadow-lg cursor-pointer"
+            : highlight
+              ? "border-purple-500 bg-white dark:bg-gray-900 hover:shadow-lg cursor-pointer"
+              : "border-gray-200 bg-white/90 dark:border-gray-800 dark:bg-gray-900/80 hover:shadow-lg cursor-pointer",
       )}
     >
       {highlight && (
@@ -84,19 +95,37 @@ export function PricingPlanCard({
           </p>
         </div>
         <button
-          onClick={onClick}
-          disabled={loadingPlan === planTier || !planTier}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!isCurrentPlan) {
+              onButtonClick();
+            }
+          }}
+          disabled={
+            loadingPlan === planTier ||
+            !planTier ||
+            !isSelected ||
+            isCurrentPlan
+          }
           data-testid={`pricing-plan-${id}-button`}
           className={clsx(
-            "w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-md transition-all cursor-pointer",
-            highlight
-              ? "bg-linear-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 disabled:opacity-60"
-              : id === PlanType.FREE
-                ? "border border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10"
-                : "border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-400/60 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20 disabled:opacity-60",
+            "w-full rounded-xl px-4 py-3 text-sm font-semibold shadow-md transition-all",
+            isCurrentPlan
+              ? "bg-gray-200 text-gray-500 dark:bg-gray-700 dark:text-gray-400 cursor-not-allowed"
+              : !isSelected
+                ? "opacity-50 cursor-not-allowed"
+                : highlight
+                  ? "bg-linear-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 disabled:opacity-60 cursor-pointer"
+                  : id === PlanType.FREE
+                    ? "border border-gray-200 text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10 cursor-pointer"
+                    : "border border-purple-200 bg-purple-50 text-purple-700 hover:bg-purple-100 dark:border-purple-400/60 dark:bg-purple-500/10 dark:text-purple-300 dark:hover:bg-purple-500/20 disabled:opacity-60 cursor-pointer",
           )}
         >
-          {loadingPlan === planTier ? t("pricing.loading") : cta}
+          {isCurrentPlan
+            ? t("pricing.current_plan", { defaultValue: "Your current plan" })
+            : loadingPlan === planTier
+              ? t("pricing.loading")
+              : cta}
         </button>
       </div>
       <div className="mt-auto space-y-3">
