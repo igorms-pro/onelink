@@ -157,6 +157,7 @@ export function ChangePasswordForm({
         disabled={loading}
         error={errors.currentPassword}
         placeholder={t("settings_change_password_current_placeholder")}
+        data-testid="current-password-input"
       />
 
       <div className="space-y-2">
@@ -168,6 +169,7 @@ export function ChangePasswordForm({
           disabled={loading}
           error={errors.newPassword}
           placeholder={t("settings_change_password_new_placeholder")}
+          data-testid="new-password-input"
         />
         <PasswordStrengthIndicator password={formData.newPassword} />
         <PasswordValidationRules password={formData.newPassword} />
@@ -181,6 +183,7 @@ export function ChangePasswordForm({
         disabled={loading}
         error={errors.confirmPassword}
         placeholder={t("settings_change_password_confirm_placeholder")}
+        data-testid="confirm-password-input"
       />
 
       <div className="flex gap-3 pt-2">
@@ -188,6 +191,7 @@ export function ChangePasswordForm({
           type="button"
           onClick={handleCancel}
           disabled={loading}
+          data-testid="cancel-button"
           className="flex-1 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-4 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {t("common_cancel")}
@@ -195,6 +199,7 @@ export function ChangePasswordForm({
         <button
           type="submit"
           disabled={loading}
+          data-testid="submit-button"
           className="flex-1 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white px-4 py-2 text-sm font-semibold shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
         >
           {loading

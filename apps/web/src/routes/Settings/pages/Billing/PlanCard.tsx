@@ -4,6 +4,7 @@ import { UsageProgressBar } from "./UsageProgressBar";
 
 interface PlanCardProps {
   planDisplayName: string;
+  planPrice: string;
   hasPaidPlan: boolean;
   renewalDate: string;
   linksUsed: number;
@@ -14,6 +15,7 @@ interface PlanCardProps {
 
 export function PlanCard({
   planDisplayName,
+  planPrice,
   hasPaidPlan,
   renewalDate,
   linksUsed,
@@ -41,15 +43,25 @@ export function PlanCard({
           <span className="text-sm text-gray-700 dark:text-gray-300">
             {t("settings_current_plan")}
           </span>
-          <span
-            className={`px-3 py-1 rounded-full text-xs font-medium ${
-              hasPaidPlan
-                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
-            }`}
-          >
-            {planDisplayName}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-semibold text-gray-900 dark:text-white">
+              {planPrice}
+              {hasPaidPlan && (
+                <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-1">
+                  /{t("billing_month", { defaultValue: "month" })}
+                </span>
+              )}
+            </span>
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-medium ${
+                hasPaidPlan
+                  ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+              }`}
+            >
+              {planDisplayName}
+            </span>
+          </div>
         </div>
 
         {hasPaidPlan && (

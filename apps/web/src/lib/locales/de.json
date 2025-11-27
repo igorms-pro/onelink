@@ -695,6 +695,7 @@
   "billing_title": "Abrechnung",
   "billing_description": "Verwalten Sie Ihr Abonnement, Zahlungsmethoden und Abrechnungshistorie",
   "billing_current_plan": "Aktueller Plan",
+  "billing_month": "Monat",
   "billing_renewal_placeholder": "Demnächst verfügbar",
   "billing_usage": "Nutzung",
   "billing_items": "Elemente",

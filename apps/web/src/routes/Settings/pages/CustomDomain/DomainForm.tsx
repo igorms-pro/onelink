@@ -48,7 +48,7 @@ export function DomainForm({
             <button
               onClick={onSubmit}
               disabled={submitting || !domainInput.trim()}
-              className="px-6 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
+              className="px-6 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
             >
               {submitting ? t("common_loading") : t("common_add")}
             </button>

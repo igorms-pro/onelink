@@ -695,6 +695,7 @@
   "billing_title": "Faturação",
   "billing_description": "Gerencie sua assinatura, métodos de pagamento e histórico de faturação",
   "billing_current_plan": "Plano atual",
+  "billing_month": "mês",
   "billing_renewal_placeholder": "Em breve",
   "billing_usage": "Uso",
   "billing_items": "itens",

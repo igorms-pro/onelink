@@ -43,10 +43,11 @@ export function PasswordValidationRules({
   if (visibleRules.length === 0) return null;
 
   return (
-    <ul className="space-y-1 text-xs">
+    <ul className="space-y-1 text-xs" data-testid="password-validation-rules">
       {visibleRules.map((rule) => (
         <li
           key={rule.key}
+          data-testid={`password-rule-${rule.key}`}
           className={clsx(
             "flex items-center gap-1.5",
             rule.passed

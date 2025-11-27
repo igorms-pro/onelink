@@ -705,6 +705,7 @@
   "billing_title": "Facturation",
   "billing_description": "Gérez votre abonnement, vos moyens de paiement et votre historique de facturation",
   "billing_current_plan": "Plan actuel",
+  "billing_month": "mois",
   "billing_renewal_placeholder": "Bientôt disponible",
   "billing_usage": "Utilisation",
   "billing_items": "éléments",

@@ -3,6 +3,8 @@ import { useAuth } from "@/lib/AuthProvider";
 // import { supabase } from "@/lib/supabase"; // TODO: Uncomment when table is ready
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { useAsyncOperation } from "@/hooks/useAsyncOperation";
+import { useAsyncSubmit } from "@/hooks/useAsyncSubmit";
 
 export interface UserPreferences {
   email_notifications: boolean;
@@ -23,19 +25,14 @@ export function useUserPreferences() {
   const { user } = useAuth();
   const [preferences, setPreferences] =
     useState<UserPreferences>(DEFAULT_PREFERENCES);
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const { loading, execute } = useAsyncOperation();
+  const { submitting, submit } = useAsyncSubmit();
 
   // Load preferences
   useEffect(() => {
-    if (!user?.id) {
-      setLoading(false);
-      return;
-    }
+    if (!user?.id) return;
 
-    let mounted = true;
-
-    (async () => {
+    execute(async () => {
       try {
         // TODO: Replace with actual Supabase call when table is ready
         // const { data, error } = await supabase
@@ -48,32 +45,21 @@ export function useUserPreferences() {
         const stored = localStorage.getItem(`preferences_${user.id}`);
         if (stored) {
           const parsed = JSON.parse(stored);
-          if (mounted) {
-            setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-          }
+          setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
       }
-    })();
-
-    return () => {
-      mounted = false;
-    };
-  }, [user?.id]);
+    });
+  }, [user?.id, execute]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
     if (!user?.id) return;
 
-    setSaving(true);
     const updated = { ...preferences, ...newPreferences };
 
-    try {
+    await submit(async () => {
       // TODO: Replace with actual Supabase call when table is ready
       // const { error } = await supabase
       //   .from("user_preferences")
@@ -88,12 +74,10 @@ export function useUserPreferences() {
 
       setPreferences(updated);
       toast.success(t("settings_preferences_saved"));
-    } catch (error) {
+    }).catch((error) => {
       console.error("Error saving preferences:", error);
       toast.error(t("settings_preferences_save_error"));
-    } finally {
-      setSaving(false);
-    }
+    });
   };
 
   // Update single preference
@@ -107,7 +91,7 @@ export function useUserPreferences() {
   return {
     preferences,
     loading,
-    saving,
+    saving: submitting,
     updatePreference,
     savePreferences,
   };

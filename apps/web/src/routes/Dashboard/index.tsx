@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
-import { useAuth } from "@/lib/AuthProvider";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { Header } from "@/components/Header";
 import { useDashboardData } from "./hooks/useDashboardData";
 import {
@@ -14,14 +14,13 @@ import {
   AccountTab,
 } from "./components";
 import type { TabId } from "./types";
-
 import { getFreeLinksLimit, getFreeDropsLimit } from "@/lib/plan-limits";
 import { isPaidPlan } from "@/lib/types/plan";
 
 export default function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { user, signOut } = useRequireAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
 
   const {
@@ -37,15 +36,8 @@ export default function Dashboard() {
 
   const isFree = !isPaidPlan(plan);
 
-  // Redirect to /auth if not logged in
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth", { replace: true });
-    }
-  }, [loading, user, navigate]);
-
   if (!user) {
-    return null; // Will redirect via useEffect
+    return null; // Will redirect via useRequireAuth
   }
 
   return (

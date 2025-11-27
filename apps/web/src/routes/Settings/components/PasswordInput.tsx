@@ -11,6 +11,7 @@ export interface PasswordInputProps {
   placeholder?: string;
   hint?: string;
   showStrength?: boolean;
+  "data-testid"?: string;
 }
 
 export function PasswordInput({
@@ -22,6 +23,7 @@ export function PasswordInput({
   error,
   placeholder,
   hint,
+  "data-testid": dataTestId,
 }: PasswordInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -42,6 +44,7 @@ export function PasswordInput({
           disabled={disabled}
           className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-3 py-2 pr-10 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400"
           placeholder={placeholder}
+          data-testid={dataTestId}
         />
         <button
           type="button"

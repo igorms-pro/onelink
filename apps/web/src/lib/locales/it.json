@@ -695,6 +695,7 @@
   "billing_title": "Fatturazione",
   "billing_description": "Gestisci il tuo abbonamento, metodi di pagamento e cronologia fatturazione",
   "billing_current_plan": "Piano attuale",
+  "billing_month": "mese",
   "billing_renewal_placeholder": "Prossimamente",
   "billing_usage": "Utilizzo",
   "billing_items": "elementi",

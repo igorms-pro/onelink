@@ -1,20 +1,19 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
-import { useAuth } from "@/lib/AuthProvider";
 import { Header } from "@/components/Header";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
 import { goToPortal, BillingError } from "@/lib/billing";
 import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/plan-limits";
-import { isPaidPlan, getPlanName } from "@/lib/types/plan";
+import { isPaidPlan, getPlanName, PlanId } from "@/lib/types/plan";
 import { PlanCard, SubscriptionSection, BillingSkeleton } from "./Billing";
 
 export default function BillingPage() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useRequireAuth();
   const {
     plan,
     links,
@@ -26,14 +25,20 @@ export default function BillingPage() {
   const planDisplayName = getPlanName(plan);
   const linksLimit = getPlanLinksLimit(plan);
   const dropsLimit = getPlanDropsLimit(plan);
-  const isLoading = authLoading || dataLoading;
+  const isLoading = dataLoading;
 
-  // Redirect to /auth if not logged in
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/auth", { replace: true });
-    }
-  }, [authLoading, user, navigate]);
+  // Get plan price from translations
+  const getPlanPrice = (planId: string | null | undefined): string => {
+    if (!planId || planId === PlanId.FREE) return "€0";
+    const planData = t(`pricing.plans.${planId}`, { returnObjects: true }) as {
+      priceMonthly?: string;
+      priceYearly?: string;
+    };
+    // Default to monthly price, but we could detect billing period from subscription
+    return planData?.priceMonthly || "€0";
+  };
+
+  const planPrice = getPlanPrice(plan);
 
   if (!user) {
     return null;
@@ -94,6 +99,7 @@ export default function BillingPage() {
           <div className="space-y-6">
             <PlanCard
               planDisplayName={planDisplayName}
+              planPrice={planPrice}
               hasPaidPlan={hasPaidPlan}
               renewalDate={renewalDate}
               linksUsed={links.length}

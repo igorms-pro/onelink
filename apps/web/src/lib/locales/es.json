@@ -695,6 +695,7 @@
   "billing_title": "Facturación",
   "billing_description": "Gestiona tu suscripción, métodos de pago e historial de facturación",
   "billing_current_plan": "Plan actual",
+  "billing_month": "mes",
   "billing_renewal_placeholder": "Próximamente",
   "billing_usage": "Uso",
   "billing_items": "elementos",
