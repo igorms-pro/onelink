@@ -45,9 +45,11 @@ describe("DropList", () => {
               })),
               data: [],
               error: null,
+              count: 0,
             })),
             data: [],
             error: null,
+            count: 0,
           })),
           insert: vi.fn(() => ({
             select: vi.fn(() => ({
