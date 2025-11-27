@@ -191,14 +191,24 @@ function DropCard({
 
   // Load file count on mount
   useEffect(() => {
+    let mounted = true;
     const loadFileCount = async () => {
-      const { count } = await supabase
-        .from("submissions")
-        .select("*", { count: "exact", head: true })
-        .eq("drop_id", d.id);
-      setFileCount(count ?? 0);
+      try {
+        const { count } = await supabase
+          .from("submissions")
+          .select("*", { count: "exact", head: true })
+          .eq("drop_id", d.id);
+        if (mounted) {
+          setFileCount(count ?? 0);
+        }
+      } catch {
+        // Silently fail - count will show as "..."
+      }
     };
     loadFileCount();
+    return () => {
+      mounted = false;
+    };
   }, [d.id]);
 
   // Load files when showing files section
