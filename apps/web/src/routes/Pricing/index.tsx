@@ -114,6 +114,8 @@ export default function Pricing() {
                   loadingPlan={loadingPlan}
                   isSelected={selectedPlan === plan.id}
                   isCurrentPlan={isCurrentPlan}
+                  isAuthenticated={isAuthenticated}
+                  userCurrentPlan={currentPlan}
                   onClick={() => {
                     if (!isCurrentPlan) {
                       setSelectedPlan(plan.id);
