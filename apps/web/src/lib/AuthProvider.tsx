@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
+import { createUserSession, logLoginAttempt } from "./sessionTracking";
 
 type AuthContextValue = {
   session: Session | null;
@@ -25,7 +26,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for auth state changes (including magic link redirects)
-    const { data: sub } = supabase.auth.onAuthStateChange((event, s) => {
+    const { data: sub } = supabase.auth.onAuthStateChange(async (event, s) => {
       console.log("[Auth] State change:", event, s?.user?.email);
       setSession(s ?? null);
       setLoading(false);
@@ -33,6 +34,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clean up URL hash after successful sign-in
       if (event === "SIGNED_IN" && window.location.hash) {
         window.history.replaceState(null, "", window.location.pathname);
+      }
+
+      // Track session and log login history on successful sign-in
+      if (event === "SIGNED_IN" && s?.user) {
+        // Create session in database
+        await createUserSession({
+          userId: s.user.id,
+        });
+
+        // Log successful login
+        await logLoginAttempt({
+          email: s.user.email || "",
+          status: "success",
+          userId: s.user.id,
+        });
       }
     });
     return () => sub.subscription.unsubscribe();

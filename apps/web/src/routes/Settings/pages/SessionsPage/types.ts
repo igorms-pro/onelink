@@ -20,3 +20,24 @@ export interface LoginHistory {
   ip: string;
   device: string;
 }
+
+// Database types for RPC functions
+export interface DatabaseSession {
+  id: string;
+  device_os: string | null;
+  device_browser: string | null;
+  ip_address: string | null;
+  city: string | null;
+  country: string | null;
+  last_activity: string;
+  created_at: string;
+  is_current: boolean;
+}
+
+export interface DatabaseLoginHistory {
+  id: string;
+  created_at: string;
+  status: "success" | "failed";
+  ip_address: string | null;
+  device_info: string | null;
+}

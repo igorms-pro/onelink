@@ -15,8 +15,15 @@ vi.mock("sonner", () => ({
   },
 }));
 
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn(),
+  },
+}));
+
 import { useAuth } from "@/lib/AuthProvider";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 describe("useUserPreferences", () => {
   const mockUser: User = {
@@ -38,6 +45,32 @@ describe("useUserPreferences", () => {
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
+
+    // Mock Supabase to return no data (fallback to localStorage)
+    const mockSelect = vi.fn().mockReturnValue({
+      eq: vi.fn().mockReturnValue({
+        maybeSingle: vi.fn().mockResolvedValue({
+          data: null,
+          error: null,
+        }),
+      }),
+    });
+
+    const mockInsert = vi.fn().mockResolvedValue({
+      data: null,
+      error: null,
+    });
+
+    const mockUpsert = vi.fn().mockResolvedValue({
+      data: null,
+      error: null,
+    });
+
+    vi.mocked(supabase.from).mockReturnValue({
+      select: mockSelect,
+      insert: mockInsert,
+      upsert: mockUpsert,
+    } as unknown as ReturnType<typeof supabase.from>);
   });
 
   afterEach(() => {
@@ -71,6 +104,26 @@ describe("useUserPreferences", () => {
       JSON.stringify(storedPrefs),
     );
 
+    // Mock Supabase to fail so it falls back to localStorage
+    vi.mocked(supabase.from).mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: null,
+            error: { message: "Table not found", code: "PGRST116" },
+          }),
+        }),
+      }),
+      insert: vi.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      }),
+      upsert: vi.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      }),
+    } as unknown as ReturnType<typeof supabase.from>);
+
     const { result } = renderHook(() => useUserPreferences());
 
     await waitFor(() => {
@@ -90,6 +143,26 @@ describe("useUserPreferences", () => {
       `preferences_${mockUser.id}`,
       JSON.stringify(partialPrefs),
     );
+
+    // Mock Supabase to fail so it falls back to localStorage
+    vi.mocked(supabase.from).mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: null,
+            error: { message: "Table not found", code: "PGRST116" },
+          }),
+        }),
+      }),
+      insert: vi.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      }),
+      upsert: vi.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      }),
+    } as unknown as ReturnType<typeof supabase.from>);
 
     const { result } = renderHook(() => useUserPreferences());
 
@@ -193,8 +266,29 @@ describe("useUserPreferences", () => {
       expect(result.current.loading).toBe(false);
     });
 
-    // Mock localStorage.setItem to throw error
-    const originalSetItem = localStorage.setItem;
+    // Mock Supabase upsert to fail
+    const mockUpsert = vi.fn().mockResolvedValue({
+      data: null,
+      error: { message: "Database error", code: "PGRST301" },
+    });
+
+    vi.mocked(supabase.from).mockReturnValue({
+      select: vi.fn().mockReturnValue({
+        eq: vi.fn().mockReturnValue({
+          maybeSingle: vi.fn().mockResolvedValue({
+            data: null,
+            error: null,
+          }),
+        }),
+      }),
+      insert: vi.fn().mockResolvedValue({
+        data: null,
+        error: null,
+      }),
+      upsert: mockUpsert,
+    } as unknown as ReturnType<typeof supabase.from>);
+
+    // Mock localStorage.setItem to also throw error (so we get toast.error)
     const setItemSpy = vi
       .spyOn(Storage.prototype, "setItem")
       .mockImplementation(() => {
@@ -209,7 +303,6 @@ describe("useUserPreferences", () => {
 
     // Restore
     setItemSpy.mockRestore();
-    localStorage.setItem = originalSetItem;
   });
 
   it("should not save when user is not available", async () => {
