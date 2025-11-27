@@ -124,7 +124,7 @@ export function PricingPlanCard({
         >
           {isCurrentPlan
             ? t("pricing.current_plan", { defaultValue: "Your current plan" })
-            : loadingPlan === planTier
+            : loadingPlan && loadingPlan === planTier
               ? t("pricing.loading")
               : cta}
         </button>
