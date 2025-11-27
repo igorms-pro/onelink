@@ -595,7 +595,7 @@
   "common_hide": "Nascondi",
   "common_add": "Aggiungi",
   "dashboard_content_drops_empty": "Ancora nessun drop. Crea il tuo primo drop sopra!",
-  "dashboard_content_drops_order_status": "Ordine {order} · {status}",
+  "dashboard_content_drops_order_status": "Ordine {{order}} · {{status}}",
   "dashboard_content_drops_update_success": "Drop aggiornato",
   "dashboard_content_drops_activated": "Drop attivato",
   "dashboard_content_drops_deactivated": "Drop disattivato",

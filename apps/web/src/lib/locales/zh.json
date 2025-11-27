@@ -595,7 +595,7 @@
   "common_hide": "隐藏",
   "common_add": "添加",
   "dashboard_content_drops_empty": "还没有文件箱。在上面创建您的第一个文件箱！",
-  "dashboard_content_drops_order_status": "顺序 {order} · {status}",
+  "dashboard_content_drops_order_status": "顺序 {{order}} · {{status}}",
   "dashboard_content_drops_update_success": "文件箱已更新",
   "dashboard_content_drops_activated": "文件箱已激活",
   "dashboard_content_drops_deactivated": "文件箱已停用",

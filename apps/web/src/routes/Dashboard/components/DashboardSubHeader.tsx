@@ -21,10 +21,6 @@ export function DashboardSubHeader({
     navigate("/pricing");
   };
 
-  const handleManageBilling = () => {
-    navigate("/settings/billing");
-  };
-
   return (
     <header className="sticky top-[56px] sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0">
       <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-4 ">
@@ -43,19 +39,12 @@ export function DashboardSubHeader({
           </span>
         </div>
         <div className="flex items-center justify-end gap-2 shrink-0">
-          {!hasPaidPlan ? (
+          {!hasPaidPlan && (
             <button
               className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
               onClick={handleUpgrade}
             >
               {t("dashboard_header_upgrade")}
-            </button>
-          ) : (
-            <button
-              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
-              onClick={handleManageBilling}
-            >
-              {t("dashboard_header_manage_billing")}
             </button>
           )}
           <button

@@ -31,7 +31,9 @@ export function DropFileList({ files }: DropFileListProps) {
     <div className="space-y-3">
       {files.map((file, index) => {
         const url = getFileUrl(file.path);
-        const fileName = file.path.split("/").pop() || "file";
+        // Extract original filename (remove timestamp prefix)
+        const rawFileName = file.path.split("/").pop() || "file";
+        const fileName = rawFileName.replace(/^\d{13}-/, "");
         return (
           <div
             key={`${file.submission_id}-${index}`}

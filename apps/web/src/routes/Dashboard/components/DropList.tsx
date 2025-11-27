@@ -11,6 +11,8 @@ import {
   File as FileIcon,
   ChevronDown,
   ChevronUp,
+  Copy,
+  ExternalLink,
 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { supabase } from "@/lib/supabase";
@@ -75,6 +77,7 @@ function DropCard({
   const [showFiles, setShowFiles] = useState(false);
   const [files, setFiles] = useState<DropFile[]>([]);
   const [isLoadingFiles, setIsLoadingFiles] = useState(false);
+  const [fileCount, setFileCount] = useState<number | null>(null);
 
   const handleEdit = async () => {
     const newLabel = prompt(t("common_new_label"), d.label);
@@ -186,12 +189,31 @@ function DropCard({
     }
   }, [d.id, t]);
 
+  // Load file count on mount
+  useEffect(() => {
+    const loadFileCount = async () => {
+      const { count } = await supabase
+        .from("submissions")
+        .select("*", { count: "exact", head: true })
+        .eq("drop_id", d.id);
+      setFileCount(count ?? 0);
+    };
+    loadFileCount();
+  }, [d.id]);
+
   // Load files when showing files section
   useEffect(() => {
     if (showFiles && files.length === 0 && !isLoadingFiles) {
       loadFiles();
     }
   }, [showFiles, files.length, isLoadingFiles, loadFiles]);
+
+  // Update file count when files are loaded
+  useEffect(() => {
+    if (files.length > 0) {
+      setFileCount(files.length);
+    }
+  }, [files.length]);
 
   const handleUploadComplete = () => {
     // Reload files after upload
@@ -201,7 +223,9 @@ function DropCard({
   };
 
   return (
-    <li className="flex flex-col gap-3 sm:gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 sm:p-6 hover:shadow-md transition-all">
+    <li
+      className={`flex flex-col gap-3 sm:gap-4 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 hover:shadow-md transition-all ${d.is_active ? "bg-purple-50 dark:bg-purple-900/20" : "bg-gray-100 dark:bg-gray-800/50 opacity-60"}`}
+    >
       {/* Top section: Title + Actions */}
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
         {/* Left side: Title + Badge + Status */}
@@ -242,33 +266,24 @@ function DropCard({
               <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
             </button>
           </div>
-          {/* Status */}
-          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-0">
-            <p className="text-sm text-gray-600 dark:text-gray-400 sm:mt-2">
-              {t("dashboard_content_drops_order_status", {
-                order: d.order,
-                status: d.is_active ? t("common_active") : t("common_off"),
-              })}
-            </p>
-            {/* Switch + Delete - Mobile: inline with status */}
-            <div className="flex items-center gap-2 sm:hidden shrink-0">
-              <Switch
-                checked={d.is_active}
-                onCheckedChange={handleToggle}
-                aria-label={
-                  d.is_active
-                    ? t("dashboard_content_drops_turn_off")
-                    : t("dashboard_content_drops_turn_on")
-                }
-              />
-              <button
-                onClick={handleDelete}
-                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
-                aria-label={t("common_delete")}
-              >
-                <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
-              </button>
-            </div>
+          {/* Switch + Delete - Mobile */}
+          <div className="flex items-center justify-end gap-2 sm:hidden mt-2">
+            <Switch
+              checked={d.is_active}
+              onCheckedChange={handleToggle}
+              aria-label={
+                d.is_active
+                  ? t("dashboard_content_drops_turn_off")
+                  : t("dashboard_content_drops_turn_on")
+              }
+            />
+            <button
+              onClick={handleDelete}
+              className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
+              aria-label={t("common_delete")}
+            >
+              <Trash2 className="w-5 h-5 text-red-600 dark:text-red-400" />
+            </button>
           </div>
         </div>
 
@@ -310,6 +325,13 @@ function DropCard({
             value={shareLink}
             className="flex-1 text-xs text-gray-600 dark:text-gray-400 bg-transparent border-none outline-none truncate"
           />
+          <button
+            onClick={handleCopyLink}
+            className="p-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            aria-label={t("dashboard_content_drops_copy_link")}
+          >
+            <Copy className="w-4 h-4 text-gray-500 dark:text-gray-400" />
+          </button>
         </div>
       )}
 
@@ -318,7 +340,7 @@ function DropCard({
         {/* Toggle Visibility */}
         <button
           onClick={handleToggleVisibility}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
         >
           {d.is_public ? (
             <>
@@ -333,21 +355,22 @@ function DropCard({
           )}
         </button>
 
-        {/* Copy Link */}
-        <button
-          onClick={handleCopyLink}
-          disabled={!shareLink}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+        {/* Preview Link */}
+        <a
+          href={shareLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 cursor-pointer ${!shareLink ? "opacity-50 pointer-events-none" : ""}`}
         >
-          <Link2 className="w-4 h-4" />
-          {t("dashboard_content_drops_copy_link")}
-        </button>
+          <ExternalLink className="w-4 h-4" />
+          {t("dashboard_content_drops_preview")}
+        </a>
 
         {/* Share with QR */}
         <button
           onClick={handleShare}
           disabled={!shareLink}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <Link2 className="w-4 h-4" />
           {t("dashboard_content_drops_share")}
@@ -356,7 +379,7 @@ function DropCard({
         {/* Upload Files */}
         <button
           onClick={() => setShowUpload(!showUpload)}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
         >
           {showUpload ? (
             <>
@@ -396,7 +419,7 @@ function DropCard({
           <div className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
             <FileIcon className="w-4 h-4" />
             <span>
-              {t("dashboard_content_drops_files_list")} ({files.length})
+              {t("dashboard_content_drops_files_list")} ({fileCount ?? "..."})
             </span>
           </div>
           {showFiles ? (

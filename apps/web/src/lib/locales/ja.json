@@ -595,7 +595,7 @@
   "common_hide": "非表示",
   "common_add": "追加",
   "dashboard_content_drops_empty": "まだドロップがありません。上記で最初のドロップを作成してください！",
-  "dashboard_content_drops_order_status": "順序 {order} · {status}",
+  "dashboard_content_drops_order_status": "順序 {{order}} · {{status}}",
   "dashboard_content_drops_update_success": "ドロップが更新されました",
   "dashboard_content_drops_activated": "ドロップが有効になりました",
   "dashboard_content_drops_deactivated": "ドロップが無効になりました",

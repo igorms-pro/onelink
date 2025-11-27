@@ -595,7 +595,7 @@
   "common_hide": "Скрыть",
   "common_add": "Добавить",
   "dashboard_content_drops_empty": "Пока нет дропов. Создайте свой первый дроп выше!",
-  "dashboard_content_drops_order_status": "Порядок {order} · {status}",
+  "dashboard_content_drops_order_status": "Порядок {{order}} · {{status}}",
   "dashboard_content_drops_update_success": "Дроп обновлен",
   "dashboard_content_drops_activated": "Дроп активирован",
   "dashboard_content_drops_deactivated": "Дроп деактивирован",

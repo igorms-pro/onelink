@@ -99,8 +99,9 @@ export function DropUploadForm({
         content_type: string | null;
       }[] = [];
       for (const f of selectedFiles) {
-        const ext = f.name.split(".").pop() || "bin";
-        const key = `${drop.id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+        // Sanitize filename: keep original name but add timestamp prefix to avoid collisions
+        const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+        const key = `${drop.id}/${Date.now()}-${safeName}`;
         const { error: upErr } = await supabase.storage
           .from("drops")
           .upload(key, f, {

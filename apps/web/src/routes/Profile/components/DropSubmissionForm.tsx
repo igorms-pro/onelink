@@ -132,8 +132,9 @@ export function DropSubmissionForm({ drop }: DropSubmissionFormProps) {
                 content_type: string | null;
               }[] = [];
               for (const f of files) {
-                const ext = f.name.split(".").pop() || "bin";
-                const key = `${drop.drop_id}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+                // Sanitize filename: keep original name but add random suffix to avoid collisions
+                const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+                const key = `${drop.drop_id}/${Date.now()}-${safeName}`;
                 const { error: upErr } = await supabase.storage
                   .from("drops")
                   .upload(key, f, {

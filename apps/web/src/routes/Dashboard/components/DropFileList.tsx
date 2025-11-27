@@ -16,6 +16,13 @@ interface DropFileListProps {
   isLoading: boolean;
 }
 
+// Extract original filename from path (removes timestamp prefix like "1234567890-")
+function getOriginalFileName(path: string): string {
+  const fileName = path.split("/").pop() || "file";
+  // Remove timestamp prefix (13 digits + dash)
+  return fileName.replace(/^\d{13}-/, "");
+}
+
 export function DropFileList({ files, isLoading }: DropFileListProps) {
   const { t } = useTranslation();
 
@@ -51,7 +58,7 @@ export function DropFileList({ files, isLoading }: DropFileListProps) {
                 rel="noopener noreferrer"
                 className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline truncate block"
               >
-                {file.path.split("/").pop()}
+                {getOriginalFileName(file.path)}
               </a>
               <div className="flex items-center gap-2 mt-1">
                 <p className="text-xs text-gray-500 dark:text-gray-400">

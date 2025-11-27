@@ -595,7 +595,7 @@
   "common_hide": "Ocultar",
   "common_add": "Agregar",
   "dashboard_content_drops_empty": "Aún no hay drops. ¡Crea tu primer drop arriba!",
-  "dashboard_content_drops_order_status": "Orden {order} · {status}",
+  "dashboard_content_drops_order_status": "Orden {{order}} · {{status}}",
   "dashboard_content_drops_update_success": "Drop actualizado",
   "dashboard_content_drops_activated": "Drop activado",
   "dashboard_content_drops_deactivated": "Drop desactivado",
