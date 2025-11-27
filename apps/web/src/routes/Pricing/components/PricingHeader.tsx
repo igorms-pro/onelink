@@ -32,60 +32,43 @@ export function PricingHeader({
           </button>
         )}
         <div className="space-y-6 text-center">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white sm:text-5xl">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight">
             {t("pricing.title")}
           </h1>
-          <p className="mx-auto max-w-2xl text-base text-gray-600 dark:text-gray-300 sm:text-lg">
+          <p className="mx-auto max-w-2xl text-lg sm:text-xl text-gray-600 dark:text-gray-300">
             {t("pricing.description")}
           </p>
 
-          {/* Billing Period Toggle */}
-          <div className="flex items-center justify-center gap-5">
-            <span
-              className={clsx(
-                "text-base font-medium",
-                billingPeriod === "monthly"
-                  ? "text-gray-900 dark:text-white"
-                  : "text-gray-500 dark:text-gray-400",
-              )}
-            >
-              {t("pricing.monthly_label")}
-            </span>
-            <button
-              type="button"
-              onClick={() =>
-                onBillingPeriodChange(
-                  billingPeriod === "monthly" ? "yearly" : "monthly",
-                )
-              }
-              className={clsx(
-                "relative inline-flex h-7 w-14 items-center rounded-full transition-colors cursor-pointer",
-                billingPeriod === "yearly"
-                  ? "bg-purple-600"
-                  : "bg-gray-200 dark:bg-gray-700",
-              )}
-            >
-              <span
+          {/* Billing Period Toggle - Linktree style */}
+          <div className="flex items-center justify-center">
+            <div className="inline-flex rounded-lg bg-gray-100 dark:bg-gray-800 p-1.5 gap-1">
+              <button
+                type="button"
+                onClick={() => onBillingPeriodChange("monthly")}
                 className={clsx(
-                  "inline-block h-5 w-5 transform rounded-full bg-white transition-transform shadow-sm",
-                  billingPeriod === "yearly"
-                    ? "translate-x-8"
-                    : "translate-x-1",
+                  "px-6 py-2.5 rounded-md text-sm font-medium transition-all cursor-pointer",
+                  billingPeriod === "monthly"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white",
                 )}
-              />
-            </button>
-            <span
-              className={clsx(
-                "text-base font-medium",
-                billingPeriod === "yearly"
-                  ? "text-gray-900 dark:text-white"
-                  : "text-gray-500 dark:text-gray-400",
-              )}
-            >
-              {t("pricing.yearly_label", {
-                defaultValue: "Annually (save 20%)",
-              })}
-            </span>
+              >
+                {t("pricing.monthly_label")}
+              </button>
+              <button
+                type="button"
+                onClick={() => onBillingPeriodChange("yearly")}
+                className={clsx(
+                  "px-6 py-2.5 rounded-md text-sm font-medium transition-all cursor-pointer",
+                  billingPeriod === "yearly"
+                    ? "bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm"
+                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white",
+                )}
+              >
+                {t("pricing.yearly_label", {
+                  defaultValue: "Annually (save 20%)",
+                })}
+              </button>
+            </div>
           </div>
         </div>
       </div>

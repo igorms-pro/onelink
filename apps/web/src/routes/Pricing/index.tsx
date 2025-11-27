@@ -15,6 +15,7 @@ import { PricingPlanCard } from "./components/PricingPlanCard";
 import { PricingCTA } from "./components/PricingCTA";
 import { PricingFAQ } from "./components/PricingFAQ";
 import { PricingContact } from "./components/PricingContact";
+import { PricingSocialProof } from "./components/PricingSocialProof";
 import { usePricingPlans } from "./hooks/usePricingPlans";
 
 export default function Pricing() {
@@ -93,6 +94,8 @@ export default function Pricing() {
           showBackButton={isAuthenticated}
           onBackClick={() => navigate(-1)}
         />
+
+        <PricingSocialProof />
 
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="grid gap-8 lg:grid-cols-3">

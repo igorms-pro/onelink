@@ -492,6 +492,7 @@
   "pricing": {
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "trusted_by": "Trusted by creators worldwide",
     "monthly_label": "Monthly billing",
     "currency_note": "Prices in USD. Taxes may apply.",
     "per_month": "per month",

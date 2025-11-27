@@ -484,6 +484,7 @@
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
     "monthly_label": "月度",
+    "trusted_by": "受到全球创作者的信任",
     "currency_note": "价格为USD。可能适用税费。",
     "per_month": "每月",
     "yearly_label": "年度（节省20%）",
