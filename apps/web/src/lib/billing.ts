@@ -101,7 +101,7 @@ export async function goToPortal(): Promise<void> {
       throw new BillingError("No portal URL received from server", "NO_URL");
     }
 
-    window.location.href = data.url;
+    window.open(data.url, "_blank");
   } catch (error) {
     if (error instanceof BillingError) {
       throw error;

@@ -51,7 +51,13 @@ export function DashboardSubHeader({
           <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_header_title")}
           </div>
-          <span className="rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide">
+          <span
+            className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide ${
+              hasPaidPlan
+                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+            }`}
+          >
             {planDisplayName}
           </span>
         </div>
