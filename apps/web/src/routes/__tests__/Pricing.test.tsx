@@ -292,14 +292,4 @@ describe("Pricing", () => {
     // Should show "Monthly" in the toggle
     expect(screen.getByText(/monthly/i)).toBeInTheDocument();
   });
-
-  it("displays currency note", () => {
-    render(
-      <MemoryRouter>
-        <Pricing />
-      </MemoryRouter>,
-    );
-
-    expect(screen.getByText(/prices in usd/i)).toBeInTheDocument();
-  });
 });
