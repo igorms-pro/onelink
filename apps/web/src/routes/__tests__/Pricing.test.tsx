@@ -208,7 +208,7 @@ describe("Pricing", () => {
     expect(mockNavigate).toHaveBeenCalledWith("/auth");
   });
 
-  it("calls goToCheckout when pro plan button is clicked", async () => {
+  it("calls goToCheckout when pro plan card is clicked and then button is clicked", async () => {
     vi.mocked(goToCheckout).mockResolvedValue(undefined);
 
     render(
@@ -217,7 +217,12 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
-    const proButton = screen.getByRole("button", { name: /upgrade to pro/i });
+    // First click on the pro card to select it
+    const proCard = screen.getByTestId("pricing-plan-pro-card");
+    fireEvent.click(proCard);
+
+    // Then click the button
+    const proButton = screen.getByTestId("pricing-plan-pro-button");
     fireEvent.click(proButton);
 
     await waitFor(() => {
@@ -235,7 +240,12 @@ describe("Pricing", () => {
       </MemoryRouter>,
     );
 
-    const proButton = screen.getByRole("button", { name: /upgrade to pro/i });
+    // First click on the pro card to select it
+    const proCard = screen.getByTestId("pricing-plan-pro-card");
+    fireEvent.click(proCard);
+
+    // Then click the button
+    const proButton = screen.getByTestId("pricing-plan-pro-button");
     fireEvent.click(proButton);
 
     await waitFor(() => {

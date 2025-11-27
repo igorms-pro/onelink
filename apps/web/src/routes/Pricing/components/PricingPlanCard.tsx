@@ -58,6 +58,7 @@ export function PricingPlanCard({
 
   return (
     <div
+      data-testid={`pricing-plan-${id}-card`}
       onClick={!isCurrentPlan ? onClick : undefined}
       className={clsx(
         "relative flex h-full flex-col rounded-2xl border p-8 shadow-sm transition",
