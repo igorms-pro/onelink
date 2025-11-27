@@ -483,29 +483,61 @@
   "pricing": {
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
-    "monthly_label": "Monthly billing",
-    "currency_note": "Prices in USD. Taxes may apply.",
-    "per_month": "per month",
+    "monthly_label": "月額",
+    "currency_note": "価格はUSDです。税金が適用される場合があります。",
+    "per_month": "月額",
+    "yearly_label": "年間（20%節約）",
+    "per_year": "年間",
     "includes": "What's included",
     "most_popular": "Most popular",
     "loading": "Redirecting...",
+    "current_plan": "現在のプラン",
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
     "plans": {
       "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect to launch your profile and share essential links.",
-        "cta": "Start for free",
-        "features": []
+        "name": "無料",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
+        "description": "プロフィールを立ち上げて、重要なリンクを共有するのに最適です。",
+        "cta": "無料で始める",
+        "features": [
+          "リンク4つ、ドロップ2つまで",
+          "ファイルあたり50MB",
+          "ファイル保持期間7日",
+          "基本分析（7日間の履歴）",
+          "テーマでカスタマイズ可能なプロフィール"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "ファイル収集が必要なクリエイターや小規模事業者向け。",
+        "cta": "始める",
+        "features": [
+          "無制限のリンクとドロップ",
+          "カスタムドメイン",
+          "ファイルあたり500MB",
+          "ファイル保持期間30日",
+          "基本分析（7日間の履歴）"
+        ]
       },
       "pro": {
         "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
-        "cta": "Upgrade to Pro",
-        "features": []
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "大容量ファイルのアップロードと詳細な分析が必要なプロフェッショナル向け。",
+        "cta": "始める",
+        "features": [
+          "Starterに含まれるすべて",
+          "ファイルあたり2GB",
+          "ファイル保持期間90日",
+          "高度な分析（30日と90日の履歴）",
+          "Google Analytics統合",
+          "優先サポート"
+        ]
       }
     },
     "faq_title": "Frequently asked questions",
@@ -683,6 +715,17 @@
   "billing_download_coming_soon": "Download invoice feature coming soon",
   "billing_payment_error": "Failed to manage payment. Please try again.",
   "billing_upgrade_error": "Failed to start upgrade. Please try again.",
+  "billing_auth_required": "Please sign in to upgrade to Pro",
+  "upgrade_confirm_title": "Proにアップグレードしますか？",
+  "upgrade_confirm_description": "Stripeにリダイレクトされ、お支払いを完了します。お支払い後、すぐにサブスクリプションが開始されます。",
+  "upgrade_confirm_benefits_title": "Pro機能には以下が含まれます：",
+  "upgrade_confirm_benefit_unlimited": "無制限のリンクとドロップ",
+  "upgrade_confirm_benefit_domain": "カスタムドメインサポート",
+  "upgrade_confirm_benefit_analytics": "高度な分析",
+  "upgrade_confirm_benefit_support": "優先サポート",
+  "upgrade_confirm_cancel": "キャンセル",
+  "upgrade_confirm_continue": "チェックアウトに進む",
+  "upgrade_confirm_loading": "リダイレクト中...",
   "sessions_page_title": "Active Sessions",
   "sessions_page_description": "Manage your active sessions and view login history",
   "sessions_active_sessions": "Active Sessions",

@@ -483,38 +483,60 @@
   "pricing": {
     "title": "Offres et tarifs",
     "description": "Choisissez l'offre adaptée à votre étape. Commencez gratuitement, passez en Pro quand vous êtes prêt.",
-    "monthly_label": "Facturation mensuelle",
+    "monthly_label": "Mensuel",
     "currency_note": "Tarifs en USD. Des taxes peuvent s'appliquer.",
     "per_month": "par mois",
+    "yearly_label": "Annuel (économisez 20%)",
+    "per_year": "par an",
     "includes": "Comprend",
     "most_popular": "Plus populaire",
     "loading": "Redirection...",
+    "current_plan": "Votre offre actuelle",
     "cta_title": "Encore indécis ?",
     "cta_description": "Notre offre gratuite couvre l'essentiel. Passez en Pro pour débloquer les domaines personnalisés, les statistiques avancées et plus encore.",
     "cta_button": "Créer mon OneLink",
     "plans": {
       "free": {
         "name": "Gratuit",
-        "price": "0 $",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
         "description": "Idéal pour lancer votre profil et partager vos liens clés.",
         "cta": "Commencer gratuitement",
         "features": [
-          "Routes et dépôts illimités (dans les limites du plan gratuit)",
-          "Profil personnalisable avec thèmes",
-          "Notifications e-mail pour les nouvelles soumissions",
+          "4 liens, 2 dépôts max",
+          "50MB par fichier",
+          "Rétention de fichiers 7 jours",
+          "Statistiques basiques (historique 7 jours)",
+          "Profil personnalisable avec thèmes"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "Pour les créateurs et petites entreprises qui ont besoin de collecte de fichiers.",
+        "cta": "Commencer",
+        "features": [
+          "Liens et dépôts illimités",
+          "Domaine personnalisé",
+          "500MB par fichier",
+          "Rétention de fichiers 30 jours",
           "Statistiques basiques (historique 7 jours)"
         ]
       },
       "pro": {
         "name": "Pro",
-        "price": "12 $",
-        "description": "Débloquez les statistiques avancées, le domaine personnalisé et davantage d'automatisation.",
-        "cta": "Passer en Pro",
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "Pour les professionnels qui ont besoin de téléchargements de fichiers lourds et d'analyses détaillées.",
+        "cta": "Commencer",
         "features": [
-          "Routes et dépôts illimités",
-          "Statistiques avancées avec historique 30 et 90 jours",
-          "Domaine personnalisé et profil brandé",
-          "Support prioritaire et influence sur la roadmap"
+          "Tout ce qui est inclus dans Starter",
+          "2GB par fichier",
+          "Rétention de fichiers 90 jours",
+          "Statistiques avancées (historique 30 et 90 jours)",
+          "Intégration Google Analytics",
+          "Support prioritaire"
         ]
       }
     },
@@ -693,6 +715,17 @@
   "billing_download_coming_soon": "Fonctionnalité de téléchargement de facture à venir",
   "billing_payment_error": "Échec de la gestion du paiement. Veuillez réessayer.",
   "billing_upgrade_error": "Échec du démarrage de la mise à niveau. Veuillez réessayer.",
+  "billing_auth_required": "Veuillez vous connecter pour passer à Pro",
+  "upgrade_confirm_title": "Passer à Pro ?",
+  "upgrade_confirm_description": "Vous serez redirigé vers Stripe pour finaliser votre paiement. Votre abonnement commencera immédiatement après le paiement.",
+  "upgrade_confirm_benefits_title": "Les fonctionnalités Pro incluent :",
+  "upgrade_confirm_benefit_unlimited": "Liens et drops illimités",
+  "upgrade_confirm_benefit_domain": "Support de domaine personnalisé",
+  "upgrade_confirm_benefit_analytics": "Analyses avancées",
+  "upgrade_confirm_benefit_support": "Support prioritaire",
+  "upgrade_confirm_cancel": "Annuler",
+  "upgrade_confirm_continue": "Continuer vers le paiement",
+  "upgrade_confirm_loading": "Redirection...",
   "sessions_page_title": "Sessions actives",
   "sessions_page_description": "Gérez vos sessions actives et consultez l'historique de connexion",
   "sessions_active_sessions": "Sessions actives",

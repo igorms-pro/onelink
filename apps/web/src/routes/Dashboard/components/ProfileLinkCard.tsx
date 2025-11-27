@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Copy, ExternalLink, QrCode } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { toast } from "sonner";
@@ -9,7 +10,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { goToCheckout } from "@/lib/billing";
 
 interface ProfileLinkCardProps {
   slug: string | null;
@@ -18,6 +18,7 @@ interface ProfileLinkCardProps {
 
 export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [copied, setCopied] = useState(false);
   const [isQRCodeOpen, setIsQRCodeOpen] = useState(false);
 
@@ -45,7 +46,7 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
   const handleQRCode = () => {
     if (isFree) {
       toast.info(t("dashboard_account_profile_qr_pro_feature"));
-      goToCheckout();
+      navigate("/pricing");
       return;
     }
     setIsQRCodeOpen(true);

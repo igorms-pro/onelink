@@ -483,29 +483,61 @@
   "pricing": {
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
-    "monthly_label": "Monthly billing",
-    "currency_note": "Prices in USD. Taxes may apply.",
-    "per_month": "per month",
+    "monthly_label": "月度",
+    "currency_note": "价格为USD。可能适用税费。",
+    "per_month": "每月",
+    "yearly_label": "年度（节省20%）",
+    "per_year": "每年",
     "includes": "What's included",
     "most_popular": "Most popular",
     "loading": "Redirecting...",
+    "current_plan": "您当前的计划",
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
     "plans": {
       "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect to launch your profile and share essential links.",
-        "cta": "Start for free",
-        "features": []
+        "name": "免费",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
+        "description": "非常适合启动您的个人资料并分享重要链接。",
+        "cta": "免费开始",
+        "features": [
+          "4个链接，最多2个文件库",
+          "每个文件50MB",
+          "文件保留7天",
+          "基本分析（7天历史）",
+          "可自定义主题的个人资料"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "适合需要文件收集的创作者和小型企业。",
+        "cta": "开始使用",
+        "features": [
+          "无限链接和文件库",
+          "自定义域名",
+          "每个文件500MB",
+          "文件保留30天",
+          "基本分析（7天历史）"
+        ]
       },
       "pro": {
         "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
-        "cta": "Upgrade to Pro",
-        "features": []
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "适合需要大文件上传和详细分析的专业人士。",
+        "cta": "开始使用",
+        "features": [
+          "Starter中的所有内容",
+          "每个文件2GB",
+          "文件保留90天",
+          "高级分析（30和90天历史）",
+          "Google Analytics集成",
+          "优先支持"
+        ]
       }
     },
     "faq_title": "Frequently asked questions",
@@ -683,6 +715,17 @@
   "billing_download_coming_soon": "Download invoice feature coming soon",
   "billing_payment_error": "Failed to manage payment. Please try again.",
   "billing_upgrade_error": "Failed to start upgrade. Please try again.",
+  "billing_auth_required": "Please sign in to upgrade to Pro",
+  "upgrade_confirm_title": "升级到Pro？",
+  "upgrade_confirm_description": "您将被重定向到Stripe完成付款。您的订阅将在付款后立即开始。",
+  "upgrade_confirm_benefits_title": "Pro功能包括：",
+  "upgrade_confirm_benefit_unlimited": "无限链接和文件",
+  "upgrade_confirm_benefit_domain": "自定义域名支持",
+  "upgrade_confirm_benefit_analytics": "高级分析",
+  "upgrade_confirm_benefit_support": "优先支持",
+  "upgrade_confirm_cancel": "取消",
+  "upgrade_confirm_continue": "继续结账",
+  "upgrade_confirm_loading": "重定向中...",
   "sessions_page_title": "Active Sessions",
   "sessions_page_description": "Manage your active sessions and view login history",
   "sessions_active_sessions": "Active Sessions",

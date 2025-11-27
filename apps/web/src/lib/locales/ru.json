@@ -483,29 +483,61 @@
   "pricing": {
     "title": "Plans & Pricing",
     "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
-    "monthly_label": "Monthly billing",
-    "currency_note": "Prices in USD. Taxes may apply.",
-    "per_month": "per month",
+    "monthly_label": "Ежемесячно",
+    "currency_note": "Цены в USD. Могут применяться налоги.",
+    "per_month": "в месяц",
+    "yearly_label": "Ежегодно (сэкономьте 20%)",
+    "per_year": "в год",
     "includes": "What's included",
     "most_popular": "Most popular",
     "loading": "Redirecting...",
+    "current_plan": "Ваш текущий план",
     "cta_title": "Still unsure?",
     "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
     "cta_button": "Create your OneLink",
     "plans": {
       "free": {
-        "name": "Free",
-        "price": "$0",
-        "description": "Perfect to launch your profile and share essential links.",
-        "cta": "Start for free",
-        "features": []
+        "name": "Бесплатно",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
+        "description": "Идеально для запуска вашего профиля и обмена важными ссылками.",
+        "cta": "Начать бесплатно",
+        "features": [
+          "4 ссылки, 2 хранилища макс",
+          "50МБ на файл",
+          "Хранение файлов 7 дней",
+          "Базовая аналитика (история 7 дней)",
+          "Настраиваемый профиль с темами"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "Для создателей и малого бизнеса, которым нужен сбор файлов.",
+        "cta": "Начать",
+        "features": [
+          "Неограниченные ссылки и хранилища",
+          "Пользовательский домен",
+          "500МБ на файл",
+          "Хранение файлов 30 дней",
+          "Базовая аналитика (история 7 дней)"
+        ]
       },
       "pro": {
         "name": "Pro",
-        "price": "$12",
-        "description": "Unlock advanced analytics, custom domains, and more automations.",
-        "cta": "Upgrade to Pro",
-        "features": []
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "Для профессионалов, которым нужны большие загрузки файлов и детальная аналитика.",
+        "cta": "Начать",
+        "features": [
+          "Всё из Starter",
+          "2ГБ на файл",
+          "Хранение файлов 90 дней",
+          "Расширенная аналитика (история 30 и 90 дней)",
+          "Интеграция Google Analytics",
+          "Приоритетная поддержка"
+        ]
       }
     },
     "faq_title": "Frequently asked questions",
@@ -683,6 +715,17 @@
   "billing_download_coming_soon": "Download invoice feature coming soon",
   "billing_payment_error": "Failed to manage payment. Please try again.",
   "billing_upgrade_error": "Failed to start upgrade. Please try again.",
+  "billing_auth_required": "Please sign in to upgrade to Pro",
+  "upgrade_confirm_title": "Обновить до Pro?",
+  "upgrade_confirm_description": "Вы будете перенаправлены в Stripe для завершения оплаты. Ваша подписка начнется сразу после оплаты.",
+  "upgrade_confirm_benefits_title": "Функции Pro включают:",
+  "upgrade_confirm_benefit_unlimited": "Неограниченные ссылки и дропы",
+  "upgrade_confirm_benefit_domain": "Поддержка пользовательского домена",
+  "upgrade_confirm_benefit_analytics": "Расширенная аналитика",
+  "upgrade_confirm_benefit_support": "Приоритетная поддержка",
+  "upgrade_confirm_cancel": "Отмена",
+  "upgrade_confirm_continue": "Перейти к оплате",
+  "upgrade_confirm_loading": "Перенаправление...",
   "sessions_page_title": "Active Sessions",
   "sessions_page_description": "Manage your active sessions and view login history",
   "sessions_active_sessions": "Active Sessions",

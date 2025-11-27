@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { goToCheckout, goToPortal } from "@/lib/billing";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { goToPortal, BillingError } from "@/lib/billing";
 
 interface DashboardSubHeaderProps {
   isFree: boolean;
@@ -11,8 +13,35 @@ export function DashboardSubHeader({
   onSignOut,
 }: DashboardSubHeaderProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleUpgrade = () => {
+    navigate("/pricing");
+  };
+
+  const handleManageBilling = async () => {
+    try {
+      await goToPortal();
+    } catch (error) {
+      if (error instanceof BillingError) {
+        if (error.code === "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_auth_required", {
+              defaultValue: "Please sign in to manage billing",
+            }),
+          );
+          navigate("/auth");
+        } else {
+          toast.error(t("billing_payment_error"));
+        }
+      } else {
+        toast.error(t("billing_payment_error"));
+      }
+    }
+  };
+
   return (
-    <header className="sticky top-[56px] sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 flex-shrink-0">
+    <header className="sticky top-[56px] sm:static z-40 bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0">
       <div className="mx-auto max-w-4xl w-full flex flex-row items-center justify-between gap-2 sm:gap-4 px-4 md:px-6 lg:px-8 py-2 sm:py-4 ">
         <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
           <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
@@ -26,14 +55,14 @@ export function DashboardSubHeader({
           {isFree ? (
             <button
               className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
-              onClick={goToCheckout}
+              onClick={handleUpgrade}
             >
               {t("dashboard_header_upgrade")}
             </button>
           ) : (
             <button
               className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
-              onClick={goToPortal}
+              onClick={handleManageBilling}
             >
               {t("dashboard_header_manage_billing")}
             </button>
