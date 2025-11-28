@@ -22,7 +22,7 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 
 export function useUserPreferences() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [preferences, setPreferences] =
     useState<UserPreferences>(DEFAULT_PREFERENCES);
   const { loading, execute } = useAsyncOperation();
@@ -32,8 +32,13 @@ export function useUserPreferences() {
 
   // Load preferences
   useEffect(() => {
+    // Wait for auth to finish loading before checking user
+    if (authLoading) {
+      return;
+    }
+
     if (!user?.id) {
-      // If no user, set defaults immediately (don't wait for loading)
+      // If no user after auth loaded, set defaults immediately
       setPreferences(DEFAULT_PREFERENCES);
       return;
     }
@@ -99,7 +104,7 @@ export function useUserPreferences() {
         setPreferences(DEFAULT_PREFERENCES);
       }
     });
-  }, [user?.id, execute, t]);
+  }, [user?.id, authLoading, execute, t]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
@@ -167,7 +172,7 @@ export function useUserPreferences() {
 
   return {
     preferences,
-    loading,
+    loading: loading || authLoading, // Include auth loading state
     saving: submitting || isSavingRef.current, // Include ref state for immediate UI feedback
     updatePreference,
     savePreferences,
