@@ -59,6 +59,7 @@ test.describe("Settings Navigation", () => {
   test("can navigate to sessions page", async ({ authenticatedPage: page }) => {
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500); // Small delay to ensure page is fully loaded
 
     const sessionsLink = page
       .getByTestId("settings-active-sessions")

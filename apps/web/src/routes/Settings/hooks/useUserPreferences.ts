@@ -29,18 +29,20 @@ export function useUserPreferences() {
   const { submitting, submit } = useAsyncSubmit();
   // Use ref to immediately prevent double clicks (before submitting state updates)
   const isSavingRef = useRef(false);
-  // Use ref to prevent multiple simultaneous loads
-  const isLoadingRef = useRef(false);
-  // Track the last user ID we loaded preferences for
+  // Track the user ID we're currently loading for (to prevent duplicate loads)
+  const loadingUserIdRef = useRef<string | null>(null);
+  // Track the last user ID we successfully loaded preferences for
   const lastLoadedUserIdRef = useRef<string | null>(null);
 
   // Load preferences
   useEffect(() => {
+    const currentUserId = user?.id;
+
     console.log("[useUserPreferences] useEffect triggered", {
       authLoading,
-      userId: user?.id,
+      userId: currentUserId,
       hasUser: !!user,
-      isLoadingRef: isLoadingRef.current,
+      loadingUserIdRef: loadingUserIdRef.current,
       loading,
       lastLoadedUserId: lastLoadedUserIdRef.current,
     });
@@ -51,40 +53,46 @@ export function useUserPreferences() {
       return;
     }
 
-    if (!user?.id) {
+    if (!currentUserId) {
       // If no user after auth loaded, set defaults immediately
       console.log("[useUserPreferences] No user, setting defaults");
       setPreferences(DEFAULT_PREFERENCES);
-      isLoadingRef.current = false;
+      loadingUserIdRef.current = null;
       lastLoadedUserIdRef.current = null;
       return;
     }
 
     // If we already loaded preferences for this user, don't reload
-    if (lastLoadedUserIdRef.current === user.id) {
+    if (lastLoadedUserIdRef.current === currentUserId) {
       console.log(
         "[useUserPreferences] Already loaded preferences for this user, skipping...",
       );
       return;
     }
 
-    // Prevent multiple simultaneous loads
-    if (isLoadingRef.current || loading) {
-      console.log("[useUserPreferences] Already loading, skipping...");
+    // If we're already loading for this user, don't start another load
+    if (loadingUserIdRef.current === currentUserId || loading) {
+      console.log(
+        "[useUserPreferences] Already loading for this user, skipping...",
+      );
       return;
     }
 
     console.log(
       "[useUserPreferences] Starting to load preferences for user:",
-      user.id,
+      currentUserId,
     );
-    isLoadingRef.current = true;
+
+    // Mark that we're loading for this user
+    loadingUserIdRef.current = currentUserId;
 
     // Create AbortController for this specific load
     const abortController = new AbortController();
     const signal = abortController.signal;
 
+    console.log("[useUserPreferences] About to call execute()");
     execute(async () => {
+      console.log("[useUserPreferences] Inside execute() callback");
       // Check if cancelled before starting
       if (signal.aborted) {
         console.log("[useUserPreferences] Load aborted before start");
@@ -96,14 +104,16 @@ export function useUserPreferences() {
           "[useUserPreferences] Fetching preferences from Supabase...",
         );
         console.log("[useUserPreferences] Supabase client:", !!supabase);
-        console.log("[useUserPreferences] User ID:", user.id);
+        console.log("[useUserPreferences] User ID:", currentUserId);
 
         // Check current session
+        console.log("[useUserPreferences] About to call getSession()");
         const { data: sessionData } = await supabase.auth.getSession();
+        console.log("[useUserPreferences] getSession() completed");
         console.log("[useUserPreferences] Current session:", {
           hasSession: !!sessionData.session,
           userId: sessionData.session?.user?.id,
-          matches: sessionData.session?.user?.id === user.id,
+          matches: sessionData.session?.user?.id === currentUserId,
         });
 
         if (signal.aborted) {
@@ -115,7 +125,7 @@ export function useUserPreferences() {
         const queryPromise = supabase
           .from("user_preferences")
           .select("*")
-          .eq("user_id", user.id)
+          .eq("user_id", currentUserId)
           .maybeSingle();
 
         console.log("[useUserPreferences] Query promise created");
@@ -218,7 +228,8 @@ export function useUserPreferences() {
               data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
           });
           // Mark as loaded for this user
-          lastLoadedUserIdRef.current = user.id;
+          lastLoadedUserIdRef.current = currentUserId;
+          loadingUserIdRef.current = null;
         } else {
           // No preferences found, create default entry
           console.log(
@@ -227,7 +238,7 @@ export function useUserPreferences() {
           const { error: insertError } = await supabase
             .from("user_preferences")
             .insert({
-              user_id: user.id,
+              user_id: currentUserId,
               ...DEFAULT_PREFERENCES,
             });
 
@@ -243,7 +254,8 @@ export function useUserPreferences() {
             setPreferences(DEFAULT_PREFERENCES);
           }
           // Mark as loaded for this user even if we used defaults
-          lastLoadedUserIdRef.current = user.id;
+          lastLoadedUserIdRef.current = currentUserId;
+          loadingUserIdRef.current = null;
         }
       } catch (error) {
         console.error(
@@ -257,27 +269,22 @@ export function useUserPreferences() {
         );
         setPreferences(DEFAULT_PREFERENCES);
         // Don't mark as loaded if there was an error - allow retry
-      } finally {
-        // Always reset loading ref when done
-        isLoadingRef.current = false;
-        console.log("[useUserPreferences] Load completed, reset isLoadingRef");
+        loadingUserIdRef.current = null;
       }
     });
 
     // Cleanup: abort request if component unmounts or dependencies change
     return () => {
-      console.log(
-        "[useUserPreferences] Cleanup: aborting request and resetting isLoadingRef",
-        {
-          currentUserId: user?.id,
-          lastLoadedUserId: lastLoadedUserIdRef.current,
-        },
-      );
+      console.log("[useUserPreferences] Cleanup: aborting request", {
+        currentUserId,
+        loadingUserIdRef: loadingUserIdRef.current,
+        lastLoadedUserId: lastLoadedUserIdRef.current,
+      });
       abortController.abort();
-      isLoadingRef.current = false;
-      // Only reset lastLoadedUserId if user actually changed
-      if (user?.id !== lastLoadedUserIdRef.current) {
-        lastLoadedUserIdRef.current = null;
+      // Only reset loadingUserIdRef if we were loading for this user
+      // This prevents the cleanup from interfering with an ongoing load
+      if (loadingUserIdRef.current === currentUserId) {
+        loadingUserIdRef.current = null;
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

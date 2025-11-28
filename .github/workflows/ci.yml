@@ -88,6 +88,9 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install --with-deps
       
+      - name: Remove .env.local if exists (to prevent dotenv messages)
+        run: rm -f .env.local || true
+      
       - name: Build app
         run: pnpm build
         env:
@@ -100,8 +103,14 @@ jobs:
         env:
           CI: "true"
           VITE_BASE_URL: http://localhost:4173
+          # Suppress dotenv messages (dotenvx v17+)
+          DOTENV_CONFIG_QUIET: "true"
+          DOTENV_SILENT: "true"
+          NODE_ENV: "test"
           # Supabase credentials for e2e tests
           # Use GitHub secrets for real test project, or placeholder values
+          # Note: If secrets are not set, tests will use placeholder values (tests will skip auth)
+          # GitHub Actions linter warnings about secrets are expected and can be ignored
           VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
           VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
           # Test user credentials for authenticated tests
