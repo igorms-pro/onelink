@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -27,6 +27,8 @@ export function useUserPreferences() {
     useState<UserPreferences>(DEFAULT_PREFERENCES);
   const { loading, execute } = useAsyncOperation();
   const { submitting, submit } = useAsyncSubmit();
+  // Use ref to immediately prevent double clicks (before submitting state updates)
+  const isSavingRef = useRef(false);
 
   // Load preferences
   useEffect(() => {
@@ -98,10 +100,13 @@ export function useUserPreferences() {
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
     if (!user?.id) return;
-    // Prevent multiple simultaneous saves
-    if (submitting) {
+    // Prevent multiple simultaneous saves - check ref immediately (synchronous)
+    if (isSavingRef.current || submitting) {
       return;
     }
+
+    // Set ref immediately to prevent double clicks
+    isSavingRef.current = true;
 
     await submit(async () => {
       // Calculate updated preferences before state update
@@ -133,10 +138,15 @@ export function useUserPreferences() {
       }
 
       toast.success(t("settings_preferences_saved"));
-    }).catch((error) => {
-      console.error("Error saving preferences:", error);
-      toast.error(t("settings_preferences_save_error"));
-    });
+    })
+      .catch((error) => {
+        console.error("Error saving preferences:", error);
+        toast.error(t("settings_preferences_save_error"));
+      })
+      .finally(() => {
+        // Always reset ref when done
+        isSavingRef.current = false;
+      });
   };
 
   // Update single preference
@@ -144,8 +154,8 @@ export function useUserPreferences() {
     key: keyof UserPreferences,
     value: boolean,
   ) => {
-    // Prevent multiple simultaneous updates
-    if (submitting) {
+    // Prevent multiple simultaneous updates - check ref immediately
+    if (isSavingRef.current || submitting) {
       return;
     }
     await savePreferences({ [key]: value });
@@ -154,7 +164,7 @@ export function useUserPreferences() {
   return {
     preferences,
     loading,
-    saving: submitting,
+    saving: submitting || isSavingRef.current, // Include ref state for immediate UI feedback
     updatePreference,
     savePreferences,
   };
