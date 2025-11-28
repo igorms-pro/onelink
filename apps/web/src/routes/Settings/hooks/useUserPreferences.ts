@@ -98,10 +98,19 @@ export function useUserPreferences() {
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
     if (!user?.id) return;
-
-    const updated = { ...preferences, ...newPreferences };
+    // Prevent multiple simultaneous saves
+    if (submitting) {
+      return;
+    }
 
     await submit(async () => {
+      // Calculate updated preferences before state update
+      const updated = { ...preferences, ...newPreferences };
+      const previousPreferences = preferences;
+
+      // Update state optimistically
+      setPreferences(updated);
+
       // Save to Supabase
       const { error } = await supabase.from("user_preferences").upsert(
         {
@@ -118,10 +127,11 @@ export function useUserPreferences() {
 
       if (error) {
         console.error("Error saving preferences to Supabase:", error);
+        // Revert to previous state on error
+        setPreferences(previousPreferences);
         throw error; // Will be caught by submit error handler
       }
 
-      setPreferences(updated);
       toast.success(t("settings_preferences_saved"));
     }).catch((error) => {
       console.error("Error saving preferences:", error);
@@ -134,6 +144,10 @@ export function useUserPreferences() {
     key: keyof UserPreferences,
     value: boolean,
   ) => {
+    // Prevent multiple simultaneous updates
+    if (submitting) {
+      return;
+    }
     await savePreferences({ [key]: value });
   };
 
