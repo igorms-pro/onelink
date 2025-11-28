@@ -35,13 +35,20 @@ export function BackupCodesDisplay({
     if (!showBackupCodes || backupCodes.length === 0) return null;
 
     return (
-      <div className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+      <div
+        className="mb-6 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg"
+        data-testid="backup-codes-display-setup"
+      >
         <div className="flex items-center justify-between mb-3">
-          <h3 className="text-sm font-semibold text-yellow-800 dark:text-yellow-200">
+          <h3
+            className="text-sm font-semibold text-yellow-800 dark:text-yellow-200"
+            data-testid="backup-codes-title"
+          >
             {t("settings_2fa_backup_codes_title")}
           </h3>
           <button
             onClick={handleCopyAllBackupCodes}
+            data-testid="copy-all-backup-codes-button"
             className="text-xs text-yellow-700 dark:text-yellow-300 hover:underline"
           >
             {t("settings_2fa_copy_all")}
@@ -61,15 +68,22 @@ export function BackupCodesDisplay({
 
   // Active variant
   return (
-    <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <div
+      className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      data-testid="backup-codes-display-active"
+    >
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2
+          className="text-xl font-semibold text-gray-900 dark:text-white"
+          data-testid="backup-codes-title"
+        >
           {t("settings_2fa_backup_codes_title")}
         </h2>
         {onRegenerate && (
           <button
             onClick={onRegenerate}
             disabled={loading}
+            data-testid="regenerate-backup-codes-button"
             className="flex items-center gap-2 px-4 py-2 text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors disabled:opacity-50"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -89,6 +103,7 @@ export function BackupCodesDisplay({
       ) : (
         <button
           onClick={() => setShowBackupCodes(true)}
+          data-testid="show-backup-codes-button"
           className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
         >
           {t("settings_2fa_show_backup_codes")}

@@ -79,30 +79,43 @@ export default function TwoFactorPage() {
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/settings")}
+          data-testid="back-to-settings-button"
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
         </button>
 
-        <div className="mb-8">
+        <div className="mb-8" data-testid="two-factor-page-header">
           <div className="flex items-center gap-3 mb-2">
             <Shield className="w-8 h-8 text-purple-600 dark:text-purple-400" />
-            <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
+            <h1
+              className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!"
+              data-testid="two-factor-page-title"
+            >
               {t("settings_2fa_title")}
             </h1>
           </div>
-          <p className="text-gray-500 dark:text-gray-400">
+          <p
+            className="text-gray-500 dark:text-gray-400"
+            data-testid="two-factor-page-description"
+          >
             {t("settings_2fa_description")}
           </p>
         </div>
 
         {/* Disabled State */}
         {state === "disabled" && (
-          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <div
+            className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+            data-testid="two-factor-disabled-state"
+          >
             <div className="text-center py-8">
               <Shield className="w-16 h-16 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              <h2
+                className="text-xl font-semibold text-gray-900 dark:text-white mb-2"
+                data-testid="two-factor-disabled-status"
+              >
                 {t("settings_2fa_not_enabled")}
               </h2>
               <p className="text-gray-500 dark:text-gray-400 mb-6">
@@ -111,6 +124,7 @@ export default function TwoFactorPage() {
               <button
                 onClick={handleEnable2FA}
                 disabled={submitting}
+                data-testid="enable-2fa-button"
                 className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting
@@ -123,9 +137,12 @@ export default function TwoFactorPage() {
 
         {/* Setup State */}
         {state === "setup" && (
-          <div className="space-y-6">
+          <div className="space-y-6" data-testid="two-factor-setup-state">
             <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+              <h2
+                className="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+                data-testid="setup-step1-title"
+              >
                 {t("settings_2fa_setup_step1_title")}
               </h2>
               <p className="text-gray-500 dark:text-gray-400 mb-6">
@@ -153,7 +170,7 @@ export default function TwoFactorPage() {
 
         {/* Active State */}
         {state === "active" && (
-          <div className="space-y-6">
+          <div className="space-y-6" data-testid="two-factor-active-state">
             <TwoFactorActiveStatus />
 
             <BackupCodesDisplay
