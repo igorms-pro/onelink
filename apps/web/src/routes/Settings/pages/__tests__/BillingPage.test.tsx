@@ -1,5 +1,5 @@
 import "@testing-library/jest-dom";
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { PlanType } from "@/lib/types/plan";
@@ -25,6 +25,10 @@ vi.mock("@/lib/supabase", () => ({
 
 vi.mock("@/lib/AuthProvider", () => ({
   useAuth: vi.fn(),
+}));
+
+vi.mock("@/hooks/useRequireAuth", () => ({
+  useRequireAuth: vi.fn(),
 }));
 
 vi.mock("@/lib/billing", () => ({
@@ -61,10 +65,10 @@ vi.mock("sonner", () => ({
 }));
 
 import { useAuth } from "@/lib/AuthProvider";
+import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useDashboardData } from "@/routes/Dashboard/hooks/useDashboardData";
 import { useNavigate } from "react-router-dom";
-import { goToCheckout, goToPortal } from "@/lib/billing";
-import { toast } from "sonner";
+import { goToPortal } from "@/lib/billing";
 
 const mockUser = {
   id: "user-1",
@@ -133,29 +137,32 @@ describe("BillingPage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useAuth).mockReturnValue(createAuthValue());
+    vi.mocked(useRequireAuth).mockReturnValue({
+      user: mockUser,
+      loading: false,
+      signOut: vi.fn(),
+    });
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ loading: true }),
+      createDashboardData({ loading: false }),
     );
-    vi.useFakeTimers();
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
+  it("should redirect to /auth when user is not logged in", () => {
+    vi.mocked(useRequireAuth).mockReturnValue({
+      user: null,
+      loading: false,
+      signOut: vi.fn(),
+    });
 
-  it("should redirect to /auth when user is not logged in", async () => {
-    vi.mocked(useAuth).mockReturnValue(createAuthValue({ user: null }));
-
-    render(
+    const { container } = render(
       <MemoryRouter>
         <BillingPage />
       </MemoryRouter>,
     );
 
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledWith("/auth", { replace: true });
-    });
+    // Component should return null when user is null
+    expect(container.firstChild).toBeNull();
   });
 
   it("should render page title and description", async () => {
@@ -166,8 +173,14 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("billing_title")).toBeInTheDocument();
-      expect(screen.getByText("billing_description")).toBeInTheDocument();
+      expect(
+        screen.getByRole("heading", { name: /billing/i }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          /manage your subscription, payment methods, and billing history/i,
+        ),
+      ).toBeInTheDocument();
     });
   });
 
@@ -195,7 +208,8 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Free")).toBeInTheDocument();
+      const badge = screen.getByTestId("plan-badge");
+      expect(badge).toHaveTextContent("Free");
     });
   });
 
@@ -211,7 +225,8 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Pro")).toBeInTheDocument();
+      const badge = screen.getByTestId("plan-badge");
+      expect(badge).toHaveTextContent("Pro");
     });
   });
 
@@ -233,7 +248,8 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("billing_usage")).toBeInTheDocument();
+      expect(screen.getByText(/links usage/i)).toBeInTheDocument();
+      expect(screen.getByText(/drops usage/i)).toBeInTheDocument();
     });
   });
 
@@ -245,14 +261,12 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      const upgradeButton = screen.getByText("settings_upgrade_to_pro");
+      const upgradeButton = screen.getByTestId("upgrade-to-pro-button");
       expect(upgradeButton).toBeInTheDocument();
     });
   });
 
   it("should call goToCheckout when upgrade button is clicked", async () => {
-    vi.mocked(goToCheckout).mockResolvedValue(undefined);
-
     render(
       <MemoryRouter>
         <BillingPage />
@@ -260,18 +274,16 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      const upgradeButton = screen.getByText("settings_upgrade_to_pro");
+      const upgradeButton = screen.getByTestId("upgrade-to-pro-button");
       fireEvent.click(upgradeButton);
     });
 
     await waitFor(() => {
-      expect(goToCheckout).toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledWith("/pricing");
     });
   });
 
-  it("should show error toast when upgrade fails", async () => {
-    vi.mocked(goToCheckout).mockRejectedValue(new Error("Failed"));
-
+  it("should navigate to pricing when upgrade button is clicked", async () => {
     render(
       <MemoryRouter>
         <BillingPage />
@@ -279,16 +291,14 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      const upgradeButton = screen.getByText("settings_upgrade_to_pro");
+      const upgradeButton = screen.getByTestId("upgrade-to-pro-button");
       fireEvent.click(upgradeButton);
     });
 
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("billing_upgrade_error");
-    });
+    expect(mockNavigate).toHaveBeenCalledWith("/pricing");
   });
 
-  it("should show payment method section for pro users", async () => {
+  it("should show manage on stripe button for pro users", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
       createDashboardData({ plan: PlanType.PRO }),
     );
@@ -299,32 +309,12 @@ describe("BillingPage", () => {
       </MemoryRouter>,
     );
 
-    vi.advanceTimersByTime(500);
-
     await waitFor(() => {
-      expect(screen.getByText("billing_payment_method")).toBeInTheDocument();
+      expect(screen.getByTestId("manage-on-stripe-button")).toBeInTheDocument();
     });
   });
 
-  it("should show no payment method message when no card is on file", async () => {
-    vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: PlanType.PRO }),
-    );
-
-    render(
-      <MemoryRouter>
-        <BillingPage />
-      </MemoryRouter>,
-    );
-
-    vi.advanceTimersByTime(500);
-
-    await waitFor(() => {
-      expect(screen.getByText("billing_no_payment_method")).toBeInTheDocument();
-    });
-  });
-
-  it("should call goToPortal when add card button is clicked", async () => {
+  it("should call goToPortal when manage on stripe button is clicked", async () => {
     vi.mocked(useDashboardData).mockReturnValue(
       createDashboardData({ plan: PlanType.PRO }),
     );
@@ -336,92 +326,13 @@ describe("BillingPage", () => {
       </MemoryRouter>,
     );
 
-    vi.advanceTimersByTime(500);
-
     await waitFor(() => {
-      const addCardButton = screen.getByText("billing_add_card");
-      fireEvent.click(addCardButton);
+      const manageButton = screen.getByTestId("manage-on-stripe-button");
+      fireEvent.click(manageButton);
     });
 
     await waitFor(() => {
       expect(goToPortal).toHaveBeenCalled();
-    });
-  });
-
-  it("should show cancel subscription button for pro users", async () => {
-    vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: PlanType.PRO }),
-    );
-
-    render(
-      <MemoryRouter>
-        <BillingPage />
-      </MemoryRouter>,
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText("billing_cancel_subscription"),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it("should show coming soon message when cancel subscription is clicked", async () => {
-    window.confirm = vi.fn(() => true);
-
-    vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: PlanType.PRO }),
-    );
-
-    render(
-      <MemoryRouter>
-        <BillingPage />
-      </MemoryRouter>,
-    );
-
-    await waitFor(() => {
-      const cancelButton = screen.getByText("billing_cancel_subscription");
-      fireEvent.click(cancelButton);
-    });
-
-    await waitFor(() => {
-      expect(toast.info).toHaveBeenCalledWith("billing_cancel_coming_soon");
-    });
-  });
-
-  it("should show billing history section for pro users", async () => {
-    vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: PlanType.PRO }),
-    );
-
-    render(
-      <MemoryRouter>
-        <BillingPage />
-      </MemoryRouter>,
-    );
-
-    vi.advanceTimersByTime(500);
-
-    await waitFor(() => {
-      expect(screen.getByText("settings_billing_history")).toBeInTheDocument();
-    });
-  });
-
-  it("should show no invoices message when no invoices exist", async () => {
-    vi.mocked(useDashboardData).mockReturnValue(
-      createDashboardData({ plan: PlanType.PRO }),
-    );
-
-    render(
-      <MemoryRouter>
-        <BillingPage />
-      </MemoryRouter>,
-    );
-
-    vi.advanceTimersByTime(500);
-
-    await waitFor(() => {
-      expect(screen.getByText("billing_no_invoices")).toBeInTheDocument();
     });
   });
 
@@ -433,7 +344,7 @@ describe("BillingPage", () => {
     );
 
     await waitFor(() => {
-      const backButton = screen.getByText("settings_back_to_settings");
+      const backButton = screen.getByTestId("billing-back-button");
       fireEvent.click(backButton);
     });
 

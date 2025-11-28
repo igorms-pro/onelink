@@ -15,7 +15,10 @@ export function LoginHistoryList({
 
   if (history.length === 0) {
     return (
-      <div className="text-center py-12">
+      <div
+        className="text-center py-12"
+        data-testid="login-history-empty-state"
+      >
         <Clock className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-600 mb-4" />
         <p className="text-gray-500 dark:text-gray-400">
           {t("sessions_no_history")}
@@ -25,11 +28,12 @@ export function LoginHistoryList({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" data-testid="login-history-list">
       {history.map((entry) => (
         <div
           key={entry.id}
           className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50"
+          data-testid={`login-history-entry-${entry.id}`}
         >
           <div className="flex items-center gap-3 flex-1">
             {entry.status === "success" ? (

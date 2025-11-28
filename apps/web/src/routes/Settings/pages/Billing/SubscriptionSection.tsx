@@ -33,6 +33,7 @@ export function SubscriptionSection({
             </p>
             <button
               onClick={onManageOnStripe}
+              data-testid="manage-on-stripe-button"
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
             >
               <ExternalLink className="w-4 h-4" />
@@ -51,6 +52,7 @@ export function SubscriptionSection({
             </p>
             <button
               onClick={onUpgrade}
+              data-testid="upgrade-to-pro-button"
               className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all cursor-pointer active:scale-[0.98]"
             >
               {t("settings_upgrade_to_pro")}

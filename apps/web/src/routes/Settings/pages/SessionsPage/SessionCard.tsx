@@ -19,13 +19,19 @@ export function SessionCard({
   const { t } = useTranslation();
 
   return (
-    <div className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4">
+    <div
+      className="rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 p-4"
+      data-testid={`session-card-${session.id}`}
+    >
       <div className="flex items-start justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-2">
             <Monitor className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             <div>
-              <p className="font-medium text-gray-900 dark:text-white">
+              <p
+                className="font-medium text-gray-900 dark:text-white"
+                data-testid={`session-device-${session.id}`}
+              >
                 {session.device.browser} on {session.device.os}
               </p>
               {session.isCurrent && <CurrentSessionBadge />}
@@ -51,6 +57,7 @@ export function SessionCard({
             onClick={() => onRevoke(session.id)}
             disabled={isRevoking}
             className="ml-4 px-3 py-1.5 rounded-lg border border-red-300 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer text-sm font-medium flex items-center gap-1"
+            data-testid={`revoke-session-button-${session.id}`}
           >
             <LogOut className="w-4 h-4" />
             {isRevoking ? t("sessions_revoking") : t("sessions_revoke")}
