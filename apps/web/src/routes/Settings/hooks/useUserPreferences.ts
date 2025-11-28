@@ -32,7 +32,11 @@ export function useUserPreferences() {
 
   // Load preferences
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id) {
+      // If no user, set defaults immediately (don't wait for loading)
+      setPreferences(DEFAULT_PREFERENCES);
+      return;
+    }
 
     execute(async () => {
       try {
