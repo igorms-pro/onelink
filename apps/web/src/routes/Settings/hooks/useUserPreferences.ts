@@ -90,9 +90,7 @@ export function useUserPreferences() {
     const abortController = new AbortController();
     const signal = abortController.signal;
 
-    console.log("[useUserPreferences] About to call execute()");
     execute(async () => {
-      console.log("[useUserPreferences] Inside execute() callback");
       // Check if cancelled before starting
       if (signal.aborted) {
         console.log("[useUserPreferences] Load aborted before start");
@@ -106,18 +104,8 @@ export function useUserPreferences() {
         console.log("[useUserPreferences] Supabase client:", !!supabase);
         console.log("[useUserPreferences] User ID:", currentUserId);
 
-        // Check current session
-        console.log("[useUserPreferences] About to call getSession()");
-        const { data: sessionData } = await supabase.auth.getSession();
-        console.log("[useUserPreferences] getSession() completed");
-        console.log("[useUserPreferences] Current session:", {
-          hasSession: !!sessionData.session,
-          userId: sessionData.session?.user?.id,
-          matches: sessionData.session?.user?.id === currentUserId,
-        });
-
         if (signal.aborted) {
-          console.log("[useUserPreferences] Load aborted after session check");
+          console.log("[useUserPreferences] Load aborted before query");
           return;
         }
 
