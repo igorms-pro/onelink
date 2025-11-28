@@ -18,6 +18,9 @@ vi.mock("sonner", () => ({
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(),
+    auth: {
+      getSession: vi.fn(),
+    },
   },
 }));
 
@@ -74,6 +77,16 @@ describe("useUserPreferences", () => {
       insert: mockInsert,
       upsert: mockUpsert,
     } as unknown as ReturnType<typeof supabase.from>);
+
+    // Default mock for auth.getSession
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: {
+        session: {
+          user: mockUser,
+        },
+      },
+      error: null,
+    } as any);
   });
 
   it("should initialize with default preferences when no stored data", async () => {
@@ -99,6 +112,16 @@ describe("useUserPreferences", () => {
       marketing_emails: true,
       product_updates: false,
     };
+
+    // Mock Supabase auth.getSession
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: {
+        session: {
+          user: mockUser,
+        },
+      },
+      error: null,
+    } as any);
 
     // Mock Supabase to return existing preferences
     vi.mocked(supabase.from).mockReturnValue({
@@ -140,6 +163,16 @@ describe("useUserPreferences", () => {
       email_notifications: false,
       // Other fields missing, should use defaults
     };
+
+    // Mock Supabase auth.getSession
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: {
+        session: {
+          user: mockUser,
+        },
+      },
+      error: null,
+    } as any);
 
     // Mock Supabase to return partial preferences
     vi.mocked(supabase.from).mockReturnValue({
