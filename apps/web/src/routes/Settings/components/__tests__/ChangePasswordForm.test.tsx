@@ -460,6 +460,7 @@ describe("ChangePasswordForm", () => {
       await user.type(confirmPasswordInput, "newpassword123");
       await user.click(submitButton);
 
+      // The error is thrown and toast.error should be called
       await waitFor(() => {
         expect(toast.error).toHaveBeenCalled();
       });

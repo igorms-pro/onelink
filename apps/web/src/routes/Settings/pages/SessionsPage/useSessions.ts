@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import type { Session, LoginHistory } from "./types";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthProvider";
+import type {
+  Session,
+  LoginHistory,
+  DatabaseSession,
+  DatabaseLoginHistory,
+} from "./types";
 
 export function useSessions() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,52 +21,68 @@ export function useSessions() {
   );
 
   const loadSessions = async () => {
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
-      // TODO: Replace with actual API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      const mockSessions: Session[] = [
-        {
-          id: "current",
-          device: { os: "macOS", browser: "Chrome" },
-          location: { ip: "192.168.1.1", city: "San Francisco", country: "US" },
-          lastActivity: new Date().toISOString(),
-          isCurrent: true,
-        },
-        {
-          id: "session-2",
-          device: { os: "iOS", browser: "Safari" },
-          location: { ip: "10.0.0.1", city: "New York", country: "US" },
-          lastActivity: new Date(Date.now() - 3600000).toISOString(),
-          isCurrent: false,
-        },
-      ];
-      setSessions(mockSessions);
+      // Load sessions from database
+      const { data: sessionsData, error: sessionsError } = await supabase.rpc(
+        "get_user_sessions",
+        { p_user_id: user.id },
+      );
 
-      const mockHistory: LoginHistory[] = [
-        {
-          id: "hist-1",
-          date: new Date().toISOString(),
-          status: "success",
-          ip: "192.168.1.1",
-          device: "Chrome on macOS",
-        },
-        {
-          id: "hist-2",
-          date: new Date(Date.now() - 86400000).toISOString(),
-          status: "success",
-          ip: "10.0.0.1",
-          device: "Safari on iOS",
-        },
-        {
-          id: "hist-3",
-          date: new Date(Date.now() - 172800000).toISOString(),
-          status: "failed",
-          ip: "203.0.113.1",
-          device: "Unknown",
-        },
-      ];
-      setLoginHistory(mockHistory);
+      if (sessionsError) {
+        console.error("Error loading sessions:", sessionsError);
+        toast.error(t("sessions_load_error"));
+        setSessions([]);
+      } else {
+        // Map database results to Session type
+        const mappedSessions: Session[] = (
+          (sessionsData as DatabaseSession[]) || []
+        ).map((s) => ({
+          id: s.id,
+          device: {
+            os: s.device_os || "Unknown",
+            browser: s.device_browser || "Unknown",
+          },
+          location: {
+            ip: s.ip_address || "Unknown",
+            city: s.city || undefined,
+            country: s.country || undefined,
+          },
+          lastActivity: s.last_activity || s.created_at,
+          isCurrent: s.is_current || false,
+        }));
+        setSessions(mappedSessions);
+      }
+
+      // Load login history
+      const { data: historyData, error: historyError } = await supabase
+        .from("login_history")
+        .select("*")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(50); // Limit to last 50 entries
+
+      if (historyError) {
+        console.error("Error loading login history:", historyError);
+        setLoginHistory([]);
+      } else {
+        // Map database results to LoginHistory type
+        const mappedHistory: LoginHistory[] = (
+          (historyData as DatabaseLoginHistory[]) || []
+        ).map((h) => ({
+          id: h.id,
+          date: h.created_at,
+          status: h.status,
+          ip: h.ip_address || "Unknown",
+          device: h.device_info || "Unknown",
+        }));
+        setLoginHistory(mappedHistory);
+      }
     } catch (error) {
       console.error("Error loading sessions:", error);
       toast.error(t("sessions_load_error"));
@@ -68,16 +92,28 @@ export function useSessions() {
   };
 
   const revokeSession = async (sessionId: string) => {
-    if (sessionId === "current") {
+    if (!user?.id) return;
+
+    // Check if it's the current session
+    const session = sessions.find((s) => s.id === sessionId);
+    if (session?.isCurrent) {
       toast.error(t("sessions_cannot_revoke_current"));
       return;
     }
 
     setRevokingSessionId(sessionId);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setSessions((prev) => prev.filter((s) => s.id !== sessionId));
-      toast.success(t("sessions_revoked_success"));
+      const { error } = await supabase.rpc("revoke_session", {
+        p_session_id: sessionId,
+      });
+
+      if (error) {
+        console.error("Error revoking session:", error);
+        toast.error(t("sessions_revoke_error"));
+      } else {
+        setSessions((prev) => prev.filter((s) => s.id !== sessionId));
+        toast.success(t("sessions_revoked_success"));
+      }
     } catch (error) {
       console.error("Error revoking session:", error);
       toast.error(t("sessions_revoke_error"));
@@ -87,13 +123,24 @@ export function useSessions() {
   };
 
   const revokeAllOtherSessions = async () => {
+    if (!user?.id) return;
+
     if (!confirm(t("sessions_revoke_all_confirm"))) return;
 
     setRevokingSessionId("all");
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      setSessions((prev) => prev.filter((s) => s.isCurrent));
-      toast.success(t("sessions_revoked_all_success"));
+      const { error } = await supabase.rpc("revoke_all_other_sessions", {
+        p_user_id: user.id,
+      });
+
+      if (error) {
+        console.error("Error revoking all sessions:", error);
+        toast.error(t("sessions_revoke_all_error"));
+      } else {
+        // Reload sessions to get updated list
+        await loadSessions();
+        toast.success(t("sessions_revoked_all_success"));
+      }
     } catch (error) {
       console.error("Error revoking all sessions:", error);
       toast.error(t("sessions_revoke_all_error"));

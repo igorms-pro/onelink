@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 import { setOnboardingIncomplete } from "../lib/onboarding";
 import { Footer } from "@/components/Footer";
+import { logLoginAttempt } from "@/lib/sessionTracking";
 
 type FormValues = { email: string };
 
@@ -71,9 +72,15 @@ export default function Auth() {
 
               if (res.error) {
                 toast.error(res.error);
+                // Log failed login attempt
+                await logLoginAttempt({
+                  email: values.email,
+                  status: "failed",
+                });
               } else {
                 toast.success(t("auth_magic_link_sent"));
                 reset(); // Clear the email field
+                // Note: Successful login will be logged in AuthProvider when SIGNED_IN event fires
               }
             })}
           >

@@ -53,6 +53,7 @@ export function PlanCard({
               )}
             </span>
             <span
+              data-testid="plan-badge"
               className={`px-3 py-1 rounded-full text-xs font-medium ${
                 hasPaidPlan
                   ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"

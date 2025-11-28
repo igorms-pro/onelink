@@ -78,6 +78,7 @@ export default function BillingPage() {
       <main className="flex-1 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/settings")}
+          data-testid="billing-back-button"
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />

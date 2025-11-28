@@ -67,16 +67,23 @@ export default function SessionsPage() {
         <button
           onClick={() => navigate("/settings")}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
+          data-testid="sessions-back-button"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
         </button>
 
         <div className="mb-8">
-          <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
+          <h1
+            className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!"
+            data-testid="sessions-page-title"
+          >
             {t("sessions_page_title")}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
+          <p
+            className="text-gray-500 dark:text-gray-400 mt-2"
+            data-testid="sessions-page-description"
+          >
             {t("sessions_page_description")}
           </p>
         </div>
@@ -85,6 +92,7 @@ export default function SessionsPage() {
         <section
           id="active-sessions"
           className="mb-8 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+          data-testid="active-sessions-section"
         >
           {loading ? (
             <>
@@ -111,8 +119,12 @@ export default function SessionsPage() {
         <section
           id="login-history"
           className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+          data-testid="login-history-section"
         >
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+          <h2
+            className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2"
+            data-testid="login-history-title"
+          >
             <Clock className="w-5 h-5" />
             {t("sessions_login_history")}
           </h2>

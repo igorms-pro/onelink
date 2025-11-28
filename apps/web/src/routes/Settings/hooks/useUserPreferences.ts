@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/AuthProvider";
-// import { supabase } from "@/lib/supabase"; // TODO: Uncomment when table is ready
+import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { useAsyncOperation } from "@/hooks/useAsyncOperation";
@@ -34,21 +34,77 @@ export function useUserPreferences() {
 
     execute(async () => {
       try {
-        // TODO: Replace with actual Supabase call when table is ready
-        // const { data, error } = await supabase
-        //   .from("user_preferences")
-        //   .select("*")
-        //   .eq("user_id", user.id)
-        //   .single();
+        // Load from Supabase
+        const { data, error } = await supabase
+          .from("user_preferences")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-        // For now, load from localStorage as fallback
-        const stored = localStorage.getItem(`preferences_${user.id}`);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
+        if (error) {
+          // If table doesn't exist or other error, fallback to localStorage
+          console.warn(
+            "Error loading preferences from Supabase, using localStorage:",
+            error,
+          );
+          const stored = localStorage.getItem(`preferences_${user.id}`);
+          if (stored) {
+            try {
+              const parsed = JSON.parse(stored);
+              setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
+            } catch {
+              setPreferences(DEFAULT_PREFERENCES);
+            }
+          } else {
+            setPreferences(DEFAULT_PREFERENCES);
+          }
+          return;
+        }
+
+        if (data) {
+          // Preferences exist in database
+          setPreferences({
+            email_notifications:
+              data.email_notifications ??
+              DEFAULT_PREFERENCES.email_notifications,
+            weekly_digest:
+              data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
+            marketing_emails:
+              data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
+            product_updates:
+              data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
+          });
+        } else {
+          // No preferences found, create default entry
+          const { error: insertError } = await supabase
+            .from("user_preferences")
+            .insert({
+              user_id: user.id,
+              ...DEFAULT_PREFERENCES,
+            });
+
+          if (insertError) {
+            console.error("Error creating default preferences:", insertError);
+            // Fallback to localStorage
+            setPreferences(DEFAULT_PREFERENCES);
+          } else {
+            setPreferences(DEFAULT_PREFERENCES);
+          }
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
+        // Fallback to localStorage
+        const stored = localStorage.getItem(`preferences_${user.id}`);
+        if (stored) {
+          try {
+            const parsed = JSON.parse(stored);
+            setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
+          } catch {
+            setPreferences(DEFAULT_PREFERENCES);
+          }
+        } else {
+          setPreferences(DEFAULT_PREFERENCES);
+        }
       }
     });
   }, [user?.id, execute]);
@@ -60,17 +116,46 @@ export function useUserPreferences() {
     const updated = { ...preferences, ...newPreferences };
 
     await submit(async () => {
-      // TODO: Replace with actual Supabase call when table is ready
-      // const { error } = await supabase
-      //   .from("user_preferences")
-      //   .upsert({
-      //     user_id: user.id,
-      //     ...updated,
-      //     updated_at: new Date().toISOString(),
-      //   });
+      // Save to Supabase
+      const { error } = await supabase.from("user_preferences").upsert(
+        {
+          user_id: user.id,
+          email_notifications: updated.email_notifications,
+          weekly_digest: updated.weekly_digest,
+          marketing_emails: updated.marketing_emails,
+          product_updates: updated.product_updates,
+        },
+        {
+          onConflict: "user_id",
+        },
+      );
 
-      // For now, save to localStorage as fallback
-      localStorage.setItem(`preferences_${user.id}`, JSON.stringify(updated));
+      if (error) {
+        // If Supabase fails, fallback to localStorage
+        console.warn(
+          "Error saving preferences to Supabase, using localStorage:",
+          error,
+        );
+        try {
+          localStorage.setItem(
+            `preferences_${user.id}`,
+            JSON.stringify(updated),
+          );
+        } catch (storageError) {
+          console.error("Error saving to localStorage:", storageError);
+          throw error; // Re-throw Supabase error
+        }
+      } else {
+        // Also save to localStorage as backup
+        try {
+          localStorage.setItem(
+            `preferences_${user.id}`,
+            JSON.stringify(updated),
+          );
+        } catch {
+          // Ignore localStorage errors, Supabase save succeeded
+        }
+      }
 
       setPreferences(updated);
       toast.success(t("settings_preferences_saved"));
