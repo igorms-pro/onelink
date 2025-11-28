@@ -42,22 +42,14 @@ export function useUserPreferences() {
           .maybeSingle();
 
         if (error) {
-          // If table doesn't exist or other error, fallback to localStorage
-          console.warn(
-            "Error loading preferences from Supabase, using localStorage:",
-            error,
+          // If table doesn't exist or other error, use defaults and show error
+          console.error("Error loading preferences from Supabase:", error);
+          toast.error(
+            t("settings_preferences_load_error", {
+              defaultValue: "Failed to load preferences. Using defaults.",
+            }),
           );
-          const stored = localStorage.getItem(`preferences_${user.id}`);
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-            } catch {
-              setPreferences(DEFAULT_PREFERENCES);
-            }
-          } else {
-            setPreferences(DEFAULT_PREFERENCES);
-          }
+          setPreferences(DEFAULT_PREFERENCES);
           return;
         }
 
@@ -85,7 +77,7 @@ export function useUserPreferences() {
 
           if (insertError) {
             console.error("Error creating default preferences:", insertError);
-            // Fallback to localStorage
+            toast.error(t("settings_preferences_save_error"));
             setPreferences(DEFAULT_PREFERENCES);
           } else {
             setPreferences(DEFAULT_PREFERENCES);
@@ -93,21 +85,15 @@ export function useUserPreferences() {
         }
       } catch (error) {
         console.error("Error loading preferences:", error);
-        // Fallback to localStorage
-        const stored = localStorage.getItem(`preferences_${user.id}`);
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-          } catch {
-            setPreferences(DEFAULT_PREFERENCES);
-          }
-        } else {
-          setPreferences(DEFAULT_PREFERENCES);
-        }
+        toast.error(
+          t("settings_preferences_load_error", {
+            defaultValue: "Failed to load preferences. Using defaults.",
+          }),
+        );
+        setPreferences(DEFAULT_PREFERENCES);
       }
     });
-  }, [user?.id, execute]);
+  }, [user?.id, execute, t]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
@@ -131,30 +117,8 @@ export function useUserPreferences() {
       );
 
       if (error) {
-        // If Supabase fails, fallback to localStorage
-        console.warn(
-          "Error saving preferences to Supabase, using localStorage:",
-          error,
-        );
-        try {
-          localStorage.setItem(
-            `preferences_${user.id}`,
-            JSON.stringify(updated),
-          );
-        } catch (storageError) {
-          console.error("Error saving to localStorage:", storageError);
-          throw error; // Re-throw Supabase error
-        }
-      } else {
-        // Also save to localStorage as backup
-        try {
-          localStorage.setItem(
-            `preferences_${user.id}`,
-            JSON.stringify(updated),
-          );
-        } catch {
-          // Ignore localStorage errors, Supabase save succeeded
-        }
+        console.error("Error saving preferences to Supabase:", error);
+        throw error; // Will be caught by submit error handler
       }
 
       setPreferences(updated);

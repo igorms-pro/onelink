@@ -167,6 +167,7 @@
   "settings_2fa_regenerate_backup_codes": "Régénérer les codes de sauvegarde",
   "settings_2fa_backup_codes_regenerated": "Codes de sauvegarde régénérés avec succès",
   "settings_2fa_backup_codes_regenerate_failed": "Échec de la régénération des codes de sauvegarde",
+  "settings_2fa_encryption_failed": "Échec du chiffrement des données 2FA. Veuillez réessayer.",
   "settings_2fa_disable_title": "Désactiver l'authentification à deux facteurs",
   "settings_2fa_disable_warning": "Désactiver la 2FA rendra votre compte moins sécurisé. Êtes-vous sûr de vouloir continuer ?",
   "settings_2fa_password_confirm": "Confirmer le mot de passe",
