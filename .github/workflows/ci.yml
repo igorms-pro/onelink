@@ -100,6 +100,13 @@ jobs:
         env:
           CI: "true"
           VITE_BASE_URL: http://localhost:4173
+          # Supabase credentials for e2e tests
+          # Use GitHub secrets for real test project, or placeholder values
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          # Test user credentials for authenticated tests
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
       
       - name: Upload Playwright report
         if: always()

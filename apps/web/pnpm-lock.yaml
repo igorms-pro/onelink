@@ -112,6 +112,9 @@ devDependencies:
   '@vitest/ui':
     specifier: ^4.0.5
     version: 4.0.5(vitest@4.0.8)
+  dotenv:
+    specifier: ^17.2.3
+    version: 17.2.3
   eslint:
     specifier: ^9.36.0
     version: 9.38.0
@@ -2338,6 +2341,11 @@ packages:
 
   /dom-accessibility-api@0.6.3:
     resolution: {integrity: sha512-7ZgogeTnjuHbo+ct10G9Ffp0mif17idi0IyWNVA/wcwcm7NPOD/WEHVP3n7n3MhXqxoIYm8d6MuZohYWIZ4T3w==}
+    dev: true
+
+  /dotenv@17.2.3:
+    resolution: {integrity: sha512-JVUnt+DUIzu87TABbhPmNfVdBDt18BLOWjMUFJMSi/Qqg7NTYtabbvSNJGOJ7afbRuv9D/lngizHtP7QyLQ+9w==}
+    engines: {node: '>=12'}
     dev: true
 
   /electron-to-chromium@1.5.243:
