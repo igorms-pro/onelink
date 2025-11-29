@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
@@ -5,10 +6,25 @@ import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
-import { goToPortal, BillingError } from "@/lib/billing";
+import {
+  goToPortal,
+  BillingError,
+  getSubscriptionDetails,
+  getInvoices,
+  getPaymentMethods,
+  type SubscriptionDetails,
+  type Invoice,
+  type PaymentMethod,
+} from "@/lib/billing";
 import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/plan-limits";
 import { isPaidPlan, getPlanName, PlanId } from "@/lib/types/plan";
-import { PlanCard, SubscriptionSection, BillingSkeleton } from "./Billing";
+import {
+  PlanCard,
+  SubscriptionSection,
+  BillingSkeleton,
+  InvoicesList,
+  PaymentMethodCard,
+} from "./Billing";
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -27,6 +43,14 @@ export default function BillingPage() {
   const dropsLimit = getPlanDropsLimit(plan);
   const isLoading = dataLoading;
 
+  const [subscriptionDetails, setSubscriptionDetails] =
+    useState<SubscriptionDetails | null>(null);
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
+    null,
+  );
+  const [loadingSubscription, setLoadingSubscription] = useState(true);
+
   // Get plan price from translations
   const getPlanPrice = (planId: string | null | undefined): string => {
     if (!planId || planId === PlanId.FREE) return "€0";
@@ -39,6 +63,42 @@ export default function BillingPage() {
   };
 
   const planPrice = getPlanPrice(plan);
+
+  // Fetch subscription data
+  useEffect(() => {
+    if (!user || !hasPaidPlan) {
+      setLoadingSubscription(false);
+      return;
+    }
+
+    const fetchSubscriptionData = async () => {
+      try {
+        setLoadingSubscription(true);
+        const [subscription, invoicesData, paymentMethods] = await Promise.all([
+          getSubscriptionDetails(),
+          getInvoices(),
+          getPaymentMethods(),
+        ]);
+
+        setSubscriptionDetails(subscription);
+        setInvoices(invoicesData);
+        setPaymentMethod(paymentMethods[0] || null);
+      } catch (error) {
+        console.error("Failed to fetch subscription data:", error);
+        if (error instanceof BillingError && error.code !== "AUTH_REQUIRED") {
+          toast.error(
+            t("billing_fetch_error", {
+              defaultValue: "Failed to load billing information",
+            }),
+          );
+        }
+      } finally {
+        setLoadingSubscription(false);
+      }
+    };
+
+    fetchSubscriptionData();
+  }, [user, hasPaidPlan, t]);
 
   if (!user) {
     return null;
@@ -69,8 +129,20 @@ export default function BillingPage() {
     navigate("/pricing");
   };
 
-  // TODO: Fetch real renewal date from Stripe via API
-  const renewalDate = "27 Dec 2025"; // Placeholder - should come from Stripe subscription
+  // Format renewal date from subscription details
+  const formatRenewalDate = (): string => {
+    if (!subscriptionDetails?.renewalDate) {
+      return t("billing_no_renewal_date", { defaultValue: "N/A" });
+    }
+    const date = new Date(subscriptionDetails.renewalDate);
+    return date.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  const renewalDate = formatRenewalDate();
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors">
@@ -94,7 +166,7 @@ export default function BillingPage() {
           </p>
         </div>
 
-        {isLoading ? (
+        {isLoading || loadingSubscription ? (
           <BillingSkeleton />
         ) : (
           <div className="space-y-6">
@@ -113,6 +185,24 @@ export default function BillingPage() {
               onManageOnStripe={handleManageOnStripe}
               onUpgrade={handleUpgrade}
             />
+            {hasPaidPlan && (
+              <>
+                <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    {t("billing_payment_method", {
+                      defaultValue: "Payment Method",
+                    })}
+                  </h2>
+                  <PaymentMethodCard paymentMethod={paymentMethod} />
+                </section>
+                <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                    {t("billing_invoices", { defaultValue: "Invoices" })}
+                  </h2>
+                  <InvoicesList invoices={invoices} />
+                </section>
+              </>
+            )}
           </div>
         )}
       </main>

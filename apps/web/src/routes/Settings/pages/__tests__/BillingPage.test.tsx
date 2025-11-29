@@ -34,6 +34,17 @@ vi.mock("@/hooks/useRequireAuth", () => ({
 vi.mock("@/lib/billing", () => ({
   goToCheckout: vi.fn(),
   goToPortal: vi.fn(),
+  getSubscriptionDetails: vi.fn().mockResolvedValue(null),
+  getInvoices: vi.fn().mockResolvedValue([]),
+  getPaymentMethods: vi.fn().mockResolvedValue([]),
+  BillingError: class BillingError extends Error {
+    code: string;
+    constructor(message: string, code: string) {
+      super(message);
+      this.name = "BillingError";
+      this.code = code;
+    }
+  },
 }));
 
 vi.mock("@/components/Header", () => ({

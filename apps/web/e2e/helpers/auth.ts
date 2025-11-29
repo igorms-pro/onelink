@@ -25,6 +25,18 @@ export async function authenticateUser(
     );
   }
 
+  // Check if using placeholder values (common in CI without real test credentials)
+  if (
+    SUPABASE_URL.includes("placeholder") ||
+    SUPABASE_ANON_KEY === "placeholder-key"
+  ) {
+    throw new Error(
+      "Cannot authenticate with placeholder Supabase credentials. " +
+        "Please set E2E_SUPABASE_URL and E2E_SUPABASE_ANON_KEY secrets in GitHub Actions " +
+        "or use real test credentials in your local environment.",
+    );
+  }
+
   // Create Supabase client on server side
   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -83,6 +95,18 @@ export async function createAuthenticatedContext(
   if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
     throw new Error(
       "VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in environment",
+    );
+  }
+
+  // Check if using placeholder values
+  if (
+    SUPABASE_URL.includes("placeholder") ||
+    SUPABASE_ANON_KEY === "placeholder-key"
+  ) {
+    throw new Error(
+      "Cannot authenticate with placeholder Supabase credentials. " +
+        "Please set E2E_SUPABASE_URL and E2E_SUPABASE_ANON_KEY secrets in GitHub Actions " +
+        "or use real test credentials in your local environment.",
     );
   }
 

@@ -11,6 +11,7 @@ import {
   generateQRCodeData,
   verifyTOTPCode,
 } from "./twoFactorUtils";
+import { encrypt, encryptArray } from "@/lib/utils/encryption";
 
 export type TwoFactorState = "disabled" | "setup" | "active";
 
@@ -129,14 +130,24 @@ export function useTwoFactor() {
           throw new Error("Invalid TOTP code");
         }
 
-        // Save to database
-        // Note: In production, you should encrypt the secret before storing
-        // For now, we store it as-is (RLS protects access)
+        // Save to database with encryption
+        let encryptedSecret: string;
+        let encryptedBackupCodes: string;
+
+        try {
+          encryptedSecret = await encrypt(secret);
+          encryptedBackupCodes = await encryptArray(backupCodes);
+        } catch (error) {
+          console.error("Failed to encrypt 2FA data:", error);
+          toast.error(t("settings_2fa_encryption_failed"));
+          throw new Error("Encryption failed");
+        }
+
         const { error } = await supabase.from("user_2fa").upsert(
           {
             user_id: user.id,
-            secret: secret, // TODO: Encrypt before storing
-            backup_codes: backupCodes, // TODO: Encrypt before storing
+            secret: encryptedSecret,
+            backup_codes: encryptedBackupCodes,
             enabled: true,
             enabled_at: new Date().toISOString(),
           },
@@ -238,11 +249,21 @@ export function useTwoFactor() {
       const newCodes = generateBackupCodes();
       setBackupCodes(newCodes);
 
+      // Encrypt backup codes before storing
+      let encryptedBackupCodes: string;
+      try {
+        encryptedBackupCodes = await encryptArray(newCodes);
+      } catch (error) {
+        console.error("Failed to encrypt backup codes:", error);
+        toast.error(t("settings_2fa_encryption_failed"));
+        throw new Error("Encryption failed");
+      }
+
       // Update in database
       const { error } = await supabase
         .from("user_2fa")
         .update({
-          backup_codes: newCodes, // TODO: Encrypt before storing
+          backup_codes: encryptedBackupCodes,
         })
         .eq("user_id", user.id);
 

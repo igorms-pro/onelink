@@ -65,22 +65,36 @@ export async function getClientIP(): Promise<string | null> {
 /**
  * Get location info from IP (optional, requires external service)
  * Falls back to null if unavailable
+ * Silently fails - location is not critical for app functionality
  */
 export async function getLocationFromIP(
   ip: string,
 ): Promise<{ city: string | null; country: string | null }> {
   try {
     // Using ipapi.co free tier (1000 requests/day)
+    // Note: This may fail due to CORS in development or rate limits
     const response = await fetch(`https://ipapi.co/${ip}/json/`, {
       signal: AbortSignal.timeout(3000),
+      // Use no-cors mode to avoid CORS errors (but won't get response data)
+      // For now, we'll let it fail silently if CORS blocks it
     });
+
+    if (!response.ok) {
+      // Rate limit or other HTTP error - fail silently
+      return { city: null, country: null };
+    }
+
     const data = await response.json();
     return {
       city: data.city || null,
       country: data.country_name || data.country_code || null,
     };
   } catch (error) {
-    console.warn("Could not fetch location from IP:", error);
+    // Silently fail - location is optional and not critical
+    // Only log in development to help debugging
+    if (import.meta.env.DEV) {
+      console.debug("Could not fetch location from IP (non-critical):", error);
+    }
     return { city: null, country: null };
   }
 }
