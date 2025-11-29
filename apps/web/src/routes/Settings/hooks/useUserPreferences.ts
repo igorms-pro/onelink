@@ -29,254 +29,76 @@ export function useUserPreferences() {
   const { submitting, submit } = useAsyncSubmit();
   // Use ref to immediately prevent double clicks (before submitting state updates)
   const isSavingRef = useRef(false);
-  // Track the user ID we're currently loading for (to prevent duplicate loads)
-  const loadingUserIdRef = useRef<string | null>(null);
-  // Track the last user ID we successfully loaded preferences for
-  const lastLoadedUserIdRef = useRef<string | null>(null);
 
-  // Load preferences
+  // Load preferences - Wait for auth to be ready before making requests
+  const userId = user?.id ?? null;
+
   useEffect(() => {
-    const currentUserId = user?.id;
-
-    console.log("[useUserPreferences] useEffect triggered", {
-      authLoading,
-      userId: currentUserId,
-      hasUser: !!user,
-      loadingUserIdRef: loadingUserIdRef.current,
-      loading,
-      lastLoadedUserId: lastLoadedUserIdRef.current,
-    });
-
-    // Wait for auth to finish loading before checking user
+    // Don't do anything while auth is still loading
     if (authLoading) {
-      console.log("[useUserPreferences] Waiting for auth to load...");
       return;
     }
 
-    if (!currentUserId) {
-      // If no user after auth loaded, set defaults immediately
-      console.log("[useUserPreferences] No user, setting defaults");
+    // If no user after auth is loaded, set defaults
+    if (!userId) {
       setPreferences(DEFAULT_PREFERENCES);
-      loadingUserIdRef.current = null;
-      lastLoadedUserIdRef.current = null;
       return;
     }
 
-    // If we already loaded preferences for this user, don't reload
-    if (lastLoadedUserIdRef.current === currentUserId) {
-      console.log(
-        "[useUserPreferences] Already loaded preferences for this user, skipping...",
-      );
-      return;
-    }
-
-    // If we're already loading for this user, don't start another load
-    if (loadingUserIdRef.current === currentUserId || loading) {
-      console.log(
-        "[useUserPreferences] Already loading for this user, skipping...",
-      );
-      return;
-    }
-
-    console.log(
-      "[useUserPreferences] Starting to load preferences for user:",
-      currentUserId,
-    );
-
-    // Mark that we're loading for this user
-    loadingUserIdRef.current = currentUserId;
-
-    // Create AbortController for this specific load
-    const abortController = new AbortController();
-    const signal = abortController.signal;
-
+    // Verify session is available before making request
     execute(async () => {
-      // Check if cancelled before starting
-      if (signal.aborted) {
-        console.log("[useUserPreferences] Load aborted before start");
+      // Ensure session is available
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        console.error("[useUserPreferences] No session available");
+        setPreferences(DEFAULT_PREFERENCES);
         return;
       }
 
-      try {
-        console.log(
-          "[useUserPreferences] Fetching preferences from Supabase...",
-        );
-        console.log("[useUserPreferences] Supabase client:", !!supabase);
-        console.log("[useUserPreferences] User ID:", currentUserId);
+      // Load from Supabase
+      const { data, error } = await supabase
+        .from("user_preferences")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
 
-        if (signal.aborted) {
-          console.log("[useUserPreferences] Load aborted before query");
-          return;
-        }
-
-        // Load from Supabase with timeout
-        const queryPromise = supabase
-          .from("user_preferences")
-          .select("*")
-          .eq("user_id", currentUserId)
-          .maybeSingle();
-
-        console.log("[useUserPreferences] Query promise created");
-
-        console.log("[useUserPreferences] Query created, awaiting response...");
-        const startTime = Date.now();
-
-        // Add timeout to prevent infinite waiting
-        const timeoutPromise = new Promise<never>((_, reject) => {
-          setTimeout(
-            () => reject(new Error("Supabase query timeout after 10s")),
-            10000,
-          );
-        });
-
-        let data, error;
-        try {
-          const result = await Promise.race([queryPromise, timeoutPromise]);
-          data = result.data;
-          error = result.error;
-          const duration = Date.now() - startTime;
-          console.log(
-            "[useUserPreferences] ✅ Supabase response received after",
-            duration,
-            "ms",
-          );
-        } catch (e) {
-          const duration = Date.now() - startTime;
-          console.error(
-            "[useUserPreferences] ❌ Supabase query failed after",
-            duration,
-            "ms:",
-            e,
-          );
-          // If timeout, try to abort and use defaults
-          if (e instanceof Error && e.message.includes("timeout")) {
-            console.error(
-              "[useUserPreferences] Query timed out, using defaults",
-            );
-            setPreferences(DEFAULT_PREFERENCES);
-            toast.error("Failed to load preferences: request timed out");
-            return;
-          }
-          throw e;
-        }
-
-        console.log(
-          "[useUserPreferences] Response data:",
-          data ? "HAS DATA" : "NULL",
-        );
-        console.log(
-          "[useUserPreferences] Response error:",
-          error
-            ? {
-                message: error.message,
-                code: error.code,
-                details: error.details,
-              }
-            : "NO ERROR",
-        );
-
-        if (error) {
-          // If table doesn't exist or other error, use defaults and show error
-          console.error(
-            "[useUserPreferences] Error loading preferences from Supabase:",
-            error,
-          );
-          toast.error(
-            t("settings_preferences_load_error", {
-              defaultValue: "Failed to load preferences. Using defaults.",
-            }),
-          );
-          setPreferences(DEFAULT_PREFERENCES);
-          return;
-        }
-
-        if (data) {
-          // Preferences exist in database
-          console.log("[useUserPreferences] Found preferences in DB:", data);
-          setPreferences({
-            email_notifications:
-              data.email_notifications ??
-              DEFAULT_PREFERENCES.email_notifications,
-            weekly_digest:
-              data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
-            marketing_emails:
-              data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
-            product_updates:
-              data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
-          });
-          console.log("[useUserPreferences] Preferences set:", {
-            email_notifications:
-              data.email_notifications ??
-              DEFAULT_PREFERENCES.email_notifications,
-            weekly_digest:
-              data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
-            marketing_emails:
-              data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
-            product_updates:
-              data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
-          });
-          // Mark as loaded for this user
-          lastLoadedUserIdRef.current = currentUserId;
-          loadingUserIdRef.current = null;
-        } else {
-          // No preferences found, create default entry
-          console.log(
-            "[useUserPreferences] No preferences found, creating default entry",
-          );
-          const { error: insertError } = await supabase
-            .from("user_preferences")
-            .insert({
-              user_id: currentUserId,
-              ...DEFAULT_PREFERENCES,
-            });
-
-          if (insertError) {
-            console.error(
-              "[useUserPreferences] Error creating default preferences:",
-              insertError,
-            );
-            toast.error(t("settings_preferences_save_error"));
-            setPreferences(DEFAULT_PREFERENCES);
-          } else {
-            console.log("[useUserPreferences] Default preferences created");
-            setPreferences(DEFAULT_PREFERENCES);
-          }
-          // Mark as loaded for this user even if we used defaults
-          lastLoadedUserIdRef.current = currentUserId;
-          loadingUserIdRef.current = null;
-        }
-      } catch (error) {
-        console.error(
-          "[useUserPreferences] Exception loading preferences:",
-          error,
-        );
-        toast.error(
-          t("settings_preferences_load_error", {
-            defaultValue: "Failed to load preferences. Using defaults.",
-          }),
-        );
+      if (error) {
+        console.error("[useUserPreferences] Supabase query error:", error);
         setPreferences(DEFAULT_PREFERENCES);
-        // Don't mark as loaded if there was an error - allow retry
-        loadingUserIdRef.current = null;
+        return;
+      }
+
+      if (data) {
+        // Preferences exist in database
+        setPreferences({
+          email_notifications:
+            data.email_notifications ?? DEFAULT_PREFERENCES.email_notifications,
+          weekly_digest:
+            data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
+          marketing_emails:
+            data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
+          product_updates:
+            data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
+        });
+      } else {
+        // No preferences found, create default entry
+        const { error: insertError } = await supabase
+          .from("user_preferences")
+          .insert({
+            user_id: userId,
+            ...DEFAULT_PREFERENCES,
+          });
+
+        if (insertError) {
+          console.error(
+            "[useUserPreferences] Error creating defaults:",
+            insertError,
+          );
+        }
+        setPreferences(DEFAULT_PREFERENCES);
       }
     });
-
-    // Cleanup: abort request if component unmounts or dependencies change
-    return () => {
-      console.log("[useUserPreferences] Cleanup: aborting request", {
-        currentUserId,
-        loadingUserIdRef: loadingUserIdRef.current,
-        lastLoadedUserId: lastLoadedUserIdRef.current,
-      });
-      abortController.abort();
-      // Only reset loadingUserIdRef if we were loading for this user
-      // This prevents the cleanup from interfering with an ongoing load
-      if (loadingUserIdRef.current === currentUserId) {
-        loadingUserIdRef.current = null;
-      }
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user?.id, authLoading]); // Only depend on user.id, not the whole user object or execute/t
+  }, [userId, authLoading, execute]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
@@ -342,18 +164,9 @@ export function useUserPreferences() {
     await savePreferences({ [key]: value });
   };
 
-  const finalLoading = loading || authLoading;
-  console.log("[useUserPreferences] Returning state:", {
-    loading,
-    authLoading,
-    finalLoading,
-    hasPreferences: !!preferences,
-    preferences,
-  });
-
   return {
     preferences,
-    loading: finalLoading, // Include auth loading state
+    loading: loading || authLoading, // Include auth loading state
     saving: submitting || isSavingRef.current, // Include ref state for immediate UI feedback
     updatePreference,
     savePreferences,
