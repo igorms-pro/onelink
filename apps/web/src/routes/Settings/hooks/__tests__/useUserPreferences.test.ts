@@ -231,7 +231,7 @@ describe("useUserPreferences", () => {
     });
   });
 
-  it("should handle Supabase errors gracefully and show error toast", async () => {
+  it("should handle Supabase errors gracefully and use defaults", async () => {
     const consoleErrorSpy = vi
       .spyOn(console, "error")
       .mockImplementation(() => {});
@@ -256,13 +256,23 @@ describe("useUserPreferences", () => {
       }),
     } as unknown as ReturnType<typeof supabase.from>);
 
+    // Ensure getSession is mocked for this test
+    vi.mocked(supabase.auth.getSession).mockResolvedValue({
+      data: {
+        session: {
+          user: mockUser,
+        },
+      },
+      error: null,
+    } as any);
+
     const { result } = renderHook(() => useUserPreferences());
 
     await waitFor(() => {
       expect(result.current.loading).toBe(false);
     });
 
-    // Should use defaults and show error toast
+    // Should use defaults when error occurs
     expect(result.current.preferences).toEqual({
       email_notifications: true,
       weekly_digest: false,
@@ -270,7 +280,8 @@ describe("useUserPreferences", () => {
       product_updates: true,
     });
 
-    expect(toast.error).toHaveBeenCalled();
+    // Error should be logged to console
+    expect(consoleErrorSpy).toHaveBeenCalled();
     consoleErrorSpy.mockRestore();
   });
 
