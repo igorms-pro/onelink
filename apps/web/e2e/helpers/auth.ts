@@ -19,19 +19,16 @@ export async function authenticateUser(
   email: string,
   password: string,
 ): Promise<void> {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-    throw new Error(
-      "VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in environment",
-    );
-  }
-
-  // Check if using placeholder values (common in CI without real test credentials)
+  // Check if using placeholder values or missing env vars (common in CI without real test credentials)
+  // This should be handled by the fixture, but we check here too for safety
   if (
+    !SUPABASE_URL ||
+    !SUPABASE_ANON_KEY ||
     SUPABASE_URL.includes("placeholder") ||
     SUPABASE_ANON_KEY === "placeholder-key"
   ) {
     throw new Error(
-      "Cannot authenticate with placeholder Supabase credentials. " +
+      "Cannot authenticate: VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY must be set in environment. " +
         "Please set E2E_SUPABASE_URL and E2E_SUPABASE_ANON_KEY secrets in GitHub Actions " +
         "or use real test credentials in your local environment.",
     );
