@@ -19,52 +19,96 @@ export function useDashboardData(userId: string | null) {
   const { loading, execute } = useAsyncOperation();
 
   useEffect(() => {
-    if (!userId) return;
+    console.log("[Dashboard] useEffect triggered", {
+      userId,
+      hasExecute: !!execute,
+    });
+    if (!userId) {
+      console.log("[Dashboard] No userId, skipping");
+      return;
+    }
 
+    console.log("[Dashboard] Calling execute with userId:", userId);
     execute(async () => {
-      const prof = await getOrCreateProfile(userId);
+      try {
+        console.log("[Dashboard] Starting data load for userId:", userId);
 
-      setProfileId(prof.id);
-      setProfileFormInitial({
-        slug: prof.slug,
-        display_name: prof.display_name,
-        bio: prof.bio,
-        avatar_url: prof.avatar_url,
-      });
-
-      // Load links
-      const { data: linksData, error: linksError } = await supabase
-        .from("links")
-        .select("id,label,emoji,url,order")
-        .eq("profile_id", prof.id)
-        .order("order", { ascending: true });
-      if (linksError) console.error(linksError);
-      setLinks(linksData ?? []);
-
-      // Load drops (include visibility fields)
-      const { data: dropsData, error: dropsError } = await supabase
-        .from("drops")
-        .select("id,label,emoji,order,is_active,is_public,share_token")
-        .eq("profile_id", prof.id)
-        .order("order", { ascending: true });
-      if (dropsError) console.error(dropsError);
-      setDrops(dropsData ?? []);
-
-      // Load plan
-      const planValue = await getSelfPlan(userId);
-      setPlan(planValue);
-
-      // Load submissions
-      const { data: submissionsData, error: submissionsError } =
-        await supabase.rpc("get_submissions_by_profile", {
-          p_profile_id: prof.id,
+        console.log("[Dashboard] Calling getOrCreateProfile...");
+        const prof = await getOrCreateProfile(userId);
+        console.log("[Dashboard] Profile loaded successfully:", {
+          id: prof.id,
+          slug: prof.slug,
+          display_name: prof.display_name,
         });
-      if (submissionsError) console.error(submissionsError);
-      setSubmissions(
-        Array.isArray(submissionsData)
-          ? (submissionsData as SubmissionRow[])
-          : [],
-      );
+
+        setProfileId(prof.id);
+        setProfileFormInitial({
+          slug: prof.slug,
+          display_name: prof.display_name,
+          bio: prof.bio,
+          avatar_url: prof.avatar_url,
+        });
+
+        // Load links
+        const { data: linksData, error: linksError } = await supabase
+          .from("links")
+          .select("id,label,emoji,url,order")
+          .eq("profile_id", prof.id)
+          .order("order", { ascending: true });
+        if (linksError) {
+          console.error("[Dashboard] Error loading links:", linksError);
+        } else {
+          console.log("[Dashboard] Links loaded:", linksData?.length || 0);
+        }
+        setLinks(linksData ?? []);
+
+        // Load drops (include visibility fields)
+        const { data: dropsData, error: dropsError } = await supabase
+          .from("drops")
+          .select("id,label,emoji,order,is_active,is_public,share_token")
+          .eq("profile_id", prof.id)
+          .order("order", { ascending: true });
+        if (dropsError) {
+          console.error("[Dashboard] Error loading drops:", dropsError);
+        } else {
+          console.log("[Dashboard] Drops loaded:", dropsData?.length || 0);
+        }
+        setDrops(dropsData ?? []);
+
+        // Load plan
+        const planValue = await getSelfPlan(userId);
+        console.log("[Dashboard] Plan loaded:", planValue);
+        setPlan(planValue);
+
+        // Load submissions
+        const { data: submissionsData, error: submissionsError } =
+          await supabase.rpc("get_submissions_by_profile", {
+            p_profile_id: prof.id,
+          });
+        if (submissionsError) {
+          console.error(
+            "[Dashboard] Error loading submissions:",
+            submissionsError,
+          );
+        } else {
+          console.log(
+            "[Dashboard] Submissions loaded:",
+            submissionsData?.length || 0,
+          );
+        }
+        setSubmissions(
+          Array.isArray(submissionsData)
+            ? (submissionsData as SubmissionRow[])
+            : [],
+        );
+
+        console.log("[Dashboard] Data load complete");
+      } catch (error) {
+        console.error("[Dashboard] Error in data load:", error);
+        throw error;
+      }
+    }).catch((error) => {
+      console.error("[Dashboard] Error caught in execute:", error);
     });
   }, [userId, execute]);
 

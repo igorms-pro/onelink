@@ -60,22 +60,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // Track session and log login history on successful sign-in
       // Only do this for SIGNED_IN, not for INITIAL_SESSION (which happens on refresh)
+      // Run these asynchronously without blocking the auth flow
       if (event === "SIGNED_IN" && s?.user) {
-        try {
-          // Create session in database
-          await createUserSession({
-            userId: s.user.id,
+        console.log("[Auth] User signed in:", {
+          userId: s.user.id,
+          email: s.user.email,
+        });
+        // Don't await - run in background to avoid blocking auth flow
+        createUserSession({
+          userId: s.user.id,
+        })
+          .then(() => {
+            console.log("[Auth] Session created in database");
+          })
+          .catch((error) => {
+            console.error("[Auth] Error creating session:", error);
           });
 
-          // Log successful login
-          await logLoginAttempt({
-            email: s.user.email || "",
-            status: "success",
-            userId: s.user.id,
-          });
-        } catch (error) {
-          console.error("[Auth] Error tracking session:", error);
-        }
+        // Log successful login (also non-blocking)
+        logLoginAttempt({
+          email: s.user.email || "",
+          status: "success",
+          userId: s.user.id,
+        }).catch((error) => {
+          console.error("[Auth] Error logging login attempt:", error);
+        });
       }
     });
 

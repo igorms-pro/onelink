@@ -4,11 +4,7 @@
  */
 
 import { supabase } from "@/lib/supabase";
-import {
-  getDeviceInfo,
-  getClientIP,
-  getLocationFromIP,
-} from "@/lib/utils/deviceDetection";
+import { getDeviceInfo, getLocationFromIP } from "@/lib/utils/deviceDetection";
 
 export interface CreateSessionParams {
   userId: string;
@@ -27,15 +23,24 @@ export async function createUserSession(
 ): Promise<string | null> {
   try {
     const deviceInfo = getDeviceInfo();
-    const ip = params.ipAddress || (await getClientIP());
+    // Don't wait for IP - it can block. Use provided IP or skip
+    const ip = params.ipAddress || null;
     let city = params.city;
     let country = params.country;
 
-    // If IP is available and location not provided, try to get it
+    // Skip IP location lookup - it can block and is not critical
+    // If IP is available and location not provided, try to get it (but don't block)
     if (ip && !city && !country) {
-      const location = await getLocationFromIP(ip);
-      city = location.city;
-      country = location.country;
+      // Run location lookup in background, don't await
+      getLocationFromIP(ip)
+        .then((location) => {
+          // Optionally update session later if needed
+          city = location.city;
+          country = location.country;
+        })
+        .catch(() => {
+          // Ignore errors - location is not critical
+        });
     }
 
     const { data, error } = await supabase
@@ -94,7 +99,8 @@ export async function logLoginAttempt(
 ): Promise<void> {
   try {
     const deviceInfo = getDeviceInfo();
-    const ip = params.ipAddress || (await getClientIP());
+    // Don't wait for IP - use provided IP or skip to avoid blocking
+    const ip = params.ipAddress || null;
 
     await supabase.from("login_history").insert({
       user_id: params.userId || null,
