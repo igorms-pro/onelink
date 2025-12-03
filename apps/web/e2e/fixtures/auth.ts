@@ -2,14 +2,27 @@
 // This file uses Playwright fixtures, not React hooks. The "use" parameter is a Playwright convention.
 import { test as base } from "@playwright/test";
 import { authenticateUser } from "../helpers/auth";
+import { existsSync, mkdirSync } from "fs";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Path to store the authenticated session state
+const STORAGE_STATE_PATH = resolve(__dirname, "../.auth/storage-state.json");
 
 type AuthFixtures = {
   authenticatedPage: any;
 };
 
+// Global variable to track if we've authenticated once
+let hasAuthenticated = false;
+
 export const test = base.extend<AuthFixtures>({
-  // Authenticated page fixture
-  authenticatedPage: async ({ page }, usePage, testInfo) => {
+  // Authenticated page fixture with session reuse
+  authenticatedPage: async ({ browser }, usePage, testInfo) => {
     // Get test credentials from environment
     // @ts-expect-error - process.env is available in Node.js environment
     const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
@@ -35,11 +48,45 @@ export const test = base.extend<AuthFixtures>({
       return;
     }
 
-    // Authenticate the user
-    await authenticateUser(page, testEmail, testPassword);
+    // Ensure .auth directory exists
+    const authDir = resolve(__dirname, "../.auth");
+    if (!existsSync(authDir)) {
+      mkdirSync(authDir, { recursive: true });
+    }
+
+    // Only authenticate once, then reuse the storage state
+    if (!hasAuthenticated || !existsSync(STORAGE_STATE_PATH)) {
+      // Create a new context and authenticate
+      const context = await browser.newContext();
+      const page = await context.newPage();
+
+      try {
+        // Authenticate the user
+        await authenticateUser(page, testEmail, testPassword);
+
+        // Save the storage state for reuse
+        await context.storageState({ path: STORAGE_STATE_PATH });
+        hasAuthenticated = true;
+
+        await context.close();
+      } catch (error) {
+        await context.close();
+        // If authentication fails, throw the error
+        throw error;
+      }
+    }
+
+    // Create a new context using the saved storage state
+    const context = await browser.newContext({
+      storageState: STORAGE_STATE_PATH,
+    });
+    const page = await context.newPage();
 
     // Use the authenticated page
     await usePage(page);
+
+    // Cleanup
+    await context.close();
   },
 });
 
