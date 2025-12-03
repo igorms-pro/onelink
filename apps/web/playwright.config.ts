@@ -30,7 +30,7 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 1 : 0, // Reduced retries for faster CI
-  workers: process.env.CI ? 4 : undefined, // Increased workers for better parallelization in CI
+  workers: process.env.CI ? 4 : 3, // 4 workers in CI, 3 locally to avoid overloading system
   reporter: process.env.CI ? "html" : "list",
   timeout: 30 * 1000, // 30 seconds per test
   expect: {
