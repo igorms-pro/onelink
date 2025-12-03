@@ -69,11 +69,13 @@ test.describe("Settings Navigation", () => {
     if (await sessionsLink.isVisible().catch(() => false)) {
       await sessionsLink.click();
       await expect(page).toHaveURL(/\/settings\/sessions/);
-      await expect(page.getByText(/active sessions/i)).toBeVisible();
+      // Use data-testid instead of getByText to avoid strict mode violation
+      await expect(page.getByTestId("sessions-page-title")).toBeVisible();
     } else {
       // Navigate directly if link not found
       await page.goto("/settings/sessions");
       await expect(page).toHaveURL(/\/settings\/sessions/);
+      await expect(page.getByTestId("sessions-page-title")).toBeVisible();
     }
   });
 
@@ -128,38 +130,44 @@ test.describe("Settings Navigation", () => {
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
 
-    const changePasswordButton = page
-      .getByTestId("settings-change-password")
-      .or(page.getByRole("button", { name: /change password/i }))
-      .first();
+    // Wait for privacy security section to load
+    await page.waitForSelector(
+      '[data-testid="settings-privacy-security-section"]',
+    );
 
-    if (await changePasswordButton.isVisible().catch(() => false)) {
-      await changePasswordButton.click();
+    const changePasswordButton = page.getByTestId("settings-change-password");
+    await expect(changePasswordButton).toBeVisible();
+    await changePasswordButton.click();
 
-      // Modal should open
-      await expect(page.getByTestId("change-password-modal")).toBeVisible();
-      await expect(page.getByLabel(/current password/i)).toBeVisible();
-      await expect(page.getByLabel(/new password/i)).toBeVisible();
-    }
+    // Modal should open - wait for it to appear
+    await expect(page.getByTestId("change-password-modal")).toBeVisible({
+      timeout: 5000,
+    });
+    // Verify form is visible
+    await expect(
+      page.getByTestId("settings-change-password-form"),
+    ).toBeVisible();
   });
 
   test("can open delete account modal", async ({ authenticatedPage: page }) => {
     await page.goto("/settings");
     await page.waitForLoadState("networkidle");
 
-    const deleteAccountButton = page
-      .getByTestId("settings-delete-account")
-      .or(page.getByRole("button", { name: /delete account/i }))
-      .first();
+    // Wait for privacy security section to load
+    await page.waitForSelector(
+      '[data-testid="settings-privacy-security-section"]',
+    );
 
-    if (await deleteAccountButton.isVisible().catch(() => false)) {
-      await deleteAccountButton.click();
+    const deleteAccountButton = page.getByTestId("settings-delete-account");
+    await expect(deleteAccountButton).toBeVisible();
+    await deleteAccountButton.click();
 
-      // Modal should open with warning
-      await expect(page.getByTestId("delete-account-modal")).toBeVisible();
-      await expect(page.getByText(/delete account/i)).toBeVisible();
-      await expect(page.getByText(/cannot be undone/i)).toBeVisible();
-    }
+    // Modal should open with warning - wait for it to appear
+    await expect(page.getByTestId("delete-account-modal")).toBeVisible({
+      timeout: 5000,
+    });
+    // Verify form is visible
+    await expect(page.getByTestId("delete-account-form")).toBeVisible();
   });
 
   test("back to dashboard button works", async ({
