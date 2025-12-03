@@ -110,9 +110,10 @@ jobs:
           VITE_SUPABASE_ANON_KEY: "placeholder-key"
       
       - name: Run E2E tests
-        # Note: Warnings about secret access are expected and safe here
-        # Secrets are optional and have fallback values for local testing
+        # yamllint disable-line rule:line-length
         run: |
+          # These secrets are optional - if not set, default values are used
+          # The linter warnings are false positives and can be safely ignored
           export VITE_SUPABASE_URL="${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}"
           export VITE_SUPABASE_ANON_KEY="${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}"
           export E2E_TEST_EMAIL="${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}"
