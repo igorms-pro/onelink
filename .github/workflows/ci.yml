@@ -110,7 +110,14 @@ jobs:
           VITE_SUPABASE_ANON_KEY: "placeholder-key"
       
       - name: Run E2E tests
-        run: pnpm e2e:ci
+        # Note: Warnings about secret access are expected and safe here
+        # Secrets are optional and have fallback values for local testing
+        run: |
+          export VITE_SUPABASE_URL="${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}"
+          export VITE_SUPABASE_ANON_KEY="${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}"
+          export E2E_TEST_EMAIL="${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}"
+          export E2E_TEST_PASSWORD="${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}"
+          pnpm e2e:ci
         env:
           CI: "true"
           VITE_BASE_URL: http://localhost:4173
@@ -118,15 +125,6 @@ jobs:
           DOTENV_CONFIG_QUIET: "true"
           DOTENV_SILENT: "true"
           NODE_ENV: "test"
-          # Supabase credentials for e2e tests
-          # Use GitHub secrets for real test project, or placeholder values
-          # Note: If secrets are not set, tests will use placeholder values (tests will skip auth)
-          # GitHub Actions linter warnings about secrets are expected and can be ignored
-          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
-          # Test user credentials for authenticated tests
-          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
-          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
       
       - name: Upload Playwright report
         if: always()

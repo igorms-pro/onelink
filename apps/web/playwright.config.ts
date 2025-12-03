@@ -29,8 +29,8 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0, // Retries for flaky tests in CI
-  workers: process.env.CI ? 3 : undefined, // Run browsers in parallel in CI
+  retries: process.env.CI ? 1 : 0, // Reduced retries for faster CI
+  workers: process.env.CI ? 4 : undefined, // Increased workers for better parallelization in CI
   reporter: process.env.CI ? "html" : "list",
   timeout: 30 * 1000, // 30 seconds per test
   expect: {
@@ -42,20 +42,29 @@ export default defineConfig({
     actionTimeout: 10 * 1000, // 10 seconds for actions
     navigationTimeout: 30 * 1000, // 30 seconds for navigation
   },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
-    },
-    {
-      name: "webkit",
-      use: { ...devices["Desktop Safari"] },
-    },
-  ],
+  projects: process.env.CI
+    ? [
+        // In CI, only run on Chromium for speed (most stable and fastest)
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+      ]
+    : [
+        // Locally, run on all browsers
+        {
+          name: "chromium",
+          use: { ...devices["Desktop Chrome"] },
+        },
+        {
+          name: "firefox",
+          use: { ...devices["Desktop Firefox"] },
+        },
+        {
+          name: "webkit",
+          use: { ...devices["Desktop Safari"] },
+        },
+      ],
   webServer: {
     // In CI, we already built, so just preview. Locally, build + preview.
     command: process.env.CI
