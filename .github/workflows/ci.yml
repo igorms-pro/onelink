@@ -1,3 +1,8 @@
+# Note: VS Code may show "Context access might be invalid" warnings for secrets.
+# This is a known false positive bug in the vscode-github-actions extension.
+# See: https://github.com/github/vscode-github-actions/issues/222
+# These warnings can be safely ignored - they don't affect workflow execution.
+
 name: CI
 
 on:
