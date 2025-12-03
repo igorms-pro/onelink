@@ -343,17 +343,19 @@ describe("BillingPage", () => {
 
   describe("PAID Plan Tests", () => {
     const mockSubscription = {
-      status: "active",
+      status: "active" as const,
       renewalDate: new Date(
         Date.now() + 30 * 24 * 60 * 60 * 1000,
       ).toISOString(),
-      currentPeriodEnd: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      currentPeriodEnd: String(
+        Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
+      ),
       cancelAtPeriodEnd: false,
     };
 
     const mockPaymentMethod = {
       id: "pm_123",
-      type: "card",
+      type: "card" as const,
       card: {
         brand: "visa",
         last4: "4242",
@@ -367,7 +369,7 @@ describe("BillingPage", () => {
         id: "inv_123",
         amount: 999,
         currency: "eur",
-        status: "paid",
+        status: "paid" as const,
         created: Math.floor(Date.now() / 1000) - 86400,
         invoicePdf: "https://pay.stripe.com/invoice/inv_123.pdf",
         hostedInvoiceUrl: "https://invoice.stripe.com/i/inv_123",
