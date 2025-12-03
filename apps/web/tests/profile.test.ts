@@ -134,7 +134,7 @@ describe("profile utils", () => {
     expect(result.slug).toBe("existing-slug");
     expect(result.display_name).toBe("Existing User");
     // Should not call insert
-    expect(mockSelect).toHaveBeenCalled();
+    expect(mockProfilesSelect).toHaveBeenCalled();
   });
 
   it("getSelfPlan returns free by default", async () => {
