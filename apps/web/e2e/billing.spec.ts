@@ -2,39 +2,14 @@ import { test, expect } from "./fixtures/auth";
 
 // Helper function to navigate to billing page and wait for it to load
 async function gotoBillingPage(page: any) {
-  await page.goto("/settings/billing", { waitUntil: "domcontentloaded" });
+  // Navigate to the page
+  await page.goto("/settings/billing", { waitUntil: "load" });
 
-  // Wait for either the title (page loaded) or redirect to auth (not authenticated)
-  // Use Promise.race but ensure we actually wait for the element if it exists
-  try {
-    // First check if we're being redirected to auth
-    const authRedirect = await Promise.race([
-      page.waitForURL("**/auth**", { timeout: 2000 }).catch(() => null),
-      new Promise((resolve) => setTimeout(resolve, 2000)), // Timeout after 2s
-    ]);
-
-    if (authRedirect) {
-      return; // Redirected to auth, stop here
-    }
-
-    // Not redirected, wait for the billing title to appear
-    await page.waitForSelector('[data-testid="billing-title"]', {
-      timeout: 15000,
-      state: "visible",
-    });
-
-    // Also wait for network to be idle to ensure all async operations complete
-    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
-      // Ignore networkidle timeout, element is already visible
-    });
-  } catch (error) {
-    // If element not found, check if we're on auth page
-    const currentUrl = page.url();
-    if (currentUrl.includes("/auth")) {
-      return; // Redirected to auth
-    }
-    throw error; // Re-throw if it's a different error
-  }
+  // Wait for the billing title to appear - this confirms the page has loaded and React has rendered
+  // Use getByTestId which is more reliable than waitForSelector
+  await expect(page.getByTestId("billing-title")).toBeVisible({
+    timeout: 30000,
+  });
 }
 
 test.describe("Billing Page - Stripe Integration", () => {
