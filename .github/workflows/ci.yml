@@ -116,14 +116,7 @@ jobs:
       
       - name: Run E2E tests
         # yamllint disable-line rule:line-length
-        run: |
-          # These secrets are optional - if not set, default values are used
-          # The linter warnings are false positives and can be safely ignored
-          export VITE_SUPABASE_URL="${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}"
-          export VITE_SUPABASE_ANON_KEY="${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}"
-          export E2E_TEST_EMAIL="${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}"
-          export E2E_TEST_PASSWORD="${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}"
-          pnpm e2e:ci
+        run: pnpm e2e:ci
         env:
           CI: "true"
           VITE_BASE_URL: http://localhost:4173
@@ -131,6 +124,12 @@ jobs:
           DOTENV_CONFIG_QUIET: "true"
           DOTENV_SILENT: "true"
           NODE_ENV: "test"
+          # E2E test credentials - use secrets if available, otherwise placeholder values
+          # These are passed directly to the process environment for Playwright
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
       
       - name: Upload Playwright report
         if: always()
