@@ -2,14 +2,23 @@ import { test, expect } from "./fixtures/auth";
 
 // Helper function to navigate to billing page and wait for it to load
 async function gotoBillingPage(page: any) {
-  // Navigate to the page
-  await page.goto("/settings/billing", { waitUntil: "load" });
+  // Navigate to the page - use networkidle in CI for more reliable loading
+  const waitUntil = process.env.CI ? "networkidle" : "load";
+  await page.goto("/settings/billing", { waitUntil });
 
   // Wait for the billing title to appear - this confirms the page has loaded and React has rendered
   // Use getByTestId which is more reliable than waitForSelector
   await expect(page.getByTestId("billing-title")).toBeVisible({
     timeout: 30000,
   });
+
+  // In CI, wait a bit more for React to finish rendering all components
+  if (process.env.CI) {
+    // Wait for the back button as well to ensure page is fully rendered
+    await expect(page.getByTestId("billing-back-button")).toBeVisible({
+      timeout: 10000,
+    });
+  }
 }
 
 test.describe("Billing Page - Stripe Integration", () => {

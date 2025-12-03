@@ -13,7 +13,9 @@ test.describe("Settings Navigation", () => {
   test("settings page shows all sections when authenticated", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    // Use networkidle in CI for more reliable loading
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
 
     // Wait for at least one section to appear - this ensures the page has started rendering
     await expect(
@@ -39,7 +41,8 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to billing page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
     await expect(page.getByTestId("settings-billing-section")).toBeVisible({
       timeout: 30000,
     });
@@ -63,7 +66,8 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to sessions page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
     await expect(
       page.getByTestId("settings-active-sessions-section"),
     ).toBeVisible({ timeout: 30000 });
@@ -87,7 +91,8 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to 2FA page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
     await expect(
       page.getByTestId("settings-privacy-security-section"),
     ).toBeVisible({ timeout: 30000 });
@@ -111,7 +116,8 @@ test.describe("Settings Navigation", () => {
   test("can toggle notification preferences", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
 
     // Wait for preferences section to load
     await expect(
@@ -135,7 +141,8 @@ test.describe("Settings Navigation", () => {
   test("can open change password modal", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
 
     // Wait for privacy security section to load
     await expect(
@@ -157,7 +164,8 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can open delete account modal", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
 
     // Wait for privacy security section to load
     await expect(
@@ -179,7 +187,8 @@ test.describe("Settings Navigation", () => {
   test("back to dashboard button works", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings", { waitUntil: "load" });
+    const waitUntil = process.env.CI ? "networkidle" : "load";
+    await page.goto("/settings", { waitUntil });
     await expect(
       page.getByTestId("settings-notifications-section"),
     ).toBeVisible({ timeout: 30000 });

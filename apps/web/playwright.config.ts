@@ -39,8 +39,8 @@ export default defineConfig({
   use: {
     baseURL: process.env.VITE_BASE_URL || "http://localhost:4173",
     trace: "on-first-retry",
-    actionTimeout: 10 * 1000, // 10 seconds for actions
-    navigationTimeout: 30 * 1000, // 30 seconds for navigation
+    actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Longer timeout in CI
+    navigationTimeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI for networkidle
   },
   projects: process.env.CI
     ? [
