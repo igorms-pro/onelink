@@ -1,5 +1,18 @@
 import { test, expect } from "./fixtures/auth";
 
+// Helper function to navigate to billing page and wait for it to load
+async function gotoBillingPage(page: any) {
+  await page.goto("/settings/billing");
+  // Wait for either the title (page loaded) or redirect to auth (not authenticated)
+  await Promise.race([
+    page
+      .waitForSelector('[data-testid="billing-title"]', { timeout: 10000 })
+      .catch(() => null),
+    page.waitForURL("**/auth**", { timeout: 10000 }).catch(() => null),
+    page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => null),
+  ]);
+}
+
 test.describe("Billing Page - Stripe Integration", () => {
   test("billing page loads and displays core structure", async ({
     authenticatedPage: page,
@@ -19,7 +32,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       },
     );
 
-    await page.goto("/settings/billing");
+    await gotoBillingPage(page);
 
     // Verify page structure loads
     await expect(page.getByTestId("billing-title")).toBeVisible();
@@ -54,7 +67,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       },
     );
 
-    await page.goto("/settings/billing");
+    await gotoBillingPage(page);
 
     // Verify loading state appears briefly
     await expect(page.getByTestId("billing-skeleton")).toBeVisible();
@@ -83,7 +96,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // FREE plan users should see upgrade button
@@ -113,7 +126,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // FREE plan users should NOT see payment method section
@@ -140,7 +153,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // FREE plan users should NOT see invoices section
@@ -165,7 +178,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // FREE plan users should NOT see renewal date
@@ -190,7 +203,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // FREE plan has limits (4 links, 2 drops), so progress bars should be visible
@@ -223,7 +236,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       const upgradeButton = page.getByTestId("upgrade-to-pro-button");
@@ -262,7 +275,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan (by checking if manage button exists)
@@ -319,7 +332,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan
@@ -379,7 +392,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan
@@ -426,7 +439,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan
@@ -472,7 +485,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan (unlimited)
@@ -513,7 +526,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       // Check if user has paid plan
@@ -556,7 +569,7 @@ test.describe("Billing Page - Stripe Integration", () => {
         },
       );
 
-      await page.goto("/settings/billing");
+      await gotoBillingPage(page);
       await expect(page.getByTestId("billing-content")).toBeVisible();
 
       const manageButton = page.getByTestId("manage-on-stripe-button");
@@ -588,7 +601,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       },
     );
 
-    await page.goto("/settings/billing");
+    await gotoBillingPage(page);
     await expect(page.getByTestId("billing-content")).toBeVisible();
 
     // Verify plan card structure
@@ -625,7 +638,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       },
     );
 
-    await page.goto("/settings/billing");
+    await gotoBillingPage(page);
 
     // Verify page doesn't crash - core structure remains
     await expect(page.getByTestId("billing-title")).toBeVisible();
@@ -660,7 +673,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       },
     );
 
-    await page.goto("/settings/billing");
+    await gotoBillingPage(page);
     await expect(page.getByTestId("billing-title")).toBeVisible();
 
     // Verify back button is interactive
