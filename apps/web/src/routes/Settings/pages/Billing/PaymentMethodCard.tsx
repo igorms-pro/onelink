@@ -29,19 +29,31 @@ export function PaymentMethodCard({ paymentMethod }: PaymentMethodCardProps) {
   }
 
   return (
-    <div className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+    <div
+      className="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+      data-testid="payment-method-card"
+    >
       <CreditCard className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />
       <div className="flex items-center gap-2 flex-1">
         <span className="text-lg" aria-hidden="true">
           {getCardBrandIcon(paymentMethod.card.brand)}
         </span>
         <div>
-          <p className="text-sm font-medium text-gray-900 dark:text-white">
+          <p
+            className="text-sm font-medium text-gray-900 dark:text-white"
+            data-testid="payment-method-brand"
+          >
             {paymentMethod.card.brand.charAt(0).toUpperCase() +
               paymentMethod.card.brand.slice(1)}{" "}
-            •••• {paymentMethod.card.last4}
+            ••••{" "}
+            <span data-testid="payment-method-last4">
+              {paymentMethod.card.last4}
+            </span>
           </p>
-          <p className="text-xs text-gray-500 dark:text-gray-400">
+          <p
+            className="text-xs text-gray-500 dark:text-gray-400"
+            data-testid="payment-method-expiry"
+          >
             {t("billing_expires", { defaultValue: "Expires" })}{" "}
             {String(paymentMethod.card.expMonth).padStart(2, "0")}/
             {paymentMethod.card.expYear}

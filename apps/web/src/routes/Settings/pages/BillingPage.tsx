@@ -157,19 +157,25 @@ export default function BillingPage() {
           {t("settings_back_to_settings")}
         </button>
 
-        <div className="mb-8">
-          <h1 className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!">
+        <div className="mb-8" data-testid="billing-page-header">
+          <h1
+            className="text-[22px]! font-bold text-gray-900 dark:text-white sm:text-3xl!"
+            data-testid="billing-title"
+          >
             {t("billing_title")}
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-2">
+          <p
+            className="text-gray-500 dark:text-gray-400 mt-2"
+            data-testid="billing-description"
+          >
             {t("billing_description")}
           </p>
         </div>
 
         {isLoading || loadingSubscription ? (
-          <BillingSkeleton />
+          <BillingSkeleton data-testid="billing-skeleton" />
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6" data-testid="billing-content">
             <PlanCard
               planDisplayName={planDisplayName}
               planPrice={planPrice}
@@ -187,16 +193,28 @@ export default function BillingPage() {
             />
             {hasPaidPlan && (
               <>
-                <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <section
+                  className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+                  data-testid="payment-method-section"
+                >
+                  <h2
+                    className="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+                    data-testid="payment-method-title"
+                  >
                     {t("billing_payment_method", {
                       defaultValue: "Payment Method",
                     })}
                   </h2>
                   <PaymentMethodCard paymentMethod={paymentMethod} />
                 </section>
-                <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+                <section
+                  className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+                  data-testid="invoices-section"
+                >
+                  <h2
+                    className="text-xl font-semibold text-gray-900 dark:text-white mb-4"
+                    data-testid="invoices-title"
+                  >
                     {t("billing_invoices", { defaultValue: "Invoices" })}
                   </h2>
                   <InvoicesList invoices={invoices} />

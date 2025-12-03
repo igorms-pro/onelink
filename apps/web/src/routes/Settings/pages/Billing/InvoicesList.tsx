@@ -35,18 +35,22 @@ export function InvoicesList({ invoices }: InvoicesListProps) {
 
   if (invoices.length === 0) {
     return (
-      <div className="text-sm text-gray-500 dark:text-gray-400 text-center py-4">
+      <div
+        className="text-sm text-gray-500 dark:text-gray-400 text-center py-4"
+        data-testid="invoices-empty-state"
+      >
         {t("billing_no_invoices", { defaultValue: "No invoices yet" })}
       </div>
     );
   }
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-2" data-testid="invoices-list">
       {invoices.map((invoice) => (
         <div
           key={invoice.id}
           className="flex items-center justify-between p-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          data-testid={`invoice-${invoice.id}`}
         >
           <div className="flex items-center gap-3 flex-1 min-w-0">
             <FileText className="w-5 h-5 text-gray-600 dark:text-gray-400 shrink-0" />

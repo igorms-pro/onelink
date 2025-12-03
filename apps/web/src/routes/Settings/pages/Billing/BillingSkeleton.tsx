@@ -1,6 +1,12 @@
-export function BillingSkeleton() {
+interface BillingSkeletonProps {
+  "data-testid"?: string;
+}
+
+export function BillingSkeleton({
+  "data-testid": testId,
+}: BillingSkeletonProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid={testId || "billing-skeleton"}>
       {[1, 2].map((i) => (
         <div
           key={i}

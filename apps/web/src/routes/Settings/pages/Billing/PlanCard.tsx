@@ -31,10 +31,16 @@ export function PlanCard({
     dropsLimit === Infinity ? 0 : Math.min((dropsUsed / dropsLimit) * 100, 100);
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section
+      className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      data-testid="plan-card"
+    >
       <div className="flex items-center gap-2 mb-4">
         <CreditCard className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2
+          className="text-xl font-semibold text-gray-900 dark:text-white"
+          data-testid="plan-card-title"
+        >
           {t("billing_current_plan")}
         </h2>
       </div>
@@ -44,7 +50,10 @@ export function PlanCard({
             {t("settings_current_plan")}
           </span>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">
+            <span
+              className="text-sm font-semibold text-gray-900 dark:text-white"
+              data-testid="plan-price"
+            >
               {planPrice}
               {hasPaidPlan && (
                 <span className="text-xs font-normal text-gray-500 dark:text-gray-400 ml-1">
@@ -66,11 +75,17 @@ export function PlanCard({
         </div>
 
         {hasPaidPlan && (
-          <div className="flex items-center justify-between text-sm">
+          <div
+            className="flex items-center justify-between text-sm"
+            data-testid="renewal-date-row"
+          >
             <span className="text-gray-700 dark:text-gray-300">
               {t("settings_renewal_date")}
             </span>
-            <span className="text-gray-500 dark:text-gray-400">
+            <span
+              className="text-gray-500 dark:text-gray-400"
+              data-testid="renewal-date"
+            >
               {renewalDate}
             </span>
           </div>

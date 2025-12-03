@@ -1,9 +1,29 @@
 import { defineConfig, devices } from "@playwright/test";
+import { config } from "dotenv";
+import { resolve, dirname } from "path";
+import { fileURLToPath } from "url";
+import { existsSync } from "fs";
+
+// Get __dirname equivalent in ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env.local file if it exists (for local development)
+// In CI, environment variables are set directly
+if (!process.env.CI) {
+  const envPath = resolve(__dirname, ".env.local");
+  if (existsSync(envPath)) {
+    // Suppress dotenv messages by setting quiet mode
+    process.env.DOTENV_CONFIG_QUIET = "true";
+    // Don't override existing env vars (e.g., from shell)
+    // This allows CI to override with real values
+    config({ path: envPath, override: false });
+  }
+}
 
 // Note: Environment variables are loaded from:
-// - Local: .env.local file (if exists) - loaded automatically by dotenv if present
+// - Local: .env.local file (loaded above)
 // - CI: GitHub Actions environment variables (set in .github/workflows/ci.yml)
-// We don't manually load dotenv here to avoid verbose messages in CI
 
 export default defineConfig({
   testDir: "./e2e",
