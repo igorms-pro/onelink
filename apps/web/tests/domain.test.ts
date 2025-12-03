@@ -5,7 +5,7 @@ describe("domain utils", () => {
   it("isBaseHost detects localhost and base domain", () => {
     expect(isBaseHost("localhost")).toBe(true);
     expect(isBaseHost("localhost:5173")).toBe(true);
-    expect(isBaseHost("example.onemeet.app")).toBe(true);
+    expect(isBaseHost("example.getonelink.app")).toBe(true);
     expect(isBaseHost("foo.bar")).toBe(false);
   });
 
@@ -29,10 +29,10 @@ describe("domain utils", () => {
   });
 
   it("isBaseHost handles edge cases", () => {
-    expect(isBaseHost("ONEMEET.APP")).toBe(true); // case insensitive
-    expect(isBaseHost("sub.onemeet.app")).toBe(true);
+    expect(isBaseHost("GETONELINK.APP")).toBe(true); // case insensitive
+    expect(isBaseHost("sub.getonelink.app")).toBe(true);
     expect(isBaseHost("localhost:8080")).toBe(false); // different port
-    expect(isBaseHost("example.onemeet.app.com")).toBe(false); // different domain
+    expect(isBaseHost("example.getonelink.app.com")).toBe(false); // different domain
     expect(isBaseHost("")).toBe(false);
   });
 });
