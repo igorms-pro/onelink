@@ -29,7 +29,7 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 3 : 0, // Increased retries for flaky tests in CI
+  retries: process.env.CI ? 2 : 0, // Retries for flaky tests in CI
   workers: process.env.CI ? 3 : undefined, // Run browsers in parallel in CI
   reporter: process.env.CI ? "html" : "list",
   timeout: 30 * 1000, // 30 seconds per test
