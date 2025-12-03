@@ -13,8 +13,19 @@ test.describe("Settings Navigation", () => {
   test("settings page shows all sections when authenticated", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
+
+    // Wait for at least one section to appear, then wait for all sections
+    // This ensures the page has started rendering
+    await page.waitForSelector(
+      '[data-testid="settings-notifications-section"]',
+      { timeout: 15000, state: "visible" },
+    );
+
+    // Wait for network to be idle to ensure all async operations complete
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout if it takes too long
+    });
 
     await expect(
       page.getByTestId("settings-notifications-section"),
@@ -35,8 +46,14 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to billing page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
+    await page.waitForSelector('[data-testid="settings-billing-section"]', {
+      timeout: 15000,
+      state: "visible",
+    });
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     // Look for billing link/button - could be "Manage payment" or "Manage billing"
     const billingLink = page
@@ -57,9 +74,14 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to sessions page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
-    await page.waitForTimeout(500); // Small delay to ensure page is fully loaded
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
+    await page.waitForSelector(
+      '[data-testid="settings-active-sessions-section"]',
+      { timeout: 15000, state: "visible" },
+    );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     const sessionsLink = page
       .getByTestId("settings-active-sessions")
@@ -80,8 +102,14 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can navigate to 2FA page", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
+    await page.waitForSelector(
+      '[data-testid="settings-privacy-security-section"]',
+      { timeout: 15000, state: "visible" },
+    );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     const twoFactorLink = page
       .getByTestId("settings-two-factor")
@@ -102,13 +130,16 @@ test.describe("Settings Navigation", () => {
   test("can toggle notification preferences", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
 
     // Wait for preferences section to load
     await page.waitForSelector(
       '[data-testid="settings-notifications-section"]',
+      { timeout: 15000, state: "visible" },
     );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     // Find email notifications toggle
     const toggle = page.getByTestId("settings-email-notifications-toggle");
@@ -127,13 +158,16 @@ test.describe("Settings Navigation", () => {
   test("can open change password modal", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
 
     // Wait for privacy security section to load
     await page.waitForSelector(
       '[data-testid="settings-privacy-security-section"]',
+      { timeout: 15000, state: "visible" },
     );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     const changePasswordButton = page.getByTestId("settings-change-password");
     await expect(changePasswordButton).toBeVisible();
@@ -150,13 +184,16 @@ test.describe("Settings Navigation", () => {
   });
 
   test("can open delete account modal", async ({ authenticatedPage: page }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
 
     // Wait for privacy security section to load
     await page.waitForSelector(
       '[data-testid="settings-privacy-security-section"]',
+      { timeout: 15000, state: "visible" },
     );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     const deleteAccountButton = page.getByTestId("settings-delete-account");
     await expect(deleteAccountButton).toBeVisible();
@@ -173,8 +210,14 @@ test.describe("Settings Navigation", () => {
   test("back to dashboard button works", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/settings");
-    await page.waitForLoadState("networkidle");
+    await page.goto("/settings", { waitUntil: "domcontentloaded" });
+    await page.waitForSelector(
+      '[data-testid="settings-notifications-section"]',
+      { timeout: 15000, state: "visible" },
+    );
+    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {
+      // Ignore networkidle timeout
+    });
 
     const backButton = page
       .getByRole("button", { name: /back to dashboard/i })
