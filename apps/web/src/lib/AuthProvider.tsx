@@ -31,6 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!mounted) return;
 
       console.log("[Auth] State change:", event, s?.user?.email || "No user");
+      console.log("[Auth] Session data:", {
+        hasSession: !!s,
+        hasUser: !!s?.user,
+        userId: s?.user?.id,
+        email: s?.user?.email,
+        accessToken: s?.access_token ? "present" : "missing",
+      });
 
       // Update session state for all events
       // INITIAL_SESSION: fired when session is restored from storage (on refresh)
@@ -158,6 +165,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo<AuthContextValue>(() => {
+    console.log("[Auth] Context value updated:", {
+      hasSession: !!session,
+      hasUser: !!session?.user,
+      userId: session?.user?.id,
+      loading,
+    });
     return {
       session,
       user: session?.user ?? null,
