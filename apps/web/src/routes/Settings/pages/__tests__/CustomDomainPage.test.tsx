@@ -141,7 +141,7 @@ describe("CustomDomainPage", () => {
     }));
   });
 
-  it("should redirect to /settings when not pro plan", () => {
+  it("should redirect to /settings when not pro plan", async () => {
     vi.mocked(useRequireProPlan).mockReturnValue({
       user: mockUser,
       plan: PlanType.FREE,
@@ -156,10 +156,12 @@ describe("CustomDomainPage", () => {
     );
 
     // Component should return null when not pro (redirect handled by useRequireProPlan hook)
-    expect(container.firstChild).toBeNull();
+    await waitFor(() => {
+      expect(container.firstChild).toBeNull();
+    });
   });
 
-  it("should redirect to /auth when user is not logged in", () => {
+  it("should redirect to /auth when user is not logged in", async () => {
     vi.mocked(useRequireProPlan).mockReturnValue({
       user: null,
       plan: PlanType.FREE,
@@ -174,7 +176,9 @@ describe("CustomDomainPage", () => {
     );
 
     // Component should return null when user is null
-    expect(container.firstChild).toBeNull();
+    await waitFor(() => {
+      expect(container.firstChild).toBeNull();
+    });
   });
 
   it.skip("should render page title and description", async () => {
