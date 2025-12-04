@@ -46,7 +46,8 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("2FA page shows disabled state initially", async ({
+  // Supabase MFA: UI still shows disabled state first when no factors
+  test.skip("2FA page shows disabled state initially (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -57,7 +58,8 @@ test.describe("Settings - Detailed Features", () => {
     await expect(page.getByTestId("enable-2fa-button")).toBeVisible();
   });
 
-  test.skip("can start 2FA setup process", async ({
+  // Supabase MFA: enrollment is handled via supabase.auth.mfa.enroll()
+  test.skip("can start 2FA setup process (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -86,7 +88,7 @@ test.describe("Settings - Detailed Features", () => {
     await expect(page.getByTestId("verification-code-container")).toBeVisible();
   });
 
-  test.skip("2FA setup shows QR code and secret key", async ({
+  test.skip("2FA setup shows QR code and secret key (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -118,7 +120,7 @@ test.describe("Settings - Detailed Features", () => {
     await expect(page.getByTestId("copy-secret-button")).toBeVisible();
   });
 
-  test.skip("verification code input accepts 6 digits", async ({
+  test.skip("verification code input accepts 6 digits (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -153,7 +155,7 @@ test.describe("Settings - Detailed Features", () => {
     expect(value).toBe("123"); // Only numbers should remain
   });
 
-  test.skip("verification button is disabled with invalid code length", async ({
+  test.skip("verification button is disabled with invalid code length (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -179,7 +181,9 @@ test.describe("Settings - Detailed Features", () => {
     expect(isDisabled).not.toBeNull();
   });
 
-  test.skip("backup codes are displayed after successful setup", async ({
+  // Supabase MFA does not provide backup codes natively.
+  // This test is kept for potential future custom backup codes implementation.
+  test.skip("backup codes are displayed after successful setup (legacy)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -245,7 +249,7 @@ test.describe("Settings - Detailed Features", () => {
     // Note: Playwright can't directly verify clipboard, but we can check for UI feedback
   });
 
-  test.skip("active state shows 2FA is enabled", async ({
+  test.skip("active state shows 2FA is enabled (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     // This test assumes 2FA is already enabled for the test user
@@ -271,7 +275,8 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("active state shows backup codes section", async ({
+  // Backup codes are no longer part of Supabase MFA by default.
+  test.skip("active state shows backup codes section (legacy)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -295,7 +300,7 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("can show backup codes in active state", async ({
+  test.skip("can show backup codes in active state (legacy)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -323,7 +328,7 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("disable 2FA section is visible in active state", async ({
+  test.skip("disable 2FA section is visible in active state (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -346,7 +351,7 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("disable 2FA button is disabled without password", async ({
+  test.skip("disable 2FA button is disabled without password (UI confirmation only)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -362,7 +367,7 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("can toggle password visibility in disable form", async ({
+  test.skip("can toggle password visibility in disable form (Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/settings/2fa");
@@ -394,7 +399,7 @@ test.describe("Settings - Detailed Features", () => {
     }
   });
 
-  test.skip("2FA setup flow works end-to-end (UI verification)", async ({
+  test.skip("2FA setup flow works end-to-end (UI verification, Supabase MFA)", async ({
     authenticatedPage: page,
   }) => {
     // This test verifies the complete UI flow for 2FA setup

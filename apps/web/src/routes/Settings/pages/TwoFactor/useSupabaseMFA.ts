@@ -171,21 +171,65 @@ export function useSupabaseMFA() {
   const enroll = useCallback(async () => {
     await submit(async () => {
       const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
-      const { data, error } = await mfaClient.enroll({
+
+      // Try enrollment directly (fast path)
+      const result = await mfaClient.enroll({
         factorType: "totp",
       });
 
-      if (error) {
-        console.error("[MFA] Failed to enroll TOTP factor:", error);
-        toast.error(t("settings_2fa_activation_failed"));
-        throw error;
+      // Handle 422 errors - if Supabase returns factor data, use it to resume
+      if (result.error) {
+        const errorMsg =
+          result.error instanceof Error
+            ? result.error.message
+            : String(result.error);
+        const errorObj = result.error as { status?: number; message?: string };
+        const errorStatus = errorObj?.status;
+        const is422 =
+          errorStatus === 422 ||
+          errorMsg.includes("422") ||
+          errorMsg.includes("already exists");
+
+        if (is422) {
+          // Check if factor data is in the response (Supabase may return it even with 422)
+          const existingFactorData = result.data as
+            | MFAEnrollResponse
+            | undefined;
+
+          if (
+            existingFactorData &&
+            (existingFactorData.uri ||
+              existingFactorData.secret ||
+              existingFactorData.totp)
+          ) {
+            // Resume with existing factor
+            console.log("[MFA] Resuming with existing unverified factor");
+            // Continue below with result.data
+          } else {
+            // No factor data - can't resume automatically
+            console.error(
+              "[MFA] 422 error but no factor data available:",
+              result.error,
+            );
+            toast.error(
+              t("settings_2fa_resume_failed") ||
+                "A previous 2FA setup was not completed. Please refresh the page and try again.",
+            );
+            throw result.error;
+          }
+        } else {
+          // Non-422 error - fail normally
+          console.error("[MFA] Enrollment failed:", result.error);
+          toast.error(t("settings_2fa_activation_failed"));
+          throw result.error;
+        }
       }
 
       // Handle different response structures from Supabase MFA
       // The response can be either:
       // 1. { totp: { id, qr_code, uri, secret, ... } }
       // 2. { id, qr_code, uri, secret, ... } (direct factor object)
-      const response = data as MFAEnrollResponse;
+      const response = result.data as MFAEnrollResponse;
       const totpData = response?.totp;
       const directData = response && !totpData ? response : null;
       const factorData = totpData ?? directData;
