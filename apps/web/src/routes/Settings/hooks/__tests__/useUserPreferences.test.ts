@@ -145,8 +145,9 @@ describe("useUserPreferences", () => {
 
     const { result } = renderHook(() => useUserPreferences());
 
+    // Wait for preferences to be loaded from Supabase (not just loading to be false)
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.preferences.email_notifications).toBe(false);
     });
 
     expect(result.current.preferences).toEqual({
@@ -196,8 +197,9 @@ describe("useUserPreferences", () => {
 
     const { result } = renderHook(() => useUserPreferences());
 
+    // Wait for preferences to be loaded from Supabase (not just loading to be false)
     await waitFor(() => {
-      expect(result.current.loading).toBe(false);
+      expect(result.current.preferences.email_notifications).toBe(false);
     });
 
     expect(result.current.preferences).toEqual({
