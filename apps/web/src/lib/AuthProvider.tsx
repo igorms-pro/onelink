@@ -199,11 +199,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider value={value}>
       {children}
       {showMFAChallenge && (
-        <MFAChallenge
-          onVerified={() => {
-            setShowMFAChallenge(false);
-          }}
-        />
+        <div data-testid="mfa-challenge-container">
+          <MFAChallenge
+            onVerified={() => {
+              setShowMFAChallenge(false);
+            }}
+          />
+        </div>
       )}
     </AuthContext.Provider>
   );
