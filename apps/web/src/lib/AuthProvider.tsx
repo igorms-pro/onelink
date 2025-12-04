@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import { createUserSession, logLoginAttempt } from "./sessionTracking";
+import { MFAChallenge } from "@/components/MFAChallenge";
 
 type AuthContextValue = {
   session: Session | null;
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showMFAChallenge, setShowMFAChallenge] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -55,6 +57,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const url = new URL(window.location.href);
         if (url.hash || url.searchParams.has("code")) {
           window.history.replaceState(null, "", window.location.pathname);
+        }
+
+        // After a successful sign-in, check if the user has MFA factors
+        // If they do, we'll show the MFA challenge screen
+        try {
+          const { data, error } = await supabase.auth.mfa.listFactors();
+          if (error) {
+            console.error("[Auth] Error listing MFA factors:", error);
+          } else if (data?.totp && data.totp.length > 0) {
+            console.log("[Auth] User has MFA factors, showing challenge");
+            setShowMFAChallenge(true);
+          }
+        } catch (err) {
+          console.error("[Auth] Unexpected error checking MFA factors:", err);
         }
       }
 
@@ -137,7 +153,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [session, loading]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {showMFAChallenge && (
+        <MFAChallenge
+          onVerified={() => {
+            setShowMFAChallenge(false);
+          }}
+        />
+      )}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

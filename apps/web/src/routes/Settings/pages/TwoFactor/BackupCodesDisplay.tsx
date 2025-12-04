@@ -32,7 +32,9 @@ export function BackupCodesDisplay({
   };
 
   if (variant === "setup") {
-    if (!showBackupCodes || backupCodes.length === 0) return null;
+    // Supabase MFA doesn't provide backup codes, so don't show this section
+    if (backupCodes.length === 0) return null;
+    if (!showBackupCodes) return null;
 
     return (
       <div
@@ -94,20 +96,26 @@ export function BackupCodesDisplay({
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
         {t("settings_2fa_backup_codes_description")}
       </p>
-      {showBackupCodes && backupCodes.length > 0 ? (
-        <BackupCodesList
-          codes={backupCodes}
-          onCopy={handleCopyBackupCode}
-          variant="active"
-        />
+      {backupCodes.length > 0 ? (
+        showBackupCodes ? (
+          <BackupCodesList
+            codes={backupCodes}
+            onCopy={handleCopyBackupCode}
+            variant="active"
+          />
+        ) : (
+          <button
+            onClick={() => setShowBackupCodes(true)}
+            data-testid="show-backup-codes-button"
+            className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
+          >
+            {t("settings_2fa_show_backup_codes")}
+          </button>
+        )
       ) : (
-        <button
-          onClick={() => setShowBackupCodes(true)}
-          data-testid="show-backup-codes-button"
-          className="text-sm text-purple-600 dark:text-purple-400 hover:underline"
-        >
-          {t("settings_2fa_show_backup_codes")}
-        </button>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic">
+          {t("settings_2fa_backup_codes_not_available")}
+        </p>
       )}
     </div>
   );
