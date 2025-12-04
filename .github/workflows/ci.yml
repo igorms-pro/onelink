@@ -110,9 +110,9 @@ jobs:
       - name: Build app
         run: pnpm build
         env:
-          # Dummy values for build (Vercel uses real values)
-          VITE_SUPABASE_URL: "https://placeholder.supabase.co"
-          VITE_SUPABASE_ANON_KEY: "placeholder-key"
+          # Use real E2E credentials for build so tests can authenticate
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
       
       - name: Run E2E tests
         # yamllint disable-line rule:line-length
