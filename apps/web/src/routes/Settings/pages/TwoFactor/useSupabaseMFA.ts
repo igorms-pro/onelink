@@ -95,6 +95,37 @@ export function useSupabaseMFA() {
   const [challengeId, setChallengeId] = useState<string | null>(null);
   const [qrCodeData, setQrCodeData] = useState<string>("");
 
+  /**
+   * Supabase's MFA enroll endpoint can return:
+   * - `uri`: the otpauth:// URI (best for generating QR codes)
+   * - `secret`: the raw shared secret
+   * - `qr_code`: a data:image/png;base64,... string that already encodes a QR image
+   *
+   * The `qrcode.react` component expects *text* to encode, not a base64 PNG.
+   * Passing the `qr_code` image string directly will cause a "RangeError: Data too long".
+   *
+   * This helper makes sure we always pass a safe, text-based value to the QR
+   * component by preferring `uri` or `secret` and only ever falling back to
+   * `qr_code` if it's not an image data URL.
+   */
+  const getSafeQrCodeValue = (params?: {
+    uri?: string;
+    secret?: string;
+    qr_code?: string;
+  }) => {
+    if (!params) return "";
+
+    if (params.uri) return params.uri;
+    if (params.secret) return params.secret;
+
+    const code = params.qr_code ?? "";
+    if (code && !code.startsWith("data:image/")) {
+      return code;
+    }
+
+    return "";
+  };
+
   const loadFactors = useCallback(async () => {
     // If there's no active session, Supabase MFA API will throw
     // AuthSessionMissingError. We avoid calling listFactors in that case.
@@ -180,8 +211,13 @@ export function useSupabaseMFA() {
       setEnrollingFactor(factor);
       setState("enrolling");
 
-      const qr =
-        factor?.totp?.qr_code || factor?.totp?.uri || factor?.totp?.secret;
+      // Use a safe, text-based value for the QR code to avoid "Data too long"
+      // errors from the QR code library when Supabase returns a base64 PNG.
+      const qr = getSafeQrCodeValue({
+        uri: factor.totp?.uri,
+        secret: factor.totp?.secret,
+        qr_code: factor.totp?.qr_code,
+      });
 
       if (!qr) {
         console.warn("[MFA] No QR code data returned from enroll");
