@@ -313,6 +313,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       verifyChallenge: vi.fn(),
       unenroll: unenrollMock,
       reload: vi.fn(),
+      resetEnrollment: vi.fn(), // Add this line
     });
 
     render(

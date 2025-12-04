@@ -412,7 +412,7 @@ export function useSupabaseMFA() {
       }
 
       await submit(async () => {
-        const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
+        // const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
 
         // Get factor ID from state
         const factorId = enrollingFactor?.id;
@@ -432,14 +432,36 @@ export function useSupabaseMFA() {
           );
         }
 
-        console.log("[MFA] Using factor ID for verification:", factorId);
+        console.log("[MFA] calling challenge  for verification:");
+
+        const challenge = await supabase.auth.mfa.challenge({
+          factorId,
+        });
+
+        if (!challenge) {
+          // challenge not fetched
+          console.error("[MFA] ❌ challenge not fetched - state was lost");
+          toast.error(
+            "Challenge call error. Please click 'Enable 2FA' again to start over.",
+          );
+          throw new Error("Cannot recover Challenge. Please re-enroll.");
+        }
+
+        const challengeId = challenge?.data?.id;
 
         console.log("[MFA] Calling verify() with:", {
           factorId,
           codeLength: code.length,
         });
-        const verifyResult = await mfaClient.verify({
+
+        if (!challengeId) {
+          console.error("[MFA] ❌ Challenge ID is undefined");
+          throw new Error("Challenge ID is required for verification");
+        }
+
+        const verifyResult = await supabase.auth.mfa.verify({
           factorId,
+          challengeId,
           code,
         });
 
