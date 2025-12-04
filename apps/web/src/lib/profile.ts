@@ -18,16 +18,36 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
     // First, ensure user exists in public.users table
     // The trigger should create it, but let's check and create if needed
     console.log("[Profile] Checking if user exists in public.users...");
-    const { data: userData, error: userError } = await supabase
-      .from("users")
-      .select("id")
-      .eq("id", userId)
-      .maybeSingle();
+    const userCheckStartTime = Date.now();
+    let userData, userError;
+    try {
+      const result = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", userId)
+        .maybeSingle();
+      userData = result.data;
+      userError = result.error;
+      const userCheckDuration = Date.now() - userCheckStartTime;
+      console.log(`[Profile] User check completed in ${userCheckDuration}ms`);
+    } catch (err) {
+      const userCheckDuration = Date.now() - userCheckStartTime;
+      console.error(
+        `[Profile] User check threw error after ${userCheckDuration}ms:`,
+        err,
+      );
+      userError = err as Error;
+    }
 
     console.log("[Profile] User check result:", {
       hasData: !!userData,
       data: userData,
       error: userError,
+      errorMessage: userError instanceof Error ? userError.message : undefined,
+      errorCode:
+        userError && typeof userError === "object" && "code" in userError
+          ? String(userError.code)
+          : undefined,
     });
 
     if (userError) {
