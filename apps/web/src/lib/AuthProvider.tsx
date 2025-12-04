@@ -165,15 +165,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo<AuthContextValue>(() => {
+    const user = session?.user ?? null;
     console.log("[Auth] Context value updated:", {
       hasSession: !!session,
-      hasUser: !!session?.user,
-      userId: session?.user?.id,
+      hasUser: !!user,
+      userId: user?.id,
+      userObject: user ? { id: user.id, email: user.email } : null,
       loading,
     });
     return {
       session,
-      user: session?.user ?? null,
+      user,
       loading,
       async signInWithEmail(email: string) {
         const { error } = await supabase.auth.signInWithOtp({
