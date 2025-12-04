@@ -113,7 +113,10 @@ export function DeleteAccountModal({
   if (isMobile) {
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[90vh]">
+        <DrawerContent
+          className="max-h-[90vh]"
+          data-testid="delete-account-modal"
+        >
           <DrawerHeader>
             <DrawerTitle className="text-red-600 dark:text-red-400">
               {t("settings_delete_account_title")}
@@ -130,7 +133,11 @@ export function DeleteAccountModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md" showCloseButton={!isLoading}>
+      <DialogContent
+        className="max-w-md"
+        showCloseButton={!isLoading}
+        data-testid="delete-account-modal"
+      >
         <DialogHeader>
           <DialogTitle className="text-red-600 dark:text-red-400">
             {t("settings_delete_account_title")}

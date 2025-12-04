@@ -27,7 +27,11 @@ export function DeleteAccountForm({
   const { t } = useTranslation();
 
   return (
-    <form onSubmit={onSubmit} className="space-y-4">
+    <form
+      onSubmit={onSubmit}
+      className="space-y-4"
+      data-testid="delete-account-form"
+    >
       {/* Password field */}
       <div>
         <label

@@ -13,20 +13,18 @@ vi.mock("react-i18next", () => ({
 // Mock useUserPreferences
 const mockUpdatePreference = vi.fn();
 
-vi.mock("../../hooks/useUserPreferences", () => {
-  const mockUseUserPreferences = vi.fn(() => ({
-    preferences: {
-      marketing_emails: false,
-      product_updates: true,
-    },
-    loading: false,
-    saving: false,
-    updatePreference: mockUpdatePreference,
-  }));
-  return {
-    useUserPreferences: mockUseUserPreferences,
-  };
-});
+const defaultProps = {
+  preferences: {
+    email_notifications: false,
+    weekly_digest: false,
+    marketing_emails: false,
+    product_updates: true,
+  },
+  loading: false,
+  saving: false,
+  updatePreference: mockUpdatePreference,
+  savePreferences: vi.fn(),
+};
 
 describe("EmailPreferencesSection", () => {
   beforeEach(() => {
@@ -34,7 +32,7 @@ describe("EmailPreferencesSection", () => {
   });
 
   it("renders section with title", () => {
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     expect(
       screen.getByTestId("settings-email-preferences-section"),
     ).toBeInTheDocument();
@@ -42,7 +40,7 @@ describe("EmailPreferencesSection", () => {
   });
 
   it("renders marketing emails toggle", () => {
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     expect(
       screen.getByTestId("settings-marketing-emails-toggle"),
     ).toBeInTheDocument();
@@ -50,7 +48,7 @@ describe("EmailPreferencesSection", () => {
   });
 
   it("renders product updates toggle", () => {
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     expect(
       screen.getByTestId("settings-product-updates-toggle"),
     ).toBeInTheDocument();
@@ -58,7 +56,7 @@ describe("EmailPreferencesSection", () => {
   });
 
   it("displays current preference values", () => {
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     const marketingToggle = screen.getByTestId(
       "settings-marketing-emails-toggle",
     ) as HTMLInputElement;
@@ -71,7 +69,7 @@ describe("EmailPreferencesSection", () => {
 
   it("calls updatePreference when marketing emails toggle is clicked", async () => {
     const user = userEvent.setup();
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     const marketingToggle = screen.getByTestId(
       "settings-marketing-emails-toggle",
     );
@@ -81,29 +79,14 @@ describe("EmailPreferencesSection", () => {
 
   it("calls updatePreference when product updates toggle is clicked", async () => {
     const user = userEvent.setup();
-    render(<EmailPreferencesSection />);
+    render(<EmailPreferencesSection {...defaultProps} />);
     const productToggle = screen.getByTestId("settings-product-updates-toggle");
     await user.click(productToggle);
     expect(mockUpdatePreference).toHaveBeenCalledWith("product_updates", false);
   });
 
-  it("disables toggles when saving", async () => {
-    const { useUserPreferences } = await import(
-      "../../hooks/useUserPreferences"
-    );
-    vi.mocked(useUserPreferences).mockReturnValueOnce({
-      preferences: {
-        email_notifications: false,
-        weekly_digest: false,
-        marketing_emails: false,
-        product_updates: true,
-      },
-      loading: false,
-      saving: true,
-      updatePreference: mockUpdatePreference,
-      savePreferences: vi.fn(),
-    });
-    render(<EmailPreferencesSection />);
+  it("disables toggles when saving", () => {
+    render(<EmailPreferencesSection {...defaultProps} saving={true} />);
     const marketingToggle = screen.getByTestId(
       "settings-marketing-emails-toggle",
     ) as HTMLInputElement;
@@ -114,23 +97,8 @@ describe("EmailPreferencesSection", () => {
     expect(productToggle).toBeDisabled();
   });
 
-  it("shows loading skeleton when loading", async () => {
-    const { useUserPreferences } = await import(
-      "../../hooks/useUserPreferences"
-    );
-    vi.mocked(useUserPreferences).mockReturnValueOnce({
-      preferences: {
-        email_notifications: false,
-        weekly_digest: false,
-        marketing_emails: false,
-        product_updates: true,
-      },
-      loading: true,
-      saving: false,
-      updatePreference: mockUpdatePreference,
-      savePreferences: vi.fn(),
-    });
-    render(<EmailPreferencesSection />);
+  it("shows loading skeleton when loading", () => {
+    render(<EmailPreferencesSection {...defaultProps} loading={true} />);
     expect(
       screen.getByTestId("settings-email-preferences-section"),
     ).toBeInTheDocument();

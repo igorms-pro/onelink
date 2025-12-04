@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { isProPlan } from "@/lib/types/plan";
 import type { PlanTypeValue } from "@/lib/types/plan";
 import { useDashboardData } from "../Dashboard/hooks/useDashboardData";
+import { useUserPreferences } from "./hooks/useUserPreferences";
 import {
   NotificationsSection,
   EmailPreferencesSection,
@@ -23,6 +24,8 @@ export default function Settings() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { plan } = useDashboardData(user?.id ?? null);
+  // Call useUserPreferences once at the parent level to avoid multiple useEffect calls
+  const userPreferences = useUserPreferences();
 
   // Redirect to /auth if not logged in
   useEffect(() => {
@@ -56,8 +59,8 @@ export default function Settings() {
         </div>
 
         <div className="space-y-6">
-          <NotificationsSection />
-          <EmailPreferencesSection />
+          <NotificationsSection {...userPreferences} />
+          <EmailPreferencesSection {...userPreferences} />
           <BillingSection plan={plan as PlanTypeValue | null} />
           {isProPlan(plan) && <CustomDomainSection />}
           <ActiveSessionsSection />

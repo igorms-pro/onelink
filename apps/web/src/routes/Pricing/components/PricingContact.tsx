@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 export function PricingContact() {
   const { t } = useTranslation();
   const contactEmail = t("pricing.contact_email", {
-    defaultValue: "support@onelink.app",
+    defaultValue: "support@getonelink.app",
   });
 
   return (

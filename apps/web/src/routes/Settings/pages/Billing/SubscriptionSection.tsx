@@ -15,10 +15,16 @@ export function SubscriptionSection({
   const { t } = useTranslation();
 
   return (
-    <section className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm">
+    <section
+      className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
+      data-testid="subscription-section"
+    >
       <div className="flex items-center gap-2 mb-4">
         <CreditCard className="w-5 h-5 text-gray-700 dark:text-gray-300" />
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+        <h2
+          className="text-xl font-semibold text-gray-900 dark:text-white"
+          data-testid="subscription-section-title"
+        >
           {t("billing_manage_subscription")}
         </h2>
       </div>

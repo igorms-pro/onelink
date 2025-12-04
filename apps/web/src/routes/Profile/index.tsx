@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
@@ -16,7 +16,8 @@ import {
 export default function Profile() {
   const { t } = useTranslation();
   const { slug } = useParams();
-  const host = window.location.host;
+  // Memoize host to prevent unnecessary re-renders
+  const host = useMemo(() => window.location.host, []);
   const { links, drops, profile, plan, isLoading, errorType } = useProfileData(
     slug,
     host,

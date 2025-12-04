@@ -1,3 +1,8 @@
+# Note: VS Code may show "Context access might be invalid" warnings for secrets.
+# This is a known false positive bug in the vscode-github-actions extension.
+# See: https://github.com/github/vscode-github-actions/issues/222
+# These warnings can be safely ignored - they don't affect workflow execution.
+
 name: CI
 
 on:
@@ -85,21 +90,46 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        id: playwright-cache
+        with:
+          path: |
+            ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
+      
       - name: Install Playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: pnpm exec playwright install --with-deps
+      
+      - name: Remove .env.local if exists (to prevent dotenv messages)
+        run: rm -f .env.local || true
       
       - name: Build app
         run: pnpm build
         env:
-          # Dummy values for build (Vercel uses real values)
-          VITE_SUPABASE_URL: "https://placeholder.supabase.co"
-          VITE_SUPABASE_ANON_KEY: "placeholder-key"
+          # Use real E2E credentials for build so tests can authenticate
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
       
       - name: Run E2E tests
+        # yamllint disable-line rule:line-length
         run: pnpm e2e:ci
         env:
           CI: "true"
           VITE_BASE_URL: http://localhost:4173
+          # Suppress dotenv messages (dotenvx v17+)
+          DOTENV_CONFIG_QUIET: "true"
+          DOTENV_SILENT: "true"
+          NODE_ENV: "test"
+          # E2E test credentials - use secrets if available, otherwise placeholder values
+          # These are passed directly to the process environment for Playwright
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
       
       - name: Upload Playwright report
         if: always()

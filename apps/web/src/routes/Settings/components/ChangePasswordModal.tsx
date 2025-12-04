@@ -59,7 +59,10 @@ export function ChangePasswordModal({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={handleOpenChange}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent
+          className="sm:max-w-md"
+          data-testid="change-password-modal"
+        >
           <DialogHeader>
             <DialogTitle>{t("settings_change_password_title")}</DialogTitle>
             <DialogDescription>
@@ -74,7 +77,7 @@ export function ChangePasswordModal({
 
   return (
     <Drawer open={open} onOpenChange={handleOpenChange}>
-      <DrawerContent>
+      <DrawerContent data-testid="change-password-modal">
         <DrawerHeader>
           <DrawerTitle>{t("settings_change_password_title")}</DrawerTitle>
           <DrawerDescription>

@@ -1,11 +1,24 @@
 import { Mail } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useUserPreferences } from "../hooks/useUserPreferences";
+import type { UserPreferences } from "../hooks/useUserPreferences";
 
-export function EmailPreferencesSection() {
+interface EmailPreferencesSectionProps {
+  preferences: UserPreferences;
+  loading: boolean;
+  saving: boolean;
+  updatePreference: (
+    key: keyof UserPreferences,
+    value: boolean,
+  ) => Promise<void>;
+}
+
+export function EmailPreferencesSection({
+  preferences,
+  loading,
+  saving,
+  updatePreference,
+}: EmailPreferencesSectionProps) {
   const { t } = useTranslation();
-  const { preferences, loading, saving, updatePreference } =
-    useUserPreferences();
 
   if (loading) {
     return (

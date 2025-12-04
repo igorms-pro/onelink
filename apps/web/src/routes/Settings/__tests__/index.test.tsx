@@ -34,6 +34,17 @@ vi.mock("@/lib/supabase", () => {
     supabase: {
       auth: {
         signOut: vi.fn(),
+        getSession: vi.fn().mockResolvedValue({
+          data: {
+            session: {
+              user: {
+                id: "user-1",
+                email: "test@example.com",
+              },
+            },
+          },
+          error: null,
+        }),
         getUser: vi.fn().mockResolvedValue({
           data: {
             user: {

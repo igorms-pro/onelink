@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/AuthProvider";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
@@ -22,100 +22,103 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 
 export function useUserPreferences() {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [preferences, setPreferences] =
     useState<UserPreferences>(DEFAULT_PREFERENCES);
   const { loading, execute } = useAsyncOperation();
   const { submitting, submit } = useAsyncSubmit();
+  // Use ref to immediately prevent double clicks (before submitting state updates)
+  const isSavingRef = useRef(false);
 
-  // Load preferences
+  // Load preferences - Wait for auth to be ready before making requests
+  const userId = user?.id ?? null;
+
   useEffect(() => {
-    if (!user?.id) return;
+    // Don't do anything while auth is still loading
+    if (authLoading) {
+      return;
+    }
 
+    // If no user after auth is loaded, set defaults
+    if (!userId) {
+      setPreferences(DEFAULT_PREFERENCES);
+      return;
+    }
+
+    // Verify session is available before making request
     execute(async () => {
-      try {
-        // Load from Supabase
-        const { data, error } = await supabase
+      // Ensure session is available
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData.session) {
+        console.error("[useUserPreferences] No session available");
+        setPreferences(DEFAULT_PREFERENCES);
+        return;
+      }
+
+      // Load from Supabase
+      const { data, error } = await supabase
+        .from("user_preferences")
+        .select("*")
+        .eq("user_id", userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("[useUserPreferences] Supabase query error:", error);
+        setPreferences(DEFAULT_PREFERENCES);
+        return;
+      }
+
+      if (data) {
+        // Preferences exist in database
+        setPreferences({
+          email_notifications:
+            data.email_notifications ?? DEFAULT_PREFERENCES.email_notifications,
+          weekly_digest:
+            data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
+          marketing_emails:
+            data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
+          product_updates:
+            data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
+        });
+      } else {
+        // No preferences found, create default entry
+        const { error: insertError } = await supabase
           .from("user_preferences")
-          .select("*")
-          .eq("user_id", user.id)
-          .maybeSingle();
-
-        if (error) {
-          // If table doesn't exist or other error, fallback to localStorage
-          console.warn(
-            "Error loading preferences from Supabase, using localStorage:",
-            error,
-          );
-          const stored = localStorage.getItem(`preferences_${user.id}`);
-          if (stored) {
-            try {
-              const parsed = JSON.parse(stored);
-              setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-            } catch {
-              setPreferences(DEFAULT_PREFERENCES);
-            }
-          } else {
-            setPreferences(DEFAULT_PREFERENCES);
-          }
-          return;
-        }
-
-        if (data) {
-          // Preferences exist in database
-          setPreferences({
-            email_notifications:
-              data.email_notifications ??
-              DEFAULT_PREFERENCES.email_notifications,
-            weekly_digest:
-              data.weekly_digest ?? DEFAULT_PREFERENCES.weekly_digest,
-            marketing_emails:
-              data.marketing_emails ?? DEFAULT_PREFERENCES.marketing_emails,
-            product_updates:
-              data.product_updates ?? DEFAULT_PREFERENCES.product_updates,
+          .insert({
+            user_id: userId,
+            ...DEFAULT_PREFERENCES,
           });
-        } else {
-          // No preferences found, create default entry
-          const { error: insertError } = await supabase
-            .from("user_preferences")
-            .insert({
-              user_id: user.id,
-              ...DEFAULT_PREFERENCES,
-            });
 
-          if (insertError) {
-            console.error("Error creating default preferences:", insertError);
-            // Fallback to localStorage
-            setPreferences(DEFAULT_PREFERENCES);
-          } else {
-            setPreferences(DEFAULT_PREFERENCES);
-          }
+        if (insertError) {
+          console.error(
+            "[useUserPreferences] Error creating defaults:",
+            insertError,
+          );
         }
-      } catch (error) {
-        console.error("Error loading preferences:", error);
-        // Fallback to localStorage
-        const stored = localStorage.getItem(`preferences_${user.id}`);
-        if (stored) {
-          try {
-            const parsed = JSON.parse(stored);
-            setPreferences({ ...DEFAULT_PREFERENCES, ...parsed });
-          } catch {
-            setPreferences(DEFAULT_PREFERENCES);
-          }
-        } else {
-          setPreferences(DEFAULT_PREFERENCES);
-        }
+        setPreferences(DEFAULT_PREFERENCES);
       }
     });
-  }, [user?.id, execute]);
+  }, [userId, authLoading, execute]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
     if (!user?.id) return;
+    // Prevent multiple simultaneous saves - check ref immediately (synchronous)
+    if (isSavingRef.current || submitting) {
+      return;
+    }
 
-    const updated = { ...preferences, ...newPreferences };
+    // Set ref immediately to prevent double clicks
+    isSavingRef.current = true;
 
     await submit(async () => {
+      // Calculate updated preferences before state update
+      const updated = { ...preferences, ...newPreferences };
+      const previousPreferences = preferences;
+
+      // Update state optimistically
+      setPreferences(updated);
+
       // Save to Supabase
       const { error } = await supabase.from("user_preferences").upsert(
         {
@@ -131,38 +134,22 @@ export function useUserPreferences() {
       );
 
       if (error) {
-        // If Supabase fails, fallback to localStorage
-        console.warn(
-          "Error saving preferences to Supabase, using localStorage:",
-          error,
-        );
-        try {
-          localStorage.setItem(
-            `preferences_${user.id}`,
-            JSON.stringify(updated),
-          );
-        } catch (storageError) {
-          console.error("Error saving to localStorage:", storageError);
-          throw error; // Re-throw Supabase error
-        }
-      } else {
-        // Also save to localStorage as backup
-        try {
-          localStorage.setItem(
-            `preferences_${user.id}`,
-            JSON.stringify(updated),
-          );
-        } catch {
-          // Ignore localStorage errors, Supabase save succeeded
-        }
+        console.error("Error saving preferences to Supabase:", error);
+        // Revert to previous state on error
+        setPreferences(previousPreferences);
+        throw error; // Will be caught by submit error handler
       }
 
-      setPreferences(updated);
       toast.success(t("settings_preferences_saved"));
-    }).catch((error) => {
-      console.error("Error saving preferences:", error);
-      toast.error(t("settings_preferences_save_error"));
-    });
+    })
+      .catch((error) => {
+        console.error("Error saving preferences:", error);
+        toast.error(t("settings_preferences_save_error"));
+      })
+      .finally(() => {
+        // Always reset ref when done
+        isSavingRef.current = false;
+      });
   };
 
   // Update single preference
@@ -170,13 +157,17 @@ export function useUserPreferences() {
     key: keyof UserPreferences,
     value: boolean,
   ) => {
+    // Prevent multiple simultaneous updates - check ref immediately
+    if (isSavingRef.current || submitting) {
+      return;
+    }
     await savePreferences({ [key]: value });
   };
 
   return {
     preferences,
-    loading,
-    saving: submitting,
+    loading: loading || authLoading, // Include auth loading state
+    saving: submitting || isSavingRef.current, // Include ref state for immediate UI feedback
     updatePreference,
     savePreferences,
   };

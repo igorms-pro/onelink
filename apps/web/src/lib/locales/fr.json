@@ -167,6 +167,7 @@
   "settings_2fa_regenerate_backup_codes": "Régénérer les codes de sauvegarde",
   "settings_2fa_backup_codes_regenerated": "Codes de sauvegarde régénérés avec succès",
   "settings_2fa_backup_codes_regenerate_failed": "Échec de la régénération des codes de sauvegarde",
+  "settings_2fa_encryption_failed": "Échec du chiffrement des données 2FA. Veuillez réessayer.",
   "settings_2fa_disable_title": "Désactiver l'authentification à deux facteurs",
   "settings_2fa_disable_warning": "Désactiver la 2FA rendra votre compte moins sécurisé. Êtes-vous sûr de vouloir continuer ?",
   "settings_2fa_password_confirm": "Confirmer le mot de passe",
@@ -310,7 +311,7 @@
           "To exercise any of these rights:",
           "• Use Settings → Data export for data access and portability",
           "• Use Settings → Privacy & Security → Delete Account for erasure",
-          "• Email support@onelink.app for any other requests",
+          "• Email support@getonelink.app for any other requests",
           "We will respond within 30 days as required by GDPR."
         ]
       },
@@ -340,7 +341,7 @@
         "title": "Children's Privacy",
         "paragraphs": [
           "OneLink is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13.",
-          "If you are a parent or guardian and believe your child has provided us with personal information, please contact us at support@onelink.app and we will delete such information."
+          "If you are a parent or guardian and believe your child has provided us with personal information, please contact us at support@getonelink.app and we will delete such information."
         ]
       },
       {
@@ -372,7 +373,7 @@
         "id": "contact",
         "title": "Contact",
         "paragraphs": [
-          "Questions about privacy? Reach out to support@onelink.app and we will get back to you."
+          "Questions about privacy? Reach out to support@getonelink.app and we will get back to you."
         ]
       }
     ]
@@ -442,7 +443,7 @@
         "title": "7. Refund Policy",
         "paragraphs": [
           "Pro plan subscriptions are billed in advance. Refunds are available within 14 days of initial purchase or renewal.",
-          "To request a refund, contact support@onelink.app. Refunds will be processed to the original payment method within 5-10 business days.",
+          "To request a refund, contact support@getonelink.app. Refunds will be processed to the original payment method within 5-10 business days.",
           "No refunds are available for partial billing periods or after 14 days from purchase."
         ]
       },
@@ -485,7 +486,7 @@
       {
         "id": "contact",
         "title": "11. Contact",
-        "paragraphs": ["Need help? Email support@onelink.app."]
+        "paragraphs": ["Need help? Email support@getonelink.app."]
       }
     ]
   },
