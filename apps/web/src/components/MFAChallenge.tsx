@@ -79,7 +79,7 @@ export function MFAChallenge({ onVerified }: MFAChallengeProps) {
           <button
             type="submit"
             disabled={submitting || code.length !== 6}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 px-4 py-2.5 text-sm font-medium text-white shadow-md transition hover:from-purple-600 hover:to-purple-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 px-4 py-2.5 text-sm font-medium text-white shadow-md transition hover:from-purple-600 hover:to-purple-700 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-60"
             data-testid="mfa-verify-button"
           >
             {submitting && <Loader2 className="h-4 w-4 animate-spin" />}

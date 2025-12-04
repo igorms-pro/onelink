@@ -40,6 +40,8 @@ export default function TwoFactorPage() {
         ? "setup"
         : "active";
 
+  console.log("TwoFactorPage render - mfaState:", state);
+
   // Extract secret from QR code data if available (for display purposes)
   // Supabase MFA QR code contains the secret in the URI
   const secret = qrCodeData
@@ -112,7 +114,7 @@ export default function TwoFactorPage() {
         <button
           onClick={() => navigate("/settings")}
           data-testid="back-to-settings-button"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
@@ -157,7 +159,7 @@ export default function TwoFactorPage() {
                 onClick={handleEnable2FA}
                 disabled={submitting}
                 data-testid="enable-2fa-button"
-                className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting
                   ? t("settings_2fa_setting_up")

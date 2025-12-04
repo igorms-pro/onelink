@@ -127,42 +127,49 @@ export function useSupabaseMFA() {
   };
 
   const loadFactors = useCallback(async () => {
-    // If there's no active session, Supabase MFA API will throw
-    // AuthSessionMissingError. We avoid calling listFactors in that case.
+    console.log("[MFA] Loading factors...");
+
+    // Fetching the session data from Supabase Auth
     const { data: sessionData, error: sessionError } =
       await supabase.auth.getSession();
 
     if (sessionError || !sessionData?.session) {
       setFactors(null);
       setState("inactive");
+      console.log("[MFA] No active session or session error.");
       return;
     }
 
-    const result = await execute(async () => {
-      // Supabase JS client returns an object with { data, error }.
-      // In tests, this might be mocked differently, so we defensively
-      // handle cases where the result is undefined or has no data.
-      const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
-      const listResult = (await mfaClient.listFactors()) ?? {};
-      const { data, error } = listResult;
+    // Assuming you have a function called 'execute' which handles asynchronous operations and returns the result of listFactors()
+    const factorsResult = await execute(async () => {
+      try {
+        const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
+        const listResult = (await mfaClient.listFactors()) ?? {};
+        const { data, error } = listResult;
 
-      if (error) {
-        console.error("[MFA] Failed to list factors:", error);
+        if (error) {
+          console.error("[MFA] Failed to list factors:", error);
+          toast.error(t("settings_2fa_load_failed"));
+          return { totp: [] };
+        }
+
+        return (data as MFAFactors) ?? { totp: [] };
+      } catch (err) {
+        console.error("[MFA] Unexpected error during listFactors:", err);
         toast.error(t("settings_2fa_load_failed"));
         return { totp: [] };
       }
-
-      return (data as MFAFactors) ?? { totp: [] };
     });
 
-    if (!result) return;
+    if (!factorsResult) {
+      console.warn("[MFA] No result from execute function.");
+      return;
+    }
 
-    setFactors(result);
-
-    const hasTotp = result.totp && result.totp.length > 0;
+    setFactors(factorsResult);
+    const hasTotp = factorsResult.totp && factorsResult.totp.length > 0;
     setState(hasTotp ? "active" : "inactive");
   }, [execute, t]);
-
   useEffect(() => {
     // Initial load on mount
     loadFactors();
@@ -412,8 +419,6 @@ export function useSupabaseMFA() {
       }
 
       await submit(async () => {
-        // const mfaClient = supabase.auth.mfa as unknown as SupabaseMFAClient;
-
         // Get factor ID from state
         const factorId = enrollingFactor?.id;
         console.log("[MFA] Initial factor ID check:", {

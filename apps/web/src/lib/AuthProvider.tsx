@@ -60,14 +60,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // After a successful sign-in, check if the user has MFA factors
-        // If they do, we'll show the MFA challenge screen
+        // Only show challenge if session is aal1 (not aal2 - already verified)
+        // Supabase stores AAL in the session's aal claim
         try {
-          const { data, error } = await supabase.auth.mfa.listFactors();
-          if (error) {
-            console.error("[Auth] Error listing MFA factors:", error);
-          } else if (data?.totp && data.totp.length > 0) {
-            console.log("[Auth] User has MFA factors, showing challenge");
-            setShowMFAChallenge(true);
+          const sessionAAL = s?.aal;
+          const isAAL1 = sessionAAL === "aal1" || !sessionAAL; // Default to aal1 if not set
+
+          if (isAAL1) {
+            const { data, error } = await supabase.auth.mfa.listFactors();
+            if (error) {
+              console.error("[Auth] Error listing MFA factors:", error);
+            } else if (data?.totp && data.totp.length > 0) {
+              console.log(
+                "[Auth] User has MFA factors and session is aal1, showing challenge",
+              );
+              setShowMFAChallenge(true);
+            }
+          } else {
+            console.log(
+              "[Auth] Session already at aal2, skipping MFA challenge",
+            );
           }
         } catch (err) {
           console.error("[Auth] Unexpected error checking MFA factors:", err);
