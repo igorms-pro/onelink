@@ -68,40 +68,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // After a successful sign-in, check if the user has MFA factors
         // Only show challenge if session is aal1 (not aal2 - already verified)
-        try {
-          const { data: aalData, error: aalError } =
-            await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+        // Run this asynchronously without blocking the auth flow
+        // This prevents MFA checks from interfering with other Supabase queries
+        (async () => {
+          try {
+            const { data: aalData, error: aalError } =
+              await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
 
-          if (aalError) {
-            console.error("[Auth] Error getting AAL:", aalError);
-          } else if (aalData) {
-            // Show challenge if current level is aal1 but next level is aal2
-            const needsMFA =
-              aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
+            if (aalError) {
+              console.error("[Auth] Error getting AAL:", aalError);
+            } else if (aalData) {
+              // Show challenge if current level is aal1 but next level is aal2
+              const needsMFA =
+                aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
 
-            if (needsMFA) {
-              const { data, error } = await supabase.auth.mfa.listFactors();
-              if (error) {
-                console.error("[Auth] Error listing MFA factors:", error);
-              } else if (data?.totp && data.totp.length > 0) {
+              if (needsMFA) {
+                const { data, error } = await supabase.auth.mfa.listFactors();
+                if (error) {
+                  console.error("[Auth] Error listing MFA factors:", error);
+                } else if (data?.totp && data.totp.length > 0) {
+                  console.log(
+                    "[Auth] User has MFA factors and session needs upgrade to aal2, showing challenge",
+                  );
+                  setShowMFAChallenge(true);
+                }
+              } else {
                 console.log(
-                  "[Auth] User has MFA factors and session needs upgrade to aal2, showing challenge",
+                  "[Auth] Session AAL:",
+                  aalData.currentLevel,
+                  "->",
+                  aalData.nextLevel,
+                  "- skipping MFA challenge",
                 );
-                setShowMFAChallenge(true);
               }
-            } else {
-              console.log(
-                "[Auth] Session AAL:",
-                aalData.currentLevel,
-                "->",
-                aalData.nextLevel,
-                "- skipping MFA challenge",
-              );
             }
+          } catch (err) {
+            console.error("[Auth] Unexpected error checking MFA factors:", err);
           }
-        } catch (err) {
-          console.error("[Auth] Unexpected error checking MFA factors:", err);
-        }
+        })();
       }
 
       // Track session and log login history on successful sign-in
