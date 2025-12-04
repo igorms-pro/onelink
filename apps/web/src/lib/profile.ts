@@ -17,15 +17,25 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
   try {
     // First, ensure user exists in public.users table
     // The trigger should create it, but let's check and create if needed
+    // Use Promise.race with timeout to prevent hanging
     console.log("[Profile] Checking if user exists in public.users...");
     const userCheckStartTime = Date.now();
     let userData, userError;
+
     try {
-      const result = await supabase
+      const queryPromise = supabase
         .from("users")
         .select("id")
         .eq("id", userId)
         .maybeSingle();
+
+      const timeoutPromise = new Promise<never>((_, reject) => {
+        setTimeout(() => {
+          reject(new Error("User check query timed out after 5 seconds"));
+        }, 5000);
+      });
+
+      const result = await Promise.race([queryPromise, timeoutPromise]);
       userData = result.data;
       userError = result.error;
       const userCheckDuration = Date.now() - userCheckStartTime;
@@ -37,6 +47,7 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
         err,
       );
       userError = err as Error;
+      // If query timed out or failed, continue anyway - the trigger should handle user creation
     }
 
     console.log("[Profile] User check result:", {
@@ -50,35 +61,42 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
           : undefined,
     });
 
-    if (userError) {
-      console.error("[Profile] Error checking user:", userError);
-    }
-
-    if (!userData) {
+    // Only try to create user if check succeeded but user doesn't exist
+    // If check failed/timed out, skip creation attempt and continue to profile query
+    if (!userError && !userData) {
       console.log(
         "[Profile] User not found in public.users, checking auth user...",
       );
-      const { data: authUser } = await supabase.auth.getUser();
-      if (authUser?.user) {
-        console.log(
-          "[Profile] Auth user found, creating public.users entry...",
-        );
-        const { data: newUser, error: createUserError } = await supabase
-          .from("users")
-          .insert([{ id: userId, email: authUser.user.email || "" }])
-          .select("id")
-          .single();
+      try {
+        const { data: authUser } = await supabase.auth.getUser();
+        if (authUser?.user) {
+          console.log(
+            "[Profile] Auth user found, creating public.users entry...",
+          );
+          const { data: newUser, error: createUserError } = await supabase
+            .from("users")
+            .insert([{ id: userId, email: authUser.user.email || "" }])
+            .select("id")
+            .single();
 
-        console.log("[Profile] Create user result:", {
-          data: newUser,
-          error: createUserError,
-        });
+          console.log("[Profile] Create user result:", {
+            data: newUser,
+            error: createUserError,
+          });
 
-        if (createUserError) {
-          console.error("[Profile] Error creating user:", createUserError);
-          // Continue anyway, the trigger might create it
+          if (createUserError) {
+            console.error("[Profile] Error creating user:", createUserError);
+            // Continue anyway, the trigger might create it
+          }
         }
+      } catch (createErr) {
+        console.error("[Profile] Error in user creation attempt:", createErr);
+        // Continue anyway
       }
+    } else if (userError) {
+      console.log(
+        "[Profile] User check failed/timed out, skipping user creation attempt. Continuing to profile query...",
+      );
     }
 
     // Check if profile exists
