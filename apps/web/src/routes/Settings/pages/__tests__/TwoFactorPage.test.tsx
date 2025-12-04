@@ -103,6 +103,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
   });
@@ -147,6 +148,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
 
@@ -174,6 +176,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
 
@@ -203,6 +206,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
 
@@ -230,6 +234,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
 
@@ -273,6 +278,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       startChallenge: vi.fn(),
       verifyChallenge: vi.fn(),
       unenroll: vi.fn(),
+      resetEnrollment: vi.fn(),
       reload: vi.fn(),
     });
 
