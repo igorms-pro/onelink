@@ -39,8 +39,6 @@ describe("MFAChallenge", () => {
       startChallenge,
       verifyChallenge,
       unenroll: vi.fn(),
-      resetEnrollment: vi.fn(),
-      reload: vi.fn(),
     });
   });
 
