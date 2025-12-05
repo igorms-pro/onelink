@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft, Shield } from "lucide-react";
+import { toast } from "sonner";
 import { Header } from "@/components/Header";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import {
@@ -11,7 +12,7 @@ import {
   DisableTwoFactorSection,
   TwoFactorActiveStatus,
 } from "./TwoFactor";
-import { useTwoFactor } from "./TwoFactor/useTwoFactor";
+import { useSupabaseMFA } from "./TwoFactor/useSupabaseMFA";
 
 export default function TwoFactorPage() {
   const { t } = useTranslation();
@@ -21,38 +22,71 @@ export default function TwoFactorPage() {
   const [showBackupCodes, setShowBackupCodes] = useState(false);
 
   const {
-    state,
+    state: mfaState,
     loading,
     submitting,
-    secret,
-    backupCodes,
+    factors,
     qrCodeData,
-    startSetup,
-    verifyAndEnable,
-    disable,
-    regenerateBackupCodes,
-  } = useTwoFactor();
+    enroll,
+    verifyEnrollment,
+    unenroll,
+  } = useSupabaseMFA();
+
+  // Map Supabase MFA state to component state
+  const state =
+    mfaState === "inactive"
+      ? "disabled"
+      : mfaState === "enrolling"
+        ? "setup"
+        : "active";
+
+  console.log("TwoFactorPage render - mfaState:", state);
+
+  // Extract secret from QR code data if available (for display purposes)
+  // Supabase MFA QR code contains the secret in the URI
+  const secret = qrCodeData
+    ? (() => {
+        // Extract secret from otpauth:// URI if present
+        const secretMatch = qrCodeData.match(/secret=([A-Z0-9]+)/i);
+        return secretMatch ? secretMatch[1] : "";
+      })()
+    : "";
+
+  // Supabase MFA doesn't provide backup codes natively
+  // For now, we'll show an empty array or handle it differently
+  const backupCodes: string[] = [];
 
   const handleVerifyCode = async () => {
-    const success = await verifyAndEnable(verificationCode);
+    const success = await verifyEnrollment(verificationCode);
     if (success) {
       setVerificationCode("");
-      setShowBackupCodes(true);
+      // Note: Supabase MFA doesn't provide backup codes, so we don't show them
+      // setShowBackupCodes(true);
     }
   };
 
   const handleEnable2FA = async () => {
-    await startSetup();
-    setShowBackupCodes(true);
+    await enroll();
+    // Note: Supabase MFA doesn't provide backup codes
+    // setShowBackupCodes(true);
   };
 
   const handleDisable2FA = async (password: string) => {
-    await disable(password);
+    // Supabase MFA doesn't require password for unenroll
+    // But we keep the password field for user confirmation UI
+
+    void password; // Intentionally unused - kept for UI compatibility
+    const totpFactor = factors?.totp?.[0];
+    if (totpFactor?.id) {
+      await unenroll(totpFactor.id);
+    }
   };
 
   const handleRegenerateBackupCodes = async () => {
-    await regenerateBackupCodes();
-    setShowBackupCodes(true);
+    // Supabase MFA doesn't provide backup codes
+    // This function is kept for compatibility but does nothing
+    // In the future, we could implement custom backup codes if needed
+    toast.info(t("settings_2fa_backup_codes_not_available"));
   };
 
   if (authLoading || !user) {
@@ -80,7 +114,7 @@ export default function TwoFactorPage() {
         <button
           onClick={() => navigate("/settings")}
           data-testid="back-to-settings-button"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white text-sm font-medium shadow-md hover:shadow-lg transition-all mb-6 cursor-pointer active:scale-[0.98]"
         >
           <ArrowLeft className="w-4 h-4" />
           {t("settings_back_to_settings")}
@@ -125,7 +159,7 @@ export default function TwoFactorPage() {
                 onClick={handleEnable2FA}
                 disabled={submitting}
                 data-testid="enable-2fa-button"
-                className="px-6 py-3 rounded-lg bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium shadow-md hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting
                   ? t("settings_2fa_setting_up")

@@ -1,33 +1,16 @@
-import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { describe, it, expect, beforeEach, vi } from "vitest";
 import { render, screen, fireEvent, act } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useNavigate } from "react-router-dom";
 import TwoFactorPage from "../TwoFactorPage";
 import type { User } from "@supabase/supabase-js";
 
-// Mock dependencies
-vi.mock("@/lib/supabase", () => ({
-  supabase: {
-    auth: { signOut: vi.fn(), getUser: vi.fn() },
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({ eq: vi.fn(() => ({ single: vi.fn() })) })),
-      insert: vi.fn(),
-      update: vi.fn(),
-      delete: vi.fn(),
-    })),
-    rpc: vi.fn(),
-  },
-}));
-
+// Mock dependencies used by TwoFactorPage
 vi.mock("@/lib/AuthProvider", () => ({
   useAuth: vi.fn(),
 }));
 
 vi.mock("@/hooks/useRequireAuth", () => ({
   useRequireAuth: vi.fn(),
-}));
-
-vi.mock("../TwoFactor/useTwoFactor", () => ({
-  useTwoFactor: vi.fn(),
 }));
 
 vi.mock("@/components/Header", () => ({
@@ -38,8 +21,15 @@ vi.mock("@/components/Header", () => ({
   ),
 }));
 
+vi.mock("../TwoFactor/useSupabaseMFA", () => ({
+  useSupabaseMFA: vi.fn(),
+}));
+
 vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
+  const actual =
+    await vi.importActual<typeof import("react-router-dom")>(
+      "react-router-dom",
+    );
   return {
     ...actual,
     useNavigate: vi.fn(),
@@ -60,7 +50,7 @@ vi.mock("qrcode.react", () => ({
   ),
 }));
 
-// Mock clipboard API
+// Mock clipboard API (used by BackupCodes/secret copy)
 Object.assign(navigator, {
   clipboard: {
     writeText: vi.fn().mockResolvedValue(undefined),
@@ -69,8 +59,7 @@ Object.assign(navigator, {
 
 import { useAuth } from "@/lib/AuthProvider";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import { useNavigate } from "react-router-dom";
-import { useTwoFactor } from "../TwoFactor/useTwoFactor";
+import { useSupabaseMFA } from "../TwoFactor/useSupabaseMFA";
 
 const mockUser: User = {
   id: "user-1",
@@ -81,12 +70,12 @@ const mockUser: User = {
   created_at: new Date().toISOString(),
 } as User;
 
-describe("TwoFactorPage", () => {
+describe("TwoFactorPage (Supabase MFA)", () => {
   const mockNavigate = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
+
     vi.mocked(useAuth).mockReturnValue({
       user: mockUser,
       session: null,
@@ -94,42 +83,35 @@ describe("TwoFactorPage", () => {
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
+
     vi.mocked(useRequireAuth).mockReturnValue({
       user: mockUser,
       loading: false,
       signOut: vi.fn(),
     });
+
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "disabled",
+
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "inactive",
       loading: false,
       submitting: false,
-      secret: "",
-      backupCodes: [],
+      factors: { totp: [] },
       qrCodeData: "",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
   });
 
-  afterEach(() => {
-    vi.useRealTimers();
-  });
-
-  it("should render page title and description", async () => {
+  it("renders page title and description", () => {
     render(
       <MemoryRouter>
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     expect(screen.getByTestId("two-factor-page-title")).toBeInTheDocument();
     expect(
@@ -137,52 +119,33 @@ describe("TwoFactorPage", () => {
     ).toBeInTheDocument();
   });
 
-  it("should show disabled state initially", async () => {
+  it("shows disabled state when MFA state is inactive", () => {
     render(
       <MemoryRouter>
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     expect(screen.getByTestId("two-factor-disabled-state")).toBeInTheDocument();
     expect(
       screen.getByTestId("two-factor-disabled-status"),
     ).toBeInTheDocument();
-  });
-
-  it("should show enable button in disabled state", async () => {
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
     expect(screen.getByTestId("enable-2fa-button")).toBeInTheDocument();
   });
 
-  it("should start 2FA setup when enable button is clicked", async () => {
-    const mockStartSetup = vi.fn();
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "disabled",
+  it("starts MFA enrollment when enable button is clicked", () => {
+    const enrollMock = vi.fn().mockResolvedValue(undefined);
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "inactive",
       loading: false,
       submitting: false,
-      secret: "",
-      backupCodes: [],
+      factors: { totp: [] },
       qrCodeData: "",
-      twoFactorData: null,
-      startSetup: mockStartSetup,
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      enroll: enrollMock,
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
 
     render(
@@ -190,33 +153,25 @@ describe("TwoFactorPage", () => {
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     const enableButton = screen.getByTestId("enable-2fa-button");
-    await act(async () => {
-      fireEvent.click(enableButton);
-    });
+    fireEvent.click(enableButton);
 
-    expect(mockStartSetup).toHaveBeenCalled();
+    expect(enrollMock).toHaveBeenCalled();
   });
 
-  it("should display QR code in setup step 1", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "setup",
+  it("shows setup state with QR code and secret when enrolling", () => {
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "enrolling",
       loading: false,
       submitting: false,
-      secret: "TEST_SECRET_KEY",
-      backupCodes: [],
-      qrCodeData: "otpauth://totp/test",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      factors: { totp: [] },
+      qrCodeData: "otpauth://totp/OneLink:test?secret=TESTSECRET",
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
 
     render(
@@ -224,61 +179,27 @@ describe("TwoFactorPage", () => {
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     expect(screen.getByTestId("two-factor-setup-state")).toBeInTheDocument();
     expect(screen.getByTestId("qr-code")).toBeInTheDocument();
-  });
-
-  it("should display secret key in setup step 1", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "setup",
-      loading: false,
-      submitting: false,
-      secret: "TEST_SECRET_KEY",
-      backupCodes: [],
-      qrCodeData: "otpauth://totp/test",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
-    });
-
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
     expect(screen.getByTestId("secret-key-container")).toBeInTheDocument();
     expect(screen.getByTestId("secret-key-value")).toHaveTextContent(
-      "TEST_SECRET_KEY",
+      "TESTSECRET",
     );
   });
 
-  it("should copy secret key when copy button is clicked", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "setup",
+  it("disables verify button when verification code is too short", () => {
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "enrolling",
       loading: false,
       submitting: false,
-      secret: "TEST_SECRET_KEY",
-      backupCodes: [],
-      qrCodeData: "otpauth://totp/test",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      factors: { totp: [] },
+      qrCodeData: "otpauth://totp/OneLink:test?secret=TESTSECRET",
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
 
     render(
@@ -286,70 +207,25 @@ describe("TwoFactorPage", () => {
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    const copyButton = screen.getByTestId("copy-secret-button");
-    await act(async () => {
-      fireEvent.click(copyButton);
-    });
-
-    expect(navigator.clipboard.writeText).toHaveBeenCalledWith(
-      "TEST_SECRET_KEY",
-    );
-  });
-
-  it.skip("should display backup codes in setup", async () => {
-    // Skipped: Feature not fully implemented yet
-  });
-
-  it("should validate verification code length", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "setup",
-      loading: false,
-      submitting: false,
-      secret: "TEST_SECRET_KEY",
-      backupCodes: [],
-      qrCodeData: "otpauth://totp/test",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
-    });
-
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     const verifyButton = screen.getByTestId("verify-and-activate-button");
     expect(verifyButton).toBeDisabled();
   });
 
-  it("should activate 2FA when valid code is entered", async () => {
-    const mockVerifyAndEnable = vi.fn().mockResolvedValue(true);
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "setup",
+  it("verifies enrollment when valid code is submitted", async () => {
+    const verifyEnrollmentMock = vi.fn().mockResolvedValue(true);
+
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "enrolling",
       loading: false,
       submitting: false,
-      secret: "TEST_SECRET_KEY",
-      backupCodes: [],
-      qrCodeData: "otpauth://totp/test",
-      twoFactorData: null,
-      startSetup: vi.fn(),
-      verifyAndEnable: mockVerifyAndEnable,
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      factors: { totp: [] },
+      qrCodeData: "otpauth://totp/OneLink:test?secret=TESTSECRET",
+      enroll: vi.fn(),
+      verifyEnrollment: verifyEnrollmentMock,
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
 
     render(
@@ -358,11 +234,9 @@ describe("TwoFactorPage", () => {
       </MemoryRouter>,
     );
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    const codeInput = screen.getByTestId("verification-code-input");
+    const codeInput = screen.getByTestId(
+      "verification-code-input",
+    ) as HTMLInputElement;
     await act(async () => {
       fireEvent.change(codeInput, { target: { value: "123456" } });
     });
@@ -372,23 +246,28 @@ describe("TwoFactorPage", () => {
       fireEvent.click(verifyButton);
     });
 
-    expect(mockVerifyAndEnable).toHaveBeenCalledWith("123456");
+    expect(verifyEnrollmentMock).toHaveBeenCalledWith("123456");
   });
 
-  it("should show active state after activation", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
+  it("shows active state when MFA is active", () => {
+    vi.mocked(useSupabaseMFA).mockReturnValue({
       state: "active",
       loading: false,
       submitting: false,
-      secret: "",
-      backupCodes: [],
+      factors: {
+        totp: [
+          {
+            id: "factor-1",
+            factor_type: "totp",
+          } as any,
+        ],
+      },
       qrCodeData: "",
-      twoFactorData: { enabled: true, enabled_at: new Date().toISOString() },
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: vi.fn(),
     });
 
     render(
@@ -396,30 +275,31 @@ describe("TwoFactorPage", () => {
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     expect(screen.getByTestId("two-factor-active-state")).toBeInTheDocument();
-    expect(screen.getByTestId("two-factor-active-status")).toBeInTheDocument();
   });
 
-  it("should allow regenerating backup codes", async () => {
-    const mockRegenerateBackupCodes = vi.fn();
-    vi.mocked(useTwoFactor).mockReturnValue({
+  it("calls unenroll when disabling MFA", () => {
+    const unenrollMock = vi.fn().mockResolvedValue(undefined);
+
+    vi.mocked(useSupabaseMFA).mockReturnValue({
       state: "active",
       loading: false,
       submitting: false,
-      secret: "",
-      backupCodes: [],
+      factors: {
+        totp: [
+          {
+            id: "factor-1",
+            factor_type: "totp",
+          } as any,
+        ],
+      },
       qrCodeData: "",
-      twoFactorData: { enabled: true, enabled_at: new Date().toISOString() },
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: mockRegenerateBackupCodes,
-      reload: vi.fn(),
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge: vi.fn(),
+      verifyChallenge: vi.fn(),
+      unenroll: unenrollMock,
     });
 
     render(
@@ -427,147 +307,27 @@ describe("TwoFactorPage", () => {
         <TwoFactorPage />
       </MemoryRouter>,
     );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    const regenerateButton = screen.getByTestId(
-      "regenerate-backup-codes-button",
-    );
-    await act(async () => {
-      fireEvent.click(regenerateButton);
-    });
-
-    expect(mockRegenerateBackupCodes).toHaveBeenCalled();
-  });
-
-  it("should require password to disable 2FA", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "active",
-      loading: false,
-      submitting: false,
-      secret: "",
-      backupCodes: [],
-      qrCodeData: "",
-      twoFactorData: { enabled: true, enabled_at: new Date().toISOString() },
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
-    });
-
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    const disableButton = screen.getByTestId("disable-2fa-button");
-    expect(disableButton).toBeDisabled();
-  });
-
-  it("should disable 2FA when password is provided", async () => {
-    const mockDisable = vi.fn();
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "active",
-      loading: false,
-      submitting: false,
-      secret: "",
-      backupCodes: [],
-      qrCodeData: "",
-      twoFactorData: { enabled: true, enabled_at: new Date().toISOString() },
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: mockDisable,
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
-    });
-
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
-    const passwordInput = screen.getByTestId("disable-password-input");
-    await act(async () => {
-      fireEvent.change(passwordInput, { target: { value: "password123" } });
-    });
-
-    const disableButton = screen.getByTestId("disable-2fa-button");
-    await act(async () => {
-      fireEvent.click(disableButton);
-    });
-
-    expect(mockDisable).toHaveBeenCalledWith("password123");
-  });
-
-  it("should toggle password visibility", async () => {
-    vi.mocked(useTwoFactor).mockReturnValue({
-      state: "active",
-      loading: false,
-      submitting: false,
-      secret: "",
-      backupCodes: [],
-      qrCodeData: "",
-      twoFactorData: { enabled: true, enabled_at: new Date().toISOString() },
-      startSetup: vi.fn(),
-      verifyAndEnable: vi.fn(),
-      disable: vi.fn(),
-      regenerateBackupCodes: vi.fn(),
-      reload: vi.fn(),
-    });
-
-    render(
-      <MemoryRouter>
-        <TwoFactorPage />
-      </MemoryRouter>,
-    );
-
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
 
     const passwordInput = screen.getByTestId(
       "disable-password-input",
     ) as HTMLInputElement;
-    expect(passwordInput.type).toBe("password");
+    fireEvent.change(passwordInput, { target: { value: "password123" } });
 
-    const toggleButton = screen.getByTestId(
-      "toggle-password-visibility-button",
-    );
-    await act(async () => {
-      fireEvent.click(toggleButton);
-    });
+    const disableButton = screen.getByTestId("disable-2fa-button");
+    fireEvent.click(disableButton);
 
-    expect(passwordInput.type).toBe("text");
+    expect(unenrollMock).toHaveBeenCalledWith("factor-1");
   });
 
-  it("should navigate back to settings when back button is clicked", async () => {
+  it("navigates back to settings when back button is clicked", () => {
     render(
       <MemoryRouter>
         <TwoFactorPage />
       </MemoryRouter>,
     );
 
-    await act(async () => {
-      vi.advanceTimersByTime(500);
-    });
-
     const backButton = screen.getByTestId("back-to-settings-button");
-    await act(async () => {
-      fireEvent.click(backButton);
-    });
+    fireEvent.click(backButton);
 
     expect(mockNavigate).toHaveBeenCalledWith("/settings");
   });

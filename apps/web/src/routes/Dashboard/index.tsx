@@ -23,6 +23,13 @@ export default function Dashboard() {
   const { user, signOut } = useRequireAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
 
+  const userId = user?.id ?? null;
+  console.log("[Dashboard] User check:", {
+    hasUser: !!user,
+    userId,
+    userObject: user ? { id: user.id, email: user.email } : null,
+  });
+
   const {
     profileId,
     profileFormInitial,
@@ -32,7 +39,7 @@ export default function Dashboard() {
     setDrops,
     submissions,
     plan,
-  } = useDashboardData(user?.id ?? null);
+  } = useDashboardData(userId);
 
   const isFree = !isPaidPlan(plan);
 

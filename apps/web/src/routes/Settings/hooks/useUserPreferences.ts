@@ -22,10 +22,10 @@ const DEFAULT_PREFERENCES: UserPreferences = {
 
 export function useUserPreferences() {
   const { t } = useTranslation();
-  const { user, loading: authLoading } = useAuth();
+  const { user } = useAuth();
   const [preferences, setPreferences] =
     useState<UserPreferences>(DEFAULT_PREFERENCES);
-  const { loading, execute } = useAsyncOperation();
+  const { execute } = useAsyncOperation();
   const { submitting, submit } = useAsyncSubmit();
   // Use ref to immediately prevent double clicks (before submitting state updates)
   const isSavingRef = useRef(false);
@@ -34,27 +34,12 @@ export function useUserPreferences() {
   const userId = user?.id ?? null;
 
   useEffect(() => {
-    // Don't do anything while auth is still loading
-    if (authLoading) {
-      return;
-    }
-
-    // If no user after auth is loaded, set defaults
     if (!userId) {
       setPreferences(DEFAULT_PREFERENCES);
       return;
     }
 
-    // Verify session is available before making request
     execute(async () => {
-      // Ensure session is available
-      const { data: sessionData } = await supabase.auth.getSession();
-      if (!sessionData.session) {
-        console.error("[useUserPreferences] No session available");
-        setPreferences(DEFAULT_PREFERENCES);
-        return;
-      }
-
       // Load from Supabase
       const { data, error } = await supabase
         .from("user_preferences")
@@ -98,7 +83,7 @@ export function useUserPreferences() {
         setPreferences(DEFAULT_PREFERENCES);
       }
     });
-  }, [userId, authLoading, execute]);
+  }, [userId, execute]);
 
   // Save preferences
   const savePreferences = async (newPreferences: Partial<UserPreferences>) => {
@@ -166,8 +151,9 @@ export function useUserPreferences() {
 
   return {
     preferences,
-    loading: loading || authLoading, // Include auth loading state
-    saving: submitting || isSavingRef.current, // Include ref state for immediate UI feedback
+    // Don't block the UI on preferences; fall back to defaults and update in background
+    loading: false,
+    saving: submitting || isSavingRef.current,
     updatePreference,
     savePreferences,
   };

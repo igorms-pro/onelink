@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import { createUserSession, logLoginAttempt } from "./sessionTracking";
+import { MFAChallenge } from "@/components/MFAChallenge";
 
 type AuthContextValue = {
   session: Session | null;
@@ -17,6 +18,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showMFAChallenge, setShowMFAChallenge] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -29,6 +31,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!mounted) return;
 
       console.log("[Auth] State change:", event, s?.user?.email || "No user");
+      console.log("[Auth] Session data:", {
+        hasSession: !!s,
+        hasUser: !!s?.user,
+        userId: s?.user?.id,
+        email: s?.user?.email,
+        accessToken: s?.access_token ? "present" : "missing",
+      });
 
       // Update session state for all events
       // INITIAL_SESSION: fired when session is restored from storage (on refresh)
@@ -56,6 +65,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (url.hash || url.searchParams.has("code")) {
           window.history.replaceState(null, "", window.location.pathname);
         }
+
+        // After a successful sign-in, check if the user has MFA factors
+        // Only show challenge if session is aal1 (not aal2 - already verified)
+        // Run this asynchronously without blocking the auth flow
+        // This prevents MFA checks from interfering with other Supabase queries
+        (async () => {
+          try {
+            const { data: aalData, error: aalError } =
+              await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+
+            if (aalError) {
+              console.error("[Auth] Error getting AAL:", aalError);
+            } else if (aalData) {
+              // Show challenge if current level is aal1 but next level is aal2
+              const needsMFA =
+                aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
+
+              if (needsMFA) {
+                const { data, error } = await supabase.auth.mfa.listFactors();
+                if (error) {
+                  console.error("[Auth] Error listing MFA factors:", error);
+                } else if (data?.totp && data.totp.length > 0) {
+                  console.log(
+                    "[Auth] User has MFA factors and session needs upgrade to aal2, showing challenge",
+                  );
+                  setShowMFAChallenge(true);
+                }
+              } else {
+                console.log(
+                  "[Auth] Session AAL:",
+                  aalData.currentLevel,
+                  "->",
+                  aalData.nextLevel,
+                  "- skipping MFA challenge",
+                );
+              }
+            }
+          } catch (err) {
+            console.error("[Auth] Unexpected error checking MFA factors:", err);
+          }
+        })();
       }
 
       // Track session and log login history on successful sign-in
@@ -119,9 +169,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const value = useMemo<AuthContextValue>(() => {
+    const user = session?.user ?? null;
+    console.log("[Auth] Context value updated:", {
+      hasSession: !!session,
+      hasUser: !!user,
+      userId: user?.id,
+      userObject: user ? { id: user.id, email: user.email } : null,
+      loading,
+    });
     return {
       session,
-      user: session?.user ?? null,
+      user,
       loading,
       async signInWithEmail(email: string) {
         const { error } = await supabase.auth.signInWithOtp({
@@ -137,7 +195,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
   }, [session, loading]);
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+      {showMFAChallenge && (
+        <div data-testid="mfa-challenge-container">
+          <MFAChallenge
+            onVerified={() => {
+              setShowMFAChallenge(false);
+            }}
+          />
+        </div>
+      )}
+    </AuthContext.Provider>
+  );
 }
 
 export function useAuth() {

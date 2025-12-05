@@ -34,12 +34,21 @@ export function useDashboardData(userId: string | null) {
         console.log("[Dashboard] Starting data load for userId:", userId);
 
         console.log("[Dashboard] Calling getOrCreateProfile...");
-        const prof = await getOrCreateProfile(userId);
-        console.log("[Dashboard] Profile loaded successfully:", {
-          id: prof.id,
-          slug: prof.slug,
-          display_name: prof.display_name,
-        });
+        let prof: Awaited<ReturnType<typeof getOrCreateProfile>>;
+        try {
+          prof = await getOrCreateProfile(userId);
+          console.log("[Dashboard] Profile loaded successfully:", {
+            id: prof.id,
+            slug: prof.slug,
+            display_name: prof.display_name,
+          });
+        } catch (profileError) {
+          console.error(
+            "[Dashboard] Error in getOrCreateProfile:",
+            profileError,
+          );
+          throw profileError;
+        }
 
         setProfileId(prof.id);
         setProfileFormInitial({
@@ -105,10 +114,18 @@ export function useDashboardData(userId: string | null) {
         console.log("[Dashboard] Data load complete");
       } catch (error) {
         console.error("[Dashboard] Error in data load:", error);
+        console.error("[Dashboard] Error details:", {
+          message: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        });
         throw error;
       }
     }).catch((error) => {
-      console.error("[Dashboard] Error caught in execute:", error);
+      console.error("[Dashboard] Error caught in execute promise:", error);
+      console.error("[Dashboard] Error details:", {
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
     });
   }, [userId, execute]);
 

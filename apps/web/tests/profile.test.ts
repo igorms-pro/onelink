@@ -34,19 +34,9 @@ describe("profile utils", () => {
       data: { user: { email: "test@example.com" } },
     });
 
-    // Mock users table: user doesn't exist, then create
-    const mockUsersSelect = vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-      }),
-    });
-
-    const mockUsersInsert = vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        single: vi
-          .fn()
-          .mockResolvedValue({ data: { id: mockUserId }, error: null }),
-      }),
+    // Mock users table: upsert (called first in getOrCreateProfile)
+    const mockUsersUpsert = vi.fn().mockResolvedValue({
+      error: null,
     });
 
     // Mock profiles table: profile doesn't exist, then create
@@ -65,8 +55,7 @@ describe("profile utils", () => {
     (supabase.from as unknown as Mock).mockImplementation((table: string) => {
       if (table === "users") {
         return {
-          select: mockUsersSelect,
-          insert: mockUsersInsert,
+          upsert: mockUsersUpsert,
         };
       }
       if (table === "profiles") {
@@ -98,13 +87,9 @@ describe("profile utils", () => {
       data: { user: { email: "test@example.com" } },
     });
 
-    // Mock users table: user exists
-    const mockUsersSelect = vi.fn().mockReturnValue({
-      eq: vi.fn().mockReturnValue({
-        maybeSingle: vi
-          .fn()
-          .mockResolvedValue({ data: { id: mockUserId }, error: null }),
-      }),
+    // Mock users table: upsert (called first in getOrCreateProfile)
+    const mockUsersUpsert = vi.fn().mockResolvedValue({
+      error: null,
     });
 
     // Mock profiles table: profile exists
@@ -119,7 +104,7 @@ describe("profile utils", () => {
     (supabase.from as unknown as Mock).mockImplementation((table: string) => {
       if (table === "users") {
         return {
-          select: mockUsersSelect,
+          upsert: mockUsersUpsert,
         };
       }
       if (table === "profiles") {
