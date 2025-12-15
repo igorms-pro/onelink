@@ -1,0 +1,9 @@
+export { WelcomeSlide } from "./slides/WelcomeSlide";
+export { RoutesSlide } from "./slides/RoutesSlide";
+export { FilesSlide } from "./slides/FilesSlide";
+export { GetStartedSlide } from "./slides/GetStartedSlide";
+export { OnboardingHeader } from "./components/OnboardingHeader";
+export { OnboardingDots } from "./components/OnboardingDots";
+export { OnboardingButton } from "./components/OnboardingButton";
+export { OnboardingBackground } from "./components/OnboardingBackground";
+export { useOnboardingCarousel } from "./hooks/useOnboardingCarousel";
