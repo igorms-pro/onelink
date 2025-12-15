@@ -29,25 +29,21 @@ vi.mock("@/lib/AuthProvider", () => ({
   }),
 }));
 
-// Mock supabase
+// Mock supabase Edge Function call used by useDataExport
+const invokeMock = vi.fn().mockResolvedValue({
+  data: {
+    url: "https://example.com/export.json",
+    expires_in: 1200,
+    audit_id: "audit-1",
+  },
+  error: null,
+});
+
 vi.mock("@/lib/supabase", () => ({
   supabase: {
-    from: vi.fn(() => ({
-      select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          maybeSingle: vi.fn().mockResolvedValue({
-            data: { id: "profile-1" },
-            error: null,
-          }),
-          order: vi.fn(() => ({
-            limit: vi.fn().mockResolvedValue({
-              data: [],
-              error: null,
-            }),
-          })),
-        })),
-      })),
-    })),
+    functions: {
+      invoke: invokeMock,
+    },
   },
 }));
 

@@ -42,3 +42,7 @@ lerna-debug.log*
 docs/issues/
 docs/ISSUE.md
 
+# Supabase CLI temp/cache
+supabase/.temp/
+.supabase/
+
