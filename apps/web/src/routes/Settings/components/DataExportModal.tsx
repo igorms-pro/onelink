@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -85,6 +86,8 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+
+    toast.success(t("settings_export_download_started"));
   };
 
   const handleClose = () => {
@@ -105,7 +108,9 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
 
         {isGenerating && <DataExportProgress progress={progress} />}
 
-        {isReady && downloadUrl && <DataExportReadyState />}
+        {isReady && downloadUrl && (
+          <DataExportReadyState downloadUrl={downloadUrl} />
+        )}
       </div>
 
       <DataExportActions
