@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { getOrCreateProfile, getSelfPlan } from "@/lib/profile";
-import { getDefaultPlan } from "@/lib/types/plan";
-import { useAsyncOperation } from "@/hooks/useAsyncOperation";
-import type { PlanTypeValue } from "@/lib/types/plan";
 import type { ProfileForm } from "@/components/ProfileEditor";
 import type { LinkRow } from "@/components/LinksList";
 import type { DropRow, SubmissionRow } from "../types";
@@ -15,16 +12,21 @@ export function useDashboardData(userId: string | null) {
   const [links, setLinks] = useState<LinkRow[]>([]);
   const [drops, setDrops] = useState<DropRow[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionRow[]>([]);
-  const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
-  const { loading, execute } = useAsyncOperation();
+  const [plan, setPlan] = useState<string>("free");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!userId) {
+      setLoading(false);
       return;
     }
 
-    execute(async () => {
+    let mounted = true;
+    setLoading(true);
+
+    (async () => {
       const prof = await getOrCreateProfile(userId);
+      if (!mounted) return;
 
       setProfileId(prof.id);
       setProfileFormInitial({
@@ -35,41 +37,50 @@ export function useDashboardData(userId: string | null) {
       });
 
       // Load links
-      const { data: linksData } = await supabase
+      const { data: linksData, error: linksError } = await supabase
         .from("links")
         .select("id,label,emoji,url,order")
         .eq("profile_id", prof.id)
         .order("order", { ascending: true });
+      if (!mounted) return;
+      if (linksError) console.error(linksError);
       setLinks(linksData ?? []);
 
       // Load drops (include visibility fields)
-      const { data: dropsData } = await supabase
+      const { data: dropsData, error: dropsError } = await supabase
         .from("drops")
         .select("id,label,emoji,order,is_active,is_public,share_token")
         .eq("profile_id", prof.id)
         .order("order", { ascending: true });
+      if (!mounted) return;
+      if (dropsError) console.error(dropsError);
       setDrops(dropsData ?? []);
 
       // Load plan
       const planValue = await getSelfPlan(userId);
+      if (!mounted) return;
       setPlan(planValue);
 
       // Load submissions
-      const { data: submissionsData } = await supabase.rpc(
-        "get_submissions_by_profile",
-        {
+      const { data: submissionsData, error: submissionsError } =
+        await supabase.rpc("get_submissions_by_profile", {
           p_profile_id: prof.id,
-        },
-      );
+        });
+      if (!mounted) return;
+      if (submissionsError) console.error(submissionsError);
       setSubmissions(
         Array.isArray(submissionsData)
           ? (submissionsData as SubmissionRow[])
           : [],
       );
-    }).catch(() => {
-      // Error handling is done by useAsyncOperation
-    });
-  }, [userId, execute]);
+
+      setLoading(false);
+    })();
+
+    return () => {
+      mounted = false;
+    };
+  }, [userId]);
 
   return {
     profileId,
