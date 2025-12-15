@@ -32,18 +32,12 @@ vi.mock("../../hooks/useSortableData", () => ({
   },
 }));
 
-// Mock supabase RPC
-vi.mock("@/lib/supabase", async () => {
-  const actual =
-    await vi.importActual<typeof import("@/lib/supabase")>("@/lib/supabase");
-  return {
-    ...actual,
-    supabase: {
-      ...actual.supabase,
-      rpc: vi.fn(),
-    },
-  };
-});
+// Mock supabase RPC (avoid creating real client)
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    rpc: vi.fn(),
+  },
+}));
 
 describe("LinksAnalyticsCard", () => {
   const mockRpc = vi.mocked(supabase.rpc);
