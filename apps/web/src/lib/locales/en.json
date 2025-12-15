@@ -54,6 +54,7 @@
   "dashboard_account_analytics_drops": "Drops",
   "dashboard_account_analytics_name": "Name",
   "dashboard_account_analytics_clicks": "Clicks",
+  "dashboard_account_analytics_views": "Views",
   "dashboard_account_analytics_submissions": "Submissions",
   "dashboard_account_analytics_profile_not_ready": "Profile not ready.",
   "dashboard_account_analytics_no_clicks": "No clicks yet",

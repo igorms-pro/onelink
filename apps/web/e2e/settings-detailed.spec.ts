@@ -474,52 +474,52 @@ test.describe("Settings - Detailed Features", () => {
     */
   });
 
-  test("can open data export modal", async ({ page: _page }) => {
-    // This test requires authentication setup
-    /*
+  test("can open data export modal", async ({ authenticatedPage: page }) => {
     await page.goto("/settings");
-    
-    const dataExportButton = page.getByTestId("settings-data-export");
+    await page.waitForLoadState("networkidle");
+
+    const dataExportButton = page.getByTestId("settings-data-export-open");
     await dataExportButton.click();
-    
-    // Modal should open
-    await expect(page.getByText(/Data Export/i)).toBeVisible();
-    await expect(page.getByText(/Export Format/i)).toBeVisible();
-    await expect(page.getByText(/Data to Include/i)).toBeVisible();
-    */
+
+    // Modal should open (scope assertions to the dialog to avoid strict mode conflicts)
+    const modal = page.getByRole("dialog").last();
+    await expect(
+      modal.getByRole("heading", { name: /Data Export/i }),
+    ).toBeVisible();
+    await expect(modal.getByText(/Export Format/i)).toBeVisible();
+    await expect(modal.getByText(/Data to Include/i)).toBeVisible();
   });
 
-  test("data export modal shows format options", async ({ page: _page }) => {
-    // This test requires authentication setup
-    /*
+  test("data export modal shows format options", async ({
+    authenticatedPage: page,
+  }) => {
     await page.goto("/settings");
-    
-    const dataExportButton = page.getByTestId("settings-data-export");
+    await page.waitForLoadState("networkidle");
+
+    const dataExportButton = page.getByTestId("settings-data-export-open");
     await dataExportButton.click();
-    
+
     // Should show JSON and CSV options
     await expect(page.getByLabel(/JSON/i)).toBeVisible();
     await expect(page.getByLabel(/CSV/i)).toBeVisible();
-    */
   });
 
   test("data export modal shows data selection checkboxes", async ({
-    page: _page,
+    authenticatedPage: page,
   }) => {
-    // This test requires authentication setup
-    /*
     await page.goto("/settings");
-    
-    const dataExportButton = page.getByTestId("settings-data-export");
+    await page.waitForLoadState("networkidle");
+
+    const dataExportButton = page.getByTestId("settings-data-export-open");
     await dataExportButton.click();
-    
-    // Should show checkboxes for different data types
-    await expect(page.getByLabel(/Profile/i)).toBeVisible();
-    await expect(page.getByLabel(/Links/i)).toBeVisible();
-    await expect(page.getByLabel(/Drops/i)).toBeVisible();
-    await expect(page.getByLabel(/Submissions/i)).toBeVisible();
-    await expect(page.getByLabel(/Analytics/i)).toBeVisible();
-    */
+
+    // Should show checkboxes for different data types (scoped to dialog to avoid label collisions)
+    const modal = page.getByRole("dialog").last();
+    await expect(modal.getByLabel(/Profile/i)).toBeVisible();
+    await expect(modal.getByLabel(/Links/i)).toBeVisible();
+    await expect(modal.getByLabel(/Drops/i)).toBeVisible();
+    await expect(modal.getByLabel(/Submissions/i)).toBeVisible();
+    await expect(modal.getByLabel(/Analytics/i)).toBeVisible();
   });
 
   test("can navigate to sessions page", async ({ page: _page }) => {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -76,15 +77,38 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
     }
   }, [downloadUrl, isGenerating]);
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!downloadUrl) return;
 
-    const link = document.createElement("a");
-    link.href = downloadUrl;
-    link.download = `onelink-export-${new Date().toISOString().split("T")[0]}.${format}`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+    try {
+      // Fetch the signed URL to get the file content
+      const response = await fetch(downloadUrl);
+      if (!response.ok) {
+        throw new Error("Failed to download export file");
+      }
+
+      // Create a blob from the response
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+
+      // Create a temporary link and trigger download
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `onelink-export-${new Date().toISOString().split("T")[0]}.${format}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Clean up the blob URL
+      URL.revokeObjectURL(blobUrl);
+
+      toast.success(t("settings_export_download_started"));
+    } catch (error) {
+      console.error("Download failed:", error);
+      toast.error(
+        t("settings_export_download_failed") || "Failed to download export",
+      );
+    }
   };
 
   const handleClose = () => {
@@ -105,7 +129,9 @@ export function DataExportModal({ open, onOpenChange }: DataExportModalProps) {
 
         {isGenerating && <DataExportProgress progress={progress} />}
 
-        {isReady && downloadUrl && <DataExportReadyState />}
+        {isReady && downloadUrl && (
+          <DataExportReadyState downloadUrl={downloadUrl} />
+        )}
       </div>
 
       <DataExportActions

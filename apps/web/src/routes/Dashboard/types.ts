@@ -34,3 +34,13 @@ export type UploadStatsRow = {
   visitor_uploads: number;
   total_uploads: number;
 };
+
+export type DropViewsRow = {
+  drop_id: string;
+  drop_label: string | null;
+  views: number;
+};
+
+export type DropAnalyticsRow = UploadStatsRow & {
+  views: number;
+};

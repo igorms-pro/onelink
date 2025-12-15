@@ -114,8 +114,9 @@ test.describe("Analytics Cards", () => {
       const dropRow = page.getByTestId(/drops-analytics-row-/).first();
       await expect(dropRow).toBeVisible();
       
-      // Should show drop label and total uploads
+      // Should show drop label, views, and total uploads
       await expect(dropRow.getByTestId("drop-label")).toBeVisible();
+      await expect(dropRow.getByTestId("drop-views")).toBeVisible();
       await expect(dropRow.getByTestId("drop-total-uploads")).toBeVisible();
       
       // Should show owner/visitor breakdown if there are uploads

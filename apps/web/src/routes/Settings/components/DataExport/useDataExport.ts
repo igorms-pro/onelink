@@ -3,8 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useAuth } from "@/lib/AuthProvider";
 import { toast } from "sonner";
 import { useAsyncSubmit } from "@/hooks/useAsyncSubmit";
-import { fetchUserData } from "./exportDataFetcher";
-import { formatAsJSON, formatAsCSV } from "./exportFormatters";
+import { supabase } from "@/lib/supabase";
 
 export type ExportFormat = "json" | "csv";
 export type ExportDataType =
@@ -23,7 +22,7 @@ export function useDataExport() {
 
   const generateExport = useCallback(
     async (
-      format: ExportFormat,
+      _format: ExportFormat,
       dataTypes: Set<ExportDataType>,
     ): Promise<string> => {
       if (dataTypes.size === 0) {
@@ -37,25 +36,24 @@ export function useDataExport() {
       setProgress(0);
       setDownloadUrl(null);
 
-      const data = await fetchUserData(user.id, dataTypes, setProgress);
+      // Call Supabase Edge Function to generate export and return signed URL
+      const { data, error } = await supabase.functions.invoke<{
+        url: string;
+        expires_in: number;
+        audit_id?: string;
+      }>("export-user-data", {
+        method: "POST",
+      });
 
-      let content: string;
-      let mimeType: string;
-
-      if (format === "json") {
-        content = formatAsJSON(data);
-        mimeType = "application/json";
-      } else {
-        content = formatAsCSV(data);
-        mimeType = "text/csv";
+      if (error || !data?.url) {
+        console.error("Export generation failed (edge function):", error);
+        throw new Error("Failed to generate export");
       }
 
-      // Create blob and download URL
-      const blob = new Blob([content], { type: mimeType });
-      const url = URL.createObjectURL(blob);
-      setDownloadUrl(url);
+      setDownloadUrl(data.url);
+      setProgress(100);
 
-      return url;
+      return data.url;
     },
     [user?.id, t],
   );
@@ -65,10 +63,10 @@ export function useDataExport() {
       await submit(async () => {
         try {
           await generateExport(format, dataTypes);
-          toast.success(t("settings_export_generated"));
+          toast.success(t("settings_export_generation_success"));
         } catch (error) {
           console.error("Export generation failed:", error);
-          toast.error(t("settings_export_failed"));
+          toast.error(t("settings_export_generation_failed"));
           throw error;
         }
       });
