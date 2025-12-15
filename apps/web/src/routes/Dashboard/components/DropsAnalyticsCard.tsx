@@ -3,7 +3,7 @@ import { ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSortableData } from "@/hooks/useSortableData";
 import { supabase } from "@/lib/supabase";
-import type { UploadStatsRow } from "../types";
+import type { DropAnalyticsRow, UploadStatsRow, DropViewsRow } from "../types";
 
 export function DropsAnalyticsCard({
   profileId,
@@ -13,7 +13,7 @@ export function DropsAnalyticsCard({
   days: 7 | 30 | 90;
 }) {
   const { t } = useTranslation();
-  const [rows, setRows] = useState<Array<UploadStatsRow>>([]);
+  const [rows, setRows] = useState<Array<DropAnalyticsRow>>([]);
   const [loading, setLoading] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -24,22 +24,67 @@ export function DropsAnalyticsCard({
 
     (async () => {
       try {
-        const { data, error } = await supabase.rpc(
-          "get_upload_stats_by_profile",
-          { p_profile_id: profileId, p_days: days },
-        );
+        // Fetch both upload stats and drop views in parallel
+        const [uploadStatsResult, dropViewsResult] = await Promise.all([
+          supabase.rpc("get_upload_stats_by_profile", {
+            p_profile_id: profileId,
+            p_days: days,
+          }),
+          supabase.rpc("get_drop_views_by_profile", {
+            p_profile_id: profileId,
+            p_days: days,
+          }),
+        ]);
 
-        if (error) {
+        if (uploadStatsResult.error) {
           console.error(
             "[DropsAnalyticsCard] Error fetching upload stats:",
-            error,
+            uploadStatsResult.error,
           );
-          setRows([]);
-        } else if (Array.isArray(data)) {
-          setRows(data as Array<UploadStatsRow>);
-        } else {
-          setRows([]);
         }
+
+        if (dropViewsResult.error) {
+          console.error(
+            "[DropsAnalyticsCard] Error fetching drop views:",
+            dropViewsResult.error,
+          );
+        }
+
+        const uploadStats: Array<UploadStatsRow> = Array.isArray(
+          uploadStatsResult.data,
+        )
+          ? (uploadStatsResult.data as Array<UploadStatsRow>)
+          : [];
+
+        const dropViews: Array<DropViewsRow> = Array.isArray(
+          dropViewsResult.data,
+        )
+          ? (dropViewsResult.data as Array<DropViewsRow>)
+          : [];
+
+        // Merge data by drop_id
+        const viewsMap = new Map(dropViews.map((v) => [v.drop_id, v.views]));
+
+        const mergedRows: Array<DropAnalyticsRow> = uploadStats.map((stat) => ({
+          ...stat,
+          views: viewsMap.get(stat.drop_id) ?? 0,
+        }));
+
+        // Add drops that have views but no submissions
+        dropViews.forEach((view) => {
+          if (!uploadStats.find((s) => s.drop_id === view.drop_id)) {
+            mergedRows.push({
+              drop_id: view.drop_id,
+              drop_label: view.drop_label,
+              owner_uploads: 0,
+              visitor_uploads: 0,
+              total_uploads: 0,
+              views: view.views,
+            });
+          }
+        });
+
+        setRows(mergedRows);
       } catch (err) {
         console.error("[DropsAnalyticsCard] Unexpected error:", err);
         setRows([]);
@@ -62,13 +107,14 @@ export function DropsAnalyticsCard({
     defaultSortDirection: "desc",
   });
 
-  // Map back to original structure
+  // Map back to original structure with views
   const sortedRows = sortedData.map((r) => ({
     drop_id: r.drop_id,
     drop_label: r.drop_label,
     owner_uploads: r.owner_uploads,
     visitor_uploads: r.visitor_uploads,
     total_uploads: r.total_uploads,
+    views: r.views ?? 0,
   }));
 
   if (!profileId) return null;
@@ -117,10 +163,10 @@ export function DropsAnalyticsCard({
             </div>
           ) : (
             <div className="space-y-2">
-              <div className="flex justify-between items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
+              <div className="grid grid-cols-3 gap-2 items-center px-3 pb-0 text-xs font-bold text-gray-700 dark:text-gray-300">
                 <button
                   onClick={() => handleSort("label")}
-                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer text-left"
                 >
                   <span>{t("dashboard_account_analytics_name")}</span>
                   {sortField === "label" &&
@@ -131,8 +177,20 @@ export function DropsAnalyticsCard({
                     ))}
                 </button>
                 <button
+                  onClick={() => handleSort("views")}
+                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer justify-end"
+                >
+                  <span>{t("dashboard_account_analytics_views")}</span>
+                  {sortField === "views" &&
+                    (sortDirection === "asc" ? (
+                      <ChevronUp className="w-3 h-3" />
+                    ) : (
+                      <ChevronDown className="w-3 h-3" />
+                    ))}
+                </button>
+                <button
                   onClick={() => handleSort("total_uploads")}
-                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer"
+                  className="flex items-center gap-1 hover:text-gray-900 dark:hover:text-white transition-colors cursor-pointer justify-end"
                 >
                   <span>{t("dashboard_account_analytics_submissions")}</span>
                   {sortField === "total_uploads" &&
@@ -153,7 +211,7 @@ export function DropsAnalyticsCard({
                       : "hover:bg-teal-100 dark:hover:bg-teal-900/30"
                   }`}
                 >
-                  <div className="flex justify-between items-center">
+                  <div className="grid grid-cols-3 gap-2 items-center">
                     <span
                       className="text-gray-900 dark:text-white text-sm font-medium"
                       data-testid="drop-label"
@@ -161,13 +219,19 @@ export function DropsAnalyticsCard({
                       {r.drop_label ?? r.drop_id}
                     </span>
                     <span
-                      className="text-gray-700 dark:text-gray-300 font-semibold text-sm"
+                      className="text-gray-700 dark:text-gray-300 font-semibold text-sm text-right"
+                      data-testid="drop-views"
+                    >
+                      {r.views}
+                    </span>
+                    <span
+                      className="text-gray-700 dark:text-gray-300 font-semibold text-sm text-right"
                       data-testid="drop-total-uploads"
                     >
                       {r.total_uploads}
                     </span>
                   </div>
-                  {r.total_uploads > 0 && (
+                  {(r.total_uploads > 0 || r.views > 0) && (
                     <div
                       className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400"
                       data-testid="drop-upload-breakdown"

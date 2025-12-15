@@ -3,7 +3,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DropsAnalyticsCard } from "../DropsAnalyticsCard";
 import { supabase } from "@/lib/supabase";
-import type { UploadStatsRow } from "../../types";
+import type { UploadStatsRow, DropViewsRow } from "../../types";
 
 // Mock useSortableData hook
 vi.mock("../../../../hooks/useSortableData", () => ({
@@ -55,28 +55,39 @@ describe("DropsAnalyticsCard", () => {
   });
 
   it("renders loading skeleton initially", async () => {
-    mockRpc.mockResolvedValue({
-      data: [
-        {
-          drop_id: "1",
-          drop_label: "Speaker Request",
-          owner_uploads: 2,
-          visitor_uploads: 10,
-          total_uploads: 12,
-        },
-        {
-          drop_id: "2",
-          drop_label: "Resume Submissions",
-          owner_uploads: 0,
-          visitor_uploads: 8,
-          total_uploads: 8,
-        },
-      ],
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [
+          {
+            drop_id: "1",
+            drop_label: "Speaker Request",
+            owner_uploads: 2,
+            visitor_uploads: 10,
+            total_uploads: 12,
+          },
+          {
+            drop_id: "2",
+            drop_label: "Resume Submissions",
+            owner_uploads: 0,
+            visitor_uploads: 8,
+            total_uploads: 8,
+          },
+        ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [
+          { drop_id: "1", drop_label: "Speaker Request", views: 5 },
+          { drop_id: "2", drop_label: "Resume Submissions", views: 3 },
+        ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -86,7 +97,7 @@ describe("DropsAnalyticsCard", () => {
   });
 
   it("renders analytics data after API call succeeds", async () => {
-    const mockData: UploadStatsRow[] = [
+    const mockUploadData: UploadStatsRow[] = [
       {
         drop_id: "1",
         drop_label: "Speaker Request",
@@ -103,13 +114,26 @@ describe("DropsAnalyticsCard", () => {
       },
     ];
 
-    mockRpc.mockResolvedValue({
-      data: mockData,
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    const mockViewsData: DropViewsRow[] = [
+      { drop_id: "1", drop_label: "Speaker Request", views: 5 },
+      { drop_id: "2", drop_label: "Resume Submissions", views: 3 },
+    ];
+
+    mockRpc
+      .mockResolvedValueOnce({
+        data: mockUploadData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: mockViewsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -120,19 +144,30 @@ describe("DropsAnalyticsCard", () => {
       { timeout: 2000 },
     );
 
+    // Check submissions
     expect(screen.getByText("12")).toBeInTheDocument();
     expect(screen.getByText("Resume Submissions")).toBeInTheDocument();
     expect(screen.getByText("8")).toBeInTheDocument();
 
-    // Verify RPC was called with correct parameters
+    // Check views
+    const viewsElements = screen.getAllByTestId("drop-views");
+    expect(viewsElements.length).toBeGreaterThan(0);
+    expect(viewsElements[0]).toHaveTextContent("5");
+    expect(viewsElements[1]).toHaveTextContent("3");
+
+    // Verify both RPCs were called
     expect(mockRpc).toHaveBeenCalledWith("get_upload_stats_by_profile", {
+      p_profile_id: "profile-1",
+      p_days: 7,
+    });
+    expect(mockRpc).toHaveBeenCalledWith("get_drop_views_by_profile", {
       p_profile_id: "profile-1",
       p_days: 7,
     });
   });
 
   it("shows owner vs visitor breakdown", async () => {
-    const mockData: UploadStatsRow[] = [
+    const mockUploadData: UploadStatsRow[] = [
       {
         drop_id: "1",
         drop_label: "Speaker Request",
@@ -142,13 +177,25 @@ describe("DropsAnalyticsCard", () => {
       },
     ];
 
-    mockRpc.mockResolvedValue({
-      data: mockData,
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    const mockViewsData: DropViewsRow[] = [
+      { drop_id: "1", drop_label: "Speaker Request", views: 5 },
+    ];
+
+    mockRpc
+      .mockResolvedValueOnce({
+        data: mockUploadData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: mockViewsData,
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -165,13 +212,21 @@ describe("DropsAnalyticsCard", () => {
   });
 
   it("shows empty state when API returns empty array", async () => {
-    mockRpc.mockResolvedValue({
-      data: [],
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -190,19 +245,27 @@ describe("DropsAnalyticsCard", () => {
       .spyOn(console, "error")
       .mockImplementation(() => {});
 
-    mockRpc.mockResolvedValue({
-      data: null,
-      error: {
-        message: "Database error",
-        code: "PGRST116",
-        details: "",
-        hint: "",
-        name: "PostgrestError",
-      },
-      count: null,
-      status: 500,
-      statusText: "Internal Server Error",
-    });
+    mockRpc
+      .mockResolvedValueOnce({
+        data: null,
+        error: {
+          message: "Database error",
+          code: "PGRST116",
+          details: "",
+          hint: "",
+          name: "PostgrestError",
+        },
+        count: null,
+        status: 500,
+        statusText: "Internal Server Error",
+      })
+      .mockResolvedValueOnce({
+        data: [],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -250,21 +313,29 @@ describe("DropsAnalyticsCard", () => {
   });
 
   it("expands and collapses section", async () => {
-    mockRpc.mockResolvedValue({
-      data: [
-        {
-          drop_id: "1",
-          drop_label: "Speaker Request",
-          owner_uploads: 0,
-          visitor_uploads: 12,
-          total_uploads: 12,
-        },
-      ],
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [
+          {
+            drop_id: "1",
+            drop_label: "Speaker Request",
+            owner_uploads: 0,
+            visitor_uploads: 12,
+            total_uploads: 12,
+          },
+        ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Speaker Request", views: 5 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     const user = userEvent.setup();
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
@@ -301,6 +372,13 @@ describe("DropsAnalyticsCard", () => {
         statusText: "OK",
       })
       .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Speaker Request", views: 5 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
         data: [
           {
             drop_id: "1",
@@ -310,6 +388,13 @@ describe("DropsAnalyticsCard", () => {
             total_uploads: 35,
           },
         ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Speaker Request", views: 15 }],
         error: null,
         count: null,
         status: 200,
@@ -328,6 +413,10 @@ describe("DropsAnalyticsCard", () => {
       p_profile_id: "profile-1",
       p_days: 7,
     });
+    expect(mockRpc).toHaveBeenCalledWith("get_drop_views_by_profile", {
+      p_profile_id: "profile-1",
+      p_days: 7,
+    });
 
     // Change days prop
     rerender(<DropsAnalyticsCard profileId="profile-1" days={30} />);
@@ -337,9 +426,13 @@ describe("DropsAnalyticsCard", () => {
         p_profile_id: "profile-1",
         p_days: 30,
       });
+      expect(mockRpc).toHaveBeenCalledWith("get_drop_views_by_profile", {
+        p_profile_id: "profile-1",
+        p_days: 30,
+      });
     });
 
-    expect(mockRpc).toHaveBeenCalledTimes(2);
+    expect(mockRpc).toHaveBeenCalledTimes(4);
   });
 
   it("reloads data when profileId changes", async () => {
@@ -360,6 +453,13 @@ describe("DropsAnalyticsCard", () => {
         statusText: "OK",
       })
       .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Speaker Request", views: 5 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
         data: [
           {
             drop_id: "2",
@@ -369,6 +469,13 @@ describe("DropsAnalyticsCard", () => {
             total_uploads: 5,
           },
         ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "2", drop_label: "Design Files", views: 2 }],
         error: null,
         count: null,
         status: 200,
@@ -390,9 +497,13 @@ describe("DropsAnalyticsCard", () => {
         p_profile_id: "profile-2",
         p_days: 7,
       });
+      expect(mockRpc).toHaveBeenCalledWith("get_drop_views_by_profile", {
+        p_profile_id: "profile-2",
+        p_days: 7,
+      });
     });
 
-    expect(mockRpc).toHaveBeenCalledTimes(2);
+    expect(mockRpc).toHaveBeenCalledTimes(4);
   });
 
   it("does not call API when profileId is null", () => {
@@ -402,21 +513,29 @@ describe("DropsAnalyticsCard", () => {
   });
 
   it("handles null drop_label gracefully", async () => {
-    mockRpc.mockResolvedValue({
-      data: [
-        {
-          drop_id: "1",
-          drop_label: null,
-          owner_uploads: 2,
-          visitor_uploads: 3,
-          total_uploads: 5,
-        },
-      ],
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [
+          {
+            drop_id: "1",
+            drop_label: null,
+            owner_uploads: 2,
+            visitor_uploads: 3,
+            total_uploads: 5,
+          },
+        ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: null, views: 2 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -426,24 +545,33 @@ describe("DropsAnalyticsCard", () => {
     });
 
     expect(screen.getByText("5")).toBeInTheDocument();
+    expect(screen.getByText("2")).toBeInTheDocument(); // views
   });
 
-  it("does not show breakdown when total_uploads is 0", async () => {
-    mockRpc.mockResolvedValue({
-      data: [
-        {
-          drop_id: "1",
-          drop_label: "Empty Drop",
-          owner_uploads: 0,
-          visitor_uploads: 0,
-          total_uploads: 0,
-        },
-      ],
-      error: null,
-      count: null,
-      status: 200,
-      statusText: "OK",
-    });
+  it("does not show breakdown when total_uploads and views are 0", async () => {
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [
+          {
+            drop_id: "1",
+            drop_label: "Empty Drop",
+            owner_uploads: 0,
+            visitor_uploads: 0,
+            total_uploads: 0,
+          },
+        ],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Empty Drop", views: 0 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
 
     render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
 
@@ -451,9 +579,39 @@ describe("DropsAnalyticsCard", () => {
       expect(screen.getByText("Empty Drop")).toBeInTheDocument();
     });
 
-    expect(screen.getByText("0")).toBeInTheDocument();
-    // Should not show breakdown text when total is 0
+    const zeroElements = screen.getAllByText("0");
+    expect(zeroElements.length).toBeGreaterThanOrEqual(2); // views and submissions
+    // Should not show breakdown text when both are 0
     expect(screen.queryByText(/by you/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/by visitors/i)).not.toBeInTheDocument();
+  });
+
+  it("shows drops with views but no submissions", async () => {
+    mockRpc
+      .mockResolvedValueOnce({
+        data: [],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      })
+      .mockResolvedValueOnce({
+        data: [{ drop_id: "1", drop_label: "Viewed Drop", views: 10 }],
+        error: null,
+        count: null,
+        status: 200,
+        statusText: "OK",
+      });
+
+    render(<DropsAnalyticsCard profileId="profile-1" days={7} />);
+
+    await waitFor(() => {
+      expect(screen.getByText("Viewed Drop")).toBeInTheDocument();
+    });
+
+    const viewsElement = screen.getByTestId("drop-views");
+    expect(viewsElement).toHaveTextContent("10");
+    const submissionsElement = screen.getByTestId("drop-total-uploads");
+    expect(submissionsElement).toHaveTextContent("0");
   });
 });
