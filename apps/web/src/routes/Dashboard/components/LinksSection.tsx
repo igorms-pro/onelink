@@ -98,8 +98,7 @@ export function LinksSection({
                     ),
                   );
                   toast.success(t("dashboard_content_links_create_success"));
-                } catch (e) {
-                  console.error(e);
+                } catch {
                   toast.error(t("dashboard_content_links_create_failed"));
                 } finally {
                   setBusy(false);

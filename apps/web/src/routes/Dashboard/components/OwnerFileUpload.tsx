@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Upload, X, File } from "lucide-react";
+import { useAuth } from "@/lib/AuthProvider";
 import { uploadFileToDrop } from "@/lib/drops";
 import { toast } from "sonner";
 
@@ -14,6 +15,7 @@ export function OwnerFileUpload({
   onUploadComplete,
 }: OwnerFileUploadProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -30,7 +32,11 @@ export function OwnerFileUpload({
 
     setIsUploading(true);
     try {
-      const success = await uploadFileToDrop(dropId, selectedFile);
+      const success = await uploadFileToDrop(
+        dropId,
+        selectedFile,
+        user?.id ?? null,
+      );
       if (success) {
         setSelectedFile(null);
         if (fileInputRef.current) {
@@ -38,8 +44,7 @@ export function OwnerFileUpload({
         }
         onUploadComplete?.();
       }
-    } catch (error) {
-      console.error("Upload error:", error);
+    } catch {
       toast.error(t("dashboard_content_drops_upload_failed"));
     } finally {
       setIsUploading(false);

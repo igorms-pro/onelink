@@ -145,7 +145,7 @@ revoke all on function public.get_submissions_by_profile(uuid) from public;
 grant execute on function public.get_submissions_by_profile(uuid) to authenticated;
 
 -- Owner-only: simple counts per drop (analytics)
-create or replace function public.get_submission_counts_by_profile(p_profile_id uuid)
+create or replace function public.get_submission_counts_by_profile(p_profile_id uuid, p_days int)
 returns table (
   drop_id uuid,
   drop_label text,
@@ -160,6 +160,7 @@ as $$
          count(s.id)::int as submissions
   from public.drops d
   left join public.submissions s on s.drop_id = d.id
+    and s.created_at >= now() - make_interval(days => p_days)
   where d.profile_id = p_profile_id and exists (
     select 1 from public.profiles p where p.id = p_profile_id and p.user_id = auth.uid()
   )
@@ -167,8 +168,8 @@ as $$
   order by submissions desc, d.label asc;
 $$;
 
-revoke all on function public.get_submission_counts_by_profile(uuid) from public;
-grant execute on function public.get_submission_counts_by_profile(uuid) to authenticated;
+revoke all on function public.get_submission_counts_by_profile(uuid, int) from public;
+grant execute on function public.get_submission_counts_by_profile(uuid, int) to authenticated;
 
 -- 4) Optional: helper check constraint to keep reasonable limits
 alter table public.drops

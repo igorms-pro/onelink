@@ -1,4 +1,6 @@
 import { File, Download } from "lucide-react";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthProvider";
 import {
   formatFileSize,
   formatDateFull,
@@ -19,6 +21,19 @@ interface DropFileListProps {
 }
 
 export function DropFileList({ files }: DropFileListProps) {
+  const { user } = useAuth();
+
+  const handleDownload = async (submissionId: string, filePath: string) => {
+    // Track file download (exclude owner downloads)
+    void supabase.from("file_downloads").insert([
+      {
+        submission_id: submissionId,
+        file_path: filePath,
+        user_id: user?.id ?? null,
+        user_agent: navigator.userAgent,
+      },
+    ]);
+  };
   if (files.length === 0) {
     return (
       <p className="text-gray-500 dark:text-gray-400 text-center py-8">
@@ -70,6 +85,7 @@ export function DropFileList({ files }: DropFileListProps) {
               href={url}
               target="_blank"
               rel="noreferrer"
+              onClick={() => handleDownload(file.submission_id, file.path)}
               className="shrink-0 ml-4 p-2 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors cursor-pointer"
               aria-label="Download file"
             >

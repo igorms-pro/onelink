@@ -15,7 +15,7 @@ export function HeaderMobileDashboard({
   const appTitle = i18n.exists("app_title") ? t("app_title") : "OneLink";
 
   return (
-    <header className="sticky top-0 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 shadow-sm flex-shrink-0">
+    <header className="sticky top-0 w-full border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 z-50 shadow-sm shrink-0">
       <div className="mx-auto max-w-4xl w-full flex items-center justify-between px-4 md:px-6 lg:px-8 py-2 md:py-3 lg:py-3">
         <Link
           to="/"
@@ -28,7 +28,7 @@ export function HeaderMobileDashboard({
               className="w-full h-full object-contain"
             />
           </div>
-          <span className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+          <span className="text-xl sm:text-2xl font-bold bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
             {appTitle}
           </span>
         </Link>

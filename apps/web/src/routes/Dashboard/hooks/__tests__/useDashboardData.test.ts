@@ -329,8 +329,6 @@ describe("useDashboardData", () => {
       error: { message: "Error loading submissions" },
     });
 
-    const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {});
-
     const { result } = renderHook(() => useDashboardData(mockUserId));
 
     await waitFor(() => {
@@ -339,9 +337,6 @@ describe("useDashboardData", () => {
 
     expect(result.current.links).toEqual([]);
     expect(result.current.submissions).toEqual([]);
-    expect(consoleSpy).toHaveBeenCalled();
-
-    consoleSpy.mockRestore();
   });
 
   it("should handle empty submissions array", async () => {

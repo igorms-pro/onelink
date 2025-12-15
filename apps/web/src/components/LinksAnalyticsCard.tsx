@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSortableData } from "@/hooks/useSortableData";
-// import { supabase } from "../lib/supabase"; // Temporarily commented for dummy data
+import { supabase } from "@/lib/supabase";
 
 type ClickRow = { link_id: string; clicks: number; label?: string };
 
@@ -21,42 +21,30 @@ export function LinksAnalyticsCard({
   useEffect(() => {
     if (!profileId) return;
 
-    // Set loading to true to show greyed state (even if we have existing data)
-    // In production, this simulates fetching new data when days change
     setLoading(true);
 
-    // Dummy data for testing
-    const dummyData: ClickRow[] = [
-      { link_id: "1", label: "Portfolio", clicks: 45 },
-      { link_id: "2", label: "GitHub", clicks: 32 },
-      { link_id: "3", label: "LinkedIn", clicks: 28 },
-      { link_id: "4", label: "Twitter", clicks: 15 },
-      { link_id: "5", label: "Blog", clicks: 8 },
-    ];
-
-    // Simulate API delay - keep existing data visible but greyed
-    setTimeout(() => {
-      setRows(dummyData);
-      setLoading(false);
-    }, 500);
-
-    // Real API call (commented out for now)
-    /*
     (async () => {
       try {
-        const { data } = await supabase.rpc("get_clicks_by_profile", {
-          profile_id: profileId,
-          days,
+        const { data, error } = await supabase.rpc("get_clicks_by_profile", {
+          p_profile_id: profileId,
+          p_days: days,
         });
-        if (Array.isArray(data)) setRows(data as Array<ClickRow>);
-        else setRows([]);
-      } catch {
+
+        if (error) {
+          console.error("[LinksAnalyticsCard] Error fetching clicks:", error);
+          setRows([]);
+        } else if (Array.isArray(data)) {
+          setRows(data as Array<ClickRow>);
+        } else {
+          setRows([]);
+        }
+      } catch (err) {
+        console.error("[LinksAnalyticsCard] Unexpected error:", err);
         setRows([]);
       } finally {
         setLoading(false);
       }
     })();
-    */
   }, [profileId, days]);
 
   // Use sortable data hook
@@ -79,12 +67,13 @@ export function LinksAnalyticsCard({
     );
 
   return (
-    <div className="mt-2">
+    <div className="mt-2" data-testid="links-analytics-card">
       {/* Header with expand/collapse */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full flex items-center mb-3 text-left cursor-pointer"
         aria-label={isExpanded ? t("common_collapse") : t("common_expand")}
+        data-testid="links-analytics-toggle"
       >
         <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
           {t("dashboard_account_analytics_links")}
@@ -126,7 +115,10 @@ export function LinksAnalyticsCard({
                 </button>
               </div>
               {sortedRows.length === 0 && !loading ? (
-                <div className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4 text-center text-gray-500 dark:text-gray-400 text-sm">
+                <div
+                  className="rounded-lg bg-blue-50 dark:bg-blue-900/20 p-4 text-center text-gray-500 dark:text-gray-400 text-sm"
+                  data-testid="links-analytics-empty"
+                >
                   {t("dashboard_account_analytics_no_clicks")}
                 </div>
               ) : sortedRows.length === 0 && loading ? (
@@ -146,16 +138,23 @@ export function LinksAnalyticsCard({
                 sortedRows.map((r) => (
                   <div
                     key={r.link_id}
+                    data-testid={`links-analytics-row-${r.link_id}`}
                     className={`flex justify-between items-center rounded-lg bg-blue-50 dark:bg-blue-900/20 p-3 transition-all ${
                       loading
                         ? "opacity-50 pointer-events-none"
                         : "hover:bg-blue-100 dark:hover:bg-blue-900/30"
                     }`}
                   >
-                    <span className="text-gray-900 dark:text-white text-sm">
+                    <span
+                      className="text-gray-900 dark:text-white text-sm"
+                      data-testid="link-label"
+                    >
                       {r.label ?? r.link_id}
                     </span>
-                    <span className="text-gray-700 dark:text-gray-300 font-medium text-sm">
+                    <span
+                      className="text-gray-700 dark:text-gray-300 font-medium text-sm"
+                      data-testid="link-clicks"
+                    >
                       {r.clicks}
                     </span>
                   </div>

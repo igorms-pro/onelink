@@ -61,6 +61,8 @@
   "dashboard_account_analytics_days_7": "7 days",
   "dashboard_account_analytics_days_30": "30 days",
   "dashboard_account_analytics_days_90": "90 days",
+  "dashboard_account_analytics_by_you": "by you",
+  "dashboard_account_analytics_by_visitors": "by visitors",
   "dashboard_account_profile_updated": "Updated at",
   "dashboard_account_slug_taken": "This slug is already taken. Please choose another.",
   "dashboard_account_profile_update_failed": "Failed to update profile",

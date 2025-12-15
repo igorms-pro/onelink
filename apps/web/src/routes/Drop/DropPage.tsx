@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthProvider";
 import { getDropByToken, getDropFiles } from "@/lib/drops";
 import type { DropWithVisibility } from "@/lib/drops";
 import { DropHeader } from "./components/DropHeader";
@@ -11,6 +13,7 @@ interface DropPageProps {
 }
 
 export default function DropPage({ token }: DropPageProps) {
+  const { user } = useAuth();
   const [drop, setDrop] = useState<DropWithVisibility | null>(null);
   const [files, setFiles] = useState<DropFile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,6 +34,15 @@ export default function DropPage({ token }: DropPageProps) {
 
         setDrop(dropData);
 
+        // Track drop view (exclude owner views)
+        void supabase.from("drop_views").insert([
+          {
+            drop_id: dropData.id,
+            user_id: user?.id ?? null,
+            user_agent: navigator.userAgent,
+          },
+        ]);
+
         // Load files
         const dropFiles = await getDropFiles(dropData.id);
         setFiles(dropFiles);
@@ -43,7 +55,7 @@ export default function DropPage({ token }: DropPageProps) {
     }
 
     loadDrop();
-  }, [token]);
+  }, [token, user]);
 
   // Refresh files after upload
   const refreshFiles = async () => {

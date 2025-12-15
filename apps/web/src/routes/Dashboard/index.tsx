@@ -24,11 +24,6 @@ export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
 
   const userId = user?.id ?? null;
-  console.log("[Dashboard] User check:", {
-    hasUser: !!user,
-    userId,
-    userObject: user ? { id: user.id, email: user.email } : null,
-  });
 
   const {
     profileId,
@@ -78,7 +73,6 @@ export default function Dashboard() {
               onClick={() => {
                 if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
                   // TODO: Implement actual clear functionality with database
-                  console.log("Clear all clicked");
                 }
               }}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
@@ -123,7 +117,6 @@ export default function Dashboard() {
         onClearAll={() => {
           if (confirm("Clear all inbox items? This cannot be undone.")) {
             // TODO: Implement actual clear functionality with database
-            console.log("Clear all clicked");
           }
         }}
       />

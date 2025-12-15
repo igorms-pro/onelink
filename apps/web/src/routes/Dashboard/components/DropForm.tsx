@@ -63,8 +63,7 @@ export function DropForm({
           onDropCreated(data as DropRow);
           form.reset();
           toast.success(t("dashboard_content_drops_create_success"));
-        } catch (e) {
-          console.error(e);
+        } catch {
           toast.error(t("dashboard_content_drops_create_failed"));
         } finally {
           setBusy(false);
