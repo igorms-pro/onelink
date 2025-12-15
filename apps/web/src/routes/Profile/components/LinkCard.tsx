@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthProvider";
 import type { PublicLink } from "../types";
 import { ExternalLink } from "lucide-react";
 
@@ -11,6 +12,7 @@ export function LinkCard({ link }: LinkCardProps) {
   const [isPressed, setIsPressed] = useState(false);
   const rippleRef = useRef<HTMLSpanElement>(null);
   const cardRef = useRef<HTMLAnchorElement>(null);
+  const { user } = useAuth();
 
   const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Create ripple effect
@@ -34,10 +36,14 @@ export function LinkCard({ link }: LinkCardProps) {
       ripple.classList.add("animate-ripple");
     }
 
-    // Track click
-    void supabase
-      .from("link_clicks")
-      .insert([{ link_id: link.link_id, user_agent: navigator.userAgent }]);
+    // Track click (include user_id if authenticated, null for anonymous)
+    void supabase.from("link_clicks").insert([
+      {
+        link_id: link.link_id,
+        user_agent: navigator.userAgent,
+        user_id: user?.id ?? null,
+      },
+    ]);
 
     // Reset ripple after animation completes
     setTimeout(() => {

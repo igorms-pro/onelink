@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { useAuth } from "../lib/AuthProvider";
 import { isBaseHost } from "../lib/domain";
 import { getPlanBySlug } from "../lib/profile";
 import { PlanType, getDefaultPlan, isProPlan } from "../lib/types/plan";
@@ -22,6 +23,7 @@ type PublicProfile = {
 
 export default function Profile() {
   const { slug } = useParams();
+  const { user } = useAuth();
   const [links, setLinks] = useState<PublicLink[]>([]);
   const [profile, setProfile] = useState<PublicProfile | null>(null);
   const [plan, setPlan] = useState<PlanTypeValue>(getDefaultPlan());
@@ -140,11 +142,13 @@ export default function Profile() {
             target="_blank"
             rel="noreferrer"
             onClick={async () => {
-              void supabase
-                .from("link_clicks")
-                .insert([
-                  { link_id: l.link_id, user_agent: navigator.userAgent },
-                ]);
+              void supabase.from("link_clicks").insert([
+                {
+                  link_id: l.link_id,
+                  user_agent: navigator.userAgent,
+                  user_id: user?.id ?? null,
+                },
+              ]);
             }}
           >
             {l.emoji ? `${l.emoji} ` : ""}

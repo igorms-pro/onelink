@@ -12,6 +12,14 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+// Mock useAuth
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: null,
+    signOut: vi.fn(),
+  }),
+}));
+
 // Mock navigator.userAgent
 Object.defineProperty(navigator, "userAgent", {
   writable: true,
@@ -76,6 +84,7 @@ describe("LinkCard", () => {
         {
           link_id: "link-1",
           user_agent: "Mozilla/5.0",
+          user_id: null,
         },
       ]);
     });

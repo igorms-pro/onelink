@@ -8,11 +8,15 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
   const [days, setDays] = useState<7 | 30 | 90>(7);
 
   return (
-    <>
+    <div data-testid="analytics-section">
       {/* Toggle buttons - Above both cards */}
-      <div className="grid grid-cols-3 gap-2 mb-3">
+      <div
+        className="grid grid-cols-3 gap-2 mb-3"
+        data-testid="analytics-time-filters"
+      >
         <button
           onClick={() => setDays(7)}
+          data-testid="analytics-filter-7"
           className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             days === 7
               ? "bg-gray-900 dark:bg-gray-700 text-white"
@@ -23,6 +27,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         </button>
         <button
           onClick={() => setDays(30)}
+          data-testid="analytics-filter-30"
           className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             days === 30
               ? "bg-gray-900 dark:bg-gray-700 text-white"
@@ -33,6 +38,7 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         </button>
         <button
           onClick={() => setDays(90)}
+          data-testid="analytics-filter-90"
           className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
             days === 90
               ? "bg-gray-900 dark:bg-gray-700 text-white"
@@ -44,6 +50,6 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
       </div>
       <LinksAnalyticsCard profileId={profileId} days={days} />
       <DropsAnalyticsCard profileId={profileId} days={days} />
-    </>
+    </div>
   );
 }

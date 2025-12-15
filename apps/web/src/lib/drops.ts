@@ -121,6 +121,7 @@ export async function getDropFiles(dropId: string) {
 export async function uploadFileToDrop(
   dropId: string,
   file: File,
+  userId: string | null = null,
 ): Promise<boolean> {
   try {
     // Generate unique file path
@@ -158,6 +159,7 @@ export async function uploadFileToDrop(
             },
           ],
           user_agent: navigator.userAgent,
+          uploaded_by: userId, // Track who uploaded (owner)
         },
       ]);
 

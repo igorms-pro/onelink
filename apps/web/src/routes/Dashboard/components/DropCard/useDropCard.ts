@@ -117,8 +117,7 @@ export function useDropCard({
     try {
       const dropFiles = await getDropFiles(d.id);
       setFiles(dropFiles);
-    } catch (error) {
-      console.error("Failed to load files:", error);
+    } catch {
       toast.error(t("dashboard_content_drops_files_load_failed"));
     } finally {
       setIsLoadingFiles(false);

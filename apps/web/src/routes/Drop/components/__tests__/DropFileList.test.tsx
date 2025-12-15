@@ -12,7 +12,18 @@ vi.mock("@/lib/supabase", () => ({
         })),
       })),
     },
+    from: vi.fn(() => ({
+      insert: vi.fn(),
+    })),
   },
+}));
+
+// Mock useAuth
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: null,
+    signOut: vi.fn(),
+  }),
 }));
 
 const mockFiles: DropFile[] = [

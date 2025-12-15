@@ -21,15 +21,9 @@ export function useProfileData(slug: string | undefined, host: string) {
   useEffect(() => {
     // Prevent multiple simultaneous loads
     if (loadingRef.current) {
-      console.log("[Profile] Already loading, skipping");
       return;
     }
 
-    console.log("[Profile] useEffect triggered", {
-      slug,
-      host,
-      isBaseHost: isBaseHost(host),
-    });
     loadingRef.current = true;
     setIsLoading(true);
     setErrorType(null);
@@ -38,42 +32,34 @@ export function useProfileData(slug: string | undefined, host: string) {
       try {
         if (isBaseHost(host)) {
           if (!slug) {
-            console.log("[Profile] No slug provided");
             setIsLoading(false);
             setErrorType("not_found");
             loadingRef.current = false;
             return;
           }
-          console.log("[Profile] Loading by slug:", slug);
           const found = await loadBySlug(slug);
           if (found) {
-            console.log("[Profile] Profile found by slug");
             const p = await getPlanBySlug(slug);
             setPlan(p);
             maybeInjectGA(p);
           } else {
-            console.log("[Profile] Profile not found by slug");
             setErrorType("not_found");
           }
           setIsLoading(false);
         } else {
-          console.log("[Profile] Loading by domain:", host);
           const domainResult = await loadByDomain(host);
           if (!domainResult) {
-            console.log("[Profile] Domain not verified or not found");
             setIsLoading(false);
             setErrorType("domain_unverified");
             loadingRef.current = false;
             return;
           }
-          console.log("[Profile] Profile found by domain, slug:", domainResult);
           const p = await getPlanBySlug(domainResult);
           setPlan(p);
           maybeInjectGA(p);
           setIsLoading(false);
         }
-      } catch (error) {
-        console.error("[Profile] Error loading profile:", error);
+      } catch {
         setIsLoading(false);
         setErrorType("not_found");
       } finally {
@@ -83,7 +69,6 @@ export function useProfileData(slug: string | undefined, host: string) {
   }, [host, slug]);
 
   async function loadBySlug(s: string): Promise<boolean> {
-    console.log("[Profile] loadBySlug called with:", s);
     const prof = await supabase
       .from("profiles")
       .select("display_name,bio,avatar_url,slug,id")
@@ -96,24 +81,13 @@ export function useProfileData(slug: string | undefined, host: string) {
         id: string;
       }>();
 
-    console.log("[Profile] Profile query result:", {
-      data: prof.data,
-      error: prof.error,
-    });
-
-    if (prof.error) {
-      console.error("[Profile] Error fetching profile:", prof.error);
-    }
-
     if (!prof.data) {
-      console.log("[Profile] No profile data found");
       setProfile(null);
       setLinks([]);
       setDrops([]);
       return false;
     }
 
-    console.log("[Profile] Setting profile data:", prof.data);
     setProfile({
       display_name: prof.data.display_name,
       bio: prof.data.bio,
@@ -121,25 +95,14 @@ export function useProfileData(slug: string | undefined, host: string) {
       slug: prof.data.slug,
     });
 
-    const { data: linksData, error: linksError } = await supabase.rpc(
-      "get_links_by_slug",
-      { p_slug: s },
-    );
-    if (linksError) {
-      console.error("[Profile] Error fetching links:", linksError);
-    } else {
-      console.log("[Profile] Links loaded:", linksData?.length || 0);
-    }
+    const { data: linksData } = await supabase.rpc("get_links_by_slug", {
+      p_slug: s,
+    });
     setLinks(Array.isArray(linksData) ? (linksData as PublicLink[]) : []);
 
     // Fetch drops - RPC filters by is_public = true and is_active = true
     // Only public drops are returned for the public profile page
     const dropsRes = await supabase.rpc("get_drops_by_slug", { p_slug: s });
-    if (dropsRes.error) {
-      console.error("[Profile] Error fetching drops:", dropsRes.error);
-    } else {
-      console.log("[Profile] Drops loaded:", dropsRes.data?.length || 0);
-    }
     setDrops(
       Array.isArray(dropsRes.data) ? (dropsRes.data as PublicDrop[]) : [],
     );
@@ -147,7 +110,6 @@ export function useProfileData(slug: string | undefined, host: string) {
   }
 
   async function loadByDomain(domain: string) {
-    console.log("[Profile] loadByDomain called with:", domain);
     type DomainJoin = {
       verified: boolean;
       profile_id: string;
@@ -167,17 +129,7 @@ export function useProfileData(slug: string | undefined, host: string) {
       .eq("domain", domain)
       .maybeSingle<DomainJoin>();
 
-    console.log("[Profile] Domain query result:", {
-      data: dom.data,
-      error: dom.error,
-    });
-
-    if (dom.error) {
-      console.error("[Profile] Error fetching domain:", dom.error);
-    }
-
     if (!dom.data || dom.data.verified !== true) {
-      console.log("[Profile] Domain not verified or not found");
       setProfile(null);
       setLinks([]);
       setDrops([]);
@@ -185,10 +137,6 @@ export function useProfileData(slug: string | undefined, host: string) {
     }
 
     const s = dom.data.profiles.slug;
-    console.log(
-      "[Profile] Setting profile data from domain:",
-      dom.data.profiles,
-    );
     setProfile({
       display_name: dom.data.profiles.display_name,
       bio: dom.data.profiles.bio,
@@ -196,25 +144,14 @@ export function useProfileData(slug: string | undefined, host: string) {
       slug: s,
     });
 
-    const { data: linksData, error: linksError } = await supabase.rpc(
-      "get_links_by_slug",
-      { p_slug: s },
-    );
-    if (linksError) {
-      console.error("[Profile] Error fetching links:", linksError);
-    } else {
-      console.log("[Profile] Links loaded:", linksData?.length || 0);
-    }
+    const { data: linksData } = await supabase.rpc("get_links_by_slug", {
+      p_slug: s,
+    });
     setLinks(Array.isArray(linksData) ? (linksData as PublicLink[]) : []);
 
     // Fetch drops - RPC filters by is_public = true and is_active = true
     // Only public drops are returned for the public profile page
     const dropsRes = await supabase.rpc("get_drops_by_slug", { p_slug: s });
-    if (dropsRes.error) {
-      console.error("[Profile] Error fetching drops:", dropsRes.error);
-    } else {
-      console.log("[Profile] Drops loaded:", dropsRes.data?.length || 0);
-    }
     setDrops(
       Array.isArray(dropsRes.data) ? (dropsRes.data as PublicDrop[]) : [],
     );

@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/AuthProvider";
 import { toast } from "sonner";
 import { useAsyncSubmit } from "@/hooks/useAsyncSubmit";
 import type { PublicDrop } from "../types";
@@ -14,6 +15,7 @@ interface DropSubmissionFormData {
 
 export function useDropSubmission(drop: PublicDrop) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const { submitting, submit } = useAsyncSubmit();
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
@@ -116,6 +118,7 @@ export function useDropSubmission(drop: PublicDrop) {
               note: formData.note,
               files: uploaded,
               user_agent: navigator.userAgent,
+              uploaded_by: user?.id ?? null, // Track who uploaded (visitor if authenticated, null if anonymous)
             },
           ]);
 
@@ -129,7 +132,7 @@ export function useDropSubmission(drop: PublicDrop) {
         return false;
       }
     },
-    [validateFiles, uploadFiles, drop.drop_id, submit, t],
+    [validateFiles, uploadFiles, drop.drop_id, submit, t, user?.id],
   );
 
   return {

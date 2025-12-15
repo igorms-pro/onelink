@@ -10,6 +10,23 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
+// Mock useAuth (used by LinkCard)
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: null,
+    signOut: vi.fn(),
+  }),
+}));
+
+// Mock supabase (used by LinkCard)
+vi.mock("@/lib/supabase", () => ({
+  supabase: {
+    from: vi.fn(() => ({
+      insert: vi.fn(),
+    })),
+  },
+}));
+
 describe("LinksSection", () => {
   beforeEach(() => {
     vi.clearAllMocks();

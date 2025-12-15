@@ -26,3 +26,11 @@ export type CountRow = {
   drop_label: string | null;
   submissions: number;
 };
+
+export type UploadStatsRow = {
+  drop_id: string;
+  drop_label: string | null;
+  owner_uploads: number;
+  visitor_uploads: number;
+  total_uploads: number;
+};

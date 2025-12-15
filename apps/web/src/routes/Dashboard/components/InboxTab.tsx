@@ -112,6 +112,17 @@ export function InboxTab({ submissions }: InboxTabProps) {
                                 href={href}
                                 target="_blank"
                                 rel="noreferrer"
+                                onClick={async () => {
+                                  // Track file download (exclude owner downloads)
+                                  void supabase.from("file_downloads").insert([
+                                    {
+                                      submission_id: s.submission_id,
+                                      file_path: f.path,
+                                      user_id: null, // Owner downloads (always null for owner)
+                                      user_agent: navigator.userAgent,
+                                    },
+                                  ]);
+                                }}
                               >
                                 <span className="truncate">{name}</span>
                                 {f.size && (
