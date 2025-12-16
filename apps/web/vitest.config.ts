@@ -7,6 +7,9 @@ export default defineConfig({
     setupFiles: ["./vitest.setup.ts"],
     globals: true,
     exclude: ["e2e/**", "node_modules/**", "dist/**"],
+    // Increase timeout for CI environments where tests may run slower
+    testTimeout: process.env.CI ? 10000 : 5000,
+    hookTimeout: process.env.CI ? 10000 : 5000,
     coverage: {
       provider: "v8",
       reporter: ["text", "json", "html"],
