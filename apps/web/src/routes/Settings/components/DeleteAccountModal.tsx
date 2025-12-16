@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { toast } from "sonner";
@@ -17,6 +18,8 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { DeleteAccountWarning, DeleteAccountForm } from "./DeleteAccount";
+import { deleteAccount } from "@/lib/deleteAccount";
+import { useAuth } from "@/lib/AuthProvider";
 
 interface DeleteAccountModalProps {
   open: boolean;
@@ -28,6 +31,8 @@ export function DeleteAccountModal({
   onOpenChange,
 }: DeleteAccountModalProps) {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const isMobile = useMediaQuery("(max-width: 640px)");
   const [password, setPassword] = useState("");
   const [confirmChecked, setConfirmChecked] = useState(false);
@@ -44,16 +49,15 @@ export function DeleteAccountModal({
     setError(null);
 
     try {
-      // TODO: Implement actual account deletion API
-      // For now, this is a placeholder
-      // const { error: deleteError } = await supabase.rpc('delete_user_account', {
-      //   password: password
-      // });
+      const result = await deleteAccount();
 
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (!result.success) {
+        const message = result.error || t("settings_delete_account_error");
+        setError(message);
+        toast.error(message);
+        return;
+      }
 
-      // For now, just show success (remove this when API is ready)
       toast.success(t("settings_delete_account_success"));
       onOpenChange(false);
 
@@ -61,9 +65,9 @@ export function DeleteAccountModal({
       setPassword("");
       setConfirmChecked(false);
 
-      // TODO: Sign out user and redirect to home
-      // await supabase.auth.signOut();
-      // navigate("/");
+      // Sign out user and redirect to auth page
+      await signOut();
+      navigate("/auth");
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : t("settings_delete_account_error");

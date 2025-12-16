@@ -3,10 +3,12 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { DeleteAccountModal } from "../DeleteAccountModal";
 import { toast } from "sonner";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { deleteAccount } from "@/lib/deleteAccount";
 
 // Mock dependencies
 vi.mock("@/hooks/use-media-query", () => ({
-  useMediaQuery: vi.fn(() => false), // Default to mobile
+  useMediaQuery: vi.fn(() => false), // Default to desktop
 }));
 
 vi.mock("sonner", () => ({
@@ -14,6 +16,29 @@ vi.mock("sonner", () => ({
     success: vi.fn(),
     error: vi.fn(),
   },
+}));
+
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: vi.fn(() => ({
+    user: { id: "user-1", email: "test@example.com" },
+    session: null,
+    loading: false,
+    signOut: vi.fn(async () => {}),
+    signInWithEmail: vi.fn(async () => ({})),
+  })),
+}));
+
+const mockNavigate = vi.fn();
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: vi.fn(() => mockNavigate),
+  };
+});
+
+vi.mock("@/lib/deleteAccount", () => ({
+  deleteAccount: vi.fn(),
 }));
 
 // i18n is already configured in vitest.setup.ts - no need to mock
@@ -82,13 +107,13 @@ vi.mock("../DeleteAccount/DeleteAccountForm", () => ({
   ),
 }));
 
-import { useMediaQuery } from "@/hooks/use-media-query";
-
 describe("DeleteAccountModal", () => {
   const mockOnOpenChange = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
+    mockNavigate.mockReset();
+    vi.mocked(useMediaQuery).mockReturnValue(false);
   });
 
   describe("Modal States", () => {
@@ -276,72 +301,11 @@ describe("DeleteAccountModal", () => {
   });
 
   describe("Form Submission", () => {
-    it.skip("handles successful submission", async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ delay: null });
-      render(
-        <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
-      );
+    it("handles successful submission", async () => {
+      const user = userEvent.setup();
+      const mockedDeleteAccount = vi.mocked(deleteAccount);
+      mockedDeleteAccount.mockResolvedValue({ success: true } as any);
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
-
-      await user.type(passwordInput, "testpassword");
-      await user.click(checkbox);
-      await user.click(submitButton);
-
-      // Advance timers to complete submission (1500ms delay in component)
-      vi.advanceTimersByTime(1500);
-
-      // Wait for async operation
-      await waitFor(
-        () => {
-          expect(toast.success).toHaveBeenCalled();
-        },
-        { timeout: 1000 },
-      );
-
-      await waitFor(() => {
-        expect(mockOnOpenChange).toHaveBeenCalledWith(false);
-      });
-
-      vi.useRealTimers();
-    });
-
-    it.skip("shows error toast on submission failure", async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ delay: null });
-      render(
-        <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
-      );
-
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
-
-      await user.type(passwordInput, "testpassword");
-      await user.click(checkbox);
-      await user.click(submitButton);
-
-      // Advance timers - the component will handle the submission
-      vi.advanceTimersByTime(1500);
-
-      // The modal should handle errors internally
-      // We verify the form is still present (error doesn't close modal)
-      await waitFor(
-        () => {
-          expect(screen.getByTestId("delete-account-form")).toBeInTheDocument();
-        },
-        { timeout: 1000 },
-      );
-
-      vi.useRealTimers();
-    });
-
-    it.skip("resets form after successful submission", async () => {
-      vi.useFakeTimers();
-      const user = userEvent.setup({ delay: null });
       const { rerender } = render(
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
@@ -354,18 +318,14 @@ describe("DeleteAccountModal", () => {
       await user.click(checkbox);
       await user.click(submitButton);
 
-      // Advance timers to complete submission (1500ms delay in component)
-      vi.advanceTimersByTime(1500);
+      await waitFor(() => {
+        expect(deleteAccount).toHaveBeenCalled();
+        expect(toast.success).toHaveBeenCalled();
+        expect(mockOnOpenChange).toHaveBeenCalledWith(false);
+        expect(mockNavigate).toHaveBeenCalledWith("/auth");
+      });
 
-      // Wait for submission to complete
-      await waitFor(
-        () => {
-          expect(mockOnOpenChange).toHaveBeenCalledWith(false);
-        },
-        { timeout: 1000 },
-      );
-
-      // Reopen modal to check reset
+      // Reopen modal to verify form reset
       rerender(
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
@@ -375,8 +335,34 @@ describe("DeleteAccountModal", () => {
 
       expect(resetPasswordInput).toHaveValue("");
       expect(resetCheckbox).not.toBeChecked();
+    });
 
-      vi.useRealTimers();
+    it("shows error toast on submission failure and keeps modal open", async () => {
+      const user = userEvent.setup();
+      const mockedDeleteAccount = vi.mocked(deleteAccount);
+      mockedDeleteAccount.mockResolvedValue({
+        success: false,
+        error: "Failed to delete account",
+      } as any);
+
+      render(
+        <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
+      );
+
+      const passwordInput = screen.getByTestId("password-input");
+      const checkbox = screen.getByTestId("confirm-checkbox");
+      const submitButton = screen.getByTestId("submit-button");
+
+      await user.type(passwordInput, "testpassword");
+      await user.click(checkbox);
+      await user.click(submitButton);
+
+      await waitFor(() => {
+        expect(deleteAccount).toHaveBeenCalled();
+        expect(toast.error).toHaveBeenCalled();
+        expect(mockOnOpenChange).not.toHaveBeenCalledWith(false);
+        expect(screen.getByTestId("delete-account-form")).toBeInTheDocument();
+      });
     });
   });
 

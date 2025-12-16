@@ -39,8 +39,9 @@ lerna-debug.log*
 *.sw?
 
 # Docs issues (temporary planning files)
-docs/issues/
-docs/ISSUE.md
+# Only track the main ISSUE.md; all other files in docs/issues/ stay unversioned
+docs/issues/*
+!docs/issues/ISSUE.md
 
 # Supabase CLI temp/cache
 supabase/.temp/
