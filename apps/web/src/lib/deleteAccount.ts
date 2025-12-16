@@ -7,7 +7,7 @@ type DeleteAccountResponse = {
   stats?: unknown;
 };
 
-export async function deleteAccount(): Promise<{
+export async function deleteAccount({ mfaCode }: { mfaCode: string }): Promise<{
   success: boolean;
   error?: string;
 }> {
@@ -15,6 +15,7 @@ export async function deleteAccount(): Promise<{
     const { data, error } =
       await supabase.functions.invoke<DeleteAccountResponse>("delete-account", {
         method: "POST",
+        body: { mfa_code: mfaCode },
       });
 
     if (error) {

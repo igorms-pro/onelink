@@ -21,11 +21,14 @@ describe("deleteAccount", () => {
       error: null,
     } as any);
 
-    const result = await deleteAccount();
+    const result = await deleteAccount({ mfaCode: "123456" });
 
     expect(supabase.functions.invoke).toHaveBeenCalledWith(
       "delete-account",
-      expect.objectContaining({ method: "POST" }),
+      expect.objectContaining({
+        method: "POST",
+        body: expect.objectContaining({ mfa_code: "123456" }),
+      }),
     );
     expect(result).toEqual({ success: true });
   });
@@ -36,7 +39,7 @@ describe("deleteAccount", () => {
       error: { message: "Server error" },
     } as any);
 
-    const result = await deleteAccount();
+    const result = await deleteAccount({ mfaCode: "123456" });
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("Server error");
@@ -51,7 +54,7 @@ describe("deleteAccount", () => {
       error: null,
     } as any);
 
-    const result = await deleteAccount();
+    const result = await deleteAccount({ mfaCode: "123456" });
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("DELETE_ACCOUNT_DISABLED");
@@ -62,7 +65,7 @@ describe("deleteAccount", () => {
       new Error("Network error"),
     );
 
-    const result = await deleteAccount();
+    const result = await deleteAccount({ mfaCode: "123456" });
 
     expect(result.success).toBe(false);
     expect(result.error).toBe("Network error");

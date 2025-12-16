@@ -26,6 +26,62 @@ interface DeleteAccountStats {
   users: number;
 }
 
+async function verifyMFACode(
+  supabase: any,
+  mfaCode: string,
+  userId: string,
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    // 1. List MFA factors for the user
+    const { data: factorsData, error: factorsError } = await supabase.auth.mfa.listFactors();
+
+    if (factorsError) {
+      console.error("[delete-account] Failed to list MFA factors:", factorsError);
+      return { success: false, error: "MFA_VERIFICATION_FAILED" };
+    }
+
+    // 2. Check if user has TOTP factors enabled
+    const totpFactors = factorsData?.totp || [];
+    if (totpFactors.length === 0) {
+      return { success: false, error: "MFA_NOT_ENABLED" };
+    }
+
+    // 3. Use the first TOTP factor
+    const totpFactor = totpFactors[0];
+    if (!totpFactor?.id) {
+      return { success: false, error: "MFA_FACTOR_NOT_FOUND" };
+    }
+
+    // 4. Create a challenge for the factor
+    const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({
+      factorId: totpFactor.id,
+    });
+
+    if (challengeError || !challengeData?.id) {
+      console.error("[delete-account] Failed to create MFA challenge:", challengeError);
+      return { success: false, error: "MFA_CHALLENGE_FAILED" };
+    }
+
+    // 5. Verify the TOTP code with the challenge
+    const { error: verifyError } = await supabase.auth.mfa.verify({
+      factorId: totpFactor.id,
+      code: mfaCode,
+      challengeId: challengeData.id,
+    });
+
+    if (verifyError) {
+      console.error("[delete-account] MFA code verification failed:", verifyError);
+      return { success: false, error: "MFA_CODE_INVALID" };
+    }
+
+    // Success
+    return { success: true };
+  } catch (error: any) {
+    console.error("[delete-account] Unexpected error during MFA verification:", error?.message, error?.stack);
+    return { success: false, error: "MFA_VERIFICATION_FAILED" };
+  }
+}
+
 async function sendEmailNotification(
   email: string,
   supabaseUrl: string,
@@ -313,7 +369,50 @@ export async function handleDeleteAccountRequest(req: Request) {
   });
 
   try {
-    // 1. Authenticate request (require JWT, user must be logged in)
+    // 1. Parse request body for mfa_code
+    let requestBody: { mfa_code?: string } = {};
+    try {
+      const bodyText = await req.text();
+      if (bodyText) {
+        requestBody = JSON.parse(bodyText);
+      }
+    } catch (parseError: any) {
+      console.error("[delete-account] Failed to parse request body:", parseError?.message);
+      return new Response(
+        JSON.stringify({
+          error: "INVALID_REQUEST",
+          message: "Invalid request body",
+        }),
+        {
+          status: 400,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    }
+
+    const mfaCode = requestBody.mfa_code?.trim();
+
+    // 2. Validate mfa_code is provided
+    if (!mfaCode || mfaCode.length !== 6) {
+      return new Response(
+        JSON.stringify({
+          error: "MFA_CODE_REQUIRED",
+          message: "MFA code is required and must be 6 digits",
+        }),
+        {
+          status: 400,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    }
+
+    // 3. Authenticate request (require JWT, user must be logged in)
     const {
       data: { user },
       error: authError,
@@ -338,7 +437,43 @@ export async function handleDeleteAccountRequest(req: Request) {
 
     console.log(`[delete-account] Delete request received for user ${userId} at ${timestamp}`);
 
-    // Check feature flag before performing any destructive operation
+    // 4. Verify MFA code before proceeding
+    const mfaVerification = await verifyMFACode(supabase, mfaCode, userId);
+
+    if (!mfaVerification.success) {
+      const errorCode = mfaVerification.error || "MFA_VERIFICATION_FAILED";
+      let statusCode = 401;
+      let message = "MFA verification failed";
+
+      if (errorCode === "MFA_NOT_ENABLED") {
+        statusCode = 403;
+        message = "Two-factor authentication is not enabled. Please enable 2FA before deleting your account.";
+      } else if (errorCode === "MFA_CODE_INVALID") {
+        statusCode = 401;
+        message = "Invalid MFA code. Please try again.";
+      } else {
+        statusCode = 500;
+        message = "MFA verification failed. Please try again.";
+      }
+
+      return new Response(
+        JSON.stringify({
+          error: errorCode,
+          message,
+        }),
+        {
+          status: statusCode,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        },
+      );
+    }
+
+    console.log(`[delete-account] MFA verification successful for user ${userId}`);
+
+    // 5. Check feature flag before performing any destructive operation
     if (deleteAccountEnabled !== "true") {
       console.warn(
         `[delete-account] Delete account is currently disabled via feature flag for user ${userId} at ${timestamp}`,
@@ -358,7 +493,7 @@ export async function handleDeleteAccountRequest(req: Request) {
       );
     }
 
-    // 2. Perform cascade delete
+    // 6. Perform cascade delete (only if MFA verification succeeded)
     const result = await deleteUserAccount(userId, supabaseUrl, serviceRoleKey);
 
     if (!result.success) {

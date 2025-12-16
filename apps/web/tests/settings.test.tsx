@@ -50,6 +50,13 @@ vi.mock("../src/lib/AuthProvider", () => ({
   useAuth: () => mockAuthValue,
 }));
 
+vi.mock("../src/routes/Settings/pages/TwoFactor/useSupabaseMFA", () => ({
+  useSupabaseMFA: vi.fn(() => ({
+    state: "active",
+    loading: false,
+  })),
+}));
+
 vi.mock("../src/components/Header", () => ({
   Header: () => React.createElement("header", { "data-testid": "mock-header" }),
 }));

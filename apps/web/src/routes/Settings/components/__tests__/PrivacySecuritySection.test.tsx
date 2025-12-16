@@ -20,6 +20,14 @@ vi.mock("react-i18next", () => ({
   }),
 }));
 
+// Mock useSupabaseMFA
+vi.mock("@/routes/Settings/pages/TwoFactor/useSupabaseMFA", () => ({
+  useSupabaseMFA: vi.fn(() => ({
+    state: "active",
+    loading: false,
+  })),
+}));
+
 // Mock ChangePasswordModal
 vi.mock("../ChangePasswordModal", () => ({
   ChangePasswordModal: ({

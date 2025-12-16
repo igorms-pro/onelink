@@ -41,6 +41,13 @@ vi.mock("@/lib/deleteAccount", () => ({
   deleteAccount: vi.fn(),
 }));
 
+vi.mock("@/routes/Settings/pages/TwoFactor/useSupabaseMFA", () => ({
+  useSupabaseMFA: vi.fn(() => ({
+    state: "active",
+    loading: false,
+  })),
+}));
+
 // i18n is already configured in vitest.setup.ts - no need to mock
 
 vi.mock("@/components/ui/drawer", () => ({
@@ -60,8 +67,8 @@ vi.mock("../DeleteAccount/DeleteAccountWarning", () => ({
 
 vi.mock("../DeleteAccount/DeleteAccountForm", () => ({
   DeleteAccountForm: ({
-    password,
-    onPasswordChange,
+    mfaCode,
+    onMfaCodeChange,
     confirmChecked,
     onConfirmChange,
     onSubmit,
@@ -72,15 +79,15 @@ vi.mock("../DeleteAccount/DeleteAccountForm", () => ({
   }: any) => (
     <form data-testid="delete-account-form" onSubmit={onSubmit}>
       <input
-        data-testid="password-input"
-        id="delete-password"
-        type="password"
-        value={password}
-        onChange={(e) => onPasswordChange(e.target.value)}
+        data-testid="delete-account-mfa-input"
+        id="delete-mfa-code"
+        type="tel"
+        value={mfaCode}
+        onChange={(e) => onMfaCodeChange(e.target.value)}
         disabled={isLoading}
       />
       <input
-        data-testid="confirm-checkbox"
+        data-testid="delete-account-confirm-checkbox"
         id="delete-confirm"
         type="checkbox"
         checked={confirmChecked}
@@ -88,14 +95,14 @@ vi.mock("../DeleteAccount/DeleteAccountForm", () => ({
         disabled={isLoading}
       />
       <button
-        data-testid="submit-button"
+        data-testid="delete-account-submit-button"
         type="submit"
         disabled={!isValid || isLoading}
       >
         Submit
       </button>
       <button
-        data-testid="cancel-button"
+        data-testid="delete-account-cancel-button"
         type="button"
         onClick={onCancel}
         disabled={isLoading}
@@ -141,7 +148,7 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const cancelButton = screen.getByTestId("cancel-button");
+      const cancelButton = screen.getByTestId("delete-account-cancel-button");
       await user.click(cancelButton);
 
       expect(mockOnOpenChange).toHaveBeenCalledWith(false);
@@ -153,19 +160,19 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
 
-      await user.type(passwordInput, "testpassword");
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
 
       await waitFor(() => {
-        expect(passwordInput).toHaveValue("testpassword");
+        expect(mfaCodeInput).toHaveValue("123456");
         expect(checkbox).toBeChecked();
       });
 
       // Close modal - this should reset the form
-      await user.click(screen.getByTestId("cancel-button"));
+      await user.click(screen.getByTestId("delete-account-cancel-button"));
       await waitFor(() => {
         expect(mockOnOpenChange).toHaveBeenCalledWith(false);
       });
@@ -175,10 +182,12 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const resetPasswordInput = screen.getByTestId("password-input");
-      const resetCheckbox = screen.getByTestId("confirm-checkbox");
+      const resetMfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const resetCheckbox = screen.getByTestId(
+        "delete-account-confirm-checkbox",
+      );
 
-      expect(resetPasswordInput).toHaveValue("");
+      expect(resetMfaCodeInput).toHaveValue("");
       expect(resetCheckbox).not.toBeChecked();
     });
 
@@ -189,11 +198,11 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
+      const submitButton = screen.getByTestId("delete-account-submit-button");
 
-      await user.type(passwordInput, "testpassword");
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
       await user.click(submitButton);
 
@@ -209,7 +218,7 @@ describe("DeleteAccountModal", () => {
       );
 
       // Try to close - should not work during loading
-      const cancelButton = screen.getByTestId("cancel-button");
+      const cancelButton = screen.getByTestId("delete-account-cancel-button");
       expect(cancelButton).toBeDisabled();
 
       vi.useRealTimers();
@@ -241,16 +250,16 @@ describe("DeleteAccountModal", () => {
   });
 
   describe("Form Integration", () => {
-    it("passes password state to form", async () => {
+    it("passes MFA code state to form", async () => {
       const user = userEvent.setup();
       render(
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      await user.type(passwordInput, "testpassword");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      await user.type(mfaCodeInput, "123456");
 
-      expect(passwordInput).toHaveValue("testpassword");
+      expect(mfaCodeInput).toHaveValue("123456");
     });
 
     it("passes confirmChecked state to form", async () => {
@@ -259,27 +268,27 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const checkbox = screen.getByTestId("confirm-checkbox");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
       await user.click(checkbox);
 
       expect(checkbox).toBeChecked();
     });
 
-    it("calculates isValid based on password and checkbox", async () => {
+    it("calculates isValid based on MFA code and checkbox", async () => {
       const user = userEvent.setup();
       render(
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
+      const submitButton = screen.getByTestId("delete-account-submit-button");
 
       // Initially disabled
       expect(submitButton).toBeDisabled();
 
-      // Enable with password and checkbox
-      await user.type(passwordInput, "testpassword");
+      // Enable with MFA code and checkbox
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
 
       await waitFor(
@@ -310,16 +319,16 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
+      const submitButton = screen.getByTestId("delete-account-submit-button");
 
-      await user.type(passwordInput, "testpassword");
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
       await user.click(submitButton);
 
       await waitFor(() => {
-        expect(deleteAccount).toHaveBeenCalled();
+        expect(deleteAccount).toHaveBeenCalledWith({ mfaCode: "123456" });
         expect(toast.success).toHaveBeenCalled();
         expect(mockOnOpenChange).toHaveBeenCalledWith(false);
         expect(mockNavigate).toHaveBeenCalledWith("/auth");
@@ -330,10 +339,12 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const resetPasswordInput = screen.getByTestId("password-input");
-      const resetCheckbox = screen.getByTestId("confirm-checkbox");
+      const resetMfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const resetCheckbox = screen.getByTestId(
+        "delete-account-confirm-checkbox",
+      );
 
-      expect(resetPasswordInput).toHaveValue("");
+      expect(resetMfaCodeInput).toHaveValue("");
       expect(resetCheckbox).not.toBeChecked();
     });
 
@@ -349,11 +360,11 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
+      const submitButton = screen.getByTestId("delete-account-submit-button");
 
-      await user.type(passwordInput, "testpassword");
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
       await user.click(submitButton);
 
@@ -396,12 +407,12 @@ describe("DeleteAccountModal", () => {
         <DeleteAccountModal open={true} onOpenChange={mockOnOpenChange} />,
       );
 
-      const passwordInput = screen.getByTestId("password-input");
-      const checkbox = screen.getByTestId("confirm-checkbox");
-      const submitButton = screen.getByTestId("submit-button");
-      const cancelButton = screen.getByTestId("cancel-button");
+      const mfaCodeInput = screen.getByTestId("delete-account-mfa-input");
+      const checkbox = screen.getByTestId("delete-account-confirm-checkbox");
+      const submitButton = screen.getByTestId("delete-account-submit-button");
+      const cancelButton = screen.getByTestId("delete-account-cancel-button");
 
-      await user.type(passwordInput, "testpassword");
+      await user.type(mfaCodeInput, "123456");
       await user.click(checkbox);
       await user.click(submitButton);
 
@@ -410,7 +421,7 @@ describe("DeleteAccountModal", () => {
 
       await waitFor(
         () => {
-          expect(passwordInput).toBeDisabled();
+          expect(mfaCodeInput).toBeDisabled();
           expect(checkbox).toBeDisabled();
           expect(submitButton).toBeDisabled();
           expect(cancelButton).toBeDisabled();
