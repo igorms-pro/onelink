@@ -177,6 +177,44 @@ test.describe("Settings Navigation", () => {
     await expect(page.getByTestId("delete-account-form")).toBeVisible();
   });
 
+  test("attempting to delete account keeps user on settings when deletion is disabled", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/settings", { waitUntil: "load" });
+
+    // Ensure privacy & security section is visible
+    await expect(
+      page.getByTestId("settings-privacy-security-section"),
+    ).toBeVisible({ timeout: 30000 });
+
+    // Open delete account modal
+    const deleteAccountButton = page.getByTestId("settings-delete-account");
+    await expect(deleteAccountButton).toBeVisible();
+    await deleteAccountButton.click();
+
+    const modal = page.getByTestId("delete-account-modal");
+    await expect(modal).toBeVisible({ timeout: 5000 });
+    await expect(page.getByTestId("delete-account-form")).toBeVisible();
+
+    // Fill form (password + confirmation checkbox)
+    const passwordInput = page.getByTestId("delete-account-password-input");
+    const confirmCheckbox = page.getByTestId("delete-account-confirm-checkbox");
+
+    await passwordInput.fill("testpassword123");
+    await confirmCheckbox.click();
+
+    // Submit the form
+    const submitButton = page.getByTestId("delete-account-submit-button");
+    await submitButton.click();
+
+    // When DELETE_ACCOUNT_ENABLED is false in the Edge Function env, the call
+    // should fail and keep the user on /settings with the modal still open.
+    // This makes the test safe even with a shared E2E test account.
+    await expect(page).toHaveURL(/\/settings/, { timeout: 10000 });
+    await expect(page.getByTestId("delete-account-modal")).toBeVisible();
+    await expect(page.getByTestId("delete-account-form")).toBeVisible();
+  });
+
   test("back to dashboard button works", async ({
     authenticatedPage: page,
   }) => {
