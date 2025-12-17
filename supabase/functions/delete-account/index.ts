@@ -322,7 +322,18 @@ async function deleteUserAccount(
   }
 }
 
-export async function handleDeleteAccountRequest(req: Request) {
+interface HandlerEnv {
+  supabaseUrl?: string | null;
+  supabaseAnonKey?: string | null;
+  serviceRoleKey?: string | null;
+  deleteAccountEnabled?: string | null;
+  createClientImpl?: typeof createClient;
+}
+
+export async function handleDeleteAccountRequest(
+  req: Request,
+  env: HandlerEnv = {},
+) {
   // CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, {
@@ -338,9 +349,9 @@ export async function handleDeleteAccountRequest(req: Request) {
     });
   }
 
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY");
-  const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const supabaseUrl = env.supabaseUrl ?? Deno.env.get("SUPABASE_URL");
+  const supabaseAnonKey = env.supabaseAnonKey ?? Deno.env.get("SUPABASE_ANON_KEY");
+  const serviceRoleKey = env.serviceRoleKey ?? Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
 
   if (!supabaseUrl || !supabaseAnonKey || !serviceRoleKey) {
     console.error("[delete-account] Missing required environment variables");
@@ -351,7 +362,7 @@ export async function handleDeleteAccountRequest(req: Request) {
   }
 
   // Safety feature flag: allow soft-launch / kill-switch for delete account
-  const deleteAccountEnabled = (Deno.env.get("DELETE_ACCOUNT_ENABLED") || "false").toLowerCase();
+  const deleteAccountEnabled = (env.deleteAccountEnabled ?? Deno.env.get("DELETE_ACCOUNT_ENABLED") || "false").toLowerCase();
 
   const authHeader = req.headers.get("Authorization") || "";
   const jwt = authHeader.replace("Bearer ", "");
@@ -363,7 +374,8 @@ export async function handleDeleteAccountRequest(req: Request) {
     });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  const createClientFn = env.createClientImpl ?? createClient;
+  const supabase = createClientFn(supabaseUrl, supabaseAnonKey, {
     auth: { persistSession: false },
     global: { headers: { Authorization: `Bearer ${jwt}` } },
   });
