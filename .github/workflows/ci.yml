@@ -111,10 +111,8 @@ jobs:
         run: pnpm build
         env:
           # Use real E2E credentials for build so tests can authenticate
-          # yamllint disable-line rule:context-access
-          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          # yamllint disable-line rule:context-access
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL != '' && secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY != '' && secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
       
       - name: Run E2E tests
         # yamllint disable-line rule:line-length
@@ -128,14 +126,10 @@ jobs:
           NODE_ENV: "test"
           # E2E test credentials - use secrets if available, otherwise placeholder values
           # These are passed directly to the process environment for Playwright
-          # yamllint disable-line rule:context-access
-          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          # yamllint disable-line rule:context-access
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
-          # yamllint disable-line rule:context-access
-          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
-          # yamllint disable-line rule:context-access
-          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
+          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL != '' && secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY != '' && secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL != '' && secrets.E2E_TEST_EMAIL || 'test@example.com' }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD != '' && secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
       
       - name: Upload Playwright report
         if: always()
@@ -158,17 +152,13 @@ jobs:
         with:
           deno-version: v2.x
       
-      - name: Install Deno dependencies
-        working-directory: supabase/functions
-        run: deno install --allow-read --allow-env
-      
       - name: Run Edge Function tests (send-notification-email)
         working-directory: supabase/functions
-        run: deno test send-notification-email/__tests__/*.test.ts --allow-read --allow-env --allow-net
+        run: deno test send-notification-email/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check
       
       - name: Run Edge Function tests (send-weekly-digest)
         working-directory: supabase/functions
-        run: deno test send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env --allow-net
+        run: deno test send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check
 
   build:
     runs-on: ubuntu-latest

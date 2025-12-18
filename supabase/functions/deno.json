@@ -10,5 +10,8 @@
     "lib": ["deno.window", "deno.ns"],
     "strict": false,
     "types": ["./deno.d.ts"]
+  },
+  "test": {
+    "include": ["**/__tests__/**/*.test.ts"]
   }
 }
