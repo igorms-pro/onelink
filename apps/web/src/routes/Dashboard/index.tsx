@@ -34,6 +34,7 @@ export default function Dashboard() {
     setDrops,
     submissions,
     plan,
+    clearAllSubmissions,
   } = useDashboardData(userId);
 
   const isFree = !isPaidPlan(plan);
@@ -67,12 +68,18 @@ export default function Dashboard() {
         />
 
         {/* Clear All button - Desktop only, outside scrollable area */}
-        {activeTab === "inbox" && submissions.length + 6 > 0 && (
+        {activeTab === "inbox" && submissions.length > 0 && (
           <div className="hidden sm:flex justify-end  shrink-0">
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
-                  // TODO: Implement actual clear functionality with database
+                  const success = await clearAllSubmissions();
+                  if (!success) {
+                    alert(
+                      t("dashboard_inbox_clear_all_error") ||
+                        "Failed to clear submissions",
+                    );
+                  }
                 }
               }}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
@@ -113,10 +120,16 @@ export default function Dashboard() {
       <BottomNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        submissionCount={submissions.length + 6}
-        onClearAll={() => {
-          if (confirm("Clear all inbox items? This cannot be undone.")) {
-            // TODO: Implement actual clear functionality with database
+        submissionCount={submissions.length}
+        onClearAll={async () => {
+          if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
+            const success = await clearAllSubmissions();
+            if (!success) {
+              alert(
+                t("dashboard_inbox_clear_all_error") ||
+                  "Failed to clear submissions",
+              );
+            }
           }
         }}
       />

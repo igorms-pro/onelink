@@ -133,8 +133,10 @@ const createDashboardData = (
   drops: [],
   setDrops: createDispatch<DropRow[]>(),
   submissions: emptySubmissions,
+  setSubmissions: createDispatch<SubmissionRow[]>(),
   plan: PlanType.FREE,
   loading: false,
+  clearAllSubmissions: async () => true,
   ...overrides,
 });
 
