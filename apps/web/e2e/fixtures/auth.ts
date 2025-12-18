@@ -2,6 +2,7 @@
 // This file uses Playwright fixtures, not React hooks. The "use" parameter is a Playwright convention.
 import { test as base } from "@playwright/test";
 import { authenticateUser } from "../helpers/auth";
+import { setupPostHogInterception } from "../helpers/posthog";
 import { existsSync, mkdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -81,6 +82,9 @@ export const test = base.extend<AuthFixtures>({
       storageState: STORAGE_STATE_PATH,
     });
     const page = await context.newPage();
+
+    // Intercept PostHog requests to avoid real API calls during tests
+    await setupPostHogInterception(page);
 
     // Use the authenticated page
     await usePage(page);
