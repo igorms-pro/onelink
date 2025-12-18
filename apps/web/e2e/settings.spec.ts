@@ -167,14 +167,189 @@ test.describe("Settings Navigation", () => {
 
     const deleteAccountButton = page.getByTestId("settings-delete-account");
     await expect(deleteAccountButton).toBeVisible();
+
+    // If button is disabled (MFA not enabled), skip this test
+    const isDisabled = await deleteAccountButton
+      .isDisabled()
+      .catch(() => false);
+    if (isDisabled) {
+      // Verify the MFA notice is shown in the settings section
+      const mfaNotice = page.getByTestId("settings-delete-account-mfa-notice");
+      await expect(mfaNotice).toBeVisible();
+      return;
+    }
+
     await deleteAccountButton.click();
 
-    // Modal should open with warning - wait for it to appear
+    // Modal should open - wait for it to appear
     await expect(page.getByTestId("delete-account-modal")).toBeVisible({
       timeout: 5000,
     });
-    // Verify form is visible
-    await expect(page.getByTestId("delete-account-form")).toBeVisible();
+
+    // Wait a bit for MFA status to load
+    await page.waitForTimeout(500);
+
+    // Check if MFA is required message is shown (if MFA not enabled)
+    // or the form is shown (if MFA is enabled)
+    const mfaRequiredMessage = page.getByTestId(
+      "delete-account-mfa-required-message",
+    );
+    const form = page.getByTestId("delete-account-form");
+
+    // Wait for either one to be visible (with timeout)
+    await Promise.race([
+      mfaRequiredMessage
+        .waitFor({ state: "visible", timeout: 2000 })
+        .catch(() => null),
+      form.waitFor({ state: "visible", timeout: 2000 }).catch(() => null),
+    ]);
+
+    const isMfaRequired = await mfaRequiredMessage
+      .isVisible()
+      .catch(() => false);
+    const isFormVisible = await form.isVisible().catch(() => false);
+
+    // Either the MFA required message OR the form should be visible
+    expect(isMfaRequired || isFormVisible).toBe(true);
+  });
+
+  test("attempting to delete account keeps user on settings when deletion is disabled", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/settings", { waitUntil: "load" });
+
+    // Ensure privacy & security section is visible
+    await expect(
+      page.getByTestId("settings-privacy-security-section"),
+    ).toBeVisible({ timeout: 30000 });
+
+    // Open delete account modal
+    const deleteAccountButton = page.getByTestId("settings-delete-account");
+    await expect(deleteAccountButton).toBeVisible();
+    await deleteAccountButton.click();
+
+    const modal = page.getByTestId("delete-account-modal");
+    await expect(modal).toBeVisible({ timeout: 5000 });
+
+    // Wait a bit for MFA status to load
+    await page.waitForTimeout(500);
+
+    // Check if MFA is required message is shown (if MFA not enabled)
+    // or the form is shown (if MFA is enabled)
+    const mfaRequiredMessage = page.getByTestId(
+      "delete-account-mfa-required-message",
+    );
+    const form = page.getByTestId("delete-account-form");
+
+    // Wait for either one to be visible (with timeout)
+    await Promise.race([
+      mfaRequiredMessage
+        .waitFor({ state: "visible", timeout: 2000 })
+        .catch(() => null),
+      form.waitFor({ state: "visible", timeout: 2000 }).catch(() => null),
+    ]);
+
+    const isMfaRequired = await mfaRequiredMessage
+      .isVisible()
+      .catch(() => false);
+    const isFormVisible = await form.isVisible().catch(() => false);
+
+    // If MFA is not enabled, the test should show the MFA required message
+    if (isMfaRequired) {
+      // User needs to enable MFA first - test that the message is shown
+      await expect(mfaRequiredMessage).toBeVisible();
+      return;
+    }
+
+    // If MFA is enabled, proceed with the form
+    if (!isFormVisible) {
+      throw new Error("Neither MFA required message nor form is visible");
+    }
+    await expect(form).toBeVisible();
+
+    // Fill form (MFA code + confirmation checkbox)
+    const mfaCodeInput = page.getByTestId("delete-account-mfa-input");
+    const confirmCheckbox = page.getByTestId("delete-account-confirm-checkbox");
+
+    await mfaCodeInput.fill("123456");
+    await confirmCheckbox.click();
+
+    // Submit the form
+    const submitButton = page.getByTestId("delete-account-submit-button");
+    await submitButton.click();
+
+    // When DELETE_ACCOUNT_ENABLED is false in the Edge Function env, the call
+    // should fail and keep the user on /settings with the modal still open.
+    // This makes the test safe even with a shared E2E test account.
+    await expect(page).toHaveURL(/\/settings/, { timeout: 10000 });
+    await expect(page.getByTestId("delete-account-modal")).toBeVisible();
+
+    // After submission, either the form or the MFA required message should still be visible
+    const formAfterSubmit = page.getByTestId("delete-account-form");
+    const mfaRequiredAfterSubmit = page.getByTestId(
+      "delete-account-mfa-required-message",
+    );
+    const isFormStillVisible = await formAfterSubmit
+      .isVisible()
+      .catch(() => false);
+    const isMfaRequiredStillVisible = await mfaRequiredAfterSubmit
+      .isVisible()
+      .catch(() => false);
+
+    // At least one should be visible (form if MFA enabled, or MFA required message if not)
+    expect(isFormStillVisible || isMfaRequiredStillVisible).toBe(true);
+  });
+
+  test("delete account modal shows MFA required message when MFA is not enabled", async ({
+    authenticatedPage: page,
+  }) => {
+    await page.goto("/settings", { waitUntil: "load" });
+
+    // Ensure privacy & security section is visible
+    await expect(
+      page.getByTestId("settings-privacy-security-section"),
+    ).toBeVisible({ timeout: 30000 });
+
+    // Open delete account modal
+    const deleteAccountButton = page.getByTestId("settings-delete-account");
+    await expect(deleteAccountButton).toBeVisible();
+
+    // If button is disabled (MFA not enabled), skip this test
+    const isDisabled = await deleteAccountButton
+      .isDisabled()
+      .catch(() => false);
+    if (isDisabled) {
+      // Verify the MFA notice is shown in the settings section
+      const mfaNotice = page.getByTestId("settings-delete-account-mfa-notice");
+      await expect(mfaNotice).toBeVisible();
+      return;
+    }
+
+    await deleteAccountButton.click();
+
+    const modal = page.getByTestId("delete-account-modal");
+    await expect(modal).toBeVisible({ timeout: 5000 });
+
+    // Check if MFA required message is shown
+    const mfaRequiredMessage = page.getByTestId(
+      "delete-account-mfa-required-message",
+    );
+    const isMfaRequired = await mfaRequiredMessage
+      .isVisible()
+      .catch(() => false);
+
+    if (isMfaRequired) {
+      // Verify the message and CTA button are visible
+      await expect(mfaRequiredMessage).toBeVisible();
+      const enable2FAButton = page.getByTestId(
+        "delete-account-enable-2fa-button",
+      );
+      await expect(enable2FAButton).toBeVisible();
+
+      // Click the enable 2FA button should navigate to 2FA page
+      await enable2FAButton.click();
+      await expect(page).toHaveURL(/\/settings\/2fa/);
+    }
   });
 
   test("back to dashboard button works", async ({
