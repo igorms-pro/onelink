@@ -2,14 +2,31 @@ import { describe, it, expect, beforeEach, vi } from "vitest";
 
 // Mock dependencies BEFORE imports
 const mockNavigate = vi.fn();
+const mockSearchParams = new URLSearchParams();
 
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
   return {
     ...actual,
     useNavigate: () => mockNavigate,
+    useSearchParams: () => [mockSearchParams],
   };
 });
+
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "test-user-id" },
+    loading: false,
+  }),
+}));
+
+vi.mock("@/lib/posthog", () => ({
+  trackEvent: vi.fn(),
+}));
+
+vi.mock("@/lib/posthog-events", () => ({
+  trackSubscriptionUpgraded: vi.fn(),
+}));
 
 // Mock react-i18next
 vi.mock("react-i18next", async () => {

@@ -38,6 +38,17 @@ vi.mock("./ProfileLinkCard", () => ({
   ),
 }));
 
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "test-user-id" },
+    loading: false,
+  }),
+}));
+
+vi.mock("@/lib/posthog-events", () => ({
+  trackProfileUpdated: vi.fn(),
+}));
+
 vi.mock("@/lib/supabase", () => ({
   supabase: {
     from: vi.fn(() => ({
