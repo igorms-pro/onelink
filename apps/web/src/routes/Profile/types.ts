@@ -11,6 +11,7 @@ export type PublicProfile = {
   display_name?: string | null;
   bio?: string | null;
   avatar_url?: string | null;
+  user_id?: string; // Added for isOwner check
 };
 
 export type PublicDrop = {

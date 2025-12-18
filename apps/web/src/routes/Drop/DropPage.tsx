@@ -45,8 +45,8 @@ export default function DropPage({ token }: DropPageProps) {
         ]);
 
         // Track drop view in PostHog
-        // Note: isOwner check can be enhanced later if needed
-        trackDropViewed(token, false); // Default to false - can be enhanced later
+        const isOwner = user?.id === dropData.owner_user_id;
+        trackDropViewed(token, isOwner);
 
         // Load files
         const dropFiles = await getDropFiles(dropData.id);

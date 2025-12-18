@@ -10,3 +10,6 @@ export { toggleDropVisibility } from "./visibility";
 // Files
 export { getDropFiles } from "./getDropFiles";
 export { uploadFileToDrop } from "./uploadFiles";
+
+// Owner
+export { getDropOwnerUserId } from "./getDropOwner";

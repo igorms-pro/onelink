@@ -29,9 +29,8 @@ export default function Profile() {
   // Track profile view
   useEffect(() => {
     if (profile && slug) {
-      // Note: isOwner check can be enhanced later by fetching user_id from profile
-      // For now, we track with isOwner = false (can be enriched later)
-      trackProfileViewed(slug, false);
+      const isOwner = user?.id === profile.user_id;
+      trackProfileViewed(slug, isOwner);
     }
   }, [profile, slug, user]);
 

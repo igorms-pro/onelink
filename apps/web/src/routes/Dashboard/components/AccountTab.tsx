@@ -10,6 +10,8 @@ import {
 import { AnalyticsCard } from "@/components/AnalyticsCard";
 import { ProfileLinkCard } from "./ProfileLinkCard";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackProfileUpdated } from "@/lib/posthog-events";
 
 interface AccountTabProps {
   profileId: string | null;
@@ -23,6 +25,7 @@ export function AccountTab({
   isFree,
 }: AccountTabProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const profileEditorRef = useRef<ProfileEditorRef>(null);
   const [profileUpdatedAt, setProfileUpdatedAt] = useState<string | null>(null);
   const [isAnalyticsExpanded, setIsAnalyticsExpanded] = useState(true);
@@ -79,6 +82,11 @@ export function AccountTab({
             }
             toast.success(t("dashboard_account_profile_update_success"));
             setProfileUpdatedAt(data?.updated_at ?? new Date().toISOString());
+
+            // Track profile update
+            if (user?.id) {
+              trackProfileUpdated(user.id);
+            }
           }}
         />
         {profileUpdatedAt && (

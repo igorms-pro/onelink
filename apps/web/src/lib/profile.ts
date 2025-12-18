@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { trackProfileCreated } from "./posthog-events";
 
 export type ProfileRow = {
   id: string;
@@ -107,7 +108,12 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
     .single<ProfileRow>();
 
   if (inserted.error) throw inserted.error;
-  return inserted.data as ProfileRow;
+
+  // Track profile creation
+  const profile = inserted.data as ProfileRow;
+  trackProfileCreated(userId, profile.slug);
+
+  return profile;
 }
 
 export async function getSelfPlan(
