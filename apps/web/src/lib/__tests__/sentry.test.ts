@@ -43,7 +43,6 @@ describe("initSentry", () => {
     (import.meta.env as any).VITE_SENTRY_DSN = "https://test@sentry.io/123";
     delete (import.meta.env as any).VITE_SENTRY_ENVIRONMENT;
     delete (import.meta.env as any).MODE;
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     initSentry();
 
@@ -57,17 +56,11 @@ describe("initSentry", () => {
         replaysOnErrorSampleRate: 1.0,
       }),
     );
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "[Sentry] Initialized in development environment",
-    );
-
-    consoleSpy.mockRestore();
   });
 
   it("should use VITE_SENTRY_ENVIRONMENT when provided", () => {
     (import.meta.env as any).VITE_SENTRY_DSN = "https://test@sentry.io/123";
     (import.meta.env as any).VITE_SENTRY_ENVIRONMENT = "staging";
-    const consoleSpy = vi.spyOn(console, "log").mockImplementation(() => {});
 
     initSentry();
 
@@ -76,11 +69,6 @@ describe("initSentry", () => {
         environment: "staging",
       }),
     );
-    expect(consoleSpy).toHaveBeenCalledWith(
-      "[Sentry] Initialized in staging environment",
-    );
-
-    consoleSpy.mockRestore();
   });
 
   it("should fallback to MODE when VITE_SENTRY_ENVIRONMENT is not provided", () => {

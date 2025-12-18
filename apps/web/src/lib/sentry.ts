@@ -71,5 +71,5 @@ export function initSentry() {
     },
   });
 
-  console.log(`[Sentry] Initialized in ${environment} environment`);
+  // Sentry initialized silently
 }

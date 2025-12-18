@@ -5,6 +5,7 @@ import { Toaster } from "sonner";
 import "./index.css";
 import "./lib/i18n";
 import { initSentry } from "./lib/sentry";
+import { initPostHog } from "./lib/posthog";
 import App from "./routes/App";
 import Profile from "./routes/Profile/index";
 import Auth from "./routes/Auth";
@@ -24,6 +25,9 @@ import { AuthProvider } from "./lib/AuthProvider";
 
 // Initialize Sentry as early as possible (before any other code)
 initSentry();
+
+// Initialize PostHog for product analytics
+initPostHog();
 
 // Initialize theme on app load
 const theme = localStorage.getItem("theme") || "system";

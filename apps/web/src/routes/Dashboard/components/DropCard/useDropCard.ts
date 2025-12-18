@@ -10,6 +10,8 @@ import {
 import { useAsyncOperation } from "@/hooks/useAsyncOperation";
 import type { DropRow } from "../../types";
 import type { DropFile } from "../DropFileList";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackDropUpdated, trackDropDeleted } from "@/lib/posthog-events";
 
 interface UseDropCardProps {
   drop: DropRow;
@@ -25,6 +27,7 @@ export function useDropCard({
   setDrops,
 }: UseDropCardProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
@@ -48,7 +51,11 @@ export function useDropCard({
     }
     setDrops(drops.map((x) => (x.id === d.id ? { ...x, label: newLabel } : x)));
     toast.success(t("dashboard_content_drops_update_success"));
-  }, [d.id, d.label, profileId, drops, setDrops, t]);
+    // Track drop update
+    if (user?.id) {
+      trackDropUpdated(user.id, d.id);
+    }
+  }, [d.id, d.label, profileId, drops, setDrops, t, user?.id]);
 
   const handleToggle = useCallback(
     async (checked: boolean) => {
@@ -90,7 +97,11 @@ export function useDropCard({
     }
     setDrops(drops.filter((x) => x.id !== d.id));
     toast.success(t("dashboard_content_drops_delete_success"));
-  }, [d.id, profileId, drops, setDrops, t]);
+    // Track drop deletion
+    if (user?.id) {
+      trackDropDeleted(user.id, d.id);
+    }
+  }, [d.id, profileId, drops, setDrops, t, user?.id]);
 
   const handleToggleVisibility = useCallback(async () => {
     const newVisibility = !d.is_public;

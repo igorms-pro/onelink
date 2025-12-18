@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import type { DropRow } from "../types";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackDropCreated } from "@/lib/posthog-events";
 
 interface DropFormProps {
   profileId: string | null;
@@ -20,6 +22,7 @@ export function DropForm({
   dropsCount,
 }: DropFormProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [busy, setBusy] = useState(false);
   const limitReached = isFree && dropsCount >= freeDropsLimit;
 
@@ -63,6 +66,10 @@ export function DropForm({
           onDropCreated(data as DropRow);
           form.reset();
           toast.success(t("dashboard_content_drops_create_success"));
+          // Track drop creation
+          if (user?.id) {
+            trackDropCreated(user.id, data.id);
+          }
         } catch {
           toast.error(t("dashboard_content_drops_create_failed"));
         } finally {

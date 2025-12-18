@@ -4,6 +4,7 @@ import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
 import { createUserSession, logLoginAttempt } from "./sessionTracking";
 import { MFAChallenge } from "@/components/MFAChallenge";
+import { trackUserSignedIn, trackUserSignedOut } from "./posthog-events";
 
 type AuthContextValue = {
   session: Session | null;
@@ -29,15 +30,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // This is the primary way to detect session restoration
     const { data: sub } = supabase.auth.onAuthStateChange(async (event, s) => {
       if (!mounted) return;
-
-      console.log("[Auth] State change:", event, s?.user?.email || "No user");
-      console.log("[Auth] Session data:", {
-        hasSession: !!s,
-        hasUser: !!s?.user,
-        userId: s?.user?.id,
-        email: s?.user?.email,
-        accessToken: s?.access_token ? "present" : "missing",
-      });
 
       // Update session state for all events
       // INITIAL_SESSION: fired when session is restored from storage (on refresh)
@@ -87,19 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 if (error) {
                   console.error("[Auth] Error listing MFA factors:", error);
                 } else if (data?.totp && data.totp.length > 0) {
-                  console.log(
-                    "[Auth] User has MFA factors and session needs upgrade to aal2, showing challenge",
-                  );
                   setShowMFAChallenge(true);
                 }
-              } else {
-                console.log(
-                  "[Auth] Session AAL:",
-                  aalData.currentLevel,
-                  "->",
-                  aalData.nextLevel,
-                  "- skipping MFA challenge",
-                );
               }
             }
           } catch (err) {
@@ -112,20 +93,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Only do this for SIGNED_IN, not for INITIAL_SESSION (which happens on refresh)
       // Run these asynchronously without blocking the auth flow
       if (event === "SIGNED_IN" && s?.user) {
-        console.log("[Auth] User signed in:", {
-          userId: s.user.id,
-          email: s.user.email,
-        });
         // Don't await - run in background to avoid blocking auth flow
         createUserSession({
           userId: s.user.id,
-        })
-          .then(() => {
-            console.log("[Auth] Session created in database");
-          })
-          .catch((error) => {
-            console.error("[Auth] Error creating session:", error);
-          });
+        }).catch((error) => {
+          console.error("[Auth] Error creating session:", error);
+        });
 
         // Log successful login (also non-blocking)
         logLoginAttempt({
@@ -135,6 +108,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }).catch((error) => {
           console.error("[Auth] Error logging login attempt:", error);
         });
+
+        // Track sign-in in PostHog (non-blocking)
+        trackUserSignedIn(s.user.id);
+      }
+
+      // Track sign-out
+      if (event === "SIGNED_OUT") {
+        trackUserSignedOut();
       }
     });
 
@@ -147,7 +128,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (data.session) {
-        console.log("[Auth] Fallback session check:", data.session.user.email);
         setSession(data.session);
       }
 
@@ -155,9 +135,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // we assume there's no session and set loading to false
       setTimeout(() => {
         if (!mounted || sessionInitialized) return;
-        console.log(
-          "[Auth] Timeout: INITIAL_SESSION not received, assuming no session",
-        );
         setLoading(false);
       }, 1000);
     });
@@ -170,13 +147,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<AuthContextValue>(() => {
     const user = session?.user ?? null;
-    console.log("[Auth] Context value updated:", {
-      hasSession: !!session,
-      hasUser: !!user,
-      userId: user?.id,
-      userObject: user ? { id: user.id, email: user.email } : null,
-      loading,
-    });
     return {
       session,
       user,
@@ -191,6 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       },
       async signOut() {
         await supabase.auth.signOut();
+        // Note: trackUserSignedOut is called in onAuthStateChange when SIGNED_OUT fires
       },
     };
   }, [session, loading]);

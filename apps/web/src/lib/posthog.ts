@@ -1,0 +1,132 @@
+import posthog from "posthog-js";
+
+// Type for PostHog event properties (JSON-serializable values)
+type PostHogPropertyValue = string | number | boolean | null | undefined;
+type PostHogProperties = Record<
+  string,
+  PostHogPropertyValue | PostHogPropertyValue[]
+>;
+
+/**
+ * Initialize PostHog for product analytics and user behavior tracking
+ * This should be called as early as possible in the application lifecycle
+ */
+export function initPostHog() {
+  const apiKey = import.meta.env.VITE_POSTHOG_KEY;
+  const host = import.meta.env.VITE_POSTHOG_HOST || "https://app.posthog.com";
+  const environment =
+    import.meta.env.VITE_POSTHOG_ENVIRONMENT ||
+    import.meta.env.VITE_SENTRY_ENVIRONMENT ||
+    import.meta.env.MODE ||
+    "development";
+
+  // Only initialize PostHog if API key is provided
+  if (!apiKey) {
+    console.warn(
+      "[PostHog] ⚠️ API key not provided, PostHog will not be initialized",
+    );
+    console.warn("[PostHog] Set VITE_POSTHOG_KEY in your .env.local file");
+    return;
+  }
+
+  posthog.init(apiKey, {
+    api_host: host,
+    // Privacy settings
+    capture_pageview: true, // Automatically capture pageviews
+    capture_pageleave: true, // Capture when users leave pages
+    loaded: (posthogInstance) => {
+      // Send a test event to verify installation
+      posthogInstance.capture("posthog_initialized", {
+        environment,
+        timestamp: new Date().toISOString(),
+      });
+    },
+    // Disable autocapture for privacy (we'll use manual event tracking)
+    autocapture: false,
+    // Respect Do Not Track
+    respect_dnt: true,
+    // Disable session recording by default (can be enabled per user consent)
+    disable_session_recording: true,
+    // Mask text for privacy (if session recording is enabled)
+    mask_all_text: true,
+  });
+}
+
+/**
+ * Identify a user in PostHog
+ * Call this when a user signs in or signs up
+ */
+export function identifyUser(userId: string, properties?: PostHogProperties) {
+  if (!posthog.__loaded) return;
+
+  posthog.identify(userId, {
+    ...properties,
+    // Don't send email as a property (privacy)
+    // Only send non-PII data
+  });
+}
+
+/**
+ * Reset user identification (call on sign out)
+ */
+export function resetUser() {
+  if (!posthog.__loaded) return;
+  posthog.reset();
+}
+
+/**
+ * Track a custom event
+ */
+export function trackEvent(eventName: string, properties?: PostHogProperties) {
+  if (!posthog.__loaded) return;
+  posthog.capture(eventName, properties);
+}
+
+/**
+ * Set user properties
+ */
+export function setUserProperties(properties: PostHogProperties) {
+  if (!posthog.__loaded) return;
+  posthog.setPersonProperties(properties);
+}
+
+/**
+ * Check if PostHog is loaded
+ */
+export function isPostHogLoaded(): boolean {
+  return posthog.__loaded || false;
+}
+
+/**
+ * Debug helper: Log PostHog status to console (only in dev)
+ */
+export function debugPostHog() {
+  if (!import.meta.env.DEV) return;
+
+  if (posthog.__loaded) {
+    console.log("[PostHog] Ready to track events");
+  } else {
+    console.warn("[PostHog] Not loaded. Check your API key.");
+  }
+}
+
+// Extend Window interface for development test function
+declare global {
+  interface Window {
+    posthogTest?: () => void;
+  }
+}
+
+// Expose test function to window in development
+if (import.meta.env.DEV && typeof window !== "undefined") {
+  window.posthogTest = () => {
+    if (posthog.__loaded) {
+      trackEvent("test_event", {
+        timestamp: new Date().toISOString(),
+        source: "manual_test",
+      });
+    } else {
+      console.error("[PostHog] Not loaded. Check your API key.");
+    }
+  };
+}

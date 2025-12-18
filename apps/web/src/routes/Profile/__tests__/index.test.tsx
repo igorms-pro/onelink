@@ -27,6 +27,19 @@ vi.mock("../hooks/useProfileData", () => ({
   useProfileData: () => mockProfileData,
 }));
 
+// Mock PostHog
+vi.mock("@/lib/posthog-events", () => ({
+  trackProfileViewed: vi.fn(),
+}));
+
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: null,
+    loading: false,
+  }),
+}));
+
 // Mock components
 vi.mock("../components", () => ({
   LoadingState: () => <div data-testid="loading-state">Loading...</div>,

@@ -5,6 +5,8 @@ import { isBaseHost } from "@/lib/domain";
 import { Footer } from "@/components/Footer";
 import { isProPlan } from "@/lib/types/plan";
 import { useProfileData } from "./hooks/useProfileData";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackProfileViewed } from "@/lib/posthog-events";
 import {
   LoadingState,
   ErrorState,
@@ -16,12 +18,22 @@ import {
 export default function Profile() {
   const { t } = useTranslation();
   const { slug } = useParams();
+  const { user } = useAuth();
   // Memoize host to prevent unnecessary re-renders
   const host = useMemo(() => window.location.host, []);
   const { links, drops, profile, plan, isLoading, errorType } = useProfileData(
     slug,
     host,
   );
+
+  // Track profile view
+  useEffect(() => {
+    if (profile && slug) {
+      // Note: isOwner check can be enhanced later by fetching user_id from profile
+      // For now, we track with isOwner = false (can be enriched later)
+      trackProfileViewed(slug, false);
+    }
+  }, [profile, slug, user]);
 
   // SEO Meta Tags
   useEffect(() => {

@@ -1,8 +1,10 @@
 import { useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthProvider";
 import type { PublicLink } from "../types";
 import { ExternalLink } from "lucide-react";
+import { trackLinkClicked } from "@/lib/posthog-events";
 
 interface LinkCardProps {
   link: PublicLink;
@@ -13,6 +15,7 @@ export function LinkCard({ link }: LinkCardProps) {
   const rippleRef = useRef<HTMLSpanElement>(null);
   const cardRef = useRef<HTMLAnchorElement>(null);
   const { user } = useAuth();
+  const { slug } = useParams();
 
   const handleClick = async (e: React.MouseEvent<HTMLAnchorElement>) => {
     // Create ripple effect
@@ -44,6 +47,11 @@ export function LinkCard({ link }: LinkCardProps) {
         user_id: user?.id ?? null,
       },
     ]);
+
+    // Track link click in PostHog
+    if (slug) {
+      trackLinkClicked(link.link_id, slug);
+    }
 
     // Reset ripple after animation completes
     setTimeout(() => {

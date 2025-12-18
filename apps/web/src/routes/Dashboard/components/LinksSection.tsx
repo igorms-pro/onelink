@@ -6,6 +6,8 @@ import { isSafeHttpUrl } from "@/lib/domain";
 import { NewLinkForm } from "@/components/NewLinkForm";
 import { LinksList, type LinkRow } from "@/components/LinksList";
 import { toast } from "sonner";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackLinkCreated } from "@/lib/posthog-events";
 interface LinksSectionProps {
   profileId: string | null;
   links: LinkRow[];
@@ -22,6 +24,7 @@ export function LinksSection({
   freeLinksLimit,
 }: LinksSectionProps) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [busy, setBusy] = useState(false);
   const [isExpanded, setIsExpanded] = useState(true);
 
@@ -98,6 +101,10 @@ export function LinksSection({
                     ),
                   );
                   toast.success(t("dashboard_content_links_create_success"));
+                  // Track link creation
+                  if (user?.id) {
+                    trackLinkCreated(user.id, data.id);
+                  }
                 } catch {
                   toast.error(t("dashboard_content_links_create_failed"));
                 } finally {

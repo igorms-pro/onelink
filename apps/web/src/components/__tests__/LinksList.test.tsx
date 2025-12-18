@@ -12,6 +12,20 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+// Mock PostHog
+vi.mock("@/lib/posthog-events", () => ({
+  trackLinkUpdated: vi.fn(),
+  trackLinkDeleted: vi.fn(),
+}));
+
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "user-1" },
+    loading: false,
+  }),
+}));
+
 // Mock toast - already mocked globally, but we can override if needed
 // Mock i18n - using global mock from vitest.setup.ts that returns English translations
 
