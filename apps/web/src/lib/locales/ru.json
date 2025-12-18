@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "Файлы",
   "dashboard_inbox_clear_all": "Очистить все",
   "dashboard_inbox_clear_all_confirm": "Вы уверены, что хотите очистить все элементы входящих? Это действие нельзя отменить.",
+  "dashboard_inbox_clear_all_error": "Не удалось очистить загрузки. Пожалуйста, попробуйте снова.",
   "dashboard_account_profile_title": "Профиль",
   "dashboard_account_profile_description": "Управление настройками вашего публичного профиля",
   "dashboard_account_analytics_title": "Аналитика",

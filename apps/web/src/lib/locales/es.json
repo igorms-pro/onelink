@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "Archivos",
   "dashboard_inbox_clear_all": "Limpiar todo",
   "dashboard_inbox_clear_all_confirm": "¿Estás seguro de que quieres eliminar todos los elementos de la bandeja de entrada? Esta acción no se puede deshacer.",
+  "dashboard_inbox_clear_all_error": "Error al limpiar los envíos. Por favor, inténtalo de nuevo.",
   "dashboard_account_profile_title": "Perfil",
   "dashboard_account_profile_description": "Gestiona la configuración de tu perfil público",
   "dashboard_account_analytics_title": "Analíticas",

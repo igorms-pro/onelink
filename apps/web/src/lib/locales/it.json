@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "File",
   "dashboard_inbox_clear_all": "Cancella tutto",
   "dashboard_inbox_clear_all_confirm": "Sei sicuro di voler eliminare tutti gli elementi della posta in arrivo? Questa azione non può essere annullata.",
+  "dashboard_inbox_clear_all_error": "Impossibile cancellare i caricamenti. Riprova.",
   "dashboard_account_profile_title": "Profilo",
   "dashboard_account_profile_description": "Gestisci le impostazioni del tuo profilo pubblico",
   "dashboard_account_analytics_title": "Analisi",
