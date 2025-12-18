@@ -125,12 +125,17 @@ test.describe("Settings Navigation", () => {
 
     const initialState = await toggle.isChecked();
 
-    await toggle.click();
-    await page.waitForTimeout(1000); // Wait for save
+    // Wait for toggle to be enabled (not saving)
+    await expect(toggle).toBeEnabled({ timeout: 5000 });
 
-    // Should toggle state
-    const newState = await toggle.isChecked();
-    expect(newState).not.toBe(initialState);
+    await toggle.click();
+
+    // Wait for the toggle state to actually change
+    // The updatePreference function is async and uses optimistic updates
+    await expect(async () => {
+      const newState = await toggle.isChecked();
+      expect(newState).not.toBe(initialState);
+    }).toPass({ timeout: 10000 });
   });
 
   test("can open change password modal", async ({

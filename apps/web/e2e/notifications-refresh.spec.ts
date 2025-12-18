@@ -73,6 +73,9 @@ test.describe("Notifications Refresh Functionality", () => {
       .locator("section:has([class*='mt-2'])")
       .first();
 
+    // Wait for container to be visible before getting bounding box
+    await expect(scrollContainer).toBeVisible({ timeout: 15000 });
+
     // Simulate pull-to-refresh gesture
     // 1. Start touch at top of container
     const box = await scrollContainer.boundingBox();

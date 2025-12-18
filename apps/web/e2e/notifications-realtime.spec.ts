@@ -22,10 +22,14 @@ test.describe("Notifications Realtime", () => {
     await page.waitForLoadState("networkidle");
 
     // Get initial unread count (if any) - target desktop TabNavigation
+    // Badge only appears when unreadCount > 0, so check if it exists first
     const initialBadge = page.locator(
       '[data-testid="tab-navigation-inbox-badge"]',
     );
-    const initialCount = (await initialBadge.textContent()) || "0";
+    const badgeExists = await initialBadge.isVisible().catch(() => false);
+    const initialCount = badgeExists
+      ? (await initialBadge.textContent()) || "0"
+      : "0";
     const _initialUnreadCount = parseInt(initialCount) || 0;
 
     // Note: In a real scenario, you would:
