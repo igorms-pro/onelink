@@ -3,6 +3,10 @@
 // deno-lint-ignore-file no-explicit-any
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import Stripe from "npm:stripe@^16.0.0";
+import { initSentry } from "../_shared/sentry.ts";
+
+// Initialize Sentry (will only initialize once, even if called multiple times)
+await initSentry();
 
 Deno.serve(async (req) => {
   console.log("[stripe-webhook] Request received");

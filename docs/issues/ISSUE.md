@@ -106,7 +106,7 @@ Status: ✅ Completed
 
 ## Settings Implementation
 
-**Status:** ✅ Completed (UI + Backend), 🔄 Delete Account cascade needed
+**Status:** ✅ Completed (UI + Backend + Delete Account with MFA)
 
 ### Completed Features
 - ✅ Settings page (`/settings`) with all sections
@@ -118,17 +118,15 @@ Status: ✅ Completed
 - ✅ Data export modal - GDPR export (JSON/CSV)
 - ✅ Change password modal - Full form with validation
 - ✅ Two-factor authentication page (`/settings/2fa`) - QR code, backup codes, enable/disable
-- ✅ Delete account modal - Confirmation with password
+- ✅ Delete account modal - MFA code verification (6 digits), cascade delete, email notification
 - ✅ User preferences hook (`useUserPreferences`) - Supabase integration
 - ✅ Backend SQL migration executed
 - ✅ Session tracking implemented
 - ✅ Login history logging implemented
 - ✅ 2FA backend (Supabase MFA integration)
-
-### Remaining
-- 🔄 Delete account cascade - API to delete account (cascade delete profile, links, drops, submissions)
-  - Email notification to user
-  - Sign out and redirect after deletion
+- ✅ Delete account Edge Function - MFA verification required, cascade delete (profiles, links, drops, submissions, sessions, preferences, login history, export audit)
+- ✅ Delete account frontend - Conditional UI (MFA required message if 2FA not enabled, MFA code input if enabled)
+- ✅ Delete account tests - Unit tests (frontend + backend) and E2E tests
 
 ---
 
@@ -303,19 +301,25 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ---
 
 ### 5. Delete Account Page
-**Status:** ✅ Completed (UI), 🔄 Backend cascade needed
+**Status:** ✅ Completed (UI + Backend + MFA)
 **Implementation:**
 - Modal/Drawer responsive (`DeleteAccountModal.tsx`)
 - Warning message with icon
-- Password confirmation field
+- **MFA code input** (6 digits) - Required for account deletion
+- Conditional UI:
+  - If 2FA not enabled → Shows message "Enable 2FA to delete your account" + CTA to `/settings/2fa`
+  - If 2FA enabled → Shows MFA code input + confirmation checkbox
 - Checkbox "I understand this action is irreversible"
-- Button disabled until validation
+- Button disabled until validation (6-digit MFA code + checkbox)
 - Route: Accessed from Settings → Privacy & Security section
 
-**Backend needed:**
-- 🔄 Cascade delete API - Delete account (cascade delete profile, links, drops, submissions)
-- Email notification to user
-- Sign out and redirect after deletion
+**Backend:**
+- ✅ Edge Function `delete-account` - MFA verification required before deletion
+- ✅ Cascade delete API - Deletes account, profile, links, drops, submissions, sessions, preferences, login history, export audit
+- ✅ Email notification to user after deletion
+- ✅ Sign out and redirect to `/auth` after deletion
+- ✅ Feature flag `DELETE_ACCOUNT_ENABLED` for safety
+- ✅ Unit tests (Deno) and E2E tests (Playwright)
 
 ---
 
@@ -350,9 +354,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ### Remaining Tasks
 
 **High Priority:**
-1. 🔄 Delete Account cascade - API to cascade delete profile, links, drops, submissions
-   - Email notification to user
-   - Sign out and redirect after deletion
+_(None - all critical features completed)_
 
 **Medium Priority:**
 1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
@@ -364,13 +366,20 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
    - **Status:** 🔴 Not Started
    - **Priority:** Medium (gros chantier)
 
-2. 📈 PostHog Monitoring Setup
-   - Install PostHog SDK
-   - Configure event tracking
-   - Set up user identification
-   - Track key user actions (sign up, sign in, create link, create drop, etc.)
-   - Set up funnels and conversion tracking
-   - Configure environment variables
+2. 📈 Monitoring & Observability Stack (Sentry + PostHog)
+   - **Sentry Setup:**
+     - Install `@sentry/react` for frontend error tracking
+     - Install `@sentry/deno` for Edge Functions error tracking
+     - Configure error alerts (email/Slack)
+     - Enable performance tracing (automatic request tracing)
+   - **PostHog Setup:**
+     - Install PostHog SDK
+     - Configure event tracking
+     - Set up user identification
+     - Track key user actions (sign up, sign in, create link, create drop, etc.)
+     - Set up funnels and conversion tracking
+     - Configure environment variables
+   - **Documentation:** See `docs/meta/monitoring.md` for full observability stack
    - **Status:** 🔴 Not Started
    - **Priority:** Medium
 

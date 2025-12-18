@@ -71,7 +71,7 @@ export function useProfileData(slug: string | undefined, host: string) {
   async function loadBySlug(s: string): Promise<boolean> {
     const prof = await supabase
       .from("profiles")
-      .select("display_name,bio,avatar_url,slug,id")
+      .select("display_name,bio,avatar_url,slug,id,user_id")
       .eq("slug", s)
       .maybeSingle<{
         display_name: string | null;
@@ -79,6 +79,7 @@ export function useProfileData(slug: string | undefined, host: string) {
         avatar_url: string | null;
         slug: string;
         id: string;
+        user_id: string;
       }>();
 
     if (!prof.data) {
@@ -93,6 +94,7 @@ export function useProfileData(slug: string | undefined, host: string) {
       bio: prof.data.bio,
       avatar_url: prof.data.avatar_url,
       slug: prof.data.slug,
+      user_id: prof.data.user_id, // Store user_id for isOwner check
     });
 
     const { data: linksData } = await supabase.rpc("get_links_by_slug", {
@@ -118,13 +120,14 @@ export function useProfileData(slug: string | undefined, host: string) {
         bio: string | null;
         avatar_url: string | null;
         slug: string;
+        user_id: string;
       };
     };
 
     const dom = await supabase
       .from("custom_domains")
       .select(
-        "verified, profile_id, profiles!inner(display_name,bio,avatar_url,slug)",
+        "verified, profile_id, profiles!inner(display_name,bio,avatar_url,slug,user_id)",
       )
       .eq("domain", domain)
       .maybeSingle<DomainJoin>();
@@ -142,6 +145,7 @@ export function useProfileData(slug: string | undefined, host: string) {
       bio: dom.data.profiles.bio,
       avatar_url: dom.data.profiles.avatar_url,
       slug: s,
+      user_id: dom.data.profiles.user_id,
     });
 
     const { data: linksData } = await supabase.rpc("get_links_by_slug", {

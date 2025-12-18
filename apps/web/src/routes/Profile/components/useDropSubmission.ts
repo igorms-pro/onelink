@@ -5,6 +5,8 @@ import { useAuth } from "@/lib/AuthProvider";
 import { toast } from "sonner";
 import { useAsyncSubmit } from "@/hooks/useAsyncSubmit";
 import type { PublicDrop } from "../types";
+import { trackSubmissionReceived } from "@/lib/posthog-events";
+import { getDropOwnerUserId } from "@/lib/drops";
 
 interface DropSubmissionFormData {
   name: string | null;
@@ -126,6 +128,10 @@ export function useDropSubmission(drop: PublicDrop) {
 
           toast.success(t("profile_drop_submission_success"));
           setSelectedFiles([]);
+
+          // Track submission received with owner userId
+          const ownerUserId = await getDropOwnerUserId(drop.drop_id);
+          trackSubmissionReceived(drop.drop_id, ownerUserId || undefined);
         });
         return true;
       } catch {

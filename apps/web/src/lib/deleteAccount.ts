@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { trackUserDeletedAccount } from "./posthog-events";
 
 type DeleteAccountResponse = {
   success?: boolean;
@@ -34,6 +35,14 @@ export async function deleteAccount({ mfaCode }: { mfaCode: string }): Promise<{
         success: false,
         error: message,
       };
+    }
+
+    // Track account deletion (before sign out)
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    if (user?.id) {
+      trackUserDeletedAccount(user.id);
     }
 
     return { success: true };

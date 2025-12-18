@@ -2,6 +2,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // deno-lint-ignore-file no-explicit-any
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { initSentry } from "../_shared/sentry.ts";
+
+// Initialize Sentry (will only initialize once, even if called multiple times)
+await initSentry();
 
 Deno.serve(async (req) => {
   if (req.method !== "GET" && req.method !== "POST") {

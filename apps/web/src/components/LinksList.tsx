@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 import { Pencil, Trash2 } from "lucide-react";
+import { useAuth } from "../lib/AuthProvider";
+import { trackLinkUpdated, trackLinkDeleted } from "../lib/posthog-events";
 
 export type LinkRow = {
   id: string;
@@ -22,6 +24,7 @@ export function LinksList({
   setLinks: (rows: LinkRow[]) => void;
 }) {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const dragIndex = useRef<number | null>(null);
   const overIndex = useRef<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
@@ -120,6 +123,10 @@ export function LinksList({
                       ),
                     );
                     toast.success(t("dashboard_content_links_update_success"));
+                    // Track link update
+                    if (user?.id) {
+                      trackLinkUpdated(user.id, l.id);
+                    }
                   }}
                   className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                   aria-label={t("common_edit")}
@@ -142,6 +149,10 @@ export function LinksList({
                     }
                     setLinks(links.filter((x) => x.id !== l.id));
                     toast.success(t("dashboard_content_links_delete_success"));
+                    // Track link deletion
+                    if (user?.id) {
+                      trackLinkDeleted(user.id, l.id);
+                    }
                   }}
                   className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                   aria-label={t("common_delete")}

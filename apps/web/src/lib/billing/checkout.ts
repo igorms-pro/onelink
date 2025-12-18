@@ -2,6 +2,7 @@ import { supabase } from "../supabase";
 import { BillingError } from "./errors";
 import { handleHttpError, handleError } from "./httpUtils";
 import type { BillingPeriod, PlanTier } from "./types";
+import { trackEvent } from "../posthog";
 
 export async function goToCheckout(
   plan: PlanTier,
@@ -35,6 +36,12 @@ export async function goToCheckout(
     if (!data?.url) {
       throw new BillingError("No checkout URL received from server", "NO_URL");
     }
+
+    // Track checkout started
+    trackEvent("checkout_started", {
+      plan,
+      period,
+    });
 
     window.location.href = data.url;
   } catch (error) {

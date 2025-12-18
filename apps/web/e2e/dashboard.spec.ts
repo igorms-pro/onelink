@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { setupPostHogInterception } from "./helpers/posthog";
 
 test.describe("Dashboard Navigation", () => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   test.beforeEach(async ({ page }) => {
+    // Intercept PostHog requests to avoid real API calls during tests
+    await setupPostHogInterception(page);
+
     // Note: These tests require authentication
     // In a real scenario, you would set up auth state or use test credentials
     // For now, we'll test the structure assuming user is authenticated

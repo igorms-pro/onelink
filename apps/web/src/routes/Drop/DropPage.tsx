@@ -7,6 +7,7 @@ import { DropHeader } from "./components/DropHeader";
 import { DropUploadForm } from "./components/DropUploadForm";
 import { DropFileList, type DropFile } from "./components/DropFileList";
 import { DropErrorStates } from "./components/DropErrorStates";
+import { trackDropViewed } from "@/lib/posthog-events";
 
 interface DropPageProps {
   token: string;
@@ -42,6 +43,10 @@ export default function DropPage({ token }: DropPageProps) {
             user_agent: navigator.userAgent,
           },
         ]);
+
+        // Track drop view in PostHog
+        const isOwner = user?.id === dropData.owner_user_id;
+        trackDropViewed(token, isOwner);
 
         // Load files
         const dropFiles = await getDropFiles(dropData.id);

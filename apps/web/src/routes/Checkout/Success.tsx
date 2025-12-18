@@ -1,12 +1,35 @@
+import { useEffect } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { HeaderMobileSignIn } from "@/components/HeaderMobileSignIn";
 import { Footer } from "@/components/Footer";
+import { useAuth } from "@/lib/AuthProvider";
+import { trackEvent } from "@/lib/posthog";
+import { trackSubscriptionUpgraded } from "@/lib/posthog-events";
 
 export default function CheckoutSuccess() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+
+  // Track checkout completion and subscription upgrade
+  useEffect(() => {
+    if (user?.id) {
+      const upgraded = searchParams.get("upgraded") === "1";
+
+      trackEvent("checkout_completed", {
+        user_id: user.id,
+        upgraded,
+      });
+
+      // Track subscription upgrade if applicable
+      if (upgraded) {
+        trackSubscriptionUpgraded(user.id, "pro");
+      }
+    }
+  }, [user, searchParams]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 transition-colors flex flex-col">

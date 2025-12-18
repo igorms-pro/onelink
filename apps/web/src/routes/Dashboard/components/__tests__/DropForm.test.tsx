@@ -13,6 +13,19 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+// Mock PostHog
+vi.mock("@/lib/posthog-events", () => ({
+  trackDropCreated: vi.fn(),
+}));
+
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "user-1" },
+    loading: false,
+  }),
+}));
+
 describe("DropForm", () => {
   const mockOnDropCreated = vi.fn();
   const defaultProps = {

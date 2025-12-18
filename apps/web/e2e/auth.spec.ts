@@ -1,6 +1,11 @@
 import { test, expect } from "@playwright/test";
+import { setupPostHogInterception } from "./helpers/posthog";
 
 test.describe("Authentication", () => {
+  test.beforeEach(async ({ page }) => {
+    // Intercept PostHog requests to avoid real API calls during tests
+    await setupPostHogInterception(page);
+  });
   test("sign in page loads", async ({ page }) => {
     await page.goto("/auth");
     // Check that auth form elements are present

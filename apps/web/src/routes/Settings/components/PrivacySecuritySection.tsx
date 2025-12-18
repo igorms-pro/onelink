@@ -66,7 +66,7 @@ export function PrivacySecuritySection() {
                 className="rounded-lg border border-orange-200 dark:border-orange-900/50 bg-orange-50 dark:bg-orange-900/20 p-3 mb-2"
               >
                 <div className="flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
+                  <AlertCircle className="w-4 h-4 text-orange-600 dark:text-orange-400 mt-0.5 shrink-0" />
                   <div className="flex-1">
                     <p className="text-sm text-orange-800 dark:text-orange-200">
                       {t("settings_delete_account_mfa_required_notice")}

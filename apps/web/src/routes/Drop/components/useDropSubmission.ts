@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { toast } from "sonner";
 import type { DropWithVisibility } from "@/lib/drops";
+import { trackSubmissionReceived } from "@/lib/posthog-events";
+import { getDropOwnerUserId } from "@/lib/drops";
 
 export function useDropSubmission(
   drop: DropWithVisibility,
@@ -94,6 +96,11 @@ export function useDropSubmission(
 
       toast.success(t("profile_drop_submission_success"));
       onComplete();
+
+      // Track submission received with owner userId
+      const ownerUserId = await getDropOwnerUserId(drop.id);
+      trackSubmissionReceived(drop.id, ownerUserId || undefined);
+
       return true;
     } catch (err) {
       console.error(err);

@@ -21,6 +21,8 @@ OneLink combines OneMeet (routing to meetings) and DropRequest (public file inbo
 - Backend: Supabase (Auth, Postgres, Storage)
 - Billing: Stripe (Checkout + Portal)
 - Hosting: Vercel; custom domains supported
+- Monitoring: Sentry (Error Tracking + Tracing), PostHog (Analytics)
+- Logging: Supabase Logs, Vercel Analytics
 
 ## Data model (key)
 - profiles, links (Routes), link_clicks

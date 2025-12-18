@@ -13,6 +13,19 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+// Mock PostHog
+vi.mock("@/lib/posthog-events", () => ({
+  trackLinkCreated: vi.fn(),
+}));
+
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "user-1" },
+    loading: false,
+  }),
+}));
+
 // Mock NewLinkForm and LinksList
 vi.mock("@/components/NewLinkForm", () => ({
   NewLinkForm: ({ onCreate, disabled, limitReached }: any) => {

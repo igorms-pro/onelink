@@ -13,6 +13,20 @@ vi.mock("@/lib/supabase", () => ({
   },
 }));
 
+// Mock PostHog
+vi.mock("@/lib/posthog-events", () => ({
+  trackDropUpdated: vi.fn(),
+  trackDropDeleted: vi.fn(),
+}));
+
+// Mock AuthProvider
+vi.mock("@/lib/AuthProvider", () => ({
+  useAuth: () => ({
+    user: { id: "user-1" },
+    loading: false,
+  }),
+}));
+
 import { supabase } from "@/lib/supabase";
 
 // Mock window.confirm and prompt
