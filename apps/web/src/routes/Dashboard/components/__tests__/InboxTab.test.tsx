@@ -50,13 +50,11 @@ describe("InboxTab", () => {
     vi.clearAllMocks();
   });
 
-  it("should render fake notifications", () => {
+  it("should show empty state when no submissions", () => {
     render(<InboxTab submissions={[]} />);
 
-    // Check that fake notifications are rendered
-    // The exact content depends on FAKE_NOTIFICATIONS constant
-    const notifications = screen.getAllByRole("listitem");
-    expect(notifications.length).toBeGreaterThan(0);
+    // Check that empty state is shown
+    expect(screen.getByText(/no submissions yet/i)).toBeInTheDocument();
   });
 
   it("should render submissions list", () => {
@@ -108,9 +106,8 @@ describe("InboxTab", () => {
   it("should handle empty submissions array", () => {
     render(<InboxTab submissions={[]} />);
 
-    // Should still render fake notifications
-    const notifications = screen.getAllByRole("listitem");
-    expect(notifications.length).toBeGreaterThan(0);
+    // Should show empty state
+    expect(screen.getByText(/no submissions yet/i)).toBeInTheDocument();
   });
 
   it("should format dates correctly", () => {

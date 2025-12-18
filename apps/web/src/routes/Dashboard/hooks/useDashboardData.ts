@@ -82,6 +82,43 @@ export function useDashboardData(userId: string | null) {
     };
   }, [userId]);
 
+  const clearAllSubmissions = async () => {
+    if (!profileId) return false;
+
+    try {
+      const { error } = await supabase.rpc("delete_submissions_by_profile", {
+        p_profile_id: profileId,
+      });
+
+      if (error) {
+        console.error("Failed to clear submissions:", error);
+        return false;
+      }
+
+      // Refresh submissions after clearing
+      const { data: submissionsData, error: submissionsError } =
+        await supabase.rpc("get_submissions_by_profile", {
+          p_profile_id: profileId,
+        });
+
+      if (submissionsError) {
+        console.error("Failed to refresh submissions:", submissionsError);
+        return false;
+      }
+
+      setSubmissions(
+        Array.isArray(submissionsData)
+          ? (submissionsData as SubmissionRow[])
+          : [],
+      );
+
+      return true;
+    } catch (error) {
+      console.error("Error clearing submissions:", error);
+      return false;
+    }
+  };
+
   return {
     profileId,
     profileFormInitial,
@@ -90,7 +127,9 @@ export function useDashboardData(userId: string | null) {
     drops,
     setDrops,
     submissions,
+    setSubmissions,
     plan,
     loading,
+    clearAllSubmissions,
   };
 }
