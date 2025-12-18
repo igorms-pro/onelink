@@ -3,6 +3,10 @@
 // deno-lint-ignore-file no-explicit-any
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { initSentry } from "../_shared/sentry.ts";
+
+// Initialize Sentry (will only initialize once, even if called multiple times)
+await initSentry();
 
 // CORS helper (mirrors other JSON POST endpoints)
 const corsHeaders: Record<string, string> = {

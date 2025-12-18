@@ -3,6 +3,10 @@
 // deno-lint-ignore-file no-explicit-any
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
+import { initSentry } from "../_shared/sentry.ts";
+
+// Initialize Sentry (will only initialize once, even if called multiple times)
+await initSentry();
 
 // CORS helper (mirrors other JSON POST endpoints)
 const corsHeaders: Record<string, string> = {
@@ -362,7 +366,7 @@ export async function handleDeleteAccountRequest(
   }
 
   // Safety feature flag: allow soft-launch / kill-switch for delete account
-  const deleteAccountEnabled = (env.deleteAccountEnabled ?? Deno.env.get("DELETE_ACCOUNT_ENABLED") || "false").toLowerCase();
+  const deleteAccountEnabled = ((env.deleteAccountEnabled ?? Deno.env.get("DELETE_ACCOUNT_ENABLED")) || "false").toLowerCase();
 
   const authHeader = req.headers.get("Authorization") || "";
   const jwt = authHeader.replace("Bearer ", "");
@@ -556,6 +560,9 @@ export async function handleDeleteAccountRequest(
     );
   }
 }
+
+// Initialize Sentry before starting the server
+initSentry();
 
 Deno.serve((req) => handleDeleteAccountRequest(req));
 
