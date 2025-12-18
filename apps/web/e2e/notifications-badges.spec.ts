@@ -15,15 +15,11 @@ test.describe("Notifications Badges", () => {
     await page.setViewportSize({ width: 1280, height: 720 });
 
     // Check if badge is visible on Inbox tab (target desktop TabNavigation specifically)
-    const inboxTab = page
-      .locator("div.hidden.sm\\:flex")
-      .locator("button:has-text('Inbox')");
+    const inboxTab = page.locator('[data-testid="tab-navigation-inbox"]');
     await expect(inboxTab).toBeVisible();
 
     // Check for badge (gradient purple badge with number)
-    const badge = inboxTab.locator(
-      "span.rounded-full:has-text(/\\d+/):has([class*='from-purple-600'])",
-    );
+    const badge = page.locator('[data-testid="tab-navigation-inbox-badge"]');
 
     // Badge should appear if there are unread submissions
     const badgeVisible = await badge.isVisible();
@@ -60,18 +56,14 @@ test.describe("Notifications Badges", () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     // Navigate to Content tab (not Inbox) - target mobile BottomNavigation
-    const contentTab = page
-      .locator("nav.sm\\:hidden")
-      .locator("button:has-text('Content')");
+    const contentTab = page.locator(
+      '[data-testid="bottom-navigation-content"]',
+    );
     await contentTab.click();
     await page.waitForTimeout(500);
 
-    // Check for purple dot on Inbox icon (it's inside the button, in a relative div)
-    // Target mobile BottomNavigation specifically
-    const inboxButton = page
-      .locator("nav.sm\\:hidden")
-      .locator("button:has-text('Inbox')");
-    const dot = inboxButton.locator("span.bg-purple-600.rounded-full");
+    // Check for purple dot on Inbox icon
+    const dot = page.locator('[data-testid="bottom-navigation-inbox-dot"]');
     const dotVisible = await dot.isVisible();
 
     if (dotVisible) {
@@ -79,9 +71,7 @@ test.describe("Notifications Badges", () => {
       await expect(dot).toBeVisible();
 
       // Switch to Inbox tab
-      const inboxTab = page
-        .locator("nav.sm\\:hidden")
-        .locator("button:has-text('Inbox')");
+      const inboxTab = page.locator('[data-testid="bottom-navigation-inbox"]');
       await inboxTab.click();
       await page.waitForTimeout(500);
 
@@ -101,16 +91,13 @@ test.describe("Notifications Badges", () => {
       await page.waitForTimeout(500);
 
       // Verify dot is gone after marking all as read
-      const dotAfterMarkAll = page
-        .locator("nav.sm\\:hidden")
-        .locator("button:has-text('Inbox')")
-        .locator("span.bg-purple-600.rounded-full");
+      const dotAfterMarkAll = page.locator(
+        '[data-testid="bottom-navigation-inbox-dot"]',
+      );
       await expect(dotAfterMarkAll).not.toBeVisible();
     } else {
       // If no dot, verify it's because there are no unread items
-      const inboxTab = page
-        .locator("nav.sm\\:hidden")
-        .locator("button:has-text('Inbox')");
+      const inboxTab = page.locator('[data-testid="bottom-navigation-inbox"]');
       await inboxTab.click();
       const markAllButton = page.locator("button:has-text('Mark all as read')");
       const hasUnread = await markAllButton.isVisible();

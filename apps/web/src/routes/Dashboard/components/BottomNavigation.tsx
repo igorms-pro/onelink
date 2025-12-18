@@ -39,6 +39,7 @@ export function BottomNavigation({
       )}
       <div className="flex items-center justify-around h-14">
         <button
+          data-testid="bottom-navigation-inbox"
           onClick={() => onTabChange("inbox")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
@@ -51,7 +52,10 @@ export function BottomNavigation({
               }`}
             />
             {unreadCount > 0 && activeTab !== "inbox" && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-600"></span>
+              <span
+                data-testid="bottom-navigation-inbox-dot"
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-600"
+              ></span>
             )}
           </div>
           <span
@@ -66,6 +70,7 @@ export function BottomNavigation({
         </button>
 
         <button
+          data-testid="bottom-navigation-content"
           onClick={() => onTabChange("content")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
@@ -88,6 +93,7 @@ export function BottomNavigation({
         </button>
 
         <button
+          data-testid="bottom-navigation-account"
           onClick={() => onTabChange("account")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
