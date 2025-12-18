@@ -29,7 +29,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );
@@ -44,7 +43,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="content"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );
@@ -60,7 +58,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );
@@ -71,12 +68,11 @@ describe("TabNavigation", () => {
     expect(mockOnTabChange).toHaveBeenCalledWith("content");
   });
 
-  it("should display submission count badge when count > 0", () => {
+  it("should display unread count badge when count > 0", () => {
     render(
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={5}
         unreadCount={3}
       />,
     );
@@ -84,12 +80,11 @@ describe("TabNavigation", () => {
     expect(screen.getByText("3")).toBeInTheDocument();
   });
 
-  it("should not display submission count badge when count is 0", () => {
+  it("should not display unread count badge when count is 0", () => {
     render(
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );
@@ -103,7 +98,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={5}
         unreadCount={3}
       />,
     );
@@ -118,7 +112,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={10}
         unreadCount={7}
       />,
     );
@@ -131,7 +124,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={5}
         unreadCount={3}
       />,
     );
@@ -147,7 +139,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );
@@ -164,7 +155,6 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
         unreadCount={0}
       />,
     );

@@ -104,7 +104,11 @@ export function useFileDownloadsRealtime({
           );
 
           // Show toast notification
-          const fileName = newDownload.file_path.split("/").pop() || "file";
+          const filePath =
+            typeof newDownload.file_path === "string"
+              ? newDownload.file_path
+              : "";
+          const fileName = filePath.split("/").pop() || "file";
           const dropLabel = dropData.label || "Drop";
           toast.success(`File downloaded from ${dropLabel}`, {
             description: fileName,
