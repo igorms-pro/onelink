@@ -7,7 +7,14 @@ vi.mock("../supabase", () => ({
     functions: {
       invoke: vi.fn(),
     },
+    auth: {
+      getUser: vi.fn(),
+    },
   },
+}));
+
+vi.mock("../posthog-events", () => ({
+  trackUserDeletedAccount: vi.fn(),
 }));
 
 describe("deleteAccount", () => {
@@ -18,6 +25,10 @@ describe("deleteAccount", () => {
   it("returns success=true when edge function succeeds", async () => {
     vi.mocked(supabase.functions.invoke).mockResolvedValue({
       data: { success: true, message: "ok" },
+      error: null,
+    } as any);
+    vi.mocked(supabase.auth.getUser).mockResolvedValue({
+      data: { user: { id: "test-user-id" } },
       error: null,
     } as any);
 
