@@ -13,7 +13,10 @@ test.describe("Download Notifications", () => {
     authenticatedPage: page,
   }) => {
     // Check if there are any downloads displayed
-    const downloadItems = page.locator("li:has-text('File downloaded')");
+    // Downloads have green background and Download icon
+    const downloadItems = page.locator(
+      "li:has([class*='bg-green-50']):has-text('File downloaded')",
+    );
     const hasDownloads = (await downloadItems.count()) > 0;
 
     if (hasDownloads) {
@@ -85,7 +88,9 @@ test.describe("Download Notifications", () => {
     // - Or a way to identify owner vs visitor downloads
 
     // For now, we verify the inbox structure
-    const downloadItems = page.locator("li:has-text('File downloaded')");
+    const downloadItems = page.locator(
+      "li:has([class*='bg-green-50']):has-text('File downloaded')",
+    );
     const downloadCount = await downloadItems.count();
 
     // If downloads exist, verify they're not from owner

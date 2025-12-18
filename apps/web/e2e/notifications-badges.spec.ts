@@ -20,7 +20,7 @@ test.describe("Notifications Badges", () => {
 
     // Check for badge (gradient purple badge with number)
     const badge = inboxTab.locator(
-      "span:has-text(/\\d+/):has([class*='from-purple-600'])",
+      "span.rounded-full:has-text(/\\d+/):has([class*='from-purple-600'])",
     );
 
     // Badge should appear if there are unread submissions
@@ -62,16 +62,14 @@ test.describe("Notifications Badges", () => {
     await contentTab.click();
     await page.waitForTimeout(500);
 
-    // Check for purple dot on Inbox icon
-    const inboxButton = page
-      .locator("button:has-text('Inbox')")
-      .locator("..")
-      .locator(".bg-purple-600");
-    const dotVisible = await inboxButton.isVisible();
+    // Check for purple dot on Inbox icon (it's inside the button, in a relative div)
+    const inboxButton = page.locator("button:has-text('Inbox')");
+    const dot = inboxButton.locator("span.bg-purple-600.rounded-full");
+    const dotVisible = await dot.isVisible();
 
     if (dotVisible) {
       // Verify dot is visible
-      await expect(inboxButton).toBeVisible();
+      await expect(dot).toBeVisible();
 
       // Switch to Inbox tab
       const inboxTab = page.locator("button:has-text('Inbox')");
@@ -79,10 +77,7 @@ test.describe("Notifications Badges", () => {
       await page.waitForTimeout(500);
 
       // Verify dot disappears when on inbox tab
-      const dotAfterClick = page
-        .locator("button:has-text('Inbox')")
-        .locator("..")
-        .locator(".bg-purple-600");
+      const dotAfterClick = inboxTab.locator("span.bg-purple-600.rounded-full");
       await expect(dotAfterClick).not.toBeVisible();
 
       // Mark all as read
@@ -97,13 +92,14 @@ test.describe("Notifications Badges", () => {
       await page.waitForTimeout(500);
 
       // Verify dot is gone after marking all as read
-      const dotAfterMarkAll = page
-        .locator("button:has-text('Inbox')")
+      const dotAfterMarkAll = contentTab
         .locator("..")
-        .locator(".bg-purple-600");
+        .locator("button:has-text('Inbox')")
+        .locator("span.bg-purple-600.rounded-full");
       await expect(dotAfterMarkAll).not.toBeVisible();
     } else {
       // If no dot, verify it's because there are no unread items
+      const inboxTab = page.locator("button:has-text('Inbox')");
       await inboxTab.click();
       const markAllButton = page.locator("button:has-text('Mark all as read')");
       const hasUnread = await markAllButton.isVisible();

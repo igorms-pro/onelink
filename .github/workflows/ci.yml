@@ -158,11 +158,17 @@ jobs:
         with:
           deno-version: v2.x
       
+      - name: Install Deno dependencies
+        working-directory: supabase/functions
+        run: deno install --allow-read --allow-env
+      
       - name: Run Edge Function tests (send-notification-email)
-        run: deno test supabase/functions/send-notification-email/__tests__/*.test.ts --allow-read --allow-env
+        working-directory: supabase/functions
+        run: deno test send-notification-email/__tests__/*.test.ts --allow-read --allow-env --allow-net
       
       - name: Run Edge Function tests (send-weekly-digest)
-        run: deno test supabase/functions/send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env
+        working-directory: supabase/functions
+        run: deno test send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env --allow-net
 
   build:
     runs-on: ubuntu-latest

@@ -19,9 +19,11 @@ test.describe("Email Notifications", () => {
 
     if (sectionVisible) {
       // Enable email notifications if not already enabled
+      // Look for checkbox near email notification text
       const emailToggle = page
-        .locator('input[type="checkbox"][name*="email"]')
-        .first();
+        .locator('input[type="checkbox"]')
+        .filter({ has: page.locator("text=/email.*notification/i") })
+        .or(page.locator('input[type="checkbox"]').first());
       const isChecked = await emailToggle.isChecked();
 
       if (!isChecked) {
@@ -73,9 +75,11 @@ test.describe("Email Notifications", () => {
 
     if (sectionVisible) {
       // Disable email notifications
+      // Look for checkbox near email notification text
       const emailToggle = page
-        .locator('input[type="checkbox"][name*="email"]')
-        .first();
+        .locator('input[type="checkbox"]')
+        .filter({ has: page.locator("text=/email.*notification/i") })
+        .or(page.locator('input[type="checkbox"]').first());
       const isChecked = await emailToggle.isChecked();
 
       if (isChecked) {
