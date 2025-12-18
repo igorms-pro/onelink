@@ -380,11 +380,257 @@ _(None - all critical features completed)_
      - Set up funnels and conversion tracking
      - Configure environment variables
    - **Documentation:** See `docs/meta/monitoring.md` for full observability stack
-   - **Status:** 🔴 Not Started
+   - **Status:** ✅ Completed
    - **Priority:** Medium
+
+3. 🔔 Notifications System (In-App + Email)
+   - **Current State:**
+     - ✅ Basic inbox display (submissions shown in Dashboard)
+     - ✅ Clear all functionality (soft delete via `deleted_at`)
+     - ✅ Notification preferences UI (Settings → Notifications section)
+     - ✅ Database migration read/unread (Task 1 completed)
+     - ✅ Email service setup (Resend - Task 2 completed)
+     - ✅ Email notification Edge Function (Task 3 completed - déployée)
+     - ✅ Real-time updates (Supabase Realtime subscriptions active)
+     - ✅ Email notifications triggered (database trigger configured)
+     - ✅ Read/unread UI (visual indicators, mark as read buttons)
+     - ✅ Download notifications (realtime + display in inbox)
+   
+   - **Phase 1: Maintenant (Tous les plans) - Submissions & Downloads**
+     - ✅ Task 1: Database Migration Read/Unread (Completed)
+     - ✅ Task 2: Email Service Setup (Completed)
+     - ✅ Task 3: Email Notification Edge Function (Completed)
+     - ✅ Task 4: Database Trigger for Email (Completed - `014_email_notifications_trigger.sql`)
+     - 🔴 Task 5: Weekly Digest Edge Function (Code créé mais cron non configuré - `send-weekly-digest`)
+     - ✅ Task 6: Realtime Subscription Hook (Completed - `useSubmissionsRealtime`)
+     - ✅ Task 7: Update useDashboardData for Realtime (Completed - hooks intégrés)
+     - ✅ Task 8: InboxTab Read/Unread UI (Completed - styles + boutons)
+     - ✅ Task 9: Navigation Unread Badge (Completed - TabNavigation + BottomNavigation)
+     - ✅ Task 10: Download Notifications In-App (Completed - `useFileDownloadsRealtime`)
+     - ✅ Task 11: Manual Refresh Button (Completed - bouton + pull-to-refresh)
+   
+   - **Phase 2: Plus Tard (PRO/Starter seulement) - Activity & Summaries**
+     - 🔴 Task 12: Activity Notifications (Clics/Vues) In-App (3h)
+       - Section Activity dans inbox ou onglet séparé
+       - Notifications temps réel pour clics sur liens
+       - Notifications pour vues de drops
+       - Configurable dans Settings
+       - **PAS d'emails** (seulement in-app)
+     - 🔴 Task 13: Daily/Weekly Summary Email (2h)
+       - Résumé quotidien/hebdomadaire des clics/vues
+       - Top liens les plus cliqués
+       - Seulement si préférence activée ET plan PRO/Starter
+   
+   - **Documentation:** Voir section "Notifications System - Phase 2" ci-dessous pour les détails
+   - **Status:** 🟡 Phase 1 Presque Complétée (Weekly Digest cron manquant) - Phase 2 En attente
+   - **Priority:** Medium
+   - **Estimated Time:** 
+     - Phase 1: ✅ Complétée et testée (~8 heures)
+     - Phase 2: ~5 heures (PRO/Starter seulement)
+   
+   - **Fonctionnalités Implémentées:**
+     - ✅ Notifications temps réel (submissions + downloads)
+     - ✅ UI Read/Unread avec indicateurs visuels
+     - ✅ Badges de comptage dans la navigation
+     - ✅ Boutons "Mark as read" individuels et "Mark all as read"
+     - ✅ Bouton refresh manuel + pull-to-refresh mobile
+     - ✅ Emails automatiques avec rate limiting amélioré (1 email / 5 min par drop)
+     - ✅ i18n complet (traductions ajoutées)
+   
+   - **À Faire:**
+     - 🔴 Weekly Digest - Edge Function créée mais cron non configuré (nécessite Supabase Cron ou scheduler)
+   
+   - **Migrations SQL Appliquées:**
+     - ✅ `013_notifications_system.sql` - Read/unread status
+     - ✅ `014_email_notifications_trigger.sql` - Trigger pour emails
+     - ✅ `015_download_notifications.sql` - Fonction get_downloads_by_profile
+     - ✅ `016_email_rate_limiting_improvement.sql` - Rate limiting amélioré avec last_email_sent_at
+   
+   - **Tests:** Voir `docs/TEST_PLAN_NOTIFICATIONS.md` pour le plan complet de tests (unitaires, intégration, E2E)
+   
+   - **Note importante:** Le système de notifications utilise actuellement Supabase Realtime pour les mises à jour automatiques. Cependant, pour une meilleure expérience utilisateur, il serait bénéfique d'implémenter un vrai système realtime client-serveur (WebSocket ou Server-Sent Events) pour éviter d'avoir besoin d'appuyer sur refresh. Cela permettrait une synchronisation bidirectionnelle plus robuste et une meilleure gestion de la reconnexion automatique.
 
 **Low Priority (Nice to have):**
 1. File Display Modes (List / Card / Grid) - See "UI Enhancements" section below
+
+---
+
+## Notifications System - Phase 2 (PRO/Starter)
+
+**Status:** 🔴 Not Started  
+**Priority:** Low (Plus tard)  
+**Plan Required:** PRO ou Starter
+
+### Batch 4: Activity Notifications & Summaries
+
+#### 🔴 Task 12: Activity Notifications (Clics/Vues) - PRO/Starter
+**Estimated Time:** 3 hours
+
+**Description:**
+- Section "Activity" dans l'inbox ou onglet séparé
+- Notifications temps réel pour :
+  - Clics sur les liens (`link_clicks`)
+  - Vues de drops (`drop_views`)
+  - Vues de profil (optionnel)
+- Configurable dans Settings
+- **PAS d'emails** (seulement in-app)
+
+**Files to Create:**
+- `supabase/sql/015_activity_notifications.sql` (table `activity_notifications`)
+- `apps/web/src/hooks/useActivityRealtime.ts`
+- `apps/web/src/routes/Dashboard/components/ActivityTab.tsx` (ou section dans InboxTab)
+
+**Database Schema:**
+```sql
+CREATE TABLE public.activity_notifications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
+  type text NOT NULL, -- 'link_click', 'drop_view', 'profile_view'
+  link_id uuid REFERENCES public.links(id),
+  drop_id uuid REFERENCES public.drops(id),
+  clicked_by_user_id uuid REFERENCES auth.users(id), -- null if anonymous
+  created_at timestamptz NOT NULL DEFAULT now(),
+  read_at timestamptz,
+  metadata jsonb -- {ip, user_agent, referrer, etc.}
+);
+```
+
+**Preference:**
+- Ajouter `activity_notifications` dans `user_preferences`
+- Vérifier plan (PRO/Starter) avant d'afficher
+
+---
+
+#### 🔴 Task 13: Daily/Weekly Summary Email - PRO/Starter
+**Estimated Time:** 2 hours  
+**Dependencies:** Task 12
+
+**Description:**
+- Edge Function `send-daily-summary` ou `send-weekly-summary`
+- Résumé des clics/vues de la journée/semaine
+- Top liens les plus cliqués
+- Stats agrégées
+- Seulement si préférence activée ET plan PRO/Starter
+
+**Files to Create:**
+- `supabase/functions/send-daily-summary/index.ts`
+- `supabase/functions/send-weekly-summary/index.ts` (ou combiner avec weekly-digest)
+- Templates email
+
+**Preference:**
+- Ajouter `daily_summary` et `weekly_summary` dans `user_preferences`
+- Vérifier plan avant d'envoyer
+
+**Total Estimated Time:** ~5 heures
+
+---
+
+## Weekly Digest Email (Phase 1 - À Compléter)
+
+**Status:** 🟡 Partiellement Complété  
+**Priority:** Low  
+**Estimated Time:** 30 minutes (configuration cron)
+
+**Current State:**
+- ✅ Edge Function `send-weekly-digest` créée et fonctionnelle
+- ✅ Templates email créés (HTML et TXT)
+- ✅ Logique d'agrégation des submissions par drop
+- ✅ Vérification préférence `weekly_digest`
+- 🔴 **Cron job non configuré** - La fonction n'est jamais appelée automatiquement
+
+**Description:**
+- Email résumé hebdomadaire envoyé tous les lundis à 9h UTC
+- Agrège toutes les submissions de la semaine passée
+- Groupé par drop avec statistiques
+- Seulement si préférence `weekly_digest` activée
+
+**Ce qui manque:**
+- Configuration du cron job dans Supabase pour appeler la fonction automatiquement
+- Option 1: Supabase Cron (pg_cron extension)
+- Option 2: External scheduler (GitHub Actions, Vercel Cron, etc.)
+
+**Configuration Requise:**
+```sql
+-- Exemple avec pg_cron (si disponible)
+SELECT cron.schedule(
+  'weekly-digest',
+  '0 9 * * 1', -- Tous les lundis à 9h UTC
+  $$
+  SELECT net.http_post(
+    url := current_setting('app.supabase_url') || '/functions/v1/send-weekly-digest',
+    headers := jsonb_build_object(
+      'Content-Type', 'application/json',
+      'Authorization', 'Bearer ' || current_setting('app.supabase_service_role_key')
+    ),
+    body := '{}'::jsonb
+  );
+  $$
+);
+```
+
+**Alternative (External Scheduler):**
+- GitHub Actions avec schedule cron
+- Vercel Cron Jobs
+- Cloudflare Workers Cron Triggers
+- Appeler manuellement via API
+
+**Files:**
+- ✅ `supabase/functions/send-weekly-digest/index.ts` (créé)
+- ✅ `supabase/functions/_shared/emails/weekly-digest.html` (créé)
+- ✅ `supabase/functions/_shared/emails/weekly-digest.txt` (créé)
+
+---
+
+## Realtime Client-Server Improvement
+
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Infrastructure Improvement
+
+**Current State:**
+- Le système utilise Supabase Realtime pour les notifications
+- Un bouton "Refresh" manuel existe pour recharger les données
+- Les mises à jour automatiques fonctionnent mais peuvent être améliorées
+
+**Problem:**
+- Supabase Realtime peut avoir des problèmes de reconnexion
+- Pas de synchronisation bidirectionnelle optimale
+- L'utilisateur doit parfois appuyer sur refresh pour voir les dernières données
+
+**Proposed Solution:**
+Implémenter un vrai système realtime client-serveur avec :
+
+1. **WebSocket Connection** (ou Server-Sent Events)
+   - Connexion persistante entre client et serveur
+   - Reconnexion automatique en cas de déconnexion
+   - Heartbeat pour maintenir la connexion active
+
+2. **Synchronisation Bidirectionnelle**
+   - Client → Serveur : Actions utilisateur (mark as read, etc.)
+   - Serveur → Client : Nouvelles notifications en temps réel
+   - État synchronisé automatiquement
+
+3. **Queue de Messages**
+   - Stocker les messages non livrés pendant les déconnexions
+   - Replay automatique à la reconnexion
+   - Garantir la livraison des notifications
+
+4. **Optimistic Updates**
+   - Mise à jour immédiate de l'UI avant confirmation serveur
+   - Rollback en cas d'erreur
+
+**Benefits:**
+- ✅ Pas besoin de refresh manuel
+- ✅ Synchronisation automatique et fiable
+- ✅ Meilleure expérience utilisateur
+- ✅ Gestion robuste des déconnexions
+
+**Implementation Options:**
+- **Option 1:** Améliorer Supabase Realtime avec reconnexion automatique et queue
+- **Option 2:** Implémenter WebSocket custom avec Node.js/Deno
+- **Option 3:** Utiliser un service tiers (Pusher, Ably, etc.)
+
+**Estimated Time:** 8-12 hours (selon l'option choisie)
 
 ---
 

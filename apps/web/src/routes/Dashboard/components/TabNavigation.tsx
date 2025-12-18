@@ -4,13 +4,13 @@ import type { TabId } from "../types";
 interface TabNavigationProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
-  submissionCount: number;
+  unreadCount: number;
 }
 
 export function TabNavigation({
   activeTab,
   onTabChange,
-  submissionCount,
+  unreadCount,
 }: TabNavigationProps) {
   const { t } = useTranslation();
   return (
@@ -27,9 +27,9 @@ export function TabNavigation({
         `}
       >
         {t("dashboard_tab_inbox")}
-        {submissionCount > 0 && (
-          <span className="ml-2 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white text-xs px-2 py-0.5 shadow-sm">
-            {submissionCount}
+        {unreadCount > 0 && (
+          <span className="ml-2 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white text-xs px-2 py-0.5 shadow-sm font-medium">
+            {unreadCount}
           </span>
         )}
       </button>

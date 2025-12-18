@@ -1,0 +1,37 @@
+Your Weekly Digest - OneLink
+
+Hello,
+
+Here's a summary of your submissions from {{week_start}} to {{week_end}}:
+
+Summary:
+- Total Submissions: {{total_submissions}}
+- Total Files: {{total_files}}
+
+{{#if drops}}
+Submissions by Drop:
+
+{{#each drops}}
+{{item.drop_label}}
+  {{item.count}} submission(s) • {{item.files_count}} file(s)
+  
+  {{#if item.submissions}}
+  Recent Submissions:
+  {{#each item.submissions}}
+  - {{item.name}} • {{item.file_count}} file(s) • {{item.created_at}}
+  {{/each}}
+  {{#if item.has_more}}
+  + {{item.more_count}} more submission(s)
+  {{/if}}
+  {{/if}}
+
+{{/each}}
+{{/if}}
+
+View All in Dashboard: {{dashboard_url}}
+
+---
+You're receiving this email because you have weekly digest enabled.
+Manage preferences: {{settings_url}}
+
+© {{current_year}} OneLink. All rights reserved.

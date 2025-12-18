@@ -33,7 +33,11 @@ export default function Dashboard() {
     drops,
     setDrops,
     submissions,
+    setSubmissions,
+    downloads,
+    unreadCount,
     plan,
+    refreshInbox,
     clearAllSubmissions,
   } = useDashboardData(userId);
 
@@ -64,7 +68,7 @@ export default function Dashboard() {
         <TabNavigation
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          submissionCount={submissions.length}
+          unreadCount={unreadCount}
         />
 
         {/* Clear All button - Desktop only, outside scrollable area */}
@@ -93,7 +97,15 @@ export default function Dashboard() {
         {/* Tab Content - Scrollable */}
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="transition-opacity duration-200">
-            {activeTab === "inbox" && <InboxTab submissions={submissions} />}
+            {activeTab === "inbox" && (
+              <InboxTab
+                submissions={submissions}
+                downloads={downloads}
+                profileId={profileId}
+                setSubmissions={setSubmissions}
+                refreshInbox={refreshInbox}
+              />
+            )}
             {activeTab === "content" && (
               <ContentTab
                 profileId={profileId}
@@ -121,6 +133,7 @@ export default function Dashboard() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         submissionCount={submissions.length}
+        unreadCount={unreadCount}
         onClearAll={async () => {
           if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
             const success = await clearAllSubmissions();

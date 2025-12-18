@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Submission - OneLink</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 24px;">New Submission Received</h1>
+  </div>
+  
+  <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px; border: 1px solid #e5e7eb; border-top: none;">
+    <p style="margin-top: 0; font-size: 16px;">Hello,</p>
+    
+    <p style="font-size: 16px;">You've received a new submission to your drop <strong>{{drop_label}}</strong>.</p>
+    
+    <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid #e5e7eb;">
+      <h2 style="margin-top: 0; font-size: 18px; color: #667eea;">Submission Details</h2>
+      
+      {{#if submitter_name}}
+      <p style="margin: 10px 0;"><strong>From:</strong> {{submitter_name}}</p>
+      {{/if}}
+      
+      {{#if submitter_email}}
+      <p style="margin: 10px 0;"><strong>Email:</strong> {{submitter_email}}</p>
+      {{/if}}
+      
+      {{#if note}}
+      <p style="margin: 10px 0;"><strong>Note:</strong> {{note}}</p>
+      {{/if}}
+      
+      <p style="margin: 10px 0;"><strong>Files:</strong> {{file_count}} file(s)</p>
+      <p style="margin: 10px 0;"><strong>Submitted:</strong> {{submitted_at}}</p>
+    </div>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{{dashboard_url}}" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">View in Dashboard</a>
+    </div>
+    
+    <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
+      You're receiving this email because you have email notifications enabled for new submissions.
+      <a href="{{settings_url}}" style="color: #667eea;">Manage preferences</a>
+    </p>
+  </div>
+  
+  <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+    <p style="font-size: 12px; color: #9ca3af;">
+      © {{current_year}} OneLink. All rights reserved.
+    </p>
+  </div>
+</body>
+</html>

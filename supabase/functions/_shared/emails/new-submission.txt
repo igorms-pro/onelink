@@ -1,0 +1,20 @@
+New Submission Received - OneLink
+
+Hello,
+
+You've received a new submission to your drop "{{drop_label}}".
+
+Submission Details:
+{{#if submitter_name}}From: {{submitter_name}}{{/if}}
+{{#if submitter_email}}Email: {{submitter_email}}{{/if}}
+{{#if note}}Note: {{note}}{{/if}}
+Files: {{file_count}} file(s)
+Submitted: {{submitted_at}}
+
+View in Dashboard: {{dashboard_url}}
+
+---
+You're receiving this email because you have email notifications enabled for new submissions.
+Manage preferences: {{settings_url}}
+
+© {{current_year}} OneLink. All rights reserved.
