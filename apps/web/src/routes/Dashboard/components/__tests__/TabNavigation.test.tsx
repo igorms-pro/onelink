@@ -93,20 +93,6 @@ describe("TabNavigation", () => {
     expect(badge).not.toBeInTheDocument();
   });
 
-  it("should display unreadCount badge only if unreadCount > 0", () => {
-    render(
-      <TabNavigation
-        activeTab="inbox"
-        onTabChange={mockOnTabChange}
-        unreadCount={3}
-      />,
-    );
-
-    const badge = screen.getByText("3");
-    expect(badge).toBeInTheDocument();
-    expect(badge).toHaveClass("bg-gradient-to-r");
-  });
-
   it("should display correct unreadCount in badge", () => {
     render(
       <TabNavigation
