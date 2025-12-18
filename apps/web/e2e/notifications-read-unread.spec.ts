@@ -5,7 +5,8 @@ test.describe("Notifications Read/Unread Functionality", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    // Use first() to get the visible Inbox button (desktop or mobile)
+    await page.locator("button:has-text('Inbox')").first().click();
     await page.waitForLoadState("networkidle");
   });
 
@@ -23,10 +24,11 @@ test.describe("Notifications Read/Unread Functionality", () => {
       // Get first unread submission
       const firstUnread = unreadSubmissions.first();
 
-      // Get initial unread count from badge
-      const badge = page.locator(
-        "span:has-text(/\\d+/):near(button:has-text('Inbox'))",
-      );
+      // Get initial unread count from badge (target desktop TabNavigation)
+      const badge = page
+        .locator("div.hidden.sm\\:flex")
+        .locator("span:has-text(/\\d+/)")
+        .first();
       const initialCountText = (await badge.textContent()) || "0";
       const initialCount = parseInt(initialCountText) || 0;
 
@@ -136,7 +138,7 @@ test.describe("Notifications Read/Unread Functionality", () => {
       // Refresh page
       await page.reload();
       await page.waitForLoadState("networkidle");
-      await page.locator("button:has-text('Inbox')").click();
+      await page.locator("button:has-text('Inbox')").first().click();
 
       // Verify submission is still marked as read
       // Find the submission by looking for one that doesn't have "Mark read" button

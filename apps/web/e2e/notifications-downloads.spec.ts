@@ -5,7 +5,8 @@ test.describe("Download Notifications", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    // Use first() to get the visible Inbox button (desktop or mobile)
+    await page.locator("button:has-text('Inbox')").first().click();
     await page.waitForLoadState("networkidle");
   });
 

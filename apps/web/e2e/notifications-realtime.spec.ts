@@ -11,15 +11,16 @@ test.describe("Notifications Realtime", () => {
   }) => {
     // Open Dashboard in one tab
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    await page.locator("button:has-text('Inbox')").first().click();
 
     // Wait for initial load
     await page.waitForLoadState("networkidle");
 
-    // Get initial unread count (if any)
-    const initialBadge = page.locator(
-      "span:has-text(/\\d+/):near(button:has-text('Inbox'))",
-    );
+    // Get initial unread count (if any) - target desktop TabNavigation
+    const initialBadge = page
+      .locator("div.hidden.sm\\:flex")
+      .locator("span:has-text(/\\d+/)")
+      .first();
     const initialCount = (await initialBadge.textContent()) || "0";
     const _initialUnreadCount = parseInt(initialCount) || 0;
 
@@ -33,7 +34,9 @@ test.describe("Notifications Realtime", () => {
     // 7. Verify submission is marked as unread (blue background)
 
     // For now, we test the structure:
-    await expect(page.locator("button:has-text('Inbox')")).toBeVisible();
+    await expect(
+      page.locator("button:has-text('Inbox')").first(),
+    ).toBeVisible();
 
     // Check that realtime subscription is active (no errors in console)
     const consoleErrors: string[] = [];
@@ -57,7 +60,7 @@ test.describe("Notifications Realtime", () => {
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    await page.locator("button:has-text('Inbox')").first().click();
     await page.waitForLoadState("networkidle");
 
     // Note: In a real scenario:
@@ -67,14 +70,16 @@ test.describe("Notifications Realtime", () => {
     // 4. Verify toast notification appears
     // 5. Verify download is sorted chronologically with submissions
 
-    await expect(page.locator("button:has-text('Inbox')")).toBeVisible();
+    await expect(
+      page.locator("button:has-text('Inbox')").first(),
+    ).toBeVisible();
   });
 
   test("multiple submissions appear rapidly", async ({
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    await page.locator("button:has-text('Inbox')").first().click();
     await page.waitForLoadState("networkidle");
 
     // Note: In a real scenario:
@@ -82,6 +87,8 @@ test.describe("Notifications Realtime", () => {
     // 2. Verify all appear in Inbox
     // 3. Verify unreadCount is correct
 
-    await expect(page.locator("button:has-text('Inbox')")).toBeVisible();
+    await expect(
+      page.locator("button:has-text('Inbox')").first(),
+    ).toBeVisible();
   });
 });

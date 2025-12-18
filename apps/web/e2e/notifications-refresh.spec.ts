@@ -5,7 +5,10 @@ test.describe("Notifications Refresh Functionality", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
     await page.goto("/dashboard");
-    await page.locator("button:has-text('Inbox')").click();
+    // Target desktop TabNavigation (visible on desktop) or mobile BottomNavigation
+    // Use first() to get the visible one based on viewport
+    const inboxButton = page.locator("button:has-text('Inbox')").first();
+    await inboxButton.click();
     await page.waitForLoadState("networkidle");
   });
 

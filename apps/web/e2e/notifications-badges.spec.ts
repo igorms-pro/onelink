@@ -14,8 +14,10 @@ test.describe("Notifications Badges", () => {
     // Set desktop viewport
     await page.setViewportSize({ width: 1280, height: 720 });
 
-    // Check if badge is visible on Inbox tab
-    const inboxTab = page.locator("button:has-text('Inbox')");
+    // Check if badge is visible on Inbox tab (target desktop TabNavigation specifically)
+    const inboxTab = page
+      .locator("div.hidden.sm\\:flex")
+      .locator("button:has-text('Inbox')");
     await expect(inboxTab).toBeVisible();
 
     // Check for badge (gradient purple badge with number)
@@ -57,13 +59,18 @@ test.describe("Notifications Badges", () => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
 
-    // Navigate to Content tab (not Inbox)
-    const contentTab = page.locator("button:has-text('Content')");
+    // Navigate to Content tab (not Inbox) - target mobile BottomNavigation
+    const contentTab = page
+      .locator("nav.sm\\:hidden")
+      .locator("button:has-text('Content')");
     await contentTab.click();
     await page.waitForTimeout(500);
 
     // Check for purple dot on Inbox icon (it's inside the button, in a relative div)
-    const inboxButton = page.locator("button:has-text('Inbox')");
+    // Target mobile BottomNavigation specifically
+    const inboxButton = page
+      .locator("nav.sm\\:hidden")
+      .locator("button:has-text('Inbox')");
     const dot = inboxButton.locator("span.bg-purple-600.rounded-full");
     const dotVisible = await dot.isVisible();
 
@@ -72,7 +79,9 @@ test.describe("Notifications Badges", () => {
       await expect(dot).toBeVisible();
 
       // Switch to Inbox tab
-      const inboxTab = page.locator("button:has-text('Inbox')");
+      const inboxTab = page
+        .locator("nav.sm\\:hidden")
+        .locator("button:has-text('Inbox')");
       await inboxTab.click();
       await page.waitForTimeout(500);
 
@@ -92,14 +101,16 @@ test.describe("Notifications Badges", () => {
       await page.waitForTimeout(500);
 
       // Verify dot is gone after marking all as read
-      const dotAfterMarkAll = contentTab
-        .locator("..")
+      const dotAfterMarkAll = page
+        .locator("nav.sm\\:hidden")
         .locator("button:has-text('Inbox')")
         .locator("span.bg-purple-600.rounded-full");
       await expect(dotAfterMarkAll).not.toBeVisible();
     } else {
       // If no dot, verify it's because there are no unread items
-      const inboxTab = page.locator("button:has-text('Inbox')");
+      const inboxTab = page
+        .locator("nav.sm\\:hidden")
+        .locator("button:has-text('Inbox')");
       await inboxTab.click();
       const markAllButton = page.locator("button:has-text('Mark all as read')");
       const hasUnread = await markAllButton.isVisible();
