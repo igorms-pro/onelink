@@ -91,8 +91,9 @@ test.describe("Notifications Refresh Functionality", () => {
       const startY = box.y + 10;
       const startX = box.x + box.width / 2;
 
-      // Touch start
-      await page.touchscreen.tap(startX, startY);
+      // Simulate touch start using mouse (since touchscreen requires hasTouch context)
+      await page.mouse.move(startX, startY);
+      await page.mouse.down();
       await page.waitForTimeout(100);
 
       // Move down (pull)
@@ -108,7 +109,7 @@ test.describe("Notifications Refresh Functionality", () => {
         .catch(() => false);
 
       if (indicatorVisible) {
-        // Release (touch end)
+        // Release (touch end) - mouse up
         await page.mouse.up();
         await page.waitForTimeout(1000);
 
