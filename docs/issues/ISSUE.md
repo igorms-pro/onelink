@@ -447,6 +447,17 @@ _(None - all critical features completed)_
      - ✅ `016_email_rate_limiting_improvement.sql` - Rate limiting amélioré avec last_email_sent_at
    
    - **Tests:** Voir `docs/TEST_PLAN_NOTIFICATIONS.md` pour le plan complet de tests (unitaires, intégration, E2E)
+     - ✅ E2E tests créés et fonctionnels (`notifications-realtime.spec.ts`, `notifications-refresh.spec.ts`, `settings.spec.ts`)
+     - ✅ CI/CD pipeline passing - Tous les tests E2E passent en CI
+     - ✅ Fixes appliqués: env vars loading, data-testid selectors, mouse events pour mobile
+     - ✅ Tests locaux fonctionnels avec `.env.local` chargé automatiquement
+   
+   - **CI/CD Status:** ✅ **PASSING** - Tous les tests E2E passent en CI après fixes:
+     - Fix: Chargement des env vars dans worker processes (auth fixture)
+     - Fix: Migration vers `data-testid` selectors pour plus de robustesse
+     - Fix: Remplacement `touchscreen.tap()` par `mouse.move()` + `mouse.down()` pour mobile
+     - Fix: Amélioration des stratégies d'attente pour les toggles et badges
+     - **Merged:** ✅ Branch `45-notifications-in-app` merged to main
    
    - **Note importante:** Le système de notifications utilise actuellement Supabase Realtime pour les mises à jour automatiques. Cependant, pour une meilleure expérience utilisateur, il serait bénéfique d'implémenter un vrai système realtime client-serveur (WebSocket ou Server-Sent Events) pour éviter d'avoir besoin d'appuyer sur refresh. Cela permettrait une synchronisation bidirectionnelle plus robuste et une meilleure gestion de la reconnexion automatique.
 
