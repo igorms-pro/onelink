@@ -26,10 +26,10 @@ test.describe("Notifications Realtime", () => {
     const initialBadge = page.locator(
       '[data-testid="tab-navigation-inbox-badge"]',
     );
-    const badgeExists = await initialBadge.isVisible().catch(() => false);
-    const initialCount = badgeExists
-      ? (await initialBadge.textContent()) || "0"
-      : "0";
+    // Use count() instead of isVisible() to avoid timeout when badge doesn't exist
+    const badgeCount = await initialBadge.count();
+    const initialCount =
+      badgeCount > 0 ? (await initialBadge.textContent()) || "0" : "0";
     const _initialUnreadCount = parseInt(initialCount) || 0;
 
     // Note: In a real scenario, you would:

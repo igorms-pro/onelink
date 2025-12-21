@@ -68,9 +68,13 @@ test.describe("Notifications Refresh Functionality", () => {
     const initialSubmissions = page.locator("li:has([class*='rounded-xl'])");
     const _initialCount = await initialSubmissions.count();
 
+    // Find scrollable container - wait for inbox content to be loaded first
+    // The section might not be immediately available, so wait for any inbox content
+    await page.waitForTimeout(500); // Small delay to ensure DOM is ready
+
     // Find scrollable container
     const scrollContainer = page
-      .locator("section:has([class*='mt-2'])")
+      .locator("section:has([class*='mt-2']), section:has([class*='mt-0'])")
       .first();
 
     // Wait for container to be visible before getting bounding box
