@@ -15,9 +15,12 @@ if (!process.env.CI) {
   if (existsSync(envPath)) {
     // Suppress dotenv messages by setting quiet mode
     process.env.DOTENV_CONFIG_QUIET = "true";
-    // Don't override existing env vars (e.g., from shell)
-    // This allows CI to override with real values
-    config({ path: envPath, override: false });
+    // Load env vars - use override: true to ensure they're set
+    // This ensures env vars are available to worker processes
+    const result = config({ path: envPath, override: false });
+    if (result.error) {
+      console.warn("Warning: Failed to load .env.local:", result.error);
+    }
   }
 }
 
@@ -42,6 +45,17 @@ export default defineConfig({
     actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Longer timeout in CI
     navigationTimeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI for networkidle
   },
+  // Ensure environment variables are passed to worker processes
+  globalSetup: !process.env.CI
+    ? async () => {
+        // Load .env.local again in globalSetup to ensure it's available to workers
+        const envPath = resolve(__dirname, ".env.local");
+        if (existsSync(envPath)) {
+          process.env.DOTENV_CONFIG_QUIET = "true";
+          config({ path: envPath, override: false });
+        }
+      }
+    : undefined,
   projects: process.env.CI
     ? [
         // In CI, only run on Chromium for speed (most stable and fastest)
