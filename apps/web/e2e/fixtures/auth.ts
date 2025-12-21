@@ -46,8 +46,9 @@ export const test = base.extend<AuthFixtures>({
     // @ts-expect-error - process.env is available in Node.js environment
     const testPassword = process.env.E2E_TEST_PASSWORD || "testpassword123";
 
-    // Check if credentials are missing or using placeholder values
-    // If so, skip the test instead of failing
+    // Validate required credentials (best practice: fail early with clear error)
+    // Skip tests if credentials are missing or using placeholder values
+    // This prevents tests from running with invalid configuration
     if (
       !supabaseUrl ||
       !supabaseKey ||
@@ -56,7 +57,11 @@ export const test = base.extend<AuthFixtures>({
     ) {
       testInfo.skip(
         true,
-        "Skipping test: E2E test credentials not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in environment.",
+        `Skipping test: E2E test credentials not configured.
+Required environment variables:
+  - VITE_SUPABASE_URL: ${supabaseUrl ? "SET" : "MISSING"}
+  - VITE_SUPABASE_ANON_KEY: ${supabaseKey ? "SET" : "MISSING"}
+Set these in .env.local (local) or GitHub Secrets (CI).`,
       );
       return;
     }
