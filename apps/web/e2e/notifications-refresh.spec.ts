@@ -22,32 +22,29 @@ test.describe("Notifications Refresh Functionality", () => {
     await page.setViewportSize({ width: 1280, height: 720 });
 
     // Find refresh button (should be visible on desktop)
-    // The refresh button is in the InboxTab component
-    const refreshButton = page
-      .locator("button:has-text('Refresh')")
-      .or(page.locator("button:has(svg)"))
-      .filter({ has: page.locator("svg") });
-    const refreshVisible = await refreshButton
-      .first()
-      .isVisible()
-      .catch(() => false);
+    const refreshButton = page.locator('[data-testid="inbox-refresh-button"]');
+    const refreshVisible = await refreshButton.isVisible().catch(() => false);
 
     if (refreshVisible) {
       // Get initial submission count (if any)
-      const initialSubmissions = page.locator("li:has([class*='rounded-xl'])");
+      const initialSubmissions = page.locator(
+        '[data-testid="inbox-submission-item"]',
+      );
       const _initialCount = await initialSubmissions.count();
 
       // Click refresh button
-      await refreshButton.first().click();
+      await refreshButton.click();
 
       // Wait for refresh to complete
       await page.waitForTimeout(1000);
 
       // Verify button is still visible and functional after refresh
-      await expect(refreshButton.first()).toBeVisible();
+      await expect(refreshButton).toBeVisible();
 
       // Verify submissions are still loaded (or empty state)
-      const finalSubmissions = page.locator("li:has([class*='rounded-xl'])");
+      const finalSubmissions = page.locator(
+        '[data-testid="inbox-submission-item"]',
+      );
       const finalCount = await finalSubmissions.count();
 
       // Count should be same or updated (not broken)
@@ -65,13 +62,17 @@ test.describe("Notifications Refresh Functionality", () => {
     await page.setViewportSize({ width: 375, height: 667 });
 
     // Get initial submission count
-    const initialSubmissions = page.locator("li:has([class*='rounded-xl'])");
+    const initialSubmissions = page.locator(
+      '[data-testid="inbox-submission-item"]',
+    );
     const _initialCount = await initialSubmissions.count();
 
     // Wait for inbox content to be loaded first - this ensures the section exists
     // Look for either submissions list items or empty state message
     const inboxContent = page
-      .locator("li:has([class*='rounded-xl']), text=/no submissions yet/i")
+      .locator(
+        '[data-testid="inbox-submission-item"], [data-testid="inbox-empty-message"]',
+      )
       .first();
     await expect(inboxContent).toBeVisible({ timeout: 15000 });
 
@@ -99,10 +100,9 @@ test.describe("Notifications Refresh Functionality", () => {
       await page.waitForTimeout(100);
 
       // Check if refresh indicator appears (during pull-to-refresh)
-      // The indicator is a RefreshCw icon with animate-spin class
-      const refreshIndicator = page
-        .locator("svg.animate-spin")
-        .or(page.locator("svg:has([class*='text-blue-600'])"));
+      const refreshIndicator = page.locator(
+        '[data-testid="inbox-pull-refresh-indicator"]',
+      );
       const indicatorVisible = await refreshIndicator
         .isVisible()
         .catch(() => false);
@@ -116,7 +116,9 @@ test.describe("Notifications Refresh Functionality", () => {
         await expect(refreshIndicator).not.toBeVisible();
 
         // Verify submissions are still loaded
-        const finalSubmissions = page.locator("li:has([class*='rounded-xl'])");
+        const finalSubmissions = page.locator(
+          '[data-testid="inbox-submission-item"]',
+        );
         const finalCount = await finalSubmissions.count();
         expect(finalCount).toBeGreaterThanOrEqual(0);
       } else {

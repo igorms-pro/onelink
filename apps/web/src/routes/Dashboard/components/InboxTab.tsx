@@ -237,10 +237,16 @@ export function InboxTab({
 
   if (allItems.length === 0) {
     return (
-      <section className="mt-2 sm:mt-0">
-        <div className="rounded-xl bg-gray-50 dark:bg-gray-800 p-8 text-center border border-gray-200 dark:border-gray-700">
+      <section data-testid="inbox-scroll-container" className="mt-2 sm:mt-0">
+        <div
+          data-testid="inbox-empty-state"
+          className="rounded-xl bg-gray-50 dark:bg-gray-800 p-8 text-center border border-gray-200 dark:border-gray-700"
+        >
           <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
-          <p className="text-gray-600 dark:text-gray-400">
+          <p
+            data-testid="inbox-empty-message"
+            className="text-gray-600 dark:text-gray-400"
+          >
             {t("dashboard_inbox_empty") || "No submissions yet"}
           </p>
         </div>
@@ -263,6 +269,7 @@ export function InboxTab({
       {/* Pull-to-refresh indicator (mobile) */}
       {isPulling && (
         <div
+          data-testid="inbox-pull-refresh-indicator"
           className="absolute top-0 left-0 right-0 flex items-center justify-center py-2 sm:hidden"
           style={{
             transform: `translateY(-${pullDistance}px)`,
@@ -281,6 +288,7 @@ export function InboxTab({
       <div className="mb-4 flex justify-between items-center gap-2">
         {/* Refresh button (desktop) */}
         <button
+          data-testid="inbox-refresh-button"
           onClick={handleRefresh}
           disabled={refreshing}
           className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
@@ -307,7 +315,7 @@ export function InboxTab({
         )}
       </div>
 
-      <ul className="grid gap-3">
+      <ul data-testid="inbox-items-list" className="grid gap-3">
         {/* Submissions and Downloads */}
         {allItems.map((item) => {
           if (item.type === "submission") {
@@ -316,6 +324,7 @@ export function InboxTab({
             return (
               <li
                 key={s.submission_id}
+                data-testid="inbox-submission-item"
                 className={`group relative rounded-xl p-4 transition-all duration-200 border ${
                   isUnread
                     ? "bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/20"
@@ -451,6 +460,7 @@ export function InboxTab({
             return (
               <li
                 key={`download-${d.download_id}`}
+                data-testid="inbox-download-item"
                 className="group relative rounded-xl p-4 transition-all duration-200 border bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/20"
               >
                 <div className="flex items-start gap-3">
