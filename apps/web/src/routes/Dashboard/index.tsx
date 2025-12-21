@@ -33,7 +33,12 @@ export default function Dashboard() {
     drops,
     setDrops,
     submissions,
+    setSubmissions,
+    downloads,
+    unreadCount,
     plan,
+    refreshInbox,
+    clearAllSubmissions,
   } = useDashboardData(userId);
 
   const isFree = !isPaidPlan(plan);
@@ -63,16 +68,22 @@ export default function Dashboard() {
         <TabNavigation
           activeTab={activeTab}
           onTabChange={setActiveTab}
-          submissionCount={submissions.length}
+          unreadCount={unreadCount}
         />
 
         {/* Clear All button - Desktop only, outside scrollable area */}
-        {activeTab === "inbox" && submissions.length + 6 > 0 && (
+        {activeTab === "inbox" && submissions.length > 0 && (
           <div className="hidden sm:flex justify-end  shrink-0">
             <button
-              onClick={() => {
+              onClick={async () => {
                 if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
-                  // TODO: Implement actual clear functionality with database
+                  const success = await clearAllSubmissions();
+                  if (!success) {
+                    alert(
+                      t("dashboard_inbox_clear_all_error") ||
+                        "Failed to clear submissions",
+                    );
+                  }
                 }
               }}
               className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors cursor-pointer"
@@ -86,7 +97,15 @@ export default function Dashboard() {
         {/* Tab Content - Scrollable */}
         <div className="flex-1 min-h-0 overflow-y-auto">
           <div className="transition-opacity duration-200">
-            {activeTab === "inbox" && <InboxTab submissions={submissions} />}
+            {activeTab === "inbox" && (
+              <InboxTab
+                submissions={submissions}
+                downloads={downloads}
+                profileId={profileId}
+                setSubmissions={setSubmissions}
+                refreshInbox={refreshInbox}
+              />
+            )}
             {activeTab === "content" && (
               <ContentTab
                 profileId={profileId}
@@ -113,10 +132,17 @@ export default function Dashboard() {
       <BottomNavigation
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        submissionCount={submissions.length + 6}
-        onClearAll={() => {
-          if (confirm("Clear all inbox items? This cannot be undone.")) {
-            // TODO: Implement actual clear functionality with database
+        submissionCount={submissions.length}
+        unreadCount={unreadCount}
+        onClearAll={async () => {
+          if (confirm(t("dashboard_inbox_clear_all_confirm"))) {
+            const success = await clearAllSubmissions();
+            if (!success) {
+              alert(
+                t("dashboard_inbox_clear_all_error") ||
+                  "Failed to clear submissions",
+              );
+            }
           }
         }}
       />

@@ -9,21 +9,27 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Load .env.local file if it exists (for local development)
-// In CI, environment variables are set directly
+// In CI, environment variables are set directly via GitHub Actions
 if (!process.env.CI) {
   const envPath = resolve(__dirname, ".env.local");
   if (existsSync(envPath)) {
-    // Suppress dotenv messages by setting quiet mode
     process.env.DOTENV_CONFIG_QUIET = "true";
-    // Don't override existing env vars (e.g., from shell)
-    // This allows CI to override with real values
     config({ path: envPath, override: false });
   }
 }
 
-// Note: Environment variables are loaded from:
-// - Local: .env.local file (loaded above)
-// - CI: GitHub Actions environment variables (set in .github/workflows/ci.yml)
+// Helper function to validate required environment variables (available for future use)
+// Example usage: const baseUrl = requireEnv('VITE_BASE_URL');
+// Uncomment and use when needed:
+// function requireEnv(name: string): string {
+//   const value = process.env[name];
+//   if (!value) {
+//     throw new Error(
+//       `Missing required environment variable: ${name}. Set it in .env.local (local) or GitHub Secrets (CI)`,
+//     );
+//   }
+//   return value;
+// }
 
 export default defineConfig({
   testDir: "./e2e",
@@ -42,6 +48,14 @@ export default defineConfig({
     actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Longer timeout in CI
     navigationTimeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI for networkidle
   },
+  // Note: Environment variables are loaded from:
+  // - Local: .env.local file (loaded above and in auth fixture for worker processes)
+  // - CI: GitHub Actions environment variables (set in .github/workflows/ci.yml)
+  //
+  // The auth fixture also loads .env.local directly in worker processes because
+  // Playwright workers spawn as separate processes and don't inherit process.env
+  // Use globalSetup to ensure env vars are loaded before workers start
+  globalSetup: !process.env.CI ? "./e2e/global-setup.ts" : undefined,
   projects: process.env.CI
     ? [
         // In CI, only run on Chromium for speed (most stable and fastest)

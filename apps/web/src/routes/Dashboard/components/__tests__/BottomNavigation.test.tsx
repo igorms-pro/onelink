@@ -39,6 +39,7 @@ describe("BottomNavigation", () => {
         activeTab="inbox"
         onTabChange={mockOnTabChange}
         submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -54,6 +55,7 @@ describe("BottomNavigation", () => {
         activeTab="inbox"
         onTabChange={mockOnTabChange}
         submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -69,6 +71,7 @@ describe("BottomNavigation", () => {
         activeTab="content"
         onTabChange={mockOnTabChange}
         submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -85,6 +88,7 @@ describe("BottomNavigation", () => {
         activeTab="inbox"
         onTabChange={mockOnTabChange}
         submissionCount={5}
+        unreadCount={3}
         onClearAll={mockOnClearAll}
       />,
     );
@@ -99,6 +103,7 @@ describe("BottomNavigation", () => {
         activeTab="content"
         onTabChange={mockOnTabChange}
         submissionCount={5}
+        unreadCount={3}
         onClearAll={mockOnClearAll}
       />,
     );
@@ -113,6 +118,7 @@ describe("BottomNavigation", () => {
         activeTab="inbox"
         onTabChange={mockOnTabChange}
         submissionCount={0}
+        unreadCount={0}
         onClearAll={mockOnClearAll}
       />,
     );
@@ -128,6 +134,7 @@ describe("BottomNavigation", () => {
         activeTab="inbox"
         onTabChange={mockOnTabChange}
         submissionCount={5}
+        unreadCount={3}
         onClearAll={mockOnClearAll}
       />,
     );
@@ -138,12 +145,13 @@ describe("BottomNavigation", () => {
     expect(mockOnClearAll).toHaveBeenCalledTimes(1);
   });
 
-  it("should show notification dot when submissions exist and not on inbox tab", () => {
+  it("should show notification dot when unreadCount > 0 and not on inbox tab", () => {
     render(
       <BottomNavigation
         activeTab="content"
         onTabChange={mockOnTabChange}
-        submissionCount={3}
+        submissionCount={5}
+        unreadCount={3}
       />,
     );
 
@@ -157,7 +165,23 @@ describe("BottomNavigation", () => {
       <BottomNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={3}
+        submissionCount={5}
+        unreadCount={3}
+      />,
+    );
+
+    const inboxButton = screen.getByText("Inbox").closest("button");
+    const dot = inboxButton?.querySelector(".bg-purple-600");
+    expect(dot).not.toBeInTheDocument();
+  });
+
+  it("should not show notification dot when unreadCount is 0", () => {
+    render(
+      <BottomNavigation
+        activeTab="content"
+        onTabChange={mockOnTabChange}
+        submissionCount={5}
+        unreadCount={0}
       />,
     );
 

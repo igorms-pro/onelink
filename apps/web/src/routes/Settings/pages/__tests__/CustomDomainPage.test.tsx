@@ -90,8 +90,14 @@ const createDashboardData = (
   drops: [],
   setDrops: createDispatch<DropRow[]>(),
   submissions: emptySubmissions,
+  setSubmissions: createDispatch<SubmissionRow[]>(),
+  downloads: [],
+  setDownloads: createDispatch<any[]>(),
+  unreadCount: 0,
+  refreshInbox: async () => true,
   plan: PlanType.PRO,
   loading: false,
+  clearAllSubmissions: async () => true,
   ...overrides,
 });
 

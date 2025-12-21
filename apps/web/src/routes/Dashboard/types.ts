@@ -19,6 +19,7 @@ export type SubmissionRow = {
   email: string | null;
   note: string | null;
   files: { path: string; size: number; content_type: string | null }[];
+  read_at: string | null;
 };
 
 export type CountRow = {
@@ -43,4 +44,17 @@ export type DropViewsRow = {
 
 export type DropAnalyticsRow = UploadStatsRow & {
   views: number;
+};
+
+export type DownloadRow = {
+  download_id: number;
+  downloaded_at: string;
+  submission_id: string;
+  drop_id: string;
+  drop_label: string | null;
+  file_path: string;
+  file_name: string;
+  submission_name: string | null;
+  submission_email: string | null;
+  submission_created_at: string;
 };

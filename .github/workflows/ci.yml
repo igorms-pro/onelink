@@ -107,12 +107,25 @@ jobs:
       - name: Remove .env.local if exists (to prevent dotenv messages)
         run: rm -f .env.local || true
       
+      - name: Set E2E environment variables
+        shell: bash
+        run: |
+          echo "VITE_SUPABASE_URL=${E2E_SUPABASE_URL:-https://placeholder.supabase.co}" >> $GITHUB_ENV
+          echo "VITE_SUPABASE_ANON_KEY=${E2E_SUPABASE_ANON_KEY:-placeholder-key}" >> $GITHUB_ENV
+          echo "E2E_TEST_EMAIL=${E2E_TEST_EMAIL:-test@example.com}" >> $GITHUB_ENV
+          echo "E2E_TEST_PASSWORD=${E2E_TEST_PASSWORD:-testpassword123}" >> $GITHUB_ENV
+        env:
+          E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
+          E2E_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
+          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+      
       - name: Build app
         run: pnpm build
         env:
           # Use real E2E credentials for build so tests can authenticate
-          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
+          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
       
       - name: Run E2E tests
         # yamllint disable-line rule:line-length
@@ -126,10 +139,10 @@ jobs:
           NODE_ENV: "test"
           # E2E test credentials - use secrets if available, otherwise placeholder values
           # These are passed directly to the process environment for Playwright
-          VITE_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL || 'https://placeholder.supabase.co' }}
-          VITE_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY || 'placeholder-key' }}
-          E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL || 'test@example.com' }}
-          E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD || 'testpassword123' }}
+          VITE_SUPABASE_URL: ${{ env.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
+          E2E_TEST_EMAIL: ${{ env.E2E_TEST_EMAIL }}
+          E2E_TEST_PASSWORD: ${{ env.E2E_TEST_PASSWORD }}
       
       - name: Upload Playwright report
         if: always()
@@ -139,9 +152,30 @@ jobs:
           path: apps/web/playwright-report/
           retention-days: 30
 
+  edge-function-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v2.x
+      
+      - name: Run Edge Function tests (send-notification-email)
+        working-directory: supabase/functions
+        run: deno test send-notification-email/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check
+      
+      - name: Run Edge Function tests (send-weekly-digest)
+        working-directory: supabase/functions
+        run: deno test send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check
+
   build:
     runs-on: ubuntu-latest
-    needs: [lint-and-type-check, unit-tests]
+    needs: [lint-and-type-check, unit-tests, edge-function-tests]
     defaults:
       run:
         working-directory: ./apps/web

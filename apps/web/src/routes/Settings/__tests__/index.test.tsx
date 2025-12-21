@@ -95,6 +95,21 @@ vi.mock("@/lib/supabase", () => {
         upsert: vi.fn().mockResolvedValue({ data: null, error: null }),
       })),
       rpc: vi.fn().mockResolvedValue({ data: PlanType.FREE, error: null }),
+      channel: vi.fn(() => ({
+        on: vi.fn().mockReturnThis(),
+        subscribe: vi.fn((callback) => {
+          setTimeout(() => callback("SUBSCRIBED"), 0);
+          return { unsubscribe: vi.fn() };
+        }),
+      })),
+      removeChannel: vi.fn(),
+      storage: {
+        from: vi.fn(() => ({
+          getPublicUrl: vi.fn(() => ({
+            data: { publicUrl: "https://example.com/file.pdf" },
+          })),
+        })),
+      },
     },
   };
 });

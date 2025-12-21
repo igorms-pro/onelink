@@ -1,0 +1,16 @@
+{
+  "name": "onelink",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OneLink - Link in bio platform",
+  "scripts": {
+    "test:deno": "cd supabase/functions && deno test **/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check",
+    "test:deno:watch": "cd supabase/functions && deno test **/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check --watch",
+    "test:deno:send-notification": "cd supabase/functions && deno test send-notification-email/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check",
+    "test:deno:weekly-digest": "cd supabase/functions && deno test send-weekly-digest/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check",
+    "test:deno:all": "cd supabase/functions && deno test **/__tests__/*.test.ts --allow-read --allow-env --allow-net --no-check"
+  },
+  "engines": {
+    "deno": ">=2.0.0"
+  }
+}

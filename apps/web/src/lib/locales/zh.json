@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "文件",
   "dashboard_inbox_clear_all": "清除全部",
   "dashboard_inbox_clear_all_confirm": "您确定要清除所有收件箱项目吗？此操作无法撤销。",
+  "dashboard_inbox_clear_all_error": "清除提交失败。请重试。",
   "dashboard_account_profile_title": "个人资料",
   "dashboard_account_profile_description": "管理您的公开个人资料设置",
   "dashboard_account_analytics_title": "分析",

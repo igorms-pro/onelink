@@ -1,0 +1,17 @@
+{
+  "nodeModulesDir": "auto",
+  "imports": {
+    "@supabase/supabase-js": "jsr:@supabase/supabase-js@2",
+    "@supabase/functions-js": "jsr:@supabase/functions-js@2",
+    "@std/assert": "jsr:@std/assert@1.0.2"
+  },
+  "compilerOptions": {
+    "allowJs": true,
+    "lib": ["deno.window", "deno.ns"],
+    "strict": false,
+    "types": ["./deno.d.ts"]
+  },
+  "test": {
+    "include": ["**/__tests__/**/*.test.ts"]
+  }
+}

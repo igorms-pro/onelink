@@ -7,6 +7,7 @@ interface BottomNavigationProps {
   activeTab: TabId;
   onTabChange: (tab: TabId) => void;
   submissionCount: number;
+  unreadCount: number;
   onClearAll?: () => void;
 }
 
@@ -14,13 +15,14 @@ export function BottomNavigation({
   activeTab,
   onTabChange,
   submissionCount,
+  unreadCount,
   onClearAll,
 }: BottomNavigationProps) {
   const { t } = useTranslation();
   const { isScrolling, isScrollable } = useScrollState(150);
 
   return (
-    <nav className="sticky bottom-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden flex-shrink-0">
+    <nav className="sticky bottom-0 z-50 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 sm:hidden shrink-0">
       {/* Clear all button for Inbox */}
       {activeTab === "inbox" && submissionCount > 0 && onClearAll && (
         <div className="absolute -top-12 right-4">
@@ -37,6 +39,7 @@ export function BottomNavigation({
       )}
       <div className="flex items-center justify-around h-14">
         <button
+          data-testid="bottom-navigation-inbox"
           onClick={() => onTabChange("inbox")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
@@ -48,8 +51,11 @@ export function BottomNavigation({
                   : "text-gray-500 dark:text-gray-400"
               }`}
             />
-            {submissionCount > 0 && activeTab !== "inbox" && (
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-600"></span>
+            {unreadCount > 0 && activeTab !== "inbox" && (
+              <span
+                data-testid="bottom-navigation-inbox-dot"
+                className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-purple-600"
+              ></span>
             )}
           </div>
           <span
@@ -64,6 +70,7 @@ export function BottomNavigation({
         </button>
 
         <button
+          data-testid="bottom-navigation-content"
           onClick={() => onTabChange("content")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >
@@ -86,6 +93,7 @@ export function BottomNavigation({
         </button>
 
         <button
+          data-testid="bottom-navigation-account"
           onClick={() => onTabChange("account")}
           className="flex flex-col items-center justify-center gap-0.5 flex-1 h-full transition-all cursor-pointer"
         >

@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "Dateien",
   "dashboard_inbox_clear_all": "Alle löschen",
   "dashboard_inbox_clear_all_confirm": "Sind Sie sicher, dass Sie alle Posteingangselemente löschen möchten? Diese Aktion kann nicht rückgängig gemacht werden.",
+  "dashboard_inbox_clear_all_error": "Löschen der Übermittlungen fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "dashboard_account_profile_title": "Profil",
   "dashboard_account_profile_description": "Verwalten Sie Ihre öffentlichen Profileinstellungen",
   "dashboard_account_analytics_title": "Analysen",

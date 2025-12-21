@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "Arquivos",
   "dashboard_inbox_clear_all": "Limpar tudo",
   "dashboard_inbox_clear_all_confirm": "Tem certeza de que deseja limpar todos os itens da caixa de entrada? Esta ação não pode ser desfeita.",
+  "dashboard_inbox_clear_all_error": "Falha ao limpar os envios. Por favor, tente novamente.",
   "dashboard_account_profile_title": "Perfil",
   "dashboard_account_profile_description": "Gerencie as configurações do seu perfil público",
   "dashboard_account_analytics_title": "Análises",

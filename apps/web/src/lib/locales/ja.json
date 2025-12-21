@@ -46,6 +46,7 @@
   "dashboard_inbox_files": "ファイル",
   "dashboard_inbox_clear_all": "すべてクリア",
   "dashboard_inbox_clear_all_confirm": "受信トレイのすべてのアイテムをクリアしてもよろしいですか？この操作は元に戻せません。",
+  "dashboard_inbox_clear_all_error": "提出のクリアに失敗しました。もう一度お試しください。",
   "dashboard_account_profile_title": "プロフィール",
   "dashboard_account_profile_description": "公開プロフィール設定を管理",
   "dashboard_account_analytics_title": "分析",

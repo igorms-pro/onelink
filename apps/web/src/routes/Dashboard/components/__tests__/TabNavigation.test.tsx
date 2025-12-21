@@ -29,7 +29,7 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -43,7 +43,7 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="content"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -58,7 +58,7 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -68,29 +68,55 @@ describe("TabNavigation", () => {
     expect(mockOnTabChange).toHaveBeenCalledWith("content");
   });
 
-  it("should display submission count badge when count > 0", () => {
+  it("should display unread count badge when count > 0", () => {
     render(
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={5}
+        unreadCount={3}
       />,
     );
 
-    expect(screen.getByText("5")).toBeInTheDocument();
+    expect(screen.getByText("3")).toBeInTheDocument();
   });
 
-  it("should not display submission count badge when count is 0", () => {
+  it("should not display unread count badge when count is 0", () => {
     render(
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
     const badge = screen.queryByText("0");
     expect(badge).not.toBeInTheDocument();
+  });
+
+  it("should display correct unreadCount in badge", () => {
+    render(
+      <TabNavigation
+        activeTab="inbox"
+        onTabChange={mockOnTabChange}
+        unreadCount={7}
+      />,
+    );
+
+    expect(screen.getByText("7")).toBeInTheDocument();
+  });
+
+  it("should have correct badge style (gradient purple)", () => {
+    render(
+      <TabNavigation
+        activeTab="inbox"
+        onTabChange={mockOnTabChange}
+        unreadCount={3}
+      />,
+    );
+
+    const badge = screen.getByText("3");
+    expect(badge).toHaveClass("from-purple-600");
+    expect(badge).toHaveClass("to-purple-700");
   });
 
   it("should handle tab switching", async () => {
@@ -99,7 +125,7 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
@@ -115,7 +141,7 @@ describe("TabNavigation", () => {
       <TabNavigation
         activeTab="inbox"
         onTabChange={mockOnTabChange}
-        submissionCount={0}
+        unreadCount={0}
       />,
     );
 
