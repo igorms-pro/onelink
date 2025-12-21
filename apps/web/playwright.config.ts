@@ -19,17 +19,17 @@ if (!process.env.CI) {
 }
 
 // Helper function to validate required environment variables (available for future use)
-// Example: const baseUrl = requireEnv('VITE_BASE_URL');
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function requireEnv(name: string): string {
-  const value = process.env[name];
-  if (!value) {
-    throw new Error(
-      `Missing required environment variable: ${name}. Set it in .env.local (local) or GitHub Secrets (CI)`,
-    );
-  }
-  return value;
-}
+// Example usage: const baseUrl = requireEnv('VITE_BASE_URL');
+// Uncomment and use when needed:
+// function requireEnv(name: string): string {
+//   const value = process.env[name];
+//   if (!value) {
+//     throw new Error(
+//       `Missing required environment variable: ${name}. Set it in .env.local (local) or GitHub Secrets (CI)`,
+//     );
+//   }
+//   return value;
+// }
 
 export default defineConfig({
   testDir: "./e2e",
