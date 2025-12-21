@@ -1,41 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
-import { config } from "dotenv";
-import { resolve, dirname } from "path";
-import { fileURLToPath } from "url";
-import { existsSync } from "fs";
-
-// Get __dirname equivalent in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Load .env.local file if it exists (for local development)
-// In CI, environment variables are set directly
-if (!process.env.CI) {
-  const envPath = resolve(__dirname, ".env.local");
-  if (existsSync(envPath)) {
-    // Suppress dotenv messages by setting quiet mode
-    process.env.DOTENV_CONFIG_QUIET = "true";
-    // Load env vars - use override: true to ensure they're set
-    // This ensures env vars are available to worker processes
-    const result = config({ path: envPath, override: false });
-    if (result.error) {
-      console.warn("Warning: Failed to load .env.local:", result.error);
-    }
-  }
-}
 
 // Note: Environment variables are loaded from:
-// - Local: .env.local file (loaded above)
+// - Local: .env.local file (loaded in auth fixture for worker processes)
 // - CI: GitHub Actions environment variables (set in .github/workflows/ci.yml)
-
-// Ensure env vars are loaded and available
-// Load .env.local before defining config so vars are available to workers
-// This must happen BEFORE defineConfig so env vars are in process.env when workers spawn
-const envPath = resolve(__dirname, ".env.local");
-if (!process.env.CI && existsSync(envPath)) {
-  process.env.DOTENV_CONFIG_QUIET = "true";
-  config({ path: envPath, override: false });
-}
+//
+// The auth fixture loads .env.local directly in worker processes to ensure
+// env vars are available even though workers spawn as separate processes
 
 export default defineConfig({
   testDir: "./e2e",
