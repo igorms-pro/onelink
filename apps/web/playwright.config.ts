@@ -28,6 +28,15 @@ if (!process.env.CI) {
 // - Local: .env.local file (loaded above)
 // - CI: GitHub Actions environment variables (set in .github/workflows/ci.yml)
 
+// Ensure env vars are loaded and available
+// Load .env.local before defining config so vars are available to workers
+// This must happen BEFORE defineConfig so env vars are in process.env when workers spawn
+const envPath = resolve(__dirname, ".env.local");
+if (!process.env.CI && existsSync(envPath)) {
+  process.env.DOTENV_CONFIG_QUIET = "true";
+  config({ path: envPath, override: false });
+}
+
 export default defineConfig({
   testDir: "./e2e",
   fullyParallel: true,
@@ -45,17 +54,8 @@ export default defineConfig({
     actionTimeout: process.env.CI ? 15 * 1000 : 10 * 1000, // Longer timeout in CI
     navigationTimeout: process.env.CI ? 60 * 1000 : 30 * 1000, // Longer timeout in CI for networkidle
   },
-  // Ensure environment variables are passed to worker processes
-  globalSetup: !process.env.CI
-    ? async () => {
-        // Load .env.local again in globalSetup to ensure it's available to workers
-        const envPath = resolve(__dirname, ".env.local");
-        if (existsSync(envPath)) {
-          process.env.DOTENV_CONFIG_QUIET = "true";
-          config({ path: envPath, override: false });
-        }
-      }
-    : undefined,
+  // Use globalSetup to ensure env vars are loaded before workers start
+  globalSetup: !process.env.CI ? "./e2e/global-setup.ts" : undefined,
   projects: process.env.CI
     ? [
         // In CI, only run on Chromium for speed (most stable and fastest)

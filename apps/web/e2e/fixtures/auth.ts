@@ -6,6 +6,7 @@ import { setupPostHogInterception } from "../helpers/posthog";
 import { existsSync, mkdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { config } from "dotenv";
 
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,17 @@ let hasAuthenticated = false;
 export const test = base.extend<AuthFixtures>({
   // Authenticated page fixture with session reuse
   authenticatedPage: async ({ browser }, usePage, testInfo) => {
+    // Load .env.local in worker process if not in CI
+    // This ensures env vars are available in worker processes
+    // (Playwright workers spawn as separate processes and don't inherit process.env from config)
+    if (!process.env.CI) {
+      const envPath = resolve(__dirname, "../../.env.local");
+      if (existsSync(envPath)) {
+        process.env.DOTENV_CONFIG_QUIET = "true";
+        config({ path: envPath, override: true }); // Use override: true to ensure vars are set
+      }
+    }
+
     // Get test credentials from environment
     // @ts-expect-error - process.env is available in Node.js environment
     const supabaseUrl = process.env.VITE_SUPABASE_URL || "";
