@@ -354,7 +354,26 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ### Remaining Tasks
 
 **High Priority:**
-_(None - all critical features completed)_
+1. 🌐 Landing Page / Site Vitrine
+   - **Status:** 🔴 Not Started
+   - **Priority:** High (MVP Launch)
+   - **Estimated Time:** 8-12 hours
+   - **Domain:** `getonelink.io` (à acheter)
+   - **Architecture:** 
+     - `getonelink.io` → Landing page (site vitrine)
+     - `app.getonelink.io` → Application (dashboard actuel)
+   - **Description:** Créer un site vitrine professionnel pour présenter OneLink, convertir les visiteurs, et servir de point d'entrée principal
+   - **Documentation:** Voir `docs/LANDING_PAGE.md` pour le design complet, sections, et implementation steps
+   - **Sections principales:**
+     - Hero section (headline, CTA)
+     - Features (6 features principales)
+     - How It Works (3-4 étapes)
+     - Pricing (Free vs Pro)
+     - Social Proof / Testimonials
+     - Demo / Screenshots
+     - Footer (navigation, legal, social)
+   - **Stack recommandé:** Next.js 14+ (pour SEO) ou Vite + React (si garder stack actuel)
+   - **DNS:** Configuration Hostinger → Vercel pour sous-domaines
 
 **Medium Priority:**
 1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
