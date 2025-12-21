@@ -1,8 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 // This file uses Playwright fixtures, not React hooks. The "use" parameter is a Playwright convention.
 import { test as base } from "@playwright/test";
-import { authenticateUser } from "../helpers/auth";
-import { setupPostHogInterception } from "../helpers/posthog";
 import { existsSync, mkdirSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
@@ -11,6 +9,21 @@ import { config } from "dotenv";
 // Get __dirname equivalent in ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
+
+// Load .env.local BEFORE importing auth helper (which reads env vars at module load time)
+// This ensures env vars are available when the auth helper module is evaluated
+// Path: from e2e/fixtures/auth.ts -> ../../.env.local = apps/web/.env.local
+if (!process.env.VITE_SUPABASE_URL) {
+  const envPath = resolve(__dirname, "../../.env.local");
+  if (existsSync(envPath)) {
+    process.env.DOTENV_CONFIG_QUIET = "true";
+    config({ path: envPath, override: true });
+  }
+}
+
+// Import after loading env vars
+import { authenticateUser } from "../helpers/auth";
+import { setupPostHogInterception } from "../helpers/posthog";
 
 // Path to store the authenticated session state
 const STORAGE_STATE_PATH = resolve(__dirname, "../.auth/storage-state.json");
@@ -25,16 +38,8 @@ let hasAuthenticated = false;
 export const test = base.extend<AuthFixtures>({
   // Authenticated page fixture with session reuse
   authenticatedPage: async ({ browser }, usePage, testInfo) => {
-    // Load .env.local in worker process if not in CI
-    // This ensures env vars are available in worker processes
-    // (Playwright workers spawn as separate processes and don't inherit process.env from config)
-    if (!process.env.CI) {
-      const envPath = resolve(__dirname, "../../.env.local");
-      if (existsSync(envPath)) {
-        process.env.DOTENV_CONFIG_QUIET = "true";
-        config({ path: envPath, override: true }); // Use override: true to ensure vars are set
-      }
-    }
+    // Note: .env.local is loaded at module level (above) before importing auth helper
+    // This ensures env vars are available when auth helper module is evaluated
 
     // Get test credentials from environment
     // @ts-expect-error - process.env is available in Node.js environment
