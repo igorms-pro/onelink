@@ -251,6 +251,7 @@ export function InboxTab({
   return (
     <section
       ref={scrollContainerRef}
+      data-testid="inbox-scroll-container"
       className="mt-2 sm:mt-0 relative"
       style={{
         transform: isPulling

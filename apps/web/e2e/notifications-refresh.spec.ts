@@ -75,32 +75,10 @@ test.describe("Notifications Refresh Functionality", () => {
       .first();
     await expect(inboxContent).toBeVisible({ timeout: 15000 });
 
-    // Find the scrollable container section
-    // The section is the parent container that holds the inbox content
-    // Try multiple approaches to find it reliably
-    let scrollContainer = page
-      .locator("section")
-      .filter({
-        has: page.locator("ul.grid"),
-      })
-      .first();
-
-    // If that doesn't work, try finding section that contains list items
-    if ((await scrollContainer.count()) === 0) {
-      scrollContainer = page
-        .locator("section")
-        .filter({
-          has: page.locator("li:has([class*='rounded-xl'])"),
-        })
-        .first();
-    }
-
-    // If still not found, try any section in the main content area
-    if ((await scrollContainer.count()) === 0) {
-      scrollContainer = page
-        .locator("main section, [role='main'] section")
-        .first();
-    }
+    // Find the scrollable container section using data-testid
+    const scrollContainer = page.locator(
+      '[data-testid="inbox-scroll-container"]',
+    );
 
     // Wait for container to be visible before getting bounding box
     await expect(scrollContainer).toBeVisible({ timeout: 5000 });
