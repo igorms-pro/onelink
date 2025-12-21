@@ -68,17 +68,42 @@ test.describe("Notifications Refresh Functionality", () => {
     const initialSubmissions = page.locator("li:has([class*='rounded-xl'])");
     const _initialCount = await initialSubmissions.count();
 
-    // Find scrollable container - wait for inbox content to be loaded first
-    // The section might not be immediately available, so wait for any inbox content
-    await page.waitForTimeout(500); // Small delay to ensure DOM is ready
+    // Wait for inbox content to be loaded first - this ensures the section exists
+    // Look for either submissions list items or empty state message
+    const inboxContent = page
+      .locator("li:has([class*='rounded-xl']), text=/no submissions yet/i")
+      .first();
+    await expect(inboxContent).toBeVisible({ timeout: 15000 });
 
-    // Find scrollable container
-    const scrollContainer = page
-      .locator("section:has([class*='mt-2']), section:has([class*='mt-0'])")
+    // Find the scrollable container section
+    // The section is the parent container that holds the inbox content
+    // Try multiple approaches to find it reliably
+    let scrollContainer = page
+      .locator("section")
+      .filter({
+        has: page.locator("ul.grid"),
+      })
       .first();
 
+    // If that doesn't work, try finding section that contains list items
+    if ((await scrollContainer.count()) === 0) {
+      scrollContainer = page
+        .locator("section")
+        .filter({
+          has: page.locator("li:has([class*='rounded-xl'])"),
+        })
+        .first();
+    }
+
+    // If still not found, try any section in the main content area
+    if ((await scrollContainer.count()) === 0) {
+      scrollContainer = page
+        .locator("main section, [role='main'] section")
+        .first();
+    }
+
     // Wait for container to be visible before getting bounding box
-    await expect(scrollContainer).toBeVisible({ timeout: 15000 });
+    await expect(scrollContainer).toBeVisible({ timeout: 5000 });
 
     // Simulate pull-to-refresh gesture
     // 1. Start touch at top of container
