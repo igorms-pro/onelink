@@ -20,11 +20,12 @@ import { isPaidPlan } from "@/lib/types/plan";
 export default function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, signOut } = useRequireAuth();
+  const { user, loading, signOut } = useRequireAuth();
   const [activeTab, setActiveTab] = useState<TabId>("inbox");
 
   const userId = user?.id ?? null;
 
+  // Call hooks before any early returns (React hooks rules)
   const {
     profileId,
     profileFormInitial,
@@ -41,11 +42,12 @@ export default function Dashboard() {
     clearAllSubmissions,
   } = useDashboardData(userId);
 
-  const isFree = !isPaidPlan(plan);
-
-  if (!user) {
-    return null; // Will redirect via useRequireAuth
+  // Don't render dashboard content while checking MFA or if user is not loaded
+  if (loading || !user) {
+    return null; // Will redirect via useRequireAuth or show MFA challenge
   }
+
+  const isFree = !isPaidPlan(plan);
 
   return (
     <div className="h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative overflow-hidden">

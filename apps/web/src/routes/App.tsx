@@ -5,7 +5,7 @@ import { OnboardingCarousel } from "../components/OnboardingCarousel";
 import { trackEvent, isPostHogLoaded } from "../lib/posthog";
 
 export default function App() {
-  const { user, loading } = useAuth();
+  const { user, loading, checkingMFA } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,13 +21,14 @@ export default function App() {
 
   useEffect(() => {
     // Redirect logged-in users to dashboard (like Linktree)
-    if (!loading && user) {
+    // But don't redirect if we're checking MFA - wait for MFA challenge to complete
+    if (!loading && !checkingMFA && user) {
       navigate("/dashboard", { replace: true });
     }
-  }, [user, loading, navigate]);
+  }, [user, loading, checkingMFA, navigate]);
 
-  // Don't show onboarding if redirecting
-  if (loading || user) {
+  // Don't show onboarding if redirecting or checking MFA
+  if (loading || checkingMFA || user) {
     return null;
   }
 

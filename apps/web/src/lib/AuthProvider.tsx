@@ -10,6 +10,7 @@ type AuthContextValue = {
   session: Session | null;
   user: User | null;
   loading: boolean;
+  checkingMFA: boolean;
   signInWithEmail: (email: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 };
@@ -19,6 +20,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkingMFA, setCheckingMFA] = useState(false);
   const [showMFAChallenge, setShowMFAChallenge] = useState(false);
 
   useEffect(() => {
@@ -58,10 +60,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           window.history.replaceState(null, "", window.location.pathname);
         }
 
-        // After a successful sign-in, check if the user has MFA factors
+        // After a successful sign-in, IMMEDIATELY check if the user has MFA factors
+        // This check blocks rendering until complete to show MFA modal before dashboard
         // Only show challenge if session is aal1 (not aal2 - already verified)
-        // Run this asynchronously without blocking the auth flow
-        // This prevents MFA checks from interfering with other Supabase queries
+        setCheckingMFA(true);
         (async () => {
           try {
             const { data: aalData, error: aalError } =
@@ -69,10 +71,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (aalError) {
               console.error("[Auth] Error getting AAL:", aalError);
+              setCheckingMFA(false);
               return; // Don't show challenge if we can't get AAL
             }
 
             if (!aalData) {
+              setCheckingMFA(false);
               return; // No AAL data, don't show challenge
             }
 
@@ -85,6 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (!needsMFA) {
               // User doesn't need MFA (either already verified or doesn't have MFA enabled)
+              setCheckingMFA(false);
               return;
             }
 
@@ -92,16 +97,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const { data, error } = await supabase.auth.mfa.listFactors();
             if (error) {
               console.error("[Auth] Error listing MFA factors:", error);
+              setCheckingMFA(false);
               return; // Don't show challenge if we can't list factors
             }
 
             // Only show challenge if user has TOTP factors enabled
             if (data?.totp && data.totp.length > 0) {
               setShowMFAChallenge(true);
+              // Keep checkingMFA true while MFA challenge is shown
+              // This prevents dashboard from rendering
+            } else {
+              // If no factors exist, user doesn't have MFA enabled - don't show challenge
+              setCheckingMFA(false);
             }
-            // If no factors exist, user doesn't have MFA enabled - don't show challenge
           } catch (err) {
             console.error("[Auth] Unexpected error checking MFA factors:", err);
+            setCheckingMFA(false);
             // Don't show challenge on error
           }
         })();
@@ -161,6 +172,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       user,
       loading,
+      checkingMFA,
       async signInWithEmail(email: string) {
         const { error } = await supabase.auth.signInWithOtp({
           email,
@@ -174,16 +186,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Note: trackUserSignedOut is called in onAuthStateChange when SIGNED_OUT fires
       },
     };
-  }, [session, loading]);
+  }, [session, loading, checkingMFA]);
 
   return (
     <AuthContext.Provider value={value}>
       {children}
+      {/* Show loading overlay while checking MFA */}
+      {checkingMFA && !showMFAChallenge && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+              <p className="text-gray-900 dark:text-white">
+                Verifying authentication...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Show MFA challenge modal when needed */}
       {showMFAChallenge && (
         <div data-testid="mfa-challenge-container">
           <MFAChallenge
             onVerified={() => {
               setShowMFAChallenge(false);
+              setCheckingMFA(false);
             }}
           />
         </div>

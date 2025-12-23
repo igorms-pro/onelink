@@ -200,6 +200,7 @@ describe("Settings", () => {
       user: mockUser,
       session: { user: mockUser } as Session,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
@@ -222,6 +223,7 @@ describe("Settings", () => {
       user: null,
       session: null,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
@@ -370,6 +372,7 @@ describe("Settings", () => {
       user: null,
       session: null,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });

@@ -145,6 +145,7 @@ const createAuthValue = (overrides: Partial<AuthValue> = {}): AuthValue => ({
   user: mockUser,
   session: null,
   loading: false,
+  checkingMFA: false,
   signOut: vi.fn(async () => {}),
   signInWithEmail: vi.fn(async () => ({})),
   ...overrides,
