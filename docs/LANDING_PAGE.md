@@ -833,14 +833,14 @@ const features = [
 ### Phase 3: HomePage Integration & Polish
 
 #### Issue 17: Assemble HomePage with All Sections
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 1h  
 **Dependencies:** Issues 9-16  
 **Can Parallelize:** No
 
 **Tasks:**
-- [ ] Update `HomePage.tsx` to include all sections:
+- [x] Update `HomePage.tsx` to include all sections:
   1. HeroSection
   2. FeaturesSection
   3. HowItWorksSection
@@ -849,17 +849,21 @@ const features = [
   6. DemoSection
   7. CTASection
   8. Footer
-- [ ] Add LanguageToggle in header/nav (Issue 4)
-- [ ] Add ThemeToggle in header/nav (Issue 5)
-- [ ] Add smooth scroll behavior
-- [ ] Add spacing between sections
-- [ ] Add SEO meta tags using `<Helmet>` (Issue 3)
-- [ ] Test all CTAs work correctly
-- [ ] Test translations work (Issue 4)
-- [ ] Test dark/light mode works (Issue 5)
+- [x] Add LanguageToggle in header/nav (Issue 4)
+- [x] Add ThemeToggle in header/nav (Issue 5)
+- [x] Add smooth scroll behavior
+- [x] Add spacing between sections
+- [x] Add SEO meta tags using `<Helmet>` (Issue 3)
+- [x] Test all CTAs work correctly
+- [x] Test translations work (Issue 4)
+- [x] Test dark/light mode works (Issue 5)
+
+**Files to Create:**
+- `apps/landing/src/components/Header.tsx`
 
 **Files to Update:**
 - `apps/landing/src/routes/HomePage.tsx`
+- `apps/landing/src/index.css` (added smooth scroll behavior)
 
 ---
 
@@ -1485,7 +1489,7 @@ These are app-specific and don't need to be copied:
 | 14 | Demo Section | 2 | 🟢 | 1.5h | Issues 1, 6 |
 | 15 | CTA Section | 2 | 🟢 | 1h | Issues 1, 6 |
 | 16 | Footer | 2 | 🟢 | 1.5h | Issues 1, 4, 5 |
-| 17 | Assemble HomePage | 3 | 🔴 | 1h | Issues 9-16 |
+| 17 | Assemble HomePage | 3 | 🟢 | 1h | Issues 9-16 |
 | 18 | Scroll Animations | 3 | 🔴 | 1.5h | Issue 17 |
 | 19 | Responsive Polish | 3 | 🔴 | 2h | Issue 17 |
 | 20 | SEO Meta Tags | 3 | 🔴 | 1h | Issues 3, 17 |
