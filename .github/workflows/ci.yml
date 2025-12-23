@@ -11,13 +11,11 @@ on:
     paths:
       - 'apps/web/**'
       - 'supabase/**'
-      - '.github/workflows/ci.yml'
   pull_request:
     branches: [main, develop]
     paths:
       - 'apps/web/**'
       - 'supabase/**'
-      - '.github/workflows/ci.yml'
 
 jobs:
   lint-and-type-check:

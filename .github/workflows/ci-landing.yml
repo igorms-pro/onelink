@@ -8,12 +8,10 @@ on:
     branches: [main, develop]
     paths:
       - 'apps/landing/**'
-      - '.github/workflows/ci-landing.yml'
   pull_request:
     branches: [main, develop]
     paths:
       - 'apps/landing/**'
-      - '.github/workflows/ci-landing.yml'
 
 jobs:
   lint-and-type-check:
