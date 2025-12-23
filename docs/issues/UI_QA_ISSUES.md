@@ -1,0 +1,1229 @@
+# UI QA Issues - OneLink
+
+**Date:** 2024  
+**Status:** 🟡 In Progress (3/19 completed)  
+**Priority:** Mixed (High/Medium/Low)
+
+This document contains all UI QA issues identified during testing. Each issue is organized by section and includes description, expected behavior, current implementation, and proposed solutions.
+
+## Quick Reference - Issue Summary
+
+| # | Issue | Priority | Phase | Est. Time | Status |
+|---|-------|----------|-------|-----------|--------|
+| 1 | Inbox loading state | High | 2 | 2h | 🔴 |
+| 2 | Inbox mobile version | High | 3 | 3-4h | 🔴 |
+| 3 | Dark mode hover readability | Medium | 4 | 1-2h | 🔴 |
+| 4 | Links edit modal | Medium | 2 | 2h | 🔴 |
+| 5 | Links delete modal | Medium | 2 | 1-2h | 🔴 |
+| 6 | Drag-drop indicator | Low | 5 | 1h | 🔴 |
+| 7 | Add drop validation | Medium | 2 | 30m | 🔴 |
+| 8 | Drops edit modal | Medium | 2 | 2h | 🔴 |
+| 9 | Delete active drop | Medium | 5 | 2h | 🔴 |
+| 10 | i18n translation key | Medium | 1 | 15m | ✅ |
+| 11 | File name changes | Medium | 4 | 2-3h | 🔴 |
+| 12 | Mobile button widths | Low | 3 | 1h | 🔴 |
+| 13 | Analytics day buttons | Medium | 3 | 1-2h | 🔴 |
+| 14 | Billing CORS error | High | 1 | 1-2h | ✅ |
+| 15 | Billing UI simplification | Low | 5 | 2h | ✅ |
+| 16 | Sessions RPC error | High | 1 | 30m | ✅ |
+| 17 | Change password relevance | Low | 5 | 1h | 🔴 |
+| 18 | OTP auto-send | Medium | 1 | 1h | 🔴 |
+| 19 | Privacy/Terms scroll | Medium | 2 | 15m | 🔴 |
+
+**Total Estimated Time:** 26-38 hours across 5 phases
+
+---
+
+## Dashboard - Inbox Tab
+
+### Issue 1: Loading State Missing
+**Status:** 🔴 Not Started  
+**Priority:** High  
+**Category:** UI/UX
+
+**Description:**
+When loading inbox data, users see the "No submissions yet" empty state UI immediately, before data has finished loading. This creates confusion - users don't know if the inbox is truly empty or still loading.
+
+**Expected Behavior:**
+- Show a loading skeleton or spinner while data is being fetched
+- Only show the "No submissions yet" empty state after loading is complete AND there are no submissions
+
+**Current Implementation:**
+The `InboxTab` component receives `submissions` and `downloads` as props from `useDashboardData`. The component immediately renders the empty state if `allItems.length === 0`, without checking if data is still loading.
+
+**Files:**
+- `apps/web/src/routes/Dashboard/components/InboxTab.tsx`
+- `apps/web/src/routes/Dashboard/hooks/useDashboardData.ts`
+
+**Proposed Solution:**
+1. Add a `loading` prop to `InboxTab` component
+2. Pass loading state from `useDashboardData` hook
+3. Show skeleton/loader when `loading === true`
+4. Show empty state only when `loading === false && allItems.length === 0`
+
+**Implementation Steps:**
+1. Update `useDashboardData` hook to track loading state for submissions/downloads
+2. Pass `isLoading` prop to `InboxTab` component
+3. Create or reuse a skeleton component for inbox items
+4. Conditionally render based on loading state
+
+---
+
+### Issue 2: Mobile Version Not Complete
+**Status:** 🔴 Not Started  
+**Priority:** High  
+**Category:** Mobile Responsiveness
+
+**Description:**
+The inbox tab mobile version is not fully implemented or optimized for mobile devices.
+
+**Expected Behavior:**
+- Fully responsive design for mobile devices
+- Touch-friendly interactions
+- Proper spacing and sizing on small screens
+- Optimized layout for mobile viewport
+
+**Files:**
+- `apps/web/src/routes/Dashboard/components/InboxTab.tsx`
+
+**Proposed Solution:**
+Review and optimize the mobile experience:
+1. **Layout:** Ensure proper padding/margins, optimize card/item width, check text sizing
+2. **Interactions:** Ensure touch targets are at least 44x44px, verify swipe/gesture interactions, check pull-to-refresh functionality
+3. **Visual:** Ensure icons and images scale properly, check dark mode on mobile, verify spacing between items
+
+---
+
+### Issue 3: Dark Mode Hover Text Readability
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Dark Mode / Accessibility
+
+**Description:**
+When there is content in the inbox and dark mode is enabled, hovering over items shows a white hover background. However, some text becomes impossible to read due to poor contrast between text color and the white hover background. Light mode hover works correctly.
+
+**Expected Behavior:**
+- In dark mode, hover state should maintain readable text contrast
+- Text should remain visible and readable when hovering over inbox items
+- Hover background color should provide sufficient contrast with text
+
+**Files:**
+- `apps/web/src/routes/Dashboard/components/InboxTab.tsx`
+
+**Proposed Solution:**
+1. Review hover styles for inbox items in dark mode
+2. Ensure text colors are properly defined for hover states
+3. Adjust hover background color if needed to maintain contrast
+4. Test all text elements (titles, descriptions, timestamps, etc.) in hover state
+5. Ensure WCAG AA contrast ratios (4.5:1 for normal text, 3:1 for large text)
+
+---
+
+## Content Tab - Links
+
+### Issue 4: Edit Link Uses Alert Instead of Modal
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** UI/UX
+
+**Description:**
+When editing a link, the current implementation shows an alert/prompt dialog. This should be replaced with a proper modal dialog that matches the app's design system.
+
+**Expected Behavior:**
+- Clicking edit on a link opens a modal dialog
+- Modal should match the app's design system (using Dialog/Drawer components)
+- Modal should be responsive (Drawer on mobile, Dialog on desktop)
+- Modal should contain a form for editing link properties
+- Modal should have proper validation and error handling
+
+**Files to Check:**
+- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
+- Link-related components in ContentTab
+
+**Proposed Solution:**
+1. Create an `EditLinkModal` component using the existing Dialog/Drawer pattern
+2. Replace alert/prompt with modal trigger
+3. Include form fields for editable link properties (label, URL, etc.)
+4. Add form validation
+5. Handle save/cancel actions
+
+**Files to Create:**
+- `apps/web/src/routes/Dashboard/components/ContentTab/EditLinkModal.tsx`
+
+---
+
+### Issue 5: Delete Link Uses Alert Instead of Modal
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** UI/UX
+
+**Description:**
+When deleting a link, the current implementation shows a browser alert asking for confirmation. This should be replaced with a proper modal dialog.
+
+**Expected Behavior:**
+- Clicking delete on a link opens a confirmation modal
+- Modal should match the app's design system (using Dialog/Drawer components)
+- Modal should be responsive (Drawer on mobile, Dialog on desktop)
+- Modal should clearly indicate what will be deleted
+- Modal should have proper warning styling (red/destructive)
+- User should be able to cancel or confirm deletion
+
+**Files to Check:**
+- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
+- Link-related components in ContentTab
+
+**Proposed Solution:**
+1. Create a `DeleteLinkModal` component using the existing Dialog/Drawer pattern
+2. Replace `window.confirm()` with modal trigger
+3. Include warning message and link details
+4. Add destructive styling (red buttons/text)
+5. Handle confirm/cancel actions
+
+**Files to Create:**
+- `apps/web/src/routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx`
+
+---
+
+### Issue 6: Drag and Drop Visual Indicator Missing
+**Status:** 🔴 Not Started  
+**Priority:** Low  
+**Category:** UI/UX Enhancement
+
+**Description:**
+Users are not aware that they can drag and drop links to reorder them. There's no visual indicator that drag-and-drop functionality exists.
+
+**Expected Behavior:**
+- Visual indicator (icon) showing that links can be dragged to reorder
+- Icon should be visible but not intrusive
+- Hover state should provide additional feedback
+- Icon should be accessible (proper ARIA labels)
+
+**Files to Check:**
+- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
+- Link-related components in ContentTab
+
+**Proposed Solution:**
+1. **Verify drag-and-drop implementation:**
+   - Check if drag-and-drop is already working
+   - Test the functionality
+
+2. **Add visual indicator:**
+   - Add a drag handle icon (e.g., `GripVertical` or `Menu` from lucide-react)
+   - Position icon on the left or right side of each link item
+   - Show icon on hover or always visible
+   - Add cursor: grab when hovering over drag handle
+   - Add cursor: grabbing when actively dragging
+
+3. **Accessibility:**
+   - Add `aria-label` for drag handle
+   - Ensure keyboard navigation still works
+   - Consider keyboard reordering as alternative
+
+**Note:** Need to verify if drag-and-drop is actually implemented first.
+
+---
+
+## Content Tab - Drops
+
+### Issue 7: Add Drop Button Should Be Disabled When Label < 3 Characters
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Form Validation / UX
+
+**Description:**
+The "Add drop" button should be disabled when the label input has fewer than 3 characters entered. This prevents users from creating drops with invalid/short labels and provides immediate feedback.
+
+**Expected Behavior:**
+- "Add drop" button is disabled when label input has < 3 characters
+- Button becomes enabled when 3 or more characters are entered
+- Visual feedback (disabled styling) should be clear
+- Tooltip or helper text explaining the requirement would be helpful
+
+**Files to Check:**
+- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
+- Drop-related components in ContentTab
+
+**Proposed Solution:**
+1. Add validation to check label length before enabling the button
+2. Disable button when `label.length < 3`
+3. Add visual disabled state styling
+4. Optionally add helper text: "Label must be at least 3 characters"
+
+---
+
+### Issue 8: Edit Drop Uses Alert Instead of Modal
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** UI/UX
+
+**Description:**
+When editing a drop, the current implementation shows an alert/prompt dialog. This should be replaced with a proper modal dialog that matches the app's design system.
+
+**Expected Behavior:**
+- Clicking edit on a drop opens a modal dialog
+- Modal should match the app's design system (using Dialog/Drawer components)
+- Modal should be responsive (Drawer on mobile, Dialog on desktop)
+- Modal should contain a form for editing drop properties (label, visibility, etc.)
+- Modal should have proper validation and error handling
+
+**Files to Check:**
+- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
+- Drop-related components (e.g., `DropCard`)
+
+**Proposed Solution:**
+1. Create an `EditDropModal` component using the existing Dialog/Drawer pattern
+2. Replace alert/prompt with modal trigger
+3. Include form fields for drop editing (label, visibility toggle, etc.)
+4. Add form validation
+5. Handle save/cancel actions
+
+**Files to Create:**
+- `apps/web/src/routes/Dashboard/components/ContentTab/EditDropModal.tsx`
+
+---
+
+### Issue 9: Delete Active Drop Handling
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Business Logic / UX
+
+**Description:**
+Question: Can users delete an active drop, or should they be required to disable/deactivate it first? This needs to be decided based on business requirements and user experience considerations.
+
+**Options:**
+
+**Option 1: Allow Direct Deletion**
+- Users can delete active drops directly
+- Show a warning in the delete confirmation modal about deleting an active drop
+- Simpler UX, but may cause issues if drop is actively being used
+
+**Option 2: Require Deactivation First**
+- Disable delete button for active drops
+- Show tooltip: "Disable drop before deleting"
+- User must toggle drop to inactive, then delete
+- More steps but safer
+
+**Option 3: Allow Deletion with Strong Warning** (Recommended)
+- Allow deletion but show prominent warning
+- Explain consequences (active links will break, etc.)
+- Require explicit confirmation (checkbox: "I understand this will break active links")
+
+**Proposed Solution:**
+**Recommendation: Option 3** - Allow deletion with strong warning
+
+1. Allow deletion of active drops
+2. In delete confirmation modal:
+   - Show prominent warning if drop is active
+   - List consequences (e.g., "This drop is currently active. Deleting it will break any shared links.")
+   - Add checkbox: "I understand the consequences"
+   - Disable delete button until checkbox is checked
+3. This balances safety with UX simplicity
+
+**Questions:**
+- What defines an "active" drop?
+- Are there any business rules preventing deletion of active drops?
+- Should we track if a drop has been shared/accessed recently?
+
+---
+
+### Issue 10: i18n Translation Key Displayed Instead of Translation ✅ FIXED
+**Status:** ✅ Completed  
+**Priority:** Medium  
+**Category:** i18n / Localization
+
+**Description:**
+When clicking upload on a drop, the UI displays the i18n key `common_hide` instead of the translated text. The translation key is being shown literally instead of being translated.
+
+**Expected Behavior:**
+- Show translated text: "Hide" (English), "Masquer" (French), "Ocultar" (Spanish), etc.
+- Translation key should be resolved through i18n system
+- Should work for all supported languages
+- All locale files should have complete translations (no English text in non-English locales)
+
+**Root Cause:**
+The translation key `common_hide` was missing from the English locale file (`en.json`). Additionally, many other keys across all locale files still contained English text instead of proper translations.
+
+**Fix Applied:**
+- ✅ Added `"common_hide": "Hide"` to `apps/web/src/lib/locales/en.json`
+- ✅ Placed it alphabetically after `common_show` and before `common_add` for consistency
+- ✅ **Comprehensive Translation Work:** Translated ALL remaining English text across all locale files:
+  - ✅ Synchronized all locale files to have the same keys as `en.json`
+  - ✅ Translated all UI-facing keys in: de, es, fr, it, ja, pt, pt-BR, ru, zh
+  - ✅ Translated billing, settings, sessions, domain, checkout, and other UI sections
+  - ✅ ja.json, ru.json, zh.json: 100% of UI keys translated
+  - ✅ Other languages: Most keys translated (remaining are technical/product terms)
+
+**Files Updated:**
+- ✅ `apps/web/src/lib/locales/en.json` (added missing translation key)
+- ✅ `apps/web/src/lib/locales/de.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/es.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/fr.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/it.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/ja.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/pt.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/pt-BR.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/ru.json` (comprehensive translations)
+- ✅ `apps/web/src/lib/locales/zh.json` (comprehensive translations)
+
+**Note:**
+The component (`DropCardActions.tsx`) was correctly using `useTranslation()` hook and calling `t("common_hide")` properly. The initial issue was the missing translation key in the English locale file. This was expanded into a comprehensive translation audit and update to ensure all locale files are complete and properly translated.
+
+---
+
+### Issue 11: File Name Changes on Upload
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Bug / File Upload
+
+**Description:**
+When uploading a file to a drop, the file name is being changed/modified. The original file name should be preserved.
+
+**Expected Behavior:**
+- Uploaded files should retain their original file names
+- File names should not be modified during upload
+- Users should see the same file name they selected
+
+**Possible Causes:**
+1. **Storage path generation:** File names might be sanitized or modified for storage paths
+2. **Unique naming:** System might be adding timestamps/UUIDs to prevent conflicts
+3. **Display vs Storage:** Display name might differ from storage name
+4. **File sanitization:** Special characters might be removed/replaced
+
+**Proposed Solution:**
+1. **Investigate current behavior:**
+   - Check file upload code
+   - Check Supabase storage upload logic
+   - Verify if name change is intentional (for uniqueness) or a bug
+
+2. **If intentional (for uniqueness):**
+   - Store original filename in metadata
+   - Display original filename in UI
+   - Use modified name only for storage path
+
+3. **If bug:**
+   - Fix the upload logic to preserve original filename
+   - Ensure proper file name handling
+
+**Files to Investigate/Update:**
+- Drop file upload component
+- Supabase storage upload utilities
+- File metadata handling
+
+**Questions:**
+- Is the filename change intentional (for uniqueness/security)?
+- Should we preserve original filename in metadata?
+- How should we handle filename conflicts?
+
+---
+
+## Content Tab - Mobile
+
+### Issue 12: Drop Card Button Width Consistency
+**Status:** 🔴 Not Started  
+**Priority:** Low  
+**Category:** Mobile UI / Design
+
+**Description:**
+On mobile, the drop cards show action buttons (four bin/trash, make private, etc.) in a 2-column grid. The buttons have different widths because the text content differs, making the layout look inconsistent.
+
+**Current Behavior:**
+- Buttons are in a 2-column grid layout
+- Different button text lengths cause varying widths
+- Layout appears inconsistent
+
+**Options:**
+
+**Option 1: Same Width for All Buttons** (Recommended)
+- All buttons have equal width
+- Text may wrap or truncate
+- Most consistent appearance
+- May cause text wrapping issues for long labels
+
+**Option 2: Two Width Categories**
+- Short text buttons: one width
+- Long text buttons: another (wider) width
+- More flexible than Option 1
+- Still maintains some consistency
+
+**Option 3: Keep Current (Variable Widths)**
+- Buttons sized to content
+- Most flexible
+- Least consistent visually
+
+**Proposed Solution:**
+**Recommendation: Option 1** - Same width for all buttons
+
+1. Set fixed width for all action buttons in the grid
+2. Use `w-full` or specific width class
+3. Ensure text doesn't overflow (truncate with ellipsis if needed)
+4. Test with different languages (i18n text lengths vary)
+
+**Files to Update:**
+- `apps/web/src/routes/Dashboard/components/DropCard/` components
+- Action buttons grid component
+
+**Design Considerations:**
+- Ensure buttons remain touch-friendly (min 44x44px)
+- Consider icon + text layout if text is too long
+- Test with longest translations in all languages
+- Maintain visual hierarchy
+- Consider using icons instead of text for some actions
+
+---
+
+## Account Tab - Analytics
+
+### Issue 13: Day Button Styling
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** UI/UX / Design
+
+**Description:**
+The analytics card has day selection buttons (7 days, 30 days, 90 days). The active button is well-defined, but the inactive buttons have the same color as the background, making them look like labels rather than buttons. On mobile, this looks messy.
+
+**Current Behavior:**
+- Active button: Well-defined, clearly visible
+- Inactive buttons: Same color as background, look like labels
+- Light theme: Inactive buttons have different color from background but it's too weak
+- Mobile: Layout appears messy
+
+**Expected Behavior:**
+- All buttons should look like buttons (even when inactive)
+- Inactive buttons should have distinct styling from background
+- Active button should be more prominent than inactive ones
+- Mobile layout should be clean and organized
+- Consistent styling across light and dark themes
+
+**Proposed Solution:**
+1. **Inactive Button Styling:**
+   - Add border or background color to distinguish from page background
+   - Use subtle but visible styling (e.g., light border, subtle background)
+   - Ensure sufficient contrast in both light and dark modes
+
+2. **Active Button Styling:**
+   - Keep current active styling (it's working well)
+   - Ensure it's clearly more prominent than inactive buttons
+
+3. **Mobile Optimization:**
+   - Review spacing and sizing on mobile
+   - Ensure buttons are touch-friendly
+   - Consider layout adjustments if needed
+
+**Files to Update:**
+- Analytics card component (likely `LinksAnalyticsCard.tsx` or similar)
+- Check for `DropsAnalyticsCard.tsx` if it exists
+
+**Design Considerations:**
+- Maintain visual hierarchy (active > inactive > background)
+- Ensure WCAG contrast ratios
+- Keep styling consistent with other buttons in the app
+- Consider using the app's button component if available
+- Mobile: Ensure buttons are large enough for touch (min 44x44px)
+
+---
+
+## Settings - Billing Page
+
+### Issue 14: CORS Error and Slow Loading ✅ FIXED
+**Status:** ✅ Completed  
+**Priority:** High  
+**Category:** Bug / Performance
+
+**Description:**
+The billing page takes 2+ seconds to load and shows CORS errors:
+```
+Access to fetch at 'https://tdxzkceksiqcvposgcsm.supabase.co/functions/v1/stripe-get-subscription' 
+from origin 'http://localhost:5173' has been blocked by CORS policy: 
+Request header field baggage is not allowed by Access-Control-Allow-Headers in preflight response.
+```
+
+**Root Causes:**
+1. **CORS Error:** Modern browsers (Chrome) automatically add `baggage` header for distributed tracing, but Edge Functions didn't allow it
+2. **Performance Issue:** Edge Function was being called 3 times (once each for subscription, invoices, payment methods) instead of once
+
+**Expected Behavior:**
+- Page should load quickly (< 1 second)
+- No CORS errors
+- Subscription data should load smoothly
+
+**Fix Applied:**
+
+1. **CORS Headers Fixed:**
+   - ✅ Added `baggage` to `Access-Control-Allow-Headers` in all Stripe Edge Functions:
+     - `stripe-get-subscription/index.ts`
+     - `stripe-create-checkout/index.ts`
+     - `stripe-portal/index.ts`
+
+2. **Performance Optimized:**
+   - ✅ Changed BillingPage to call `getSubscriptionData()` ONCE instead of 3 times
+   - ✅ Extract subscription, invoices, and payment methods from single response
+   - ✅ Reduced Edge Function calls from 3 to 1 (3x faster!)
+
+**Files Updated:**
+- ✅ `supabase/functions/stripe-get-subscription/index.ts` (CORS headers)
+- ✅ `supabase/functions/stripe-create-checkout/index.ts` (CORS headers)
+- ✅ `supabase/functions/stripe-portal/index.ts` (CORS headers)
+- ✅ `apps/web/src/routes/Settings/pages/BillingPage.tsx` (performance optimization)
+
+**CORS Headers Fixed:**
+```typescript
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type, baggage, sentry-trace", // ✅ Added baggage and sentry-trace
+  "Access-Control-Allow-Methods": "GET, OPTIONS",
+};
+```
+
+**Note:** Edge Functions need to be redeployed for CORS fixes to take effect:
+```bash
+supabase functions deploy stripe-get-subscription
+supabase functions deploy stripe-create-checkout
+supabase functions deploy stripe-portal
+```
+
+---
+
+### Issue 15: Billing Page UI Simplification ✅ COMPLETED
+**Status:** ✅ Completed  
+**Priority:** Low  
+**Category:** UI/UX
+
+**Description:**
+The billing page shows: Current plan, Manage subscription, Payment method, and Invoices. The question is: are the last two (Payment method and Invoices) necessary? We could just show a row on current plan for payment method. And invoices? When clicking on manage subscription, users can see invoices there.
+
+**Decision:**
+- Remove Payment Method section (available in Stripe portal)
+- Remove Invoices section (available in Stripe portal)
+- Keep only Current Plan and Manage Subscription sections
+- Users can access payment methods and invoices via "Manage on Stripe" button
+
+**Fix Applied:**
+1. **Removed UI Sections:**
+   - ✅ Removed Payment Method section
+   - ✅ Removed Invoices section
+
+2. **Code Cleanup:**
+   - ✅ Removed `invoices` and `paymentMethod` state variables
+   - ✅ Removed imports for `Invoice`, `PaymentMethod`, `InvoicesList`, `PaymentMethodCard`
+   - ✅ Removed setting invoices and paymentMethod in fetchSubscriptionData
+   - ✅ Simplified data fetching (only subscription details needed)
+
+3. **Benefits:**
+   - ✅ Cleaner, simpler UI
+   - ✅ Less redundant information
+   - ✅ Focus on essential actions
+   - ✅ Faster page load (less data to fetch/display)
+
+**Files Updated:**
+- ✅ `apps/web/src/routes/Settings/pages/BillingPage.tsx`
+
+---
+
+## Settings - Active Sessions
+
+### Issue 16: get_user_sessions RPC Error - Ambiguous Column Reference ✅ FIXED
+**Status:** ✅ Completed  
+**Priority:** High  
+**Category:** Bug / Database
+
+**Description:**
+Error when loading sessions:
+```
+POST https://tdxzkceksiqcvposgcsm.supabase.co/rest/v1/rpc/get_user_sessions 400 (Bad Request)
+Error loading sessions: {
+  code: '42702',
+  details: 'It could refer to either a PL/pgSQL variable or a table column.',
+  hint: null,
+  message: 'column reference "id" is ambiguous'
+}
+```
+
+**Additional Issues Found:**
+- Sessions were being created on every page refresh (duplicate sessions)
+- Login History section was redundant (user only needs active sessions)
+
+**Expected Behavior:**
+- Sessions should load without errors
+- Only one active session per device/browser combination
+- No duplicate sessions on page refresh
+- Only show Active Sessions (remove Login History)
+
+**Fix Applied:**
+
+1. **SQL Function Fix:**
+   - ✅ Created migration `017_fix_get_user_sessions_ambiguous_column.sql`
+   - ✅ Added table alias `us` to FROM clause
+   - ✅ Qualified all column references: `us.id`, `us.user_id`, `us.revoked_at`, `us.last_activity`
+   - ✅ Fixed same issue in `revoke_all_other_sessions` function
+
+2. **Session Creation Logic Fix:**
+   - ✅ Modified `createUserSession()` to check for existing active session
+   - ✅ If active session exists for same user/device/browser, update `last_activity` instead of creating duplicate
+   - ✅ Only creates new session if no active session exists
+
+3. **UI Simplification:**
+   - ✅ Removed Login History section from SessionsPage
+   - ✅ Removed login_history loading logic from useSessions hook
+   - ✅ Updated page description to remove "view login history"
+   - ✅ Removed login_history logging from AuthProvider (not needed)
+
+**Files Updated:**
+- ✅ `supabase/sql/017_fix_get_user_sessions_ambiguous_column.sql` (new migration)
+- ✅ `supabase/sql/005_settings_tables.sql` (updated original function)
+- ✅ `apps/web/src/lib/sessionTracking.ts` (fixed duplicate session creation)
+- ✅ `apps/web/src/lib/AuthProvider.tsx` (removed login_history logging)
+- ✅ `apps/web/src/routes/Settings/pages/SessionsPage.tsx` (removed Login History UI)
+- ✅ `apps/web/src/routes/Settings/pages/SessionsPage/useSessions.ts` (removed login_history logic)
+- ✅ `apps/web/src/lib/locales/en.json` (updated description)
+```sql
+-- Current (ambiguous):
+select id, device_os, ...
+
+-- Fixed (qualified):
+select us.id, us.device_os, ...
+```
+
+**Additional Issue:**
+- Login history seems to add a row each time the page is refreshed, which is incorrect behavior
+- Need to review login history logging logic
+
+---
+
+## Settings - Change Password Modal
+
+### Issue 17: Change Password Modal Relevance
+**Status:** 🔴 Not Started  
+**Priority:** Low  
+**Category:** Feature Question
+
+**Description:**
+Question: Do we really have a password? Users sign in with magic link and OTP code. Is a change password feature necessary?
+
+**Current Behavior:**
+- Change password modal exists
+- Users authenticate via magic link (email) and OTP (2FA)
+
+**Considerations:**
+- Supabase Auth supports password-based authentication
+- Current app uses passwordless authentication (magic links)
+- If passwords aren't used, this feature may be unnecessary
+
+**Proposed Solution:**
+1. **If passwords are not used:**
+   - Remove change password modal/feature
+   - Simplify settings UI
+   - Focus on 2FA management instead
+
+2. **If passwords are used (for some users):**
+   - Keep the feature
+   - Ensure it's only shown to users who have passwords
+   - Consider making it conditional
+
+**Action Required:**
+- Verify if passwords are used in the authentication flow
+- Check Supabase Auth configuration
+- Decide whether to keep or remove this feature
+
+**Files to Review:**
+- `apps/web/src/routes/Settings/components/ChangePasswordModal.tsx`
+- Authentication flow in `AuthProvider.tsx`
+- Supabase Auth configuration
+
+---
+
+## Login with OTP
+
+### Issue 18: Auto-Send Login Request Before Code Entry
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** Bug / UX
+
+**Description:**
+When receiving the email on an active 2FA account, the modal with OTP appears correctly, but it seems to automatically send a login request without the user entering the code. Like trying to log in but the code was not entered. After entering the code, it works. This might be a useEffect issue.
+
+**Expected Behavior:**
+- OTP modal should appear
+- User should enter the code
+- Login should only proceed after code is entered and verified
+- No automatic login attempts without code
+
+**Current Implementation:**
+- `apps/web/src/components/MFAChallenge.tsx`
+- `apps/web/src/lib/AuthProvider.tsx`
+- `apps/web/src/routes/Settings/pages/TwoFactor/hooks/useMFAChallenge.ts`
+
+**Proposed Solution:**
+1. **Review useEffect Logic:**
+   - Check `MFAChallenge.tsx` for useEffect that might trigger login
+   - Review `startChallenge` function - ensure it doesn't auto-submit
+   - Check if there's a race condition
+
+2. **Fix Auto-Submit:**
+   - Ensure login only happens after code verification
+   - Remove any automatic form submission
+   - Add proper loading states
+
+**Files to Update:**
+- `apps/web/src/components/MFAChallenge.tsx`
+- `apps/web/src/routes/Settings/pages/TwoFactor/hooks/useMFAChallenge.ts`
+
+**Additional Question:**
+- The OTP modal appears - is this the right UX? Can users close it?
+- Consider if modal should be dismissible or if it should be a full-screen overlay
+
+---
+
+## Privacy and Terms Pages
+
+### Issue 19: Scroll Position Not Reset on Navigation
+**Status:** 🔴 Not Started  
+**Priority:** Medium  
+**Category:** UX Bug
+
+**Description:**
+When clicking either privacy or terms page links, the scroll position is not reset to the top. The page loads already scrolled down, which is incorrect behavior.
+
+**Expected Behavior:**
+- When navigating to `/privacy` or `/terms`, page should scroll to top
+- User should see the beginning of the page content
+- Consistent behavior across all page navigations
+
+**Current Implementation:**
+- Routes: `/privacy` and `/terms` in `main.tsx`
+- Components: `apps/web/src/routes/Legal/Privacy.tsx` and `apps/web/src/routes/Legal/Terms.tsx`
+- Layout: `apps/web/src/components/LegalPageLayout.tsx`
+
+**Proposed Solution:**
+1. **Add Scroll Reset on Route Change:**
+   - Use React Router's `useEffect` with `useLocation` to detect route changes
+   - Scroll to top when route changes to privacy/terms
+   - Or add scroll reset in the component's `useEffect`
+
+2. **Implementation Options:**
+   - Option 1: Add `useEffect` in `LegalPageLayout.tsx` to scroll to top on mount
+   - Option 2: Add scroll reset in router configuration
+   - Option 3: Use React Router's `ScrollToTop` component
+
+**Files to Update:**
+- `apps/web/src/components/LegalPageLayout.tsx` (add scroll reset)
+- Or `apps/web/src/main.tsx` (add ScrollToTop component)
+
+**Implementation Example:**
+```tsx
+useEffect(() => {
+  window.scrollTo(0, 0);
+}, [location.pathname]);
+```
+
+---
+
+## Implementation Plan - Phased Approach
+
+### Phase 1: Critical Bugs & Blockers 🔴
+**Goal:** Fix issues that break functionality or cause errors  
+**Estimated Time:** 4-6 hours  
+**Priority:** Must fix before release
+
+**Issues:**
+1. **Issue 16:** Active sessions RPC error (ambiguous column reference) ✅ COMPLETED
+   - **Why first:** Breaks entire Settings → Sessions page
+   - **Impact:** High - Users can't manage sessions
+   - **Time:** 30 min (SQL fix + test)
+   - **Fix:** Created migration `017_fix_get_user_sessions_ambiguous_column.sql` - qualified all column references with table alias
+
+2. **Issue 14:** Billing CORS error and slow loading ✅ COMPLETED
+   - **Why second:** Breaks billing page functionality
+   - **Impact:** High - Users can't manage subscriptions
+   - **Time:** 1-2 hours (CORS fix + performance investigation)
+   - **Fix:** 
+     - ✅ Added `baggage` and `sentry-trace` headers to CORS allow list in all 3 Stripe Edge Functions
+     - ✅ Optimized BillingPage to call `getSubscriptionData()` ONCE instead of 3 times
+     - ✅ Reduced Edge Function calls from 3 to 1 (3x faster!)
+     - ✅ Updated all Edge Functions: `stripe-get-subscription`, `stripe-create-checkout`, `stripe-portal`
+
+3. **Issue 10:** i18n translation key displayed (`common_hide`) ✅ COMPLETED
+   - **Why third:** Quick fix, affects UX
+   - **Impact:** Medium - Shows raw translation keys
+   - **Time:** 15 min initial fix + comprehensive translation work
+   - **Fix:** 
+     - Added missing `common_hide` translation key to `en.json` locale file
+     - Comprehensive translation audit: Translated ALL remaining English text across all locale files
+     - Synchronized all locale files to have complete key coverage matching `en.json`
+     - Translated UI-facing keys in all 9 languages (de, es, fr, it, ja, pt, pt-BR, ru, zh)
+
+4. **Issue 18:** OTP auto-send login request
+   - **Why fourth:** Security/UX concern
+   - **Impact:** Medium - May cause confusion or security issues
+   - **Time:** 1 hour (review useEffect logic)
+
+**Deliverable:** All critical bugs fixed, no errors in console
+
+**Completed Issues:**
+- ✅ Issue 16: Active sessions RPC error (SQL fix + duplicate session prevention + Login History removal)
+- ✅ Issue 14: Billing CORS error and performance (CORS headers + optimization)
+- ✅ Issue 10: i18n translation key + comprehensive translation audit (all locale files synchronized and translated)
+- ✅ Issue 15: Billing UI simplification (removed Payment Method & Invoices sections)
+
+**Remaining Issues:**
+- 🔴 Issue 18: OTP auto-send login request
+
+---
+
+### Phase 2: Core UX Improvements 🟡
+**Goal:** Improve fundamental user experience  
+**Estimated Time:** 8-12 hours  
+**Priority:** High - Significantly improves UX
+
+**Issues:**
+1. **Issue 1:** Inbox loading state (skeleton/loader)
+   - **Why first:** Core dashboard feature, affects first impression
+   - **Impact:** High - Users confused about empty state
+   - **Time:** 2 hours (loading state + skeleton component)
+
+2. **Issue 4 & 5:** Links edit/delete modals (replace alerts)
+   - **Why together:** Same pattern, can reuse modal components
+   - **Impact:** High - Modern UX, consistent with app design
+   - **Time:** 3-4 hours (2 modals + integration)
+
+3. **Issue 8:** Drops edit modal (replace alert)
+   - **Why next:** Same pattern as links, completes Content tab
+   - **Impact:** High - Consistency across Content tab
+   - **Time:** 2 hours (modal + integration)
+
+4. **Issue 7:** Add drop button validation (< 3 chars)
+   - **Why next:** Quick win, prevents invalid data
+   - **Impact:** Medium - Better form UX
+   - **Time:** 30 min (validation logic)
+
+5. **Issue 19:** Privacy/Terms scroll position reset
+   - **Why last:** Quick fix, polish
+   - **Impact:** Low-Medium - Better navigation UX
+   - **Time:** 15 min (useEffect scroll reset)
+
+**Deliverable:** Core user flows feel polished and professional
+
+---
+
+### Phase 3: Mobile & Responsive Polish 📱
+**Goal:** Ensure great mobile experience  
+**Estimated Time:** 6-8 hours  
+**Priority:** High - Mobile is critical
+
+**Issues:**
+1. **Issue 2:** Inbox mobile version completion
+   - **Why first:** Core feature, high usage
+   - **Impact:** High - Mobile users are primary audience
+   - **Time:** 3-4 hours (responsive design review + fixes)
+
+2. **Issue 12:** Drop card button width consistency (mobile)
+   - **Why second:** Visual polish, affects Content tab
+   - **Impact:** Medium - Better visual consistency
+   - **Time:** 1 hour (CSS grid/flexbox fixes)
+
+3. **Issue 13:** Analytics day button styling
+   - **Why third:** Affects Account tab, visual clarity
+   - **Impact:** Medium - Better button visibility
+   - **Time:** 1-2 hours (button styling + mobile testing)
+
+**Deliverable:** Mobile experience is polished and consistent
+
+---
+
+### Phase 4: Visual & Accessibility Polish 🎨
+**Goal:** Polish visual details and accessibility  
+**Estimated Time:** 4-6 hours  
+**Priority:** Medium - Improves quality
+
+**Issues:**
+1. **Issue 3:** Dark mode hover text readability
+   - **Why first:** Accessibility issue, affects readability
+   - **Impact:** Medium - Users can't read text on hover
+   - **Time:** 1-2 hours (hover state fixes + contrast testing)
+
+2. **Issue 11:** File name changes on upload
+   - **Why second:** Investigate and fix if needed
+   - **Impact:** Medium - Users expect original filenames
+   - **Time:** 2-3 hours (investigation + fix if bug)
+
+**Deliverable:** Visual consistency and accessibility improved
+
+---
+
+### Phase 5: Feature Decisions & Enhancements 💭
+**Goal:** Make decisions and add enhancements  
+**Estimated Time:** 4-6 hours  
+**Priority:** Low - Nice to have
+
+**Issues:**
+1. **Issue 9:** Delete active drop handling (decision needed)
+   - **Why first:** Requires business decision
+   - **Impact:** Medium - Affects user workflow
+   - **Time:** 1 hour (discussion) + 2 hours (implementation)
+   - **Action:** Discuss with team, decide on approach
+
+2. **Issue 17:** Change password modal relevance
+   - **Why second:** May remove feature if not needed
+   - **Impact:** Low - Simplifies UI if removed
+   - **Time:** 30 min (investigation) + 1 hour (remove/keep)
+   - **Action:** Verify if passwords are used, decide
+
+3. **Issue 6:** Drag and drop visual indicator
+   - **Why third:** Enhancement, verify if feature exists
+   - **Impact:** Low - Improves discoverability
+   - **Time:** 1 hour (verify + implement if needed)
+
+4. **Issue 15:** Billing page UI simplification
+   - **Why last:** Optional simplification
+   - **Impact:** Low - Cleaner UI
+   - **Time:** 2 hours (UI refactor)
+
+**Deliverable:** Features are well-defined and polished
+
+---
+
+## Summary by Phase
+
+### Phase 1: Critical Bugs (4-6 hours)
+- ✅ Fix RPC errors (Issue 16)
+- ✅ Fix CORS issues (Issue 14)
+- ✅ Fix performance (Issue 14)
+- ✅ Fix i18n display (Issue 10)
+- 🔴 Fix OTP auto-submit (Issue 18)
+
+### Phase 2: Core UX (8-12 hours)
+- Loading states
+- Modal replacements
+- Form validation
+- Navigation polish
+
+### Phase 3: Mobile Polish (6-8 hours)
+- Mobile responsive fixes
+- Button consistency
+- Mobile testing
+
+### Phase 4: Visual Polish (4-6 hours)
+- Dark mode fixes
+- File upload fixes
+
+### Phase 5: Decisions & Enhancements (4-6 hours)
+- Feature decisions
+- Optional enhancements
+
+**Total Estimated Time:** 26-38 hours
+
+---
+
+## Parallelization Strategy: One Agent Per Phase
+
+### Analysis: Can Phases Run in Parallel?
+
+**✅ YES - Can Parallelize:**
+- **Phase 1** (Critical Bugs) → **Must be done first** (blocks other work)
+- **Phases 2, 3, 4** → **Can run in parallel** (different file areas)
+- **Phase 5** → **Can run after Phase 1** (needs decisions, but independent)
+
+### File Overlap Analysis
+
+**Potential Conflicts:**
+
+| Phase | Files Touched | Conflict Risk |
+|-------|--------------|---------------|
+| **Phase 1** | SQL, Edge Functions, i18n, Auth | 🟢 Low - Infrastructure |
+| **Phase 2** | InboxTab, ContentTab, Modals, LegalPageLayout | 🟡 Medium - Core components |
+| **Phase 3** | InboxTab (mobile), DropCard (mobile), Analytics | 🟡 Medium - Same components, different concerns |
+| **Phase 4** | InboxTab (dark mode), File upload | 🟡 Medium - Same components |
+| **Phase 5** | DropCard, BillingPage, Auth | 🟢 Low - Different areas |
+
+**Overlap Areas:**
+- `InboxTab.tsx`: Phase 2 (loading) + Phase 3 (mobile) + Phase 4 (dark mode)
+- `ContentTab.tsx`: Phase 2 (modals) + Phase 3 (mobile buttons)
+- `DropCard/`: Phase 3 (mobile) + Phase 5 (delete handling)
+
+### Recommended Parallel Strategy
+
+#### Option A: Sequential with Overlap (Safest) ✅ Recommended
+```
+Timeline:
+├─ Phase 1: Critical Bugs (4-6h) → MUST BE FIRST
+│
+├─ Phase 2: Core UX (8-12h) ─┐
+├─ Phase 3: Mobile (6-8h)   ├─ Can start after Phase 1
+├─ Phase 4: Visual (4-6h)   ┘
+│
+└─ Phase 5: Decisions (4-6h) → After Phase 1 (needs decisions)
+```
+
+**Coordination:**
+- Phase 1 completes first (unblocks everything)
+- Phases 2, 3, 4 can start simultaneously BUT:
+  - **Agent 2** (Core UX): Focus on `ContentTab` modals first, then `InboxTab` loading
+  - **Agent 3** (Mobile): Focus on `DropCard` mobile first, then `InboxTab` mobile
+  - **Agent 4** (Visual): Wait for Phase 2 to finish `InboxTab` loading, then add dark mode
+  - **Agent 5** (Decisions): Independent, can start anytime after Phase 1
+
+**File Assignment:**
+- **Agent 2** owns: `ContentTab.tsx`, modal components, `LegalPageLayout.tsx`
+- **Agent 3** owns: `DropCard/` mobile styles, `AnalyticsCard.tsx` mobile
+- **Agent 4** owns: `InboxTab.tsx` dark mode (after Agent 2 finishes loading), file upload
+- **Agent 5** owns: `DropCard/` delete logic, `BillingPage.tsx`, `ChangePasswordModal.tsx`
+
+#### Option B: True Parallel (Faster, Riskier)
+```
+All phases start after Phase 1:
+├─ Phase 1: Critical Bugs (4-6h) → MUST BE FIRST
+│
+├─ Phase 2: Core UX (8-12h) ─┐
+├─ Phase 3: Mobile (6-8h)   ├─ All start simultaneously
+├─ Phase 4: Visual (4-6h)   │
+└─ Phase 5: Decisions (4-6h) ┘
+```
+
+**Risk Mitigation:**
+- Use feature branches: `phase-2-core-ux`, `phase-3-mobile`, etc.
+- Daily sync to resolve conflicts early
+- Agent 2 finishes `InboxTab` loading before Agent 4 touches dark mode
+- Agent 3 finishes `DropCard` mobile before Agent 5 touches delete logic
+
+### Coordination Protocol
+
+**For Parallel Work:**
+
+1. **Phase 1 First** (Critical)
+   - Must complete before others start
+   - Unblocks all other work
+
+2. **File Ownership Rules:**
+   - **Agent 2** (Core UX): `ContentTab.tsx`, `InboxTab.tsx` (loading only), modals
+   - **Agent 3** (Mobile): `InboxTab.tsx` (mobile styles), `DropCard/` (mobile), `AnalyticsCard.tsx`
+   - **Agent 4** (Visual): `InboxTab.tsx` (dark mode - after Agent 2), file upload
+   - **Agent 5** (Decisions): `DropCard/` (delete logic - after Agent 3), billing, auth
+
+3. **Communication Points:**
+   - **Before starting:** Each agent announces which files they'll touch
+   - **Daily sync:** Quick check-in on progress and conflicts
+   - **Before merge:** Review file overlap, resolve conflicts
+
+4. **Conflict Resolution:**
+   - If two agents need same file: Sequential work on that file
+   - Example: Agent 2 does `InboxTab` loading → Agent 4 does dark mode → Agent 3 does mobile
+   - Use Git branches and merge carefully
+
+### Recommended Approach: Hybrid
+
+**Best Strategy:**
+
+```
+Week 1:
+├─ Day 1: Phase 1 (Critical Bugs) - Single agent
+├─ Day 2-3: Phase 2 (Core UX) - Agent 2
+│           └─ Focus: Modals + Loading states
+├─ Day 2-3: Phase 3 (Mobile) - Agent 3 (parallel)
+│           └─ Focus: DropCard mobile + Analytics mobile
+│           └─ Wait for Agent 2 to finish InboxTab loading
+└─ Day 4-5: Phase 4 (Visual) - Agent 4
+            └─ After Agent 2 finishes InboxTab
+            └─ Focus: Dark mode + File upload
+
+Week 2:
+├─ Day 1-2: Complete Phase 3 (InboxTab mobile) - Agent 3
+├─ Day 1-2: Phase 5 (Decisions) - Agent 5 (parallel)
+└─ Day 3-5: Testing, conflict resolution, polish
+```
+
+**Why This Works:**
+- ✅ Phase 1 unblocks everything
+- ✅ Phase 2 & 3 can start in parallel (different files)
+- ✅ Phase 4 waits for Phase 2 (same file: InboxTab)
+- ✅ Phase 5 is independent
+- ✅ Minimal conflicts, clear handoffs
+
+### Agent Responsibilities
+
+**Agent 1: Critical Bugs** (4-6h)
+- Fix SQL RPC error
+- Fix CORS headers
+- Fix i18n translation
+- Fix OTP auto-submit
+- **Deliverable:** No console errors, all critical bugs fixed
+
+**Agent 2: Core UX** (8-12h)
+- InboxTab loading state
+- Links edit/delete modals
+- Drops edit modal
+- Add drop validation
+- Privacy/Terms scroll reset
+- **Deliverable:** Professional modal UX, loading states
+
+**Agent 3: Mobile Polish** (6-8h)
+- InboxTab mobile completion
+- DropCard button widths (mobile)
+- Analytics day buttons (mobile)
+- **Deliverable:** Polished mobile experience
+
+**Agent 4: Visual Polish** (4-6h)
+- Dark mode hover readability
+- File name preservation
+- **Deliverable:** Visual consistency, accessibility
+
+**Agent 5: Decisions & Enhancements** (4-6h)
+- Delete active drop decision + implementation
+- Change password relevance decision
+- Drag-drop indicator (if needed)
+- Billing UI simplification
+- **Deliverable:** Feature decisions made, enhancements added
+
+### Success Metrics
+
+**Phase 1:**
+- ✅ No console errors
+- ✅ All pages load without errors
+- ✅ i18n works correctly
+
+**Phase 2:**
+- ✅ All alerts replaced with modals
+- ✅ Loading states visible
+- ✅ Forms validate properly
+
+**Phase 3:**
+- ✅ Mobile responsive on all screens
+- ✅ Touch targets appropriate
+- ✅ Layouts work on small screens
+
+**Phase 4:**
+- ✅ Dark mode readable
+- ✅ File names preserved
+- ✅ WCAG contrast ratios met
+
+**Phase 5:**
+- ✅ Decisions documented
+- ✅ Features implemented or removed
+- ✅ UI simplified where appropriate
+
+---
+
+## Recommended Approach
+
+### Option 1: Sequential (Safest) - 2 weeks
+- **Week 1:** Phases 1 + 2 (Critical + Core UX)
+- **Week 2:** Phases 3 + 4 (Mobile + Visual)
+- **Week 3:** Phase 5 (Decisions)
+
+### Option 2: Parallel (Faster) - 1.5 weeks ✅ Recommended
+- **Day 1:** Phase 1 (Critical) - Single agent
+- **Day 2-4:** Phases 2 + 3 in parallel (Core UX + Mobile)
+- **Day 5:** Phase 4 (Visual) - After Phase 2
+- **Day 6-7:** Phase 5 (Decisions) + Testing
+- **Day 8-10:** Conflict resolution + polish
+
+---
+
+## Notes
+
+- **Test after each phase** - Don't wait until the end
+- **Group related issues** - Fix modals together, mobile issues together
+- **Start with quick wins** - Build momentum with fast fixes
+- **Mobile-first** - Test on real devices, not just dev tools
+- **Dark mode** - Test all fixes in both themes
+- **i18n** - Verify translations work for all languages
+- **Cross-browser** - Test in Chrome, Firefox, Safari
