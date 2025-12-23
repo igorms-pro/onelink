@@ -336,9 +336,13 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 - Modal/Drawer responsive (`ChangePasswordModal.tsx`)
 - Form with current password, new password, confirm password
 - Validation (min 8 chars, must match, must be different)
-- Supabase Auth integration
+- Supabase Auth integration (verifies current password via `signInWithPassword`, then updates via `updateUser`)
 - Success/error handling with toasts
 - Route: Accessed from Settings → Privacy & Security section
+- Button with `data-testid="settings-change-password"` in PrivacySecuritySection
+- Modal with `data-testid="change-password-modal"`
+- Form with `data-testid="settings-change-password-form"`
+- ✅ E2E test support (`e2e/settings.spec.ts:140`)
 
 ---
 
@@ -427,7 +431,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - ✅ Task 2: Email Service Setup (Completed)
      - ✅ Task 3: Email Notification Edge Function (Completed)
      - ✅ Task 4: Database Trigger for Email (Completed - `014_email_notifications_trigger.sql`)
-     - 🔴 Task 5: Weekly Digest Edge Function (Code créé mais cron non configuré - `send-weekly-digest`)
+     - ✅ Task 5: Weekly Digest Edge Function (Code créé et cron configuré via GitHub Actions - `send-weekly-digest`)
      - ✅ Task 6: Realtime Subscription Hook (Completed - `useSubmissionsRealtime`)
      - ✅ Task 7: Update useDashboardData for Realtime (Completed - hooks intégrés)
      - ✅ Task 8: InboxTab Read/Unread UI (Completed - styles + boutons)
@@ -464,7 +468,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - ✅ i18n complet (traductions ajoutées)
    
    - **À Faire:**
-     - 🔴 Weekly Digest - Edge Function créée mais cron non configuré (nécessite Supabase Cron ou scheduler)
+     - ✅ Weekly Digest - Edge Function créée et cron configuré via GitHub Actions
    
    - **Migrations SQL Appliquées:**
      - ✅ `013_notifications_system.sql` - Read/unread status
@@ -553,7 +557,7 @@ CREATE TABLE public.activity_notifications (
 
 ## Weekly Digest Email (Phase 1 - À Compléter)
 
-**Status:** 🟡 Partiellement Complété  
+**Status:** ✅ Complété  
 **Priority:** Low  
 **Estimated Time:** 30 minutes (configuration cron)
 
@@ -562,7 +566,7 @@ CREATE TABLE public.activity_notifications (
 - ✅ Templates email créés (HTML et TXT)
 - ✅ Logique d'agrégation des submissions par drop
 - ✅ Vérification préférence `weekly_digest`
-- 🔴 **Cron job non configuré** - La fonction n'est jamais appelée automatiquement
+- ✅ **Cron job configuré** - GitHub Actions workflow (`weekly-digest.yml`) exécute la fonction tous les lundis à 9h UTC
 
 **Description:**
 - Email résumé hebdomadaire envoyé tous les lundis à 9h UTC
