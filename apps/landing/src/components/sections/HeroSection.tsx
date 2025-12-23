@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
+import { trackSignUpClick, trackCTAClick } from "@/lib/analytics";
 
 export default function HeroSection() {
   const scrollToDemo = () => {
     const demoSection = document.getElementById("demo");
     if (demoSection) {
       demoSection.scrollIntoView({ behavior: "smooth" });
+      trackCTAClick("view_demo", "hero");
     }
   };
 
@@ -22,7 +24,8 @@ export default function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto">
-            Share your links, files, and drops with one simple link. No more messy bios or multiple links.
+            Share your links, files, and drops with one simple link. No more
+            messy bios or multiple links.
           </p>
 
           {/* CTAs */}
@@ -31,6 +34,7 @@ export default function HeroSection() {
               size="lg"
               className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/50"
               onClick={() => {
+                trackSignUpClick("hero");
                 window.location.href = "https://app.getonelink.io/auth";
               }}
             >

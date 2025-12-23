@@ -78,3 +78,54 @@ vi.mock("sonner", () => ({
     dismiss: vi.fn(),
   },
 }));
+
+// Mock analytics
+vi.mock("@/lib/analytics", () => ({
+  initAnalytics: vi.fn(),
+  trackEvent: vi.fn(),
+  trackSignUpClick: vi.fn(),
+  trackPricingView: vi.fn(),
+  trackCTAClick: vi.fn(),
+  trackScrollDepth: vi.fn(),
+}));
+
+// Mock react-router-dom
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  const React = await import("react");
+  return {
+    ...actual,
+    Link: ({
+      to,
+      children,
+      ...props
+    }: {
+      to: string;
+      children: React.ReactNode;
+    }) => {
+      return React.createElement("a", { href: to, ...props }, children);
+    },
+    useNavigate: () => vi.fn(),
+  };
+});
+
+// Mock IntersectionObserver
+global.IntersectionObserver = class IntersectionObserver {
+  constructor() {}
+  disconnect() {}
+  observe() {}
+  takeRecords() {
+    return [];
+  }
+  unobserve() {}
+} as unknown as typeof IntersectionObserver;
+
+// Mock scrollAnimation globally
+vi.mock("@/lib/scrollAnimation", () => ({
+  initScrollAnimations: vi.fn(() => vi.fn()), // Returns cleanup function
+}));
+
+// Mock useScrollDepth hook globally
+vi.mock("@/hooks/useScrollDepth", () => ({
+  useScrollDepth: vi.fn(),
+}));

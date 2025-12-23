@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
+import { trackSignUpClick, trackCTAClick } from "@/lib/analytics";
 
 interface PricingCardProps {
   name: string;
@@ -55,8 +56,15 @@ export function PricingCard({
           href={ctaUrl}
           target={ctaUrl.startsWith("http") ? "_blank" : undefined}
           rel={ctaUrl.startsWith("http") ? "noopener noreferrer" : undefined}
+          onClick={() => {
+            if (ctaUrl.includes("/auth")) {
+              trackSignUpClick("pricing");
+            } else if (ctaUrl.includes("/pricing")) {
+              trackCTAClick("upgrade", "pricing");
+            }
+          }}
           className={clsx(
-            "block w-full rounded-xl px-4 py-3 text-center text-sm font-semibold shadow-md transition-all cursor-pointer min-h-[44px] flex items-center justify-center",
+            "flex w-full rounded-xl px-4 py-3 text-center text-sm font-semibold shadow-md transition-all cursor-pointer min-h-[44px] items-center justify-center",
             highlight
               ? "bg-linear-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700"
               : "border border-gray-200 bg-white text-gray-700 hover:border-purple-200 hover:bg-purple-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:border-purple-400/60 dark:hover:bg-purple-500/10",

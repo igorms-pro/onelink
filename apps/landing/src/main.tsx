@@ -6,6 +6,10 @@ import { Toaster } from "sonner";
 import "./index.css";
 import "./lib/i18n";
 import { router } from "./lib/router";
+import { initAnalytics } from "./lib/analytics";
+
+// Initialize analytics
+initAnalytics();
 
 // Initialize theme on app load
 const theme = localStorage.getItem("theme") || "system";

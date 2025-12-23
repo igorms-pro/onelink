@@ -9,9 +9,12 @@ export NVM_DIR="$HOME/.nvm"
 # Enable pnpm
 export PATH="$PATH:$HOME/.local/share/pnpm"
 
+# Run checks for web app
 cd apps/web || exit 1
-
 pnpm type-check || exit 1
 pnpm test:ci || exit 1
 
-
+# Run checks for landing app
+cd ../landing || exit 1
+pnpm type-check || exit 1
+pnpm test:ci || exit 1

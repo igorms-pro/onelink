@@ -1,4 +1,4 @@
-import { LucideIcon } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 interface StepCardProps {
   stepNumber: number;
@@ -39,9 +39,13 @@ export default function StepCard({
         </div>
         {/* Desktop: Title only */}
         <div className="hidden md:block mb-2">
-          <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">{title}</h3>
+          <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">
+            {title}
+          </h3>
         </div>
-        <p className="text-muted-foreground text-sm md:text-base leading-relaxed">{description}</p>
+        <p className="text-muted-foreground text-sm md:text-base leading-relaxed">
+          {description}
+        </p>
       </div>
 
       {/* Connector Line */}

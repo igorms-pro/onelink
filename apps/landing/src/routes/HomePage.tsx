@@ -10,8 +10,12 @@ import { DemoSection } from "@/components/sections/DemoSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { Footer } from "@/components/Footer";
 import { initScrollAnimations } from "@/lib/scrollAnimation";
+import { useScrollDepth } from "@/hooks/useScrollDepth";
 
 export default function HomePage() {
+  // Track scroll depth
+  useScrollDepth();
+
   useEffect(() => {
     // Initialize scroll animations
     const cleanup = initScrollAnimations();

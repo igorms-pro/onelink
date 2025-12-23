@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { trackSignUpClick } from "@/lib/analytics";
 
 export function CTASection() {
   const { t } = useTranslation();
@@ -24,6 +25,7 @@ export function CTASection() {
               size="lg"
               className="bg-white text-purple-600 hover:bg-gray-100 shadow-lg shadow-purple-500/50 dark:bg-gray-900 dark:text-purple-300 dark:hover:bg-gray-800"
               onClick={() => {
+                trackSignUpClick("cta_section");
                 window.location.href = "https://app.getonelink.io/auth";
               }}
             >

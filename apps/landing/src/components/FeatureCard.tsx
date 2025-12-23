@@ -1,5 +1,4 @@
-import { LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import type { LucideIcon } from "lucide-react";
 
 interface FeatureCardProps {
   title: string;
@@ -7,7 +6,11 @@ interface FeatureCardProps {
   icon: LucideIcon;
 }
 
-export default function FeatureCard({ title, description, icon: Icon }: FeatureCardProps) {
+export default function FeatureCard({
+  title,
+  description,
+  icon: Icon,
+}: FeatureCardProps) {
   return (
     <div className="group relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 md:p-8 transition-all hover:border-purple-500 dark:hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20">
       {/* Icon */}
