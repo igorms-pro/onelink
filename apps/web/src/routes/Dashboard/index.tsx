@@ -106,6 +106,7 @@ export default function Dashboard() {
                 profileId={profileId}
                 setSubmissions={setSubmissions}
                 refreshInbox={refreshInbox}
+                loading={loading}
               />
             )}
             {activeTab === "content" && (

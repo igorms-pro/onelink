@@ -596,6 +596,7 @@
   "common_delete_failed": "Löschen fehlgeschlagen",
   "common_toggle_failed": "Umschalten fehlgeschlagen",
   "common_label_required": "Bezeichnung ist erforderlich",
+  "common_label_min_length": "Bezeichnung muss mindestens {{min}} Zeichen lang sein",
   "common_show": "Anzeigen",
   "common_hide": "Ausblenden",
   "common_add": "Hinzufügen",

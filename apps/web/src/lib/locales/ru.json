@@ -596,6 +596,7 @@
   "common_delete_failed": "Не удалось удалить",
   "common_toggle_failed": "Не удалось переключить",
   "common_label_required": "Метка обязательна",
+  "common_label_min_length": "Метка должна содержать не менее {{min}} символов",
   "common_show": "Показать",
   "common_hide": "Скрыть",
   "common_add": "Добавить",

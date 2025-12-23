@@ -596,6 +596,7 @@
   "common_delete_failed": "删除失败",
   "common_toggle_failed": "切换失败",
   "common_label_required": "标签是必需的",
+  "common_label_min_length": "标签必须至少{{min}}个字符",
   "common_show": "显示",
   "common_hide": "隐藏",
   "common_add": "添加",

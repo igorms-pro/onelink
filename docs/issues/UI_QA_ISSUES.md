@@ -13,8 +13,8 @@ This document contains all UI QA issues identified during testing. Each issue is
 | 1 | Inbox loading state | High | 2 | 2h | 🔴 |
 | 2 | Inbox mobile version | High | 3 | 3-4h | 🔴 |
 | 3 | Dark mode hover readability | Medium | 4 | 1-2h | 🔴 |
-| 4 | Links edit modal | Medium | 2 | 2h | 🔴 |
-| 5 | Links delete modal | Medium | 2 | 1-2h | 🔴 |
+| 4 | Links edit modal | Medium | 2 | 2h | ✅ |
+| 5 | Links delete modal | Medium | 2 | 1-2h | ✅ |
 | 6 | Drag-drop indicator | Low | 5 | 1h | 🔴 |
 | 7 | Add drop validation | Medium | 2 | 30m | 🔴 |
 | 8 | Drops edit modal | Medium | 2 | 2h | 🔴 |
@@ -28,7 +28,7 @@ This document contains all UI QA issues identified during testing. Each issue is
 | 16 | Sessions RPC error | High | 1 | 30m | ✅ |
 | 17 | Change password relevance | Low | 5 | 1h | 🔴 |
 | 18 | MFA Challenge UX | Medium | 1 | 3h | ✅ |
-| 19 | Privacy/Terms scroll | Medium | 2 | 15m | 🔴 |
+| 19 | Privacy/Terms scroll | Medium | 2 | 15m | ✅ |
 
 **Total Estimated Time:** 26-38 hours across 5 phases
 
@@ -804,8 +804,8 @@ When receiving the email on an active 2FA account, the modal with OTP appears co
 
 ## Privacy and Terms Pages
 
-### Issue 19: Scroll Position Not Reset on Navigation
-**Status:** 🔴 Not Started  
+### Issue 19: Scroll Position Not Reset on Navigation ✅ FIXED
+**Status:** ✅ Completed  
 **Priority:** Medium  
 **Category:** UX Bug
 
@@ -817,32 +817,27 @@ When clicking either privacy or terms page links, the scroll position is not res
 - User should see the beginning of the page content
 - Consistent behavior across all page navigations
 
-**Current Implementation:**
-- Routes: `/privacy` and `/terms` in `main.tsx`
-- Components: `apps/web/src/routes/Legal/Privacy.tsx` and `apps/web/src/routes/Legal/Terms.tsx`
-- Layout: `apps/web/src/components/LegalPageLayout.tsx`
+**Fix Applied:**
+- ✅ Added `useLocation` hook import from `react-router-dom`
+- ✅ Added `useEffect` hook import from `react`
+- ✅ Added scroll reset logic in `LegalPageLayout.tsx` that scrolls to top when route changes
+- ✅ Uses `location.pathname` as dependency to trigger scroll reset on navigation
 
-**Proposed Solution:**
-1. **Add Scroll Reset on Route Change:**
-   - Use React Router's `useEffect` with `useLocation` to detect route changes
-   - Scroll to top when route changes to privacy/terms
-   - Or add scroll reset in the component's `useEffect`
+**Files Updated:**
+- ✅ `apps/web/src/components/LegalPageLayout.tsx` (added scroll reset with useEffect + useLocation)
 
-2. **Implementation Options:**
-   - Option 1: Add `useEffect` in `LegalPageLayout.tsx` to scroll to top on mount
-   - Option 2: Add scroll reset in router configuration
-   - Option 3: Use React Router's `ScrollToTop` component
-
-**Files to Update:**
-- `apps/web/src/components/LegalPageLayout.tsx` (add scroll reset)
-- Or `apps/web/src/main.tsx` (add ScrollToTop component)
-
-**Implementation Example:**
+**Implementation:**
 ```tsx
+const location = useLocation();
+
+// Scroll to top when navigating to privacy/terms pages
 useEffect(() => {
   window.scrollTo(0, 0);
 }, [location.pathname]);
 ```
+
+**Note:**
+Since both Privacy and Terms pages use the `LegalPageLayout` component, fixing it in one place resolves the issue for both pages. The scroll reset triggers whenever the pathname changes, ensuring users always see the top of the page when navigating to these legal pages.
 
 ---
 

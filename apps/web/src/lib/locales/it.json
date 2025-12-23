@@ -596,6 +596,7 @@
   "common_delete_failed": "Eliminazione fallita",
   "common_toggle_failed": "Cambio stato fallito",
   "common_label_required": "L'etichetta è obbligatoria",
+  "common_label_min_length": "L'etichetta deve contenere almeno {{min}} caratteri",
   "common_show": "Mostra",
   "common_hide": "Nascondi",
   "common_add": "Aggiungi",

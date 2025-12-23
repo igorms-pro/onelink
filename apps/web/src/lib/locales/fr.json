@@ -606,6 +606,7 @@
   "common_delete_failed": "Échec de la suppression",
   "common_toggle_failed": "Échec du basculement",
   "common_label_required": "Le libellé est requis",
+  "common_label_min_length": "Le libellé doit contenir au moins {{min}} caractères",
   "common_show": "Afficher",
   "common_hide": "Masquer",
   "common_add": "Ajouter",

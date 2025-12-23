@@ -596,6 +596,7 @@
   "common_delete_failed": "Error al eliminar",
   "common_toggle_failed": "Error al cambiar",
   "common_label_required": "La etiqueta es obligatoria",
+  "common_label_min_length": "La etiqueta debe tener al menos {{min}} caracteres",
   "common_show": "Mostrar",
   "common_hide": "Ocultar",
   "common_add": "Agregar",

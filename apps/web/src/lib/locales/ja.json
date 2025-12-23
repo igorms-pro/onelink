@@ -596,6 +596,7 @@
   "common_delete_failed": "削除に失敗しました",
   "common_toggle_failed": "切り替えに失敗しました",
   "common_label_required": "ラベルは必須です",
+  "common_label_min_length": "ラベルは少なくとも{{min}}文字である必要があります",
   "common_show": "表示",
   "common_hide": "非表示",
   "common_add": "追加",

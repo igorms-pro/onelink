@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { Pencil, Trash2 } from "lucide-react";
 import { useAuth } from "../lib/AuthProvider";
 import { trackLinkUpdated, trackLinkDeleted } from "../lib/posthog-events";
+import { EditLinkModal } from "../routes/Dashboard/components/ContentTab/EditLinkModal";
+import { DeleteLinkModal } from "../routes/Dashboard/components/ContentTab/DeleteLinkModal";
 
 export type LinkRow = {
   id: string;
@@ -28,6 +30,8 @@ export function LinksList({
   const dragIndex = useRef<number | null>(null);
   const overIndex = useRef<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
+  const [editingLink, setEditingLink] = useState<LinkRow | null>(null);
+  const [deletingLink, setDeletingLink] = useState<LinkRow | null>(null);
 
   return (
     <>
@@ -104,29 +108,9 @@ export function LinksList({
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    const newLabel = prompt(t("common_new_label"), l.label);
-                    if (!newLabel) return;
-                    const { error } = await supabase
-                      .from("links")
-                      .update({ label: newLabel })
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_update_failed"));
-                      return;
-                    }
-                    setLinks(
-                      links.map((x) =>
-                        x.id === l.id ? { ...x, label: newLabel } : x,
-                      ),
-                    );
-                    toast.success(t("dashboard_content_links_update_success"));
-                    // Track link update
-                    if (user?.id) {
-                      trackLinkUpdated(user.id, l.id);
-                    }
+                    setEditingLink(l);
                   }}
                   className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                   aria-label={t("common_edit")}
@@ -134,25 +118,9 @@ export function LinksList({
                   <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </button>
                 <button
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    if (!confirm(t("dashboard_content_links_delete_confirm")))
-                      return;
-                    const { error } = await supabase
-                      .from("links")
-                      .delete()
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_delete_failed"));
-                      return;
-                    }
-                    setLinks(links.filter((x) => x.id !== l.id));
-                    toast.success(t("dashboard_content_links_delete_success"));
-                    // Track link deletion
-                    if (user?.id) {
-                      trackLinkDeleted(user.id, l.id);
-                    }
+                    setDeletingLink(l);
                   }}
                   className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                   aria-label={t("common_delete")}
@@ -164,6 +132,60 @@ export function LinksList({
           ))}
         </ul>
       )}
+      <EditLinkModal
+        open={editingLink !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditingLink(null);
+        }}
+        link={editingLink}
+        onSave={async (newLabel) => {
+          if (!editingLink) return;
+          const { error } = await supabase
+            .from("links")
+            .update({ label: newLabel })
+            .eq("id", editingLink.id)
+            .eq("profile_id", profileId);
+          if (error) {
+            toast.error(t("common_update_failed"));
+            throw error;
+          }
+          setLinks(
+            links.map((x) =>
+              x.id === editingLink.id ? { ...x, label: newLabel } : x,
+            ),
+          );
+          toast.success(t("dashboard_content_links_update_success"));
+          // Track link update
+          if (user?.id) {
+            trackLinkUpdated(user.id, editingLink.id);
+          }
+        }}
+      />
+      <DeleteLinkModal
+        open={deletingLink !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeletingLink(null);
+        }}
+        link={deletingLink}
+        onConfirm={async () => {
+          if (!deletingLink) return;
+          const { error } = await supabase
+            .from("links")
+            .delete()
+            .eq("id", deletingLink.id)
+            .eq("profile_id", profileId);
+          if (error) {
+            toast.error(t("common_delete_failed"));
+            throw error;
+          }
+          setLinks(links.filter((x) => x.id !== deletingLink.id));
+          toast.success(t("dashboard_content_links_delete_success"));
+          // Track link deletion
+          if (user?.id) {
+            trackLinkDeleted(user.id, deletingLink.id);
+          }
+        }}
+      />
     </>
   );
 }

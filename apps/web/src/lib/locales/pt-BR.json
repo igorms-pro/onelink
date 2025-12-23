@@ -596,6 +596,7 @@
   "common_delete_failed": "Falha ao excluir",
   "common_toggle_failed": "Falha ao alternar",
   "common_label_required": "A etiqueta é obrigatória",
+  "common_label_min_length": "A etiqueta deve ter pelo menos {{min}} caracteres",
   "common_show": "Mostrar",
   "common_hide": "Ocultar",
   "common_add": "Adicionar",

@@ -83,7 +83,7 @@ describe("InboxTab", () => {
     } as any);
   });
 
-  it("should show empty state when no submissions", () => {
+  it("should show skeleton when loading", () => {
     render(
       <InboxTab
         submissions={[]}
@@ -91,11 +91,32 @@ describe("InboxTab", () => {
         profileId="profile-123"
         setSubmissions={mockSetSubmissions}
         refreshInbox={mockRefreshInbox}
+        loading={true}
+      />,
+    );
+
+    // Check that skeleton is shown
+    expect(screen.getByTestId("inbox-skeleton")).toBeInTheDocument();
+    // Empty state should not be shown while loading
+    expect(screen.queryByText(/no submissions yet/i)).not.toBeInTheDocument();
+  });
+
+  it("should show empty state when not loading and no submissions", () => {
+    render(
+      <InboxTab
+        submissions={[]}
+        downloads={[]}
+        profileId="profile-123"
+        setSubmissions={mockSetSubmissions}
+        refreshInbox={mockRefreshInbox}
+        loading={false}
       />,
     );
 
     // Check that empty state is shown
     expect(screen.getByText(/no submissions yet/i)).toBeInTheDocument();
+    // Skeleton should not be shown when not loading
+    expect(screen.queryByTestId("inbox-skeleton")).not.toBeInTheDocument();
   });
 
   it("should render submissions list", () => {

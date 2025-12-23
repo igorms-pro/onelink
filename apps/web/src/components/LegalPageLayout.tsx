@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
@@ -29,8 +30,14 @@ export function LegalPageLayout({
 }: LegalPageLayoutProps) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const appTitle =
     i18n?.exists && i18n.exists("app_title") ? t("app_title") : "OneLink";
+
+  // Scroll to top when navigating to privacy/terms pages
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   const handleBack = () => {
     // Try to go back, but if no history, go to home

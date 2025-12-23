@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/lib/supabase";
 import { Upload, Check, CheckCheck, Download, RefreshCw } from "lucide-react";
 import type { SubmissionRow, DownloadRow } from "../types";
+import { InboxSkeleton } from "./InboxSkeleton";
 
 interface InboxTabProps {
   submissions: SubmissionRow[];
@@ -10,6 +11,7 @@ interface InboxTabProps {
   profileId: string | null;
   setSubmissions: React.Dispatch<React.SetStateAction<SubmissionRow[]>>;
   refreshInbox: () => Promise<boolean>;
+  loading?: boolean;
 }
 
 export function InboxTab({
@@ -18,6 +20,7 @@ export function InboxTab({
   profileId,
   setSubmissions,
   refreshInbox,
+  loading = false,
 }: InboxTabProps) {
   const { t } = useTranslation();
   const [markingRead, setMarkingRead] = useState<string | null>(null);
@@ -235,6 +238,12 @@ export function InboxTab({
     };
   }, [pullDistance, refreshing, handleRefresh]);
 
+  // Show skeleton while loading
+  if (loading) {
+    return <InboxSkeleton />;
+  }
+
+  // Show empty state only when not loading and no items
   if (allItems.length === 0) {
     return (
       <section data-testid="inbox-scroll-container" className="mt-2 sm:mt-0">
