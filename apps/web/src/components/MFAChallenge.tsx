@@ -9,13 +9,17 @@ type MFAChallengeProps = {
 
 export function MFAChallenge({ onVerified }: MFAChallengeProps) {
   const { t } = useTranslation();
-  const { startChallenge, verifyChallenge, submitting } = useSupabaseMFA();
+  const { startChallenge, verifyChallenge, submitting, factors, loading } =
+    useSupabaseMFA();
   const [code, setCode] = useState("");
 
   useEffect(() => {
-    // When the challenge screen mounts, start a new MFA challenge
-    void startChallenge();
-  }, [startChallenge]);
+    // Only start challenge if factors are loaded and user has MFA enabled
+    // Don't start if still loading or if no factors exist
+    if (!loading && factors?.totp && factors.totp.length > 0) {
+      void startChallenge();
+    }
+  }, [startChallenge, factors, loading]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();

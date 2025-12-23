@@ -69,22 +69,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (aalError) {
               console.error("[Auth] Error getting AAL:", aalError);
-            } else if (aalData) {
-              // Show challenge if current level is aal1 but next level is aal2
-              const needsMFA =
-                aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
-
-              if (needsMFA) {
-                const { data, error } = await supabase.auth.mfa.listFactors();
-                if (error) {
-                  console.error("[Auth] Error listing MFA factors:", error);
-                } else if (data?.totp && data.totp.length > 0) {
-                  setShowMFAChallenge(true);
-                }
-              }
+              return; // Don't show challenge if we can't get AAL
             }
+
+            if (!aalData) {
+              return; // No AAL data, don't show challenge
+            }
+
+            // Show challenge ONLY if:
+            // 1. Current level is aal1 (not fully authenticated)
+            // 2. Next level is aal2 (MFA is required)
+            // 3. User actually has MFA factors enabled
+            const needsMFA =
+              aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
+
+            if (!needsMFA) {
+              // User doesn't need MFA (either already verified or doesn't have MFA enabled)
+              return;
+            }
+
+            // Only proceed if MFA is actually needed
+            const { data, error } = await supabase.auth.mfa.listFactors();
+            if (error) {
+              console.error("[Auth] Error listing MFA factors:", error);
+              return; // Don't show challenge if we can't list factors
+            }
+
+            // Only show challenge if user has TOTP factors enabled
+            if (data?.totp && data.totp.length > 0) {
+              setShowMFAChallenge(true);
+            }
+            // If no factors exist, user doesn't have MFA enabled - don't show challenge
           } catch (err) {
             console.error("[Auth] Unexpected error checking MFA factors:", err);
+            // Don't show challenge on error
           }
         })();
       }
