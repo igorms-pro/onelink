@@ -371,8 +371,8 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
    - **Estimated Time:** 8-12 hours
    - **Domain:** `getonelink.io` (à acheter)
    - **Architecture:** 
-     - `getonelink.io` → Landing page (site vitrine)
-     - `app.getonelink.io` → Application (dashboard actuel)
+     - `getonelink.io` → Landing page (`apps/landing/` - Vite + React)
+     - `app.getonelink.io` → Application (`apps/web` - dashboard actuel)
    - **Description:** Créer un site vitrine professionnel pour présenter OneLink, convertir les visiteurs, et servir de point d'entrée principal
    - **Documentation:** Voir `docs/LANDING_PAGE.md` pour le design complet, sections, et implementation steps
    - **Sections principales:**
@@ -383,8 +383,11 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - Social Proof / Testimonials
      - Demo / Screenshots
      - Footer (navigation, legal, social)
-   - **Stack recommandé:** Next.js 14+ (pour SEO) ou Vite + React (si garder stack actuel)
+   - **Stack:** Vite + React + Tailwind CSS (same as current app)
+   - **SEO:** `react-helmet-async` for meta tags, `vite-plugin-prerender` post-MVP
+   - **Location:** `apps/landing/` folder in monorepo (Pattern 1 - separate app, same repo)
    - **DNS:** Configuration Hostinger → Vercel pour sous-domaines
+   - **SEO Implementation:** See "SEO Optimization" section below for detailed plan
 
 **Medium Priority:**
 1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
@@ -452,7 +455,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
        - Seulement si préférence activée ET plan PRO/Starter
    
    - **Documentation:** Voir section "Notifications System - Phase 2" ci-dessous pour les détails
-   - **Status:** 🟡 Phase 1 Presque Complétée (Weekly Digest cron manquant) - Phase 2 En attente
+   - **Status:** ✅ Phase 1 Complétée - Phase 2 En attente
    - **Priority:** Medium
    - **Estimated Time:** 
      - Phase 1: ✅ Complétée et testée (~8 heures)
@@ -706,9 +709,210 @@ Implémenter un vrai système realtime client-serveur avec :
 
 ---
 
+## SEO Optimization
+
+**Status:** 🔴 Not Started  
+**Priority:** Medium (Important for landing page)  
+**Category:** Infrastructure / Marketing
+
+### Current State
+- Basic meta tags in `index.html` (static)
+- Manual meta tag updates in Profile component using `useEffect` and DOM manipulation
+- No structured data (JSON-LD)
+- No sitemap.xml
+- No robots.txt
+
+### Problem
+- Vite + React SPA renders client-side, Google crawlers may see empty HTML initially
+- Meta tags updated via JavaScript after page load (Google may miss them)
+- No pre-rendering or SSR for better SEO
+
+### Solution: SEO Libraries & Plugins
+
+#### Option 1: react-helmet-async (Recommended for MVP)
+**Purpose:** Clean, declarative meta tag management
+
+**Installation:**
+```bash
+pnpm add react-helmet-async
+```
+
+**Usage:**
+- Wrap app with `<HelmetProvider>`
+- Use `<Helmet>` component in each route/page
+- Automatically manages meta tags, title, Open Graph, Twitter Cards
+- Works with React Router
+
+**Benefits:**
+- ✅ Clean API (declarative)
+- ✅ Automatic cleanup
+- ✅ SSR-ready (if needed later)
+- ✅ Works with Vite + React
+- ✅ Better than manual DOM manipulation
+
+**Files to Update:**
+- `apps/web/src/main.tsx` - Add `<HelmetProvider>`
+- `apps/web/src/routes/Profile/index.tsx` - Replace manual meta tags with `<Helmet>`
+- `apps/web/src/routes/Dashboard/index.tsx` - Add meta tags
+- `apps/landing/src/routes/*` - Add meta tags for landing pages
+
+**Estimated Time:** 2-3 hours
+
+---
+
+#### Option 2: vite-plugin-prerender (For Better SEO)
+**Purpose:** Pre-render static routes at build time for better SEO
+
+**Installation:**
+```bash
+pnpm add -D vite-plugin-prerender
+```
+
+**Configuration:**
+```typescript
+// vite.config.ts
+import { prerender } from 'vite-plugin-prerender'
+
+export default {
+  plugins: [
+    react(),
+    prerender({
+      routes: ['/', '/pricing', '/features'], // Pre-render these routes
+      renderer: {
+        renderAfterDocumentEvent: 'render-event',
+      },
+    })
+  ]
+}
+```
+
+**What it does:**
+- Build time: Generates static HTML files for specified routes
+- Google sees: Full HTML with content (not empty `<div id="root">`)
+- Result: Better SEO, faster initial load
+
+**Benefits:**
+- ✅ Generates static HTML at build time
+- ✅ Google crawlers see full content
+- ✅ No server needed (static hosting)
+- ✅ Works with Vite + React
+
+**When to use:**
+- Landing pages (static content)
+- Public pages (pricing, features, about)
+- Pages that don't need dynamic data
+
+**Estimated Time:** 3-4 hours (setup + configuration)
+
+---
+
+#### Option 3: vite-plugin-ssr (Full SSR - Future)
+**Purpose:** Server-side rendering for maximum SEO
+
+**Installation:**
+```bash
+pnpm add vite-plugin-ssr
+```
+
+**When to use:**
+- Need dynamic server-side rendering
+- Complex SEO requirements
+- Want maximum control
+
+**Trade-offs:**
+- More complex setup
+- Requires server/Node.js runtime
+- Overkill for simple landing pages
+
+**Estimated Time:** 8-12 hours (full SSR setup)
+
+---
+
+### Implementation Plan
+
+#### Phase 1: Basic SEO (MVP) - 2-3 hours
+1. ✅ Install `react-helmet-async`
+2. ✅ Replace manual meta tag updates with `<Helmet>` components
+3. ✅ Add proper meta tags to all routes
+4. ✅ Add Open Graph and Twitter Card tags
+5. ✅ Test meta tags with social media debuggers
+
+**Files to Create/Update:**
+- `apps/web/src/lib/seo.ts` - SEO utilities/helpers
+- Update all route components with `<Helmet>`
+
+---
+
+#### Phase 2: Pre-rendering (Post-MVP) - 3-4 hours
+1. ✅ Install `vite-plugin-prerender`
+2. ✅ Configure pre-rendering for static routes (`/`, `/pricing`, `/features`)
+3. ✅ Test pre-rendered HTML output
+4. ✅ Verify Google can crawl content
+5. ✅ Deploy and test
+
+**Files to Update:**
+- `apps/landing/vite.config.ts` - Add prerender plugin
+- `apps/landing/src/main.tsx` - Add render event trigger
+
+---
+
+#### Phase 3: Advanced SEO (Future) - 4-6 hours
+1. ✅ Add structured data (JSON-LD) for rich snippets
+2. ✅ Generate `sitemap.xml` automatically
+3. ✅ Create `robots.txt`
+4. ✅ Add canonical URLs
+5. ✅ Submit to Google Search Console
+6. ✅ Monitor SEO performance
+
+**Files to Create:**
+- `apps/landing/public/sitemap.xml` (or generate dynamically)
+- `apps/landing/public/robots.txt`
+- `apps/landing/src/lib/structured-data.ts` - JSON-LD helpers
+
+---
+
+### Recommended Libraries
+
+1. **react-helmet-async** - Meta tag management
+   - `pnpm add react-helmet-async`
+   - Clean, declarative API
+   - SSR-ready
+
+2. **vite-plugin-prerender** - Static pre-rendering
+   - `pnpm add -D vite-plugin-prerender`
+   - Better SEO for static pages
+   - No server needed
+
+3. **vite-plugin-ssr** - Full SSR (optional, future)
+   - `pnpm add vite-plugin-ssr`
+   - Maximum SEO control
+   - More complex
+
+### Testing SEO
+
+**Tools:**
+- Google Search Console - Submit sitemap, monitor indexing
+- Google Rich Results Test - Test structured data
+- Facebook Sharing Debugger - Test Open Graph tags
+- Twitter Card Validator - Test Twitter Cards
+- Lighthouse SEO audit - Check SEO score
+
+**Checklist:**
+- [ ] Meta tags present in HTML source
+- [ ] Open Graph tags work (Facebook/LinkedIn)
+- [ ] Twitter Cards work
+- [ ] Structured data validates
+- [ ] Sitemap.xml accessible
+- [ ] Robots.txt configured
+- [ ] Canonical URLs set
+- [ ] Mobile-friendly (responsive)
+
+---
+
 ## Notes
 - ✅ UX polish completed (mobile → desktop → dark theme)
 - ✅ Drop system redesign completed
 - Maintain backward compatibility
 - Keep user experience simple and intuitive
 - Legal pages can start English-only, translations can be added later
+- SEO optimization important for landing page conversion

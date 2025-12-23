@@ -3,13 +3,19 @@
 # See: https://github.com/github/vscode-github-actions/issues/222
 # These warnings can be safely ignored - they don't affect workflow execution.
 
-name: CI
+name: CI - Web
 
 on:
   push:
     branches: [main, develop]
+    paths:
+      - 'apps/web/**'
+      - 'supabase/**'
   pull_request:
     branches: [main, develop]
+    paths:
+      - 'apps/web/**'
+      - 'supabase/**'
 
 jobs:
   lint-and-type-check:

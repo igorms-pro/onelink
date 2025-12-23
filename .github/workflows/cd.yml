@@ -1,8 +1,11 @@
-name: CD
+name: CD - Web
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'apps/web/**'
+      - '.github/workflows/cd.yml'
   workflow_dispatch:
 
 jobs:

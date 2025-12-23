@@ -9,7 +9,10 @@ export NVM_DIR="$HOME/.nvm"
 # Enable pnpm
 export PATH="$PATH:$HOME/.local/share/pnpm"
 
+# Run lint-staged for web app
 cd apps/web || exit 1
-npx lint-staged
+npx lint-staged || exit 1
 
-
+# Run lint-staged for landing app
+cd ../landing || exit 1
+npx lint-staged || exit 1
