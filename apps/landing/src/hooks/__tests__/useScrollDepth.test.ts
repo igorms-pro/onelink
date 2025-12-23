@@ -32,7 +32,7 @@ describe("useScrollDepth Hook", () => {
     });
 
     // Mock requestAnimationFrame
-    global.requestAnimationFrame = vi.fn((cb) => {
+    globalThis.requestAnimationFrame = vi.fn((cb) => {
       setTimeout(cb, 0);
       return 1;
     });

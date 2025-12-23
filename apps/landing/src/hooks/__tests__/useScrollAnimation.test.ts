@@ -2,21 +2,8 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { renderHook } from "@testing-library/react";
 import { useScrollAnimation } from "../useScrollAnimation";
 
-// Mock IntersectionObserver
-const mockObserve = vi.fn();
-const mockUnobserve = vi.fn();
-const mockDisconnect = vi.fn();
-
 beforeEach(() => {
   vi.clearAllMocks();
-
-  global.IntersectionObserver = class IntersectionObserver {
-    constructor() {}
-    observe = mockObserve;
-    unobserve = mockUnobserve;
-    disconnect = mockDisconnect;
-    takeRecords = vi.fn(() => []);
-  } as unknown as typeof IntersectionObserver;
 });
 
 describe("useScrollAnimation Hook", () => {
@@ -31,12 +18,10 @@ describe("useScrollAnimation Hook", () => {
   it("cleans up observer on unmount", () => {
     const { unmount } = renderHook(() => useScrollAnimation());
 
-    unmount();
-
-    // Cleanup should be called (unobserve or disconnect)
-    // The hook returns early if element is null, so cleanup might not be called
-    // This is expected behavior
-    expect(mockUnobserve).toBeDefined();
+    // Unmount should not throw
+    expect(() => {
+      unmount();
+    }).not.toThrow();
   });
 
   it("handles missing elements gracefully", () => {

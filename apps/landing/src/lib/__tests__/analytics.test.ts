@@ -106,7 +106,6 @@ describe("Analytics Utilities", () => {
     it("warns when PostHog is not initialized", () => {
       mockPostHog.__loaded = false;
       vi.clearAllMocks();
-      vi.clearAllMocks(console.warn);
 
       analytics.trackEvent("test_event");
 
