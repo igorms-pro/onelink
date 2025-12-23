@@ -1,17 +1,12 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft, Monitor, Clock } from "lucide-react";
+import { ArrowLeft, Monitor } from "lucide-react";
 import { Header } from "@/components/Header";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
-import {
-  SessionList,
-  SessionsSkeleton,
-  LoginHistoryList,
-  LoginHistorySkeleton,
-} from "./SessionsPage/index";
+import { SessionList, SessionsSkeleton } from "./SessionsPage/index";
 import { useSessions } from "./SessionsPage/useSessions";
-import { formatDate, useFormatRelativeTime } from "./SessionsPage/utils";
+import { useFormatRelativeTime } from "./SessionsPage/utils";
 
 export default function SessionsPage() {
   const { t } = useTranslation();
@@ -22,7 +17,6 @@ export default function SessionsPage() {
 
   const {
     sessions,
-    loginHistory,
     loading,
     revokingSessionId,
     loadSessions,
@@ -112,27 +106,6 @@ export default function SessionsPage() {
               onRevokeAll={revokeAllOtherSessions}
               formatRelativeTime={formatRelativeTime}
             />
-          )}
-        </section>
-
-        {/* Login History Section */}
-        <section
-          id="login-history"
-          className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
-          data-testid="login-history-section"
-        >
-          <h2
-            className="text-xl font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2"
-            data-testid="login-history-title"
-          >
-            <Clock className="w-5 h-5" />
-            {t("sessions_login_history")}
-          </h2>
-
-          {loading ? (
-            <LoginHistorySkeleton />
-          ) : (
-            <LoginHistoryList history={loginHistory} formatDate={formatDate} />
           )}
         </section>
       </main>

@@ -2,7 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "./supabase";
-import { createUserSession, logLoginAttempt } from "./sessionTracking";
+import { createUserSession } from "./sessionTracking";
 import { MFAChallenge } from "@/components/MFAChallenge";
 import { trackUserSignedIn, trackUserSignedOut } from "./posthog-events";
 
@@ -89,24 +89,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         })();
       }
 
-      // Track session and log login history on successful sign-in
+      // Track session on successful sign-in
       // Only do this for SIGNED_IN, not for INITIAL_SESSION (which happens on refresh)
-      // Run these asynchronously without blocking the auth flow
+      // createUserSession now checks for existing sessions and updates last_activity instead of creating duplicates
+      // Run asynchronously without blocking the auth flow
       if (event === "SIGNED_IN" && s?.user) {
         // Don't await - run in background to avoid blocking auth flow
         createUserSession({
           userId: s.user.id,
         }).catch((error) => {
           console.error("[Auth] Error creating session:", error);
-        });
-
-        // Log successful login (also non-blocking)
-        logLoginAttempt({
-          email: s.user.email || "",
-          status: "success",
-          userId: s.user.id,
-        }).catch((error) => {
-          console.error("[Auth] Error logging login attempt:", error);
         });
 
         // Track sign-in in PostHog (non-blocking)

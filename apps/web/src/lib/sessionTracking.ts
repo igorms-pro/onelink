@@ -16,13 +16,17 @@ export interface CreateSessionParams {
 }
 
 /**
- * Create a new user session in the database
+ * Create or update a user session in the database
+ * If an active session exists for this user/device combination, update last_activity
+ * Otherwise, create a new session
  */
 export async function createUserSession(
   params: CreateSessionParams,
 ): Promise<string | null> {
   try {
     const deviceInfo = getDeviceInfo();
+    const deviceOS = params.deviceOS || deviceInfo.os;
+    const deviceBrowser = params.deviceBrowser || deviceInfo.browser;
     // Don't wait for IP - it can block. Use provided IP or skip
     const ip = params.ipAddress || null;
     let city = params.city;
@@ -43,12 +47,40 @@ export async function createUserSession(
         });
     }
 
+    // Check if an active session already exists for this user/device combination
+    const { data: existingSession, error: checkError } = await supabase
+      .from("user_sessions")
+      .select("id")
+      .eq("user_id", params.userId)
+      .eq("device_os", deviceOS)
+      .eq("device_browser", deviceBrowser)
+      .is("revoked_at", null)
+      .order("last_activity", { ascending: false })
+      .limit(1)
+      .single();
+
+    // If active session exists, update last_activity instead of creating new one
+    if (existingSession && !checkError) {
+      const { error: updateError } = await supabase
+        .from("user_sessions")
+        .update({ last_activity: new Date().toISOString() })
+        .eq("id", existingSession.id);
+
+      if (updateError) {
+        console.error("Error updating session activity:", updateError);
+        return null;
+      }
+
+      return existingSession.id;
+    }
+
+    // No active session found, create a new one
     const { data, error } = await supabase
       .from("user_sessions")
       .insert({
         user_id: params.userId,
-        device_os: params.deviceOS || deviceInfo.os,
-        device_browser: params.deviceBrowser || deviceInfo.browser,
+        device_os: deviceOS,
+        device_browser: deviceBrowser,
         ip_address: ip || null,
         city: city || null,
         country: country || null,

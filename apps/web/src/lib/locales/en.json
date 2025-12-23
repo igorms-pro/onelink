@@ -777,7 +777,7 @@
   "upgrade_confirm_continue": "Continue to Checkout",
   "upgrade_confirm_loading": "Redirecting...",
   "sessions_page_title": "Active Sessions",
-  "sessions_page_description": "Manage your active sessions and view login history",
+  "sessions_page_description": "Manage your active sessions",
   "sessions_active_sessions": "Active Sessions",
   "sessions_current_session": "Current session",
   "sessions_revoke": "Revoke",
