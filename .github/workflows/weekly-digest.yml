@@ -1,0 +1,21 @@
+name: Weekly Digest Email
+
+on:
+  schedule:
+    # Run every Monday at 9:00 AM UTC
+    # Cron format: minute hour day month day-of-week
+    # 0 = Sunday, 1 = Monday, etc.
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual triggering from GitHub Actions UI
+
+jobs:
+  send-weekly-digest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Weekly Digest Edge Function
+        run: |
+          curl -X POST \
+            -H "Content-Type: application/json" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}" \
+            "${{ secrets.E2E_SUPABASE_URL }}/functions/v1/send-weekly-digest" \
+            -d '{}'
