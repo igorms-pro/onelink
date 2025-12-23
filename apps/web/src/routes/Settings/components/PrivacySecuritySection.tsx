@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthProvider";
 import { useSupabaseMFA } from "@/routes/Settings/pages/TwoFactor/useSupabaseMFA";
-import { ChangePasswordModal } from "./ChangePasswordModal";
 import { DeleteAccountModal } from "./DeleteAccountModal";
 
 export function PrivacySecuritySection() {
@@ -12,7 +11,6 @@ export function PrivacySecuritySection() {
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { state: mfaState, loading: loadingMfaStatus } = useSupabaseMFA();
-  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const hasMfaEnabled = mfaState === "active";
@@ -34,13 +32,6 @@ export function PrivacySecuritySection() {
           </h2>
         </div>
         <div className="space-y-3 pl-7">
-          <button
-            data-testid="settings-change-password"
-            onClick={() => setIsChangePasswordOpen(true)}
-            className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
-          >
-            {t("settings_change_password")}
-          </button>
           <button
             data-testid="settings-two-factor"
             onClick={handle2FA}
@@ -111,10 +102,6 @@ export function PrivacySecuritySection() {
           </div>
         </div>
       </section>
-      <ChangePasswordModal
-        open={isChangePasswordOpen}
-        onOpenChange={setIsChangePasswordOpen}
-      />
       <DeleteAccountModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}

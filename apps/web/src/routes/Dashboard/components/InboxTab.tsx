@@ -347,7 +347,7 @@ export function InboxTab({
                 className={`group relative rounded-xl p-3 sm:p-4 transition-all duration-200 border w-full min-w-0 ${
                   isUnread
                     ? "bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/20"
-                    : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750"
+                    : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
               >
                 <div className="flex items-start gap-2 sm:gap-3">
@@ -446,7 +446,11 @@ export function InboxTab({
                               .from("drops")
                               .getPublicUrl(f.path);
                             const href = pub.data.publicUrl;
-                            const name = f.path.split("/").pop();
+                            // Use original filename if available, otherwise extract from path
+                            const name =
+                              (f as { original_name?: string }).original_name ||
+                              f.path.split("/").pop() ||
+                              "file";
                             return (
                               <li
                                 key={`${s.submission_id}-${fileIdx}`}

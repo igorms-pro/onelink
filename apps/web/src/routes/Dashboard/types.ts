@@ -18,7 +18,12 @@ export type SubmissionRow = {
   name: string | null;
   email: string | null;
   note: string | null;
-  files: { path: string; size: number; content_type: string | null }[];
+  files: {
+    path: string;
+    size: number;
+    content_type: string | null;
+    original_name?: string; // Original filename from upload
+  }[];
   read_at: string | null;
 };
 

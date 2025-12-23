@@ -30,6 +30,7 @@ export function useDropCard({
   const { user } = useAuth();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
   const [files, setFiles] = useState<DropFile[]>([]);
@@ -92,8 +93,11 @@ export function useDropCard({
     [d.id, profileId, drops, setDrops, t],
   );
 
-  const handleDelete = useCallback(async () => {
-    if (!confirm(t("dashboard_content_drops_delete_confirm"))) return;
+  const handleDelete = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
     const { error } = await supabase
       .from("drops")
       .delete()
@@ -101,7 +105,7 @@ export function useDropCard({
       .eq("profile_id", profileId);
     if (error) {
       toast.error(t("common_delete_failed"));
-      return;
+      throw error;
     }
     setDrops(drops.filter((x) => x.id !== d.id));
     toast.success(t("dashboard_content_drops_delete_success"));
@@ -193,6 +197,8 @@ export function useDropCard({
     setIsShareModalOpen,
     isEditModalOpen,
     setIsEditModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
     showUpload,
     setShowUpload,
     showFiles,
@@ -203,6 +209,7 @@ export function useDropCard({
     handleSaveEdit,
     handleToggle,
     handleDelete,
+    handleDeleteConfirm,
     handleToggleVisibility,
     handleShare,
     handleUploadComplete,

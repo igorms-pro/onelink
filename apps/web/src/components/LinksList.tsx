@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, GripVertical } from "lucide-react";
 import { useAuth } from "../lib/AuthProvider";
 import { trackLinkUpdated, trackLinkDeleted } from "../lib/posthog-events";
 import { EditLinkModal } from "../routes/Dashboard/components/ContentTab/EditLinkModal";
@@ -32,6 +32,7 @@ export function LinksList({
   const [savingOrder, setSavingOrder] = useState(false);
   const [editingLink, setEditingLink] = useState<LinkRow | null>(null);
   const [deletingLink, setDeletingLink] = useState<LinkRow | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   return (
     <>
@@ -51,10 +52,19 @@ export function LinksList({
           {links.map((l, idx) => (
             <li
               key={l.id}
-              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 hover:shadow-md transition-all cursor-move group"
+              className={`flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 hover:shadow-md transition-all group ${
+                isDragging && dragIndex.current === idx
+                  ? "cursor-grabbing opacity-50"
+                  : "cursor-move"
+              }`}
               draggable
               onDragStart={() => {
                 dragIndex.current = idx;
+                setIsDragging(true);
+              }}
+              onDragEnd={() => {
+                dragIndex.current = null;
+                setIsDragging(false);
               }}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -65,6 +75,7 @@ export function LinksList({
                 const to = overIndex.current;
                 dragIndex.current = null;
                 overIndex.current = null;
+                setIsDragging(false);
                 if (from == null || to == null || from === to) return;
                 const prev = links;
                 const next = [...links];
@@ -92,19 +103,32 @@ export function LinksList({
                 }
               }}
             >
-              <div className="min-w-0 flex-1 cursor-move pr-4">
-                <p className="font-medium truncate text-gray-900 dark:text-white">
-                  {l.emoji ? `${l.emoji} ` : ""}
-                  {l.label}
-                </p>
-                <a
-                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2 cursor-pointer"
-                  href={l.url}
-                  target="_blank"
-                  rel="noreferrer"
+              <div className="flex items-center gap-2 min-w-0 flex-1 pr-4">
+                <div
+                  className="shrink-0 cursor-grab active:cursor-grabbing text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors group-hover:text-gray-600 dark:group-hover:text-gray-400"
+                  aria-label={t("dashboard_content_links_drag_handle", {
+                    defaultValue: "Drag to reorder",
+                  })}
+                  title={t("dashboard_content_links_drag_handle", {
+                    defaultValue: "Drag to reorder",
+                  })}
                 >
-                  {l.url}
-                </a>
+                  <GripVertical className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate text-gray-900 dark:text-white">
+                    {l.emoji ? `${l.emoji} ` : ""}
+                    {l.label}
+                  </p>
+                  <a
+                    className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2 cursor-pointer"
+                    href={l.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {l.url}
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
