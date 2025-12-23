@@ -1,0 +1,961 @@
+{
+  "app_title": "OneLink",
+  "app_tagline": "Share a single link. Route by intent.",
+  "sign_in": "Sign in",
+  "onboarding_welcome_title": "Welcome to OneLink",
+  "onboarding_welcome_description": "One link. Multiple lives.",
+  "onboarding_routes_title": "Create Routes",
+  "onboarding_routes_description": "Add multiple links and organize them by intent. Visitors choose where to go based on their needs.",
+  "onboarding_routes_example": "Example:",
+  "onboarding_routes_example_text": "Link to your calendar, portfolio, or contact form - all from one URL!",
+  "onboarding_files_title": "Receive Files",
+  "onboarding_files_description": "Create file drops where visitors can submit files directly to you without logging in.",
+  "onboarding_files_usecase": "Use case:",
+  "onboarding_files_usecase_text": "Collect resumes, design files, or documents without email attachments.",
+  "onboarding_getstarted_title": "Get Started",
+  "onboarding_getstarted_description": "Sign in to create your OneLink profile and start sharing your single link everywhere.",
+  "onboarding_next": "Next",
+  "onboarding_getstarted_button": "Get Started",
+  "onboarding_skip": "Skip",
+  "view_sample": "View sample profile",
+  "theme": "Theme",
+  "language": "Language",
+  "system": "System",
+  "light": "Light",
+  "dark": "Dark",
+  "aria_toggle_theme": "Toggle theme",
+  "auth_sign_in_title": "Sign in",
+  "auth_sign_in_description": "We'll email you a magic link.",
+  "auth_email_placeholder": "you@example.com",
+  "auth_send_link": "Send link",
+  "auth_sending": "Sending...",
+  "auth_magic_link_sent": "Magic link sent! Check your email.",
+  "auth_view_onboarding": "New here? Learn how OneLink works",
+  "dashboard_loading": "Loading…",
+  "dashboard_please_sign_in": "Please sign in",
+  "dashboard_go_to_sign_in": "Go to sign in",
+  "dashboard_tab_inbox": "Inbox",
+  "dashboard_tab_content": "Content",
+  "dashboard_tab_account": "Account",
+  "dashboard_inbox_title": "Inbox",
+  "dashboard_inbox_description": "View and manage file submissions",
+  "dashboard_inbox_empty": "No submissions yet.",
+  "dashboard_inbox_drop": "Drop",
+  "dashboard_inbox_name": "Name:",
+  "dashboard_inbox_email": "Email:",
+  "dashboard_inbox_note": "Note:",
+  "dashboard_inbox_files": "Files",
+  "dashboard_inbox_clear_all": "Clear all",
+  "dashboard_inbox_clear_all_confirm": "Are you sure you want to clear all inbox items? This action cannot be undone.",
+  "dashboard_inbox_clear_all_error": "Failed to clear submissions. Please try again.",
+  "dashboard_inbox_refresh": "Refresh",
+  "dashboard_inbox_refresh_error": "Failed to refresh inbox",
+  "dashboard_inbox_mark_read": "Mark read",
+  "dashboard_inbox_mark_read_error": "Failed to mark submission as read",
+  "dashboard_inbox_marking": "...",
+  "dashboard_inbox_mark_all_read": "Mark all as read",
+  "dashboard_inbox_mark_all_read_error": "Failed to mark all submissions as read",
+  "dashboard_inbox_marking_all_read": "Marking...",
+  "dashboard_account_profile_title": "Profile",
+  "dashboard_account_profile_description": "Manage your public profile settings",
+  "dashboard_account_analytics_title": "Analytics",
+  "dashboard_account_analytics_description": "Track your link clicks and submissions",
+  "dashboard_account_analytics_links": "Links",
+  "dashboard_account_analytics_drops": "Drops",
+  "dashboard_account_analytics_name": "Name",
+  "dashboard_account_analytics_clicks": "Clicks",
+  "dashboard_account_analytics_views": "Views",
+  "dashboard_account_analytics_submissions": "Submissions",
+  "dashboard_account_analytics_profile_not_ready": "Profile not ready.",
+  "dashboard_account_analytics_no_clicks": "No clicks yet",
+  "dashboard_account_analytics_no_submissions": "No drop submissions yet.",
+  "dashboard_account_analytics_days_7": "7 days",
+  "dashboard_account_analytics_days_30": "30 days",
+  "dashboard_account_analytics_days_90": "90 days",
+  "dashboard_account_analytics_by_you": "by you",
+  "dashboard_account_analytics_by_visitors": "by visitors",
+  "dashboard_account_profile_updated": "Updated at",
+  "dashboard_account_slug_taken": "This slug is already taken. Please choose another.",
+  "dashboard_account_profile_update_failed": "Failed to update profile",
+  "dashboard_account_profile_update_success": "Profile updated successfully",
+  "dashboard_account_profile_link_title": "Your Profile Link",
+  "dashboard_account_profile_link_description": "Share this link to let people access your profile",
+  "dashboard_account_profile_link_copy": "Copy",
+  "dashboard_account_profile_link_preview": "Preview",
+  "dashboard_account_profile_link_qr": "QR Code",
+  "dashboard_account_profile_link_copied": "Link copied to clipboard!",
+  "dashboard_account_profile_link_copy_failed": "Failed to copy link",
+  "dashboard_account_profile_qr_coming_soon": "QR code feature coming soon",
+  "dashboard_account_profile_qr_pro_feature": "QR code is a Pro feature. Upgrade to unlock!",
+  "dashboard_account_profile_qr_title": "QR Code",
+  "dashboard_account_profile_qr_description": "Scan this QR code to access your profile",
+  "dashboard_header_title": "Dashboard",
+  "dashboard_header_free": "Free",
+  "dashboard_header_pro": "Pro",
+  "dashboard_header_upgrade": "Upgrade to Pro",
+  "dashboard_header_manage_billing": "Manage billing",
+  "dashboard_header_sign_out": "Sign out",
+  "settings_title": "Settings",
+  "settings_description": "Manage your account settings and preferences",
+  "settings_back_to_dashboard": "Back to dashboard",
+  "settings_notifications": "Notifications",
+  "settings_email_notifications": "Email notifications for new submissions",
+  "settings_weekly_digest": "Weekly digest",
+  "settings_email_preferences": "Email Preferences",
+  "settings_marketing_emails": "Marketing emails",
+  "settings_product_updates": "Product updates",
+  "settings_billing": "Billing",
+  "settings_current_plan": "Current plan",
+  "settings_renewal_date": "Renewal date",
+  "settings_manage_payment": "Manage payment method",
+  "settings_billing_history": "Billing history",
+  "settings_upgrade_to_pro": "Upgrade to Pro",
+  "settings_custom_domain": "Custom Domain",
+  "settings_configure_domain": "Configure domain",
+  "settings_domain_help": "Use your own domain for your OneLink profile",
+  "settings_active_sessions": "Active Sessions",
+  "settings_view_sessions": "View active sessions",
+  "settings_login_history": "Login history",
+  "settings_data_export": "Data Export",
+  "settings_download_data": "Download my data",
+  "settings_export_description": "Download all your data in JSON format (GDPR)",
+  "settings_api_integrations": "API & Integrations",
+  "settings_coming_soon": "Coming soon",
+  "settings_preferences_saved": "Preferences saved successfully",
+  "settings_preferences_save_error": "Failed to save preferences. Please try again.",
+  "settings_preferences_load_error": "Failed to load preferences. Using defaults.",
+  "settings_privacy_security": "Privacy & Security",
+  "settings_change_password": "Change password",
+  "settings_change_password_title": "Change Password",
+  "settings_change_password_description": "Update your account password to keep your account secure.",
+  "settings_change_password_current_label": "Current Password",
+  "settings_change_password_current_placeholder": "Enter your current password",
+  "settings_change_password_current_required": "Current password is required",
+  "settings_change_password_current_invalid": "Current password is incorrect",
+  "settings_change_password_new_label": "New Password",
+  "settings_change_password_new_placeholder": "Enter your new password",
+  "settings_change_password_new_required": "New password is required",
+  "settings_change_password_confirm_label": "Confirm New Password",
+  "settings_change_password_confirm_placeholder": "Confirm your new password",
+  "settings_change_password_confirm_required": "Please confirm your new password",
+  "settings_change_password_min_length": "Password must be at least 8 characters",
+  "settings_change_password_min_length_hint": "Must be at least 8 characters",
+  "settings_change_password_different": "New password must be different from current password",
+  "settings_change_password_match": "Passwords do not match",
+  "settings_change_password_submit": "Change Password",
+  "settings_change_password_updating": "Updating...",
+  "settings_change_password_success": "Password changed successfully",
+  "settings_change_password_update_failed": "Failed to update password. Please try again.",
+  "settings_two_factor": "Two-factor authentication",
+  "settings_back_to_settings": "Back to settings",
+  "settings_2fa_title": "Two-Factor Authentication",
+  "settings_2fa_description": "Add an extra layer of security to your account",
+  "settings_2fa_not_enabled": "2FA is not enabled",
+  "settings_2fa_not_enabled_description": "Protect your account by enabling two-factor authentication. You'll need an authenticator app like Google Authenticator or Authy.",
+  "settings_2fa_enable": "Enable 2FA",
+  "settings_2fa_setting_up": "Setting up...",
+  "settings_2fa_setup_started": "2FA setup started",
+  "settings_2fa_setup_failed": "Failed to start 2FA setup",
+  "settings_2fa_setup_step1_title": "Step 1: Scan QR Code",
+  "settings_2fa_setup_step1_description": "Scan this QR code with your authenticator app to add your account.",
+  "settings_2fa_scan_qr_code": "Scan with your authenticator app (Google Authenticator, Authy, etc.)",
+  "settings_2fa_secret_key": "Secret Key",
+  "settings_2fa_secret_key_description": "Can't scan? Enter this code manually in your authenticator app.",
+  "settings_2fa_secret_copied": "Secret key copied to clipboard",
+  "settings_2fa_backup_codes_title": "Backup Codes",
+  "settings_2fa_backup_codes_description": "Save these codes in a safe place. You can use them to access your account if you lose your device.",
+  "settings_2fa_copy_all": "Copy all",
+  "settings_2fa_backup_code_copied": "Backup code copied",
+  "settings_2fa_backup_codes_copied": "All backup codes copied",
+  "settings_2fa_verification_code": "Verification Code",
+  "settings_2fa_verification_code_description": "Enter the 6-digit code from your authenticator app",
+  "settings_2fa_code_invalid": "Please enter a valid 6-digit code",
+  "settings_2fa_code_incorrect": "Incorrect verification code. Please try again.",
+  "settings_2fa_verification_failed": "Failed to verify code",
+  "settings_2fa_verifying": "Verifying...",
+  "settings_2fa_verify_and_activate": "Verify and Activate",
+  "settings_2fa_activated": "2FA has been activated successfully",
+  "settings_2fa_active": "2FA is Active",
+  "settings_2fa_active_description": "Your account is protected with two-factor authentication.",
+  "settings_2fa_show_backup_codes": "Show backup codes",
+  "settings_2fa_regenerate_backup_codes": "Regenerate backup codes",
+  "settings_2fa_backup_codes_regenerated": "Backup codes regenerated successfully",
+  "settings_2fa_backup_codes_regenerate_failed": "Failed to regenerate backup codes",
+  "settings_2fa_encryption_failed": "Failed to encrypt 2FA data. Please try again.",
+  "settings_2fa_disable_title": "Disable Two-Factor Authentication",
+  "settings_2fa_disable_warning": "Disabling 2FA will make your account less secure. Are you sure you want to continue?",
+  "settings_2fa_password_confirm": "Confirm Password",
+  "settings_2fa_password_placeholder": "Enter your password to confirm",
+  "settings_2fa_password_required": "Password is required to disable 2FA",
+  "settings_2fa_disable_button": "Disable 2FA",
+  "settings_2fa_disabling": "Disabling...",
+  "settings_2fa_disabled": "2FA has been disabled successfully",
+  "settings_2fa_disable_failed": "Failed to disable 2FA",
+  "settings_2fa_load_failed": "Failed to load 2FA status",
+  "settings_2fa_user_required": "User authentication required",
+  "settings_2fa_setup_required": "Please start 2FA setup first",
+  "settings_2fa_activation_failed": "Failed to activate 2FA",
+  "settings_2fa_password_incorrect": "Incorrect password",
+  "settings_2fa_not_active": "2FA is not active",
+  "settings_delete_account": "Delete account",
+  "common_cancel": "Cancel",
+  "password_strength_weak": "Weak password",
+  "password_strength_fair": "Fair password",
+  "password_strength_good": "Good password",
+  "password_strength_strong": "Strong password",
+  "password_rule_min_length": "At least 8 characters",
+  "password_rule_lowercase": "Contains lowercase letter",
+  "password_rule_uppercase": "Contains uppercase letter",
+  "password_rule_number": "Contains a number",
+  "password_rule_special": "Contains special character",
+  "profile_powered_by": "Powered by OneLink",
+  "profile_slogan": "One link. Multiple lives.",
+  "footer_brand_name": "OneLink",
+  "footer_all_rights": "© {{year}} OneLink. All rights reserved.",
+  "footer_privacy": "Privacy Policy",
+  "footer_terms": "Terms of Service",
+  "footer_powered": "Powered by OneLink",
+  "legal_back_to_auth": "Back to sign in",
+  "privacy": {
+    "title": "Privacy Policy",
+    "description": "Learn how OneLink collects, uses, and protects your data.",
+    "last_updated": "Last updated: January 15, 2025",
+    "sections": [
+      {
+        "id": "introduction",
+        "title": "Introduction",
+        "paragraphs": [
+          "OneLink helps you share a single link connected to multiple destinations, routes, and file drops.",
+          "By using OneLink, you trust us with your information. This policy explains what data we collect, why, and how we protect it."
+        ]
+      },
+      {
+        "id": "information",
+        "title": "Information We Collect",
+        "paragraphs": [
+          "We collect only the data needed to operate OneLink effectively:"
+        ],
+        "items": [
+          "Account information such as your email, display name, avatar, and language preferences",
+          "Content you add to your profile: links, drops, descriptions, and files submitted to you",
+          "Usage analytics, including aggregated link clicks and drop submissions",
+          "Technical data (browser, operating system, IP address) to secure your account and prevent abuse"
+        ]
+      },
+      {
+        "id": "usage",
+        "title": "How We Use Your Information",
+        "paragraphs": ["We use your data to:"],
+        "items": [
+          "Provide and maintain the OneLink service",
+          "Personalize your dashboard experience (language, theme, plan limits)",
+          "Send critical product updates, notifications, or export files you request",
+          "Improve reliability and detect suspicious activity"
+        ]
+      },
+      {
+        "id": "legal_basis",
+        "title": "Legal Basis for Processing",
+        "paragraphs": [
+          "Under GDPR (Article 6), we process your personal data based on:"
+        ],
+        "items": [
+          "**Contractual necessity**: To provide OneLink services (account creation, profile management, file storage)",
+          "**Consent**: For optional features like marketing emails (you can withdraw at any time)",
+          "**Legitimate interests**: For security, fraud prevention, service improvement, and analytics",
+          "**Legal obligation**: For tax, accounting, and compliance requirements"
+        ]
+      },
+      {
+        "id": "storage",
+        "title": "Data Storage & Security",
+        "paragraphs": [
+          "We rely on Supabase (Postgres + storage) to securely host your data in the EU.",
+          "File uploads are encrypted at rest. Access to internal tooling requires authentication and audit logging."
+        ]
+      },
+      {
+        "id": "retention",
+        "title": "Data Retention",
+        "paragraphs": ["We retain your data only as long as necessary:"],
+        "items": [
+          "**Active accounts**: Until you delete your account or request deletion",
+          "**Inactive accounts**: 2 years after last activity, then automatic deletion",
+          "**Files in drops**: Until the drop is deleted or your account is deleted",
+          "**Analytics data**: Aggregated and anonymized after 2 years",
+          "**Legal requirements**: As required by law (e.g., invoices for 10 years for tax purposes)"
+        ]
+      },
+      {
+        "id": "sharing",
+        "title": "When We Share Data",
+        "paragraphs": [
+          "We share data only with trusted subprocessors essential to the product:"
+        ],
+        "items": [
+          "Supabase for authentication, database, and storage",
+          "Stripe for secure payments and invoicing (for Pro plans)",
+          "Error monitoring or analytics tools to maintain uptime"
+        ]
+      },
+      {
+        "id": "international_transfers",
+        "title": "International Data Transfers",
+        "paragraphs": [
+          "Your data is primarily stored in the EU (Supabase). If we transfer data outside the EU:",
+          "We use Standard Contractual Clauses (SCCs) approved by the European Commission.",
+          "We ensure adequate protection levels and comply with GDPR transfer requirements (Articles 44-49).",
+          "All transfers are documented and subject to appropriate safeguards."
+        ]
+      },
+      {
+        "id": "rights",
+        "title": "Your GDPR Rights",
+        "paragraphs": [
+          "Under GDPR (Articles 15-22), you have the following rights:"
+        ],
+        "items": [
+          "**Right of Access (Article 15)**: Request a copy of all personal data we hold about you",
+          "**Right to Rectification (Article 16)**: Correct inaccurate or incomplete data",
+          "**Right to Erasure (Article 17)**: \"Right to be forgotten\" - request deletion of your data",
+          "**Right to Restriction (Article 18)**: Limit how we process your data in certain circumstances",
+          "**Right to Data Portability (Article 20)**: Receive your data in a structured, machine-readable format",
+          "**Right to Object (Article 21)**: Object to processing based on legitimate interests",
+          "**Right to Withdraw Consent**: Withdraw consent at any time (where consent is the legal basis)"
+        ]
+      },
+      {
+        "id": "rights_exercise",
+        "title": "How to Exercise Your Rights",
+        "paragraphs": [
+          "To exercise any of these rights:",
+          "• Use Settings → Data export for data access and portability",
+          "• Use Settings → Privacy & Security → Delete Account for erasure",
+          "• Email support@getonelink.app for any other requests",
+          "We will respond within 30 days as required by GDPR."
+        ]
+      },
+      {
+        "id": "cookies",
+        "title": "Cookies & Tracking",
+        "paragraphs": ["We use the following technologies:"],
+        "items": [
+          "**Essential cookies/storage**: Session management and authentication (required, no consent needed)",
+          "**Functional storage**: Theme and language preferences via localStorage (required for service functionality)",
+          "**Analytics**: Aggregated usage statistics (if applicable, requires consent)"
+        ]
+      },
+      {
+        "id": "cookies_details",
+        "title": "What We Do NOT Use",
+        "paragraphs": [
+          "We do NOT use:",
+          "• Third-party advertising cookies",
+          "• Social media tracking pixels",
+          "• Cross-site tracking",
+          "• Behavioral advertising"
+        ]
+      },
+      {
+        "id": "children",
+        "title": "Children's Privacy",
+        "paragraphs": [
+          "OneLink is not intended for users under 13 years of age. We do not knowingly collect personal information from children under 13.",
+          "If you are a parent or guardian and believe your child has provided us with personal information, please contact us at support@getonelink.app and we will delete such information."
+        ]
+      },
+      {
+        "id": "breach",
+        "title": "Data Breach Notification",
+        "paragraphs": [
+          "In case of a data breach affecting your personal data:",
+          "• We will notify the relevant supervisory authority within 72 hours (GDPR Article 33)",
+          "• We will notify affected users without undue delay if the breach poses a high risk (GDPR Article 34)",
+          "• We will provide details about the breach, affected data, and mitigation steps taken"
+        ]
+      },
+      {
+        "id": "automated",
+        "title": "Automated Decision-Making",
+        "paragraphs": [
+          "We do not use automated decision-making or profiling that produces legal effects or significantly affects you (GDPR Article 22)."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "Changes to This Policy",
+        "paragraphs": [
+          "We may update this policy as OneLink evolves. We will post the new version here and update the \"Last updated\" date.",
+          "Material changes will be communicated via email or in-app notification."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "Contact",
+        "paragraphs": [
+          "Questions about privacy? Reach out to support@getonelink.app and we will get back to you."
+        ]
+      }
+    ]
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "description": "Please read these terms carefully before using OneLink.",
+    "last_updated": "Last updated: January 15, 2025",
+    "sections": [
+      {
+        "id": "acceptance",
+        "title": "1. Acceptance of Terms",
+        "paragraphs": [
+          "By accessing or using OneLink, you agree to be bound by these Terms and our Privacy Policy.",
+          "If you do not agree, do not use the service."
+        ]
+      },
+      {
+        "id": "service",
+        "title": "2. Service Description",
+        "paragraphs": [
+          "OneLink lets you create a single profile URL with multiple routes, drops, and analytics.",
+          "You are responsible for the content you publish and must comply with applicable laws."
+        ]
+      },
+      {
+        "id": "accounts",
+        "title": "3. Accounts & Security",
+        "paragraphs": [
+          "You must provide accurate account information and keep it up to date.",
+          "You are responsible for safeguarding your account and notifying us of unauthorized use."
+        ]
+      },
+      {
+        "id": "acceptable_use",
+        "title": "4. Acceptable Use",
+        "paragraphs": ["You agree not to:"],
+        "items": [
+          "Upload malicious content, viruses, or attempt to breach OneLink's security",
+          "Use OneLink for spam, phishing, harassment, or illegal activities",
+          "Misrepresent your identity or impersonate others",
+          "Violate any applicable laws, regulations, or third-party rights",
+          "Interfere with or disrupt the service or servers",
+          "Use automated systems to access the service without authorization"
+        ]
+      },
+      {
+        "id": "content_ownership",
+        "title": "5. Content Ownership & Intellectual Property",
+        "paragraphs": [
+          "You retain ownership of all content you upload to OneLink (links, files, profile information).",
+          "By uploading content, you grant OneLink a limited, non-exclusive license to store, display, and process your content solely to provide the service.",
+          "You are responsible for ensuring you have the right to upload any content you submit.",
+          "OneLink's trademarks, logos, and service marks are our property and may not be used without permission."
+        ]
+      },
+      {
+        "id": "plans",
+        "title": "6. Plans & Billing",
+        "paragraphs": [
+          "Free accounts have plan limits (4 links max, 2 drops max). Pro subscriptions are billed monthly or annually via Stripe according to the pricing on our website.",
+          "We reserve the right to change prices with 30 days notice. Price changes will not affect your current billing period."
+        ]
+      },
+      {
+        "id": "refunds",
+        "title": "7. Refund Policy",
+        "paragraphs": [
+          "Pro plan subscriptions are billed in advance. Refunds are available within 14 days of initial purchase or renewal.",
+          "To request a refund, contact support@getonelink.app. Refunds will be processed to the original payment method within 5-10 business days.",
+          "No refunds are available for partial billing periods or after 14 days from purchase."
+        ]
+      },
+      {
+        "id": "termination",
+        "title": "6. Termination",
+        "paragraphs": [
+          "You can delete your account at any time in Settings.",
+          "We may suspend or terminate accounts that violate these Terms or applicable laws."
+        ]
+      },
+      {
+        "id": "disclaimer",
+        "title": "7. Disclaimer",
+        "paragraphs": [
+          "OneLink is provided “as is” without warranties of any kind. We do not guarantee uninterrupted availability."
+        ]
+      },
+      {
+        "id": "liability",
+        "title": "8. Limitation of Liability",
+        "paragraphs": [
+          "To the maximum extent permitted by law, OneLink is not liable for indirect, incidental, or consequential damages."
+        ]
+      },
+      {
+        "id": "governing_law",
+        "title": "9. Governing Law",
+        "paragraphs": [
+          "These Terms are governed by the laws of France. Disputes will be handled in French courts."
+        ]
+      },
+      {
+        "id": "changes",
+        "title": "10. Changes",
+        "paragraphs": [
+          "We may update these Terms. Continued use of OneLink after changes means you accept the revised Terms."
+        ]
+      },
+      {
+        "id": "contact",
+        "title": "11. Contact",
+        "paragraphs": ["Need help? Email support@getonelink.app."]
+      }
+    ]
+  },
+  "pricing": {
+    "title": "Plans & Pricing",
+    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "trusted_by": "Trusted by creators worldwide",
+    "monthly_label": "Monthly billing",
+    "currency_note": "Prices in USD. Taxes may apply.",
+    "per_month": "per month",
+    "includes": "What's included",
+    "most_popular": "Most popular",
+    "loading": "Redirecting...",
+    "current_plan": "Your current plan",
+    "downgrade_to_free": "Downgrade to Free",
+    "cta_title": "Still unsure?",
+    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
+    "cta_button": "Create your OneLink",
+    "yearly_label": "Annually (save 20%)",
+    "per_year": "per year",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "priceMonthly": "€0",
+        "priceYearly": "€0",
+        "description": "Perfect to launch your profile and share essential links.",
+        "cta": "Start for free",
+        "features": [
+          "4 links, 2 drops max",
+          "50MB per file",
+          "7-day file retention",
+          "Basic analytics (7-day history)",
+          "Customizable profile with themes"
+        ]
+      },
+      "starter": {
+        "name": "Starter",
+        "priceMonthly": "€6",
+        "priceYearly": "€58",
+        "description": "For creators and small businesses who need file collection.",
+        "cta": "Get started",
+        "features": [
+          "Unlimited links and drops",
+          "Custom domain",
+          "500MB per file",
+          "30-day file retention",
+          "Basic analytics (7-day history)"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "priceMonthly": "€12",
+        "priceYearly": "€115",
+        "description": "For professionals who need heavy file uploads and detailed insights.",
+        "cta": "Get started",
+        "features": [
+          "Everything in Starter",
+          "2GB per file",
+          "90-day file retention",
+          "Advanced analytics (30 & 90-day history)",
+          "Google Analytics integration",
+          "Priority support"
+        ]
+      }
+    },
+    "faq_title": "Frequently asked questions",
+    "contact_title": "Have questions?",
+    "contact_description": "Get in touch with us for any questions or support.",
+    "contact_email": "support@getonelink.app",
+    "faq": [
+      {
+        "question": "Can I switch plans later?",
+        "answer": "Yes. Upgrade or downgrade at any time from the billing page. Changes apply immediately and unused time is prorated."
+      },
+      {
+        "question": "Do you offer refunds?",
+        "answer": "If you experience issues, contact support within 14 days and we'll work with you on a fair solution."
+      },
+      {
+        "question": "Is OneLink GDPR compliant?",
+        "answer": "Yes. Data is hosted in the EU with Supabase. You can export or delete your data at any time from Settings."
+      }
+    ]
+  },
+  "checkout_success": {
+    "title": "You're in!",
+    "subtitle": "Thanks for upgrading to OneLink Pro.",
+    "message": "Your subscription is active. We refreshed your dashboard with Pro features and sent a confirmation email.",
+    "button": "Go to dashboard"
+  },
+  "checkout_cancel": {
+    "title": "Checkout cancelled",
+    "subtitle": "No worries—your account is unchanged.",
+    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
+    "back_to_pricing": "Back to pricing",
+    "contact_support": "Contact support"
+  },
+  "dashboard_content_links_title": "Routes",
+  "dashboard_content_links_description": "Create buttons that link to your content",
+  "dashboard_content_links_add_button": "Add Route",
+  "dashboard_content_links_limit_reached": "Free plan limit reached ({{limit}} actions total: {{links}} links + {{drops}} drops)",
+  "dashboard_content_links_limit_hint": "Remove one or upgrade to Pro for unlimited actions.",
+  "dashboard_content_links_limit_reached_upgrade": "Free plan limit reached. Please upgrade to Pro to add more routes.",
+  "dashboard_content_links_create_success": "Link created successfully",
+  "dashboard_content_links_create_failed": "Failed to create link",
+  "dashboard_content_links_invalid_url": "Please enter a valid http(s) URL.",
+  "dashboard_content_drops_title": "Drops",
+  "dashboard_content_drops_description": "Create file inboxes for people to submit files",
+  "common_edit": "Edit",
+  "common_delete": "Delete",
+  "common_active": "Active",
+  "common_off": "Off",
+  "common_order": "Order",
+  "common_new_label": "New label",
+  "common_update_failed": "Update failed",
+  "common_delete_failed": "Delete failed",
+  "common_toggle_failed": "Toggle failed",
+  "common_label_required": "Label is required",
+  "common_label_min_length": "Label must be at least {{min}} characters",
+  "common_show": "Show",
+  "common_hide": "Hide",
+  "common_add": "Add",
+  "dashboard_content_drops_empty": "No drops yet. Create your first drop above!",
+  "dashboard_content_drops_order_status": "Order {{order}} · {{status}}",
+  "dashboard_content_drops_update_success": "Drop updated",
+  "dashboard_content_drops_activated": "Drop activated",
+  "dashboard_content_drops_deactivated": "Drop deactivated",
+  "dashboard_content_drops_turn_on": "Turn on",
+  "dashboard_content_drops_turn_off": "Turn off",
+  "dashboard_content_drops_delete_confirm": "Delete drop?",
+  "dashboard_content_drops_delete_success": "Drop deleted",
+  "dashboard_content_drops_delete_description": "Are you sure you want to delete this drop? This action cannot be undone.",
+  "dashboard_content_drops_delete_warning": "This action cannot be undone.",
+  "dashboard_content_drops_delete_active_warning_title": "This drop is currently active",
+  "dashboard_content_drops_delete_active_warning": "Deleting this drop will break any shared links. Anyone who tries to access this drop will see an error.",
+  "dashboard_content_drops_delete_confirm_checkbox": "I understand that deleting this active drop will break shared links",
+  "dashboard_content_drops_create_success": "Drop created successfully",
+  "dashboard_content_drops_create_failed": "Failed to create drop",
+  "dashboard_content_drops_limit_reached": "Free plan limit reached ({{limit}} actions). Remove one or upgrade.",
+  "dashboard_content_drops_limit_reached_upgrade": "Free plan limit reached. Please upgrade to Pro to add more drops.",
+  "dashboard_content_drops_label_placeholder": "Label (e.g. Upload assets)",
+  "dashboard_content_drops_emoji_placeholder": "Emoji (optional)",
+  "dashboard_content_drops_add_button": "Add Drop",
+  "dashboard_content_drops_edit_description": "Update your drop label",
+  "common_label_min_length_hint": "Label must be at least {{min}} characters",
+  "dashboard_content_drops_upload_label": "Upload File",
+  "dashboard_content_drops_upload_placeholder": "Select a file to upload",
+  "dashboard_content_drops_upload_failed": "Failed to upload file",
+  "dashboard_content_drops_files_list": "Files",
+  "dashboard_content_drops_no_files": "No files uploaded yet",
+  "dashboard_content_drops_files_load_failed": "Failed to load files",
+  "dashboard_content_drops_uploaded_by": "Uploaded by",
+  "common_upload": "Upload",
+  "common_uploading": "Uploading...",
+  "common_remove": "Remove",
+  "common_loading": "Loading...",
+  "common_save": "Save",
+  "common_saving": "Saving...",
+  "common_deleting": "Deleting...",
+  "dashboard_content_drops_public": "Public",
+  "dashboard_content_drops_private": "Private",
+  "dashboard_content_drops_make_public": "Make Public",
+  "dashboard_content_drops_make_private": "Make Private",
+  "dashboard_content_drops_copy_link": "Copy Link",
+  "dashboard_content_drops_preview": "Preview",
+  "dashboard_content_drops_share": "Share",
+  "dashboard_content_drops_upload_files": "Upload Files",
+  "dashboard_content_drops_link_copied": "Link copied to clipboard",
+  "dashboard_content_drops_link_copy_failed": "Failed to copy link",
+  "dashboard_content_drops_no_share_token": "No share token available",
+  "dashboard_content_drops_share_title": "Share {{label}}",
+  "dashboard_content_drops_share_link_label": "Shareable Link",
+  "dashboard_content_drops_share_description": "Share this link or QR code to allow others to upload files to this drop",
+  "dashboard_content_links_update_success": "Link updated",
+  "dashboard_content_links_delete_confirm": "Delete link?",
+  "dashboard_content_links_delete_success": "Link deleted",
+  "dashboard_content_links_edit_description": "Update the link label",
+  "dashboard_content_links_delete_description": "Are you sure you want to delete this link? This action cannot be undone.",
+  "dashboard_content_links_delete_warning": "This action cannot be undone.",
+  "dashboard_content_links_drag_handle": "Drag to reorder",
+  "profile_form_display_name_placeholder": "Display name",
+  "profile_form_display_name_required": "Display name is required",
+  "profile_form_avatar_url_placeholder": "Avatar URL",
+  "profile_form_bio_placeholder": "Bio",
+  "profile_form_show_additional": "Show additional info",
+  "profile_form_hide_additional": "Hide additional info",
+  "profile_form_slug_placeholder": "slug",
+  "profile_drop_submission_success": "Submitted successfully.",
+  "profile_drop_submission_failed": "Submission failed",
+  "profile_drop_submission_name_placeholder": "Your name (optional)",
+  "profile_drop_submission_email_placeholder": "Your email (optional)",
+  "profile_drop_submission_note_placeholder": "Note (optional)",
+  "profile_drop_submission_files_label": "Files",
+  "profile_drop_submission_click_to_upload": "Click to upload",
+  "profile_drop_submission_or_drag_drop": "or drag and drop",
+  "profile_drop_submission_max_size": "Max {{size}}MB per file",
+  "profile_drop_submission_send": "Send",
+  "profile_drop_submission_file_too_large": "File \"{name}\" exceeds {limit}MB limit.",
+  "profile_drop_submission_file_type_blocked": "File type .{{ext}} is not allowed.",
+  "profile_section_routes": "Routes",
+  "profile_section_drops": "Drops",
+  "dashboard_content_links_empty": "No links yet. Create your first link above!",
+  "dashboard_content_links_saving_order": "Saving order…",
+  "common_expand": "Expand",
+  "common_collapse": "Collapse",
+  "aria_change_language": "Change language",
+  "aria_toggle_theme": "Toggle theme",
+  "settings_delete_account_title": "Delete Account",
+  "settings_delete_account_description": "This action cannot be undone. All your data will be permanently deleted.",
+  "settings_delete_account_warning_title": "Warning: This action is irreversible",
+  "settings_delete_account_warning_description": "Deleting your account will permanently remove all your data, including your profile, links, drops, and submissions. This action cannot be undone.",
+  "settings_delete_account_password_label": "Confirm your password",
+  "settings_delete_account_password_placeholder": "Enter your password",
+  "settings_delete_account_mfa_label": "Enter your 2FA code",
+  "settings_delete_account_mfa_placeholder": "000000",
+  "settings_delete_account_mfa_error_invalid": "Invalid 2FA code. Please try again.",
+  "settings_delete_account_mfa_error_required": "2FA code is required to delete your account.",
+  "settings_delete_account_mfa_requires_2fa": "Two-factor authentication (2FA) must be enabled to delete your account. This adds an extra layer of security to protect your account.",
+  "settings_delete_account_mfa_required_notice": "Enable 2FA to delete your account. This adds an extra layer of security.",
+  "settings_delete_account_enable_2fa_cta": "Enable 2FA",
+  "settings_delete_account_confirm_text": "I understand that this action is irreversible and all my data will be permanently deleted.",
+  "settings_delete_account_button": "Delete my account",
+  "settings_delete_account_success": "Account deletion initiated. You will be signed out shortly.",
+  "settings_delete_account_error": "Failed to delete account. Please check your password and try again.",
+  "settings_export_format": "Export Format",
+  "settings_export_data_to_include": "Data to Include",
+  "settings_export_data_profile": "Profile",
+  "settings_export_data_links": "Links",
+  "settings_export_data_drops": "Drops",
+  "settings_export_data_submissions": "Submissions",
+  "settings_export_data_analytics": "Analytics",
+  "settings_export_gdpr_notice": "This export contains all your personal data stored in OneLink. You can use this data to transfer it to another service or keep it for your records. The download link will be valid for 24 hours.",
+  "settings_export_generating": "Generating export...",
+  "settings_export_ready": "Export ready!",
+  "settings_export_download_valid_24h": "Download link valid for 24 hours",
+  "settings_export_download": "Download",
+  "settings_export_generate": "Generate Export",
+  "settings_export_no_data_selected": "Please select at least one data type to export",
+  "settings_export_generation_success": "Export generated successfully",
+  "settings_export_generation_failed": "Failed to generate export. Please try again.",
+  "settings_export_download_started": "Download started",
+  "common_close": "Close",
+  "billing_title": "Billing",
+  "billing_description": "Manage your subscription, payment methods, and billing history",
+  "billing_current_plan": "Current Plan",
+  "billing_month": "month",
+  "billing_renewal_placeholder": "Coming soon",
+  "billing_usage": "Usage",
+  "billing_items": "items",
+  "billing_links_usage": "Links Usage",
+  "billing_drops_usage": "Drops Usage",
+  "billing_links": "links",
+  "billing_drops": "drops",
+  "billing_plan_limits": "Free plan: {{links}} links + drops total",
+  "billing_plan_limits_separate": "Free plan: {{links}} links max, {{drops}} drops max",
+  "billing_pro_limits": "Unlimited links and drops",
+  "billing_payment_method": "Payment Method",
+  "billing_expires": "Expires",
+  "billing_no_payment_method": "No payment method on file",
+  "billing_add_card": "Add Card",
+  "billing_no_invoices": "No invoices yet",
+  "billing_status_paid": "Paid",
+  "billing_status_pending": "Pending",
+  "billing_status_failed": "Failed",
+  "billing_download_pdf": "Download PDF",
+  "billing_manage_subscription": "Manage Subscription",
+  "billing_cancel_subscription": "Cancel Subscription",
+  "billing_cancel_confirm": "Are you sure you want to cancel your subscription? You will lose access to Pro features at the end of your billing period.",
+  "billing_cancel_coming_soon": "Cancel subscription feature coming soon",
+  "billing_download_coming_soon": "Download invoice feature coming soon",
+  "billing_payment_error": "Failed to manage payment. Please try again.",
+  "billing_manage_on_stripe": "Manage on Stripe",
+  "billing_manage_on_stripe_description": "Manage your payment method, view invoices, and cancel your subscription on Stripe.",
+  "billing_upgrade_description": "Upgrade to a paid plan to unlock more features and higher limits.",
+  "billing_upgrade_error": "Failed to start upgrade. Please try again.",
+  "billing_auth_required": "Please sign in to upgrade to Pro",
+  "upgrade_confirm_title": "Upgrade to Pro?",
+  "upgrade_confirm_description": "You'll be redirected to Stripe to complete your payment. Your subscription will start immediately after payment.",
+  "upgrade_confirm_benefits_title": "Pro features include:",
+  "upgrade_confirm_benefit_unlimited": "Unlimited links and drops",
+  "upgrade_confirm_benefit_domain": "Custom domain support",
+  "upgrade_confirm_benefit_analytics": "Advanced analytics",
+  "upgrade_confirm_benefit_support": "Priority support",
+  "upgrade_confirm_cancel": "Cancel",
+  "upgrade_confirm_continue": "Continue to Checkout",
+  "upgrade_confirm_loading": "Redirecting...",
+  "sessions_page_title": "Active Sessions",
+  "sessions_page_description": "Manage your active sessions",
+  "sessions_active_sessions": "Active Sessions",
+  "sessions_current_session": "Current session",
+  "sessions_revoke": "Revoke",
+  "sessions_revoking": "Revoking...",
+  "sessions_revoke_all_other": "Revoke all other sessions",
+  "sessions_revoke_all_confirm": "Are you sure you want to revoke all other sessions? You will be logged out from all devices except this one.",
+  "sessions_revoked_success": "Session revoked successfully",
+  "sessions_revoke_error": "Failed to revoke session. Please try again.",
+  "sessions_revoked_all_success": "All other sessions revoked successfully",
+  "sessions_revoke_all_error": "Failed to revoke all sessions. Please try again.",
+  "sessions_cannot_revoke_current": "Cannot revoke current session",
+  "sessions_no_sessions": "No active sessions",
+  "sessions_login_history": "Login History",
+  "sessions_no_history": "No login history",
+  "sessions_status_success": "Success",
+  "sessions_status_failed": "Failed",
+  "sessions_just_now": "Just now",
+  "sessions_minutes_ago": "{{count}} minute ago",
+  "sessions_minutes_ago_plural": "{{count}} minutes ago",
+  "sessions_hours_ago": "{{count}} hour ago",
+  "sessions_hours_ago_plural": "{{count}} hours ago",
+  "sessions_days_ago": "{{count}} day ago",
+  "sessions_days_ago_plural": "{{count}} days ago",
+  "sessions_load_error": "Failed to load sessions. Please try again.",
+  "settings_domain_page_description": "Configure custom domains for your OneLink profile",
+  "settings_domain_add_title": "Add Custom Domain",
+  "settings_domain_label": "Domain",
+  "settings_domain_placeholder": "example.com or subdomain.example.com",
+  "settings_domain_hint": "Enter your domain without http:// or https://",
+  "settings_domain_required": "Domain is required",
+  "settings_domain_invalid_format": "Please enter a valid domain format (e.g., example.com)",
+  "settings_domain_list_title": "Configured Domains",
+  "settings_domain_empty": "No domains configured yet. Add your first domain above.",
+  "settings_domain_status_verified": "Verified",
+  "settings_domain_status_pending": "Pending",
+  "settings_domain_added": "Domain added successfully",
+  "settings_domain_add_failed": "Failed to add domain",
+  "settings_domain_already_exists": "This domain is already configured",
+  "settings_domain_delete_confirm": "Are you sure you want to delete {{domain}}?",
+  "settings_domain_delete_failed": "Failed to delete domain",
+  "settings_domain_deleted": "Domain deleted successfully",
+  "settings_domain_load_failed": "Failed to load domains",
+  "settings_domain_profile_not_found": "Profile not found",
+  "settings_domain_dns_title": "DNS Configuration Guide",
+  "settings_domain_help_toggle": "Toggle help",
+  "settings_domain_dns_subdomain_title": "For Subdomains (e.g., subdomain.example.com)",
+  "settings_domain_dns_subdomain_description": "Add a CNAME record pointing to Vercel:",
+  "settings_domain_dns_apex_title": "For Apex/Root Domains (e.g., example.com)",
+  "settings_domain_dns_apex_description": "Add an A record pointing to Vercel's IP:",
+  "settings_domain_dns_apex_note": "Note: Some DNS providers support ALIAS records or CNAME flattening for apex domains. Check your provider's documentation.",
+  "settings_domain_dns_note": "After adding DNS records, it may take a few minutes to hours for changes to propagate. Vercel will automatically issue an SSL certificate once DNS is configured correctly.",
+  "landing": {
+    "hero": {
+      "headline": "One Link to Share Everything",
+      "subheadline": "Share your links, files, and drops with one simple link. No more messy bios or multiple links.",
+      "ctaPrimary": "Get Started Free",
+      "ctaSecondary": "View Demo"
+    },
+    "features": {
+      "title": "Everything You Need",
+      "subtitle": "All the features you need to share everything in one place",
+      "oneLink": {
+        "title": "One Link for Everything",
+        "description": "Un seul lien pour partager tout"
+      },
+      "fileSharing": {
+        "title": "File Sharing (Drops)",
+        "description": "Partage de fichiers facile"
+      },
+      "notifications": {
+        "title": "Real-time Notifications",
+        "description": "Notifications en temps réel"
+      },
+      "customizable": {
+        "title": "Customizable Profile",
+        "description": "Profil personnalisable"
+      },
+      "privacy": {
+        "title": "Privacy & Security",
+        "description": "Contrôle total"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Stats en temps réel"
+      }
+    },
+    "howItWorks": {
+      "title": "How It Works",
+      "subtitle": "Get started in minutes",
+      "step1": {
+        "title": "Sign Up",
+        "description": "Create account (free)"
+      },
+      "step2": {
+        "title": "Create Your Link",
+        "description": "Add links, upload files"
+      },
+      "step3": {
+        "title": "Share",
+        "description": "One link to share everywhere"
+      },
+      "step4": {
+        "title": "Track",
+        "description": "See analytics in real-time"
+      }
+    },
+    "pricing": {
+      "title": "Simple, Transparent Pricing",
+      "subtitle": "Choose the plan that fits your needs",
+      "free": {
+        "name": "Free",
+        "price": "Free",
+        "description": "Perfect to get started",
+        "cta": "Get Started Free",
+        "features": [
+          "5 links",
+          "3 drops",
+          "Basic analytics"
+        ]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€12/month",
+        "description": "For professionals",
+        "cta": "Upgrade to Pro",
+        "features": [
+          "Unlimited links",
+          "Unlimited drops",
+          "Advanced analytics",
+          "Custom domain",
+          "Priority support"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Join thousands of creators",
+      "userCount": "Join {{count}}+ users"
+    },
+    "demo": {
+      "title": "See It In Action",
+      "description": "See how easy it is to manage your links and files"
+    },
+    "cta": {
+      "title": "Ready to get started?",
+      "ctaPrimary": "Create Your Free Account",
+      "ctaSecondary": "Or view pricing"
+    },
+    "footer": {
+      "product": "Product",
+      "features": "Features",
+      "pricing": "Pricing",
+      "company": "Company",
+      "about": "About",
+      "contact": "Contact",
+      "legal": "Legal",
+      "privacy": "Privacy Policy",
+      "terms": "Terms of Service",
+      "social": "Social",
+      "app": "App",
+      "signIn": "Sign In",
+      "signUp": "Sign Up"
+    }
+  }
+}
