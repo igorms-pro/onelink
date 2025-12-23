@@ -182,11 +182,11 @@ declare
 begin
   -- Get current session ID from auth.sessions (if available)
   -- For now, we'll mark the most recent session as current
-  select id into v_current_session_id
-  from public.user_sessions
-  where user_id = p_user_id
-    and revoked_at is null
-  order by last_activity desc
+  select us.id into v_current_session_id
+  from public.user_sessions us
+  where us.user_id = p_user_id
+    and us.revoked_at is null
+  order by us.last_activity desc
   limit 1;
 
   return query
@@ -236,11 +236,11 @@ declare
   v_current_session_id uuid;
 begin
   -- Get current session (most recent)
-  select id into v_current_session_id
-  from public.user_sessions
-  where user_id = p_user_id
-    and revoked_at is null
-  order by last_activity desc
+  select us.id into v_current_session_id
+  from public.user_sessions us
+  where us.user_id = p_user_id
+    and us.revoked_at is null
+  order by us.last_activity desc
   limit 1;
 
   -- Revoke all other sessions
