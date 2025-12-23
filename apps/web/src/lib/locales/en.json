@@ -625,6 +625,7 @@
   "common_toggle_failed": "Toggle failed",
   "common_label_required": "Label is required",
   "common_show": "Show",
+  "common_hide": "Hide",
   "common_add": "Add",
   "dashboard_content_drops_empty": "No drops yet. Create your first drop above!",
   "dashboard_content_drops_order_status": "Order {{order}} · {{status}}",

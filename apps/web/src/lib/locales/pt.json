@@ -188,9 +188,9 @@
   "footer_powered": "Desenvolvido por OneLink",
   "legal_back_to_auth": "Voltar ao login",
   "privacy": {
-    "title": "Privacy Policy",
-    "description": "Learn how OneLink collects, uses, and protects your data.",
-    "last_updated": "Last updated: January 15, 2025",
+    "title": "Política de Privacidade",
+    "description": "Saiba como o OneLink coleta, usa e protege seus dados.",
+    "last_updated": "Última atualização: 15 de janeiro de 2025",
     "sections": [
       {
         "id": "introduction",
@@ -370,9 +370,9 @@
     ]
   },
   "terms": {
-    "title": "Terms of Service",
-    "description": "Please read these terms carefully before using OneLink.",
-    "last_updated": "Last updated: January 15, 2025",
+    "title": "Termos de Serviço",
+    "description": "Por favor, leia estes termos cuidadosamente antes de usar o OneLink.",
+    "last_updated": "Última atualização: 15 de janeiro de 2025",
     "sections": [
       {
         "id": "acceptance",
@@ -482,22 +482,22 @@
     ]
   },
   "pricing": {
-    "title": "Plans & Pricing",
-    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "title": "Planos e Preços",
+    "description": "Escolha o plano que corresponde à sua fase. Comece grátis, atualize quando estiver pronto.",
     "monthly_label": "Mensal",
     "trusted_by": "Confiado por criadores em todo o mundo",
     "currency_note": "Preços em USD. Impostos podem ser aplicados.",
     "per_month": "por mês",
     "yearly_label": "Anual (economize 20%)",
     "per_year": "por ano",
-    "includes": "What's included",
-    "most_popular": "Most popular",
-    "loading": "Redirecting...",
+    "includes": "O que está incluído",
+    "most_popular": "Mais popular",
+    "loading": "Redirecionando...",
     "current_plan": "Seu plano atual",
     "downgrade_to_free": "Mudar para gratuito",
-    "cta_title": "Still unsure?",
-    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
-    "cta_button": "Create your OneLink",
+    "cta_title": "Ainda indeciso?",
+    "cta_description": "Nosso plano gratuito cobre o básico. Atualize para desbloquear domínios personalizados, rotas ilimitadas, análises avançadas e mais.",
+    "cta_button": "Crie seu OneLink",
     "plans": {
       "free": {
         "name": "Grátis",
@@ -543,7 +543,7 @@
         ]
       }
     },
-    "faq_title": "Frequently asked questions",
+    "faq_title": "Perguntas frequentes",
     "faq": [
       {
         "question": "Can I switch plans later?",
@@ -557,20 +557,23 @@
         "question": "Is OneLink GDPR compliant?",
         "answer": "Yes. Data is hosted in the EU with Supabase. You can export or delete your data at any time from Settings."
       }
-    ]
+    ],
+    "contact_title": "Tem perguntas?",
+    "contact_description": "Entre em contato conosco para quaisquer perguntas ou suporte.",
+    "contact_email": "support@getonelink.app"
   },
   "checkout_success": {
-    "title": "You're in!",
-    "subtitle": "Thanks for upgrading to OneLink Pro.",
-    "message": "Your subscription is active.",
-    "button": "Go to dashboard"
+    "title": "Você está dentro!",
+    "subtitle": "Obrigado por atualizar para OneLink Pro.",
+    "message": "Sua assinatura está ativa. Atualizamos seu painel com recursos Pro e enviamos um e-mail de confirmação.",
+    "button": "Ir para o painel"
   },
   "checkout_cancel": {
-    "title": "Checkout cancelled",
-    "subtitle": "No worries—your account is unchanged.",
-    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
-    "back_to_pricing": "Back to pricing",
-    "contact_support": "Contact support"
+    "title": "Checkout cancelado",
+    "subtitle": "Não se preocupe - sua conta está inalterada.",
+    "message": "Você pode tentar a atualização novamente mais tarde ou continuar explorando o plano gratuito por enquanto.",
+    "back_to_pricing": "Voltar aos preços",
+    "contact_support": "Contatar suporte"
   },
   "dashboard_content_links_title": "Links",
   "dashboard_content_links_description": "Crie botões que vinculam ao seu conteúdo",
@@ -792,5 +795,39 @@
   "settings_domain_dns_apex_title": "Para domínios Apex/Raiz (ex., exemplo.com)",
   "settings_domain_dns_apex_description": "Adicione um registro A apontando para o IP do Vercel:",
   "settings_domain_dns_apex_note": "Nota: Alguns provedores DNS suportam registros ALIAS ou CNAME flattening para domínios apex. Verifique a documentação do seu provedor.",
-  "settings_domain_dns_note": "Após adicionar os registros DNS, pode levar de alguns minutos a horas para que as alterações se propaguem. O Vercel emitirá automaticamente um certificado SSL assim que o DNS estiver configurado corretamente."
+  "settings_domain_dns_note": "Após adicionar os registros DNS, pode levar de alguns minutos a horas para que as alterações se propaguem. O Vercel emitirá automaticamente um certificado SSL assim que o DNS estiver configurado corretamente.",
+  "dashboard_inbox_refresh": "Atualizar",
+  "dashboard_inbox_refresh_error": "Erro ao atualizar a caixa de entrada",
+  "dashboard_inbox_mark_read": "Marcar como lido",
+  "dashboard_inbox_mark_read_error": "Erro ao marcar envio como lido",
+  "dashboard_inbox_marking": "...",
+  "dashboard_inbox_mark_all_read": "Marcar tudo como lido",
+  "dashboard_inbox_mark_all_read_error": "Erro ao marcar todos os envios como lidos",
+  "dashboard_inbox_marking_all_read": "Marcando...",
+  "dashboard_account_analytics_views": "Visualizações",
+  "dashboard_account_analytics_by_you": "por você",
+  "dashboard_account_analytics_by_visitors": "por visitantes",
+  "settings_preferences_load_error": "Erro ao carregar preferências. Usando padrões.",
+  "settings_2fa_encryption_failed": "Erro ao criptografar dados 2FA. Tente novamente.",
+  "settings_2fa_load_failed": "Erro ao carregar status 2FA",
+  "settings_2fa_user_required": "Autenticação de usuário necessária",
+  "settings_2fa_setup_required": "Por favor, inicie a configuração 2FA primeiro",
+  "settings_2fa_activation_failed": "Erro ao ativar 2FA",
+  "settings_2fa_password_incorrect": "Senha incorreta",
+  "settings_2fa_not_active": "A 2FA não está ativa",
+  "password_strength_weak": "Senha fraca",
+  "password_strength_fair": "Senha razoável",
+  "password_strength_good": "Boa senha",
+  "password_strength_strong": "Senha forte",
+  "password_rule_min_length": "Pelo menos 8 caracteres",
+  "password_rule_lowercase": "Contém letra minúscula",
+  "password_rule_uppercase": "Contém letra maiúscula",
+  "password_rule_number": "Contém um número",
+  "password_rule_special": "Contém caractere especial",
+  "dashboard_content_drops_preview": "Visualizar",
+  "billing_links_usage": "Uso de links",
+  "billing_drops_usage": "Uso de drops",
+  "billing_links": "links",
+  "billing_drops": "drops",
+  "billing_plan_limits_separate": "Plano gratuito: {{links}} links máx, {{drops}} drops máx"
 }
