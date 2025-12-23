@@ -73,8 +73,44 @@ vi.mock("../ContentTab/EditDropModal", () => ({
   },
 }));
 
-// Mock window.confirm
-globalThis.confirm = vi.fn(() => true);
+// Mock DeleteDropModal
+vi.mock("../ContentTab/DeleteDropModal", () => ({
+  DeleteDropModal: ({
+    open,
+    onOpenChange,
+    onConfirm,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onConfirm: () => Promise<void>;
+    drop: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="delete-drop-modal">
+        <button
+          data-testid="delete-drop-confirm"
+          onClick={async () => {
+            try {
+              await onConfirm();
+              onOpenChange(false);
+            } catch {
+              // Error is handled by onConfirm, don't close modal on error
+            }
+          }}
+        >
+          Delete
+        </button>
+        <button
+          data-testid="delete-drop-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
 
 describe("DropList", () => {
   const mockSetDrops = vi.fn();
@@ -431,8 +467,16 @@ describe("DropList", () => {
       deleteButtons[0];
     await user.click(deleteButton as HTMLElement);
 
+    // Wait for modal to open
     await waitFor(() => {
-      expect(globalThis.confirm).toHaveBeenCalled();
+      expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
+    });
+
+    // Click confirm in modal
+    const confirmButton = screen.getByTestId("delete-drop-confirm");
+    await user.click(confirmButton);
+
+    await waitFor(() => {
       expect(mockSetDrops).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Drop deleted");
     });
@@ -440,7 +484,6 @@ describe("DropList", () => {
 
   it("does not delete when confirmation is cancelled", async () => {
     const user = userEvent.setup();
-    vi.mocked(globalThis.confirm).mockReturnValue(false);
     const drops: DropRow[] = [
       {
         id: "drop-1",
@@ -465,6 +508,15 @@ describe("DropList", () => {
       deleteButtons.find((btn) => !btn.hasAttribute("hidden")) ||
       deleteButtons[0];
     await user.click(deleteButton as HTMLElement);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
+    });
+
+    // Click cancel in modal
+    const cancelButton = screen.getByTestId("delete-drop-cancel");
+    await user.click(cancelButton);
 
     await waitFor(() => {
       expect(mockSetDrops).not.toHaveBeenCalled();
@@ -605,12 +657,17 @@ describe("DropList", () => {
     expect(deleteButton).toBeDefined();
     await user.click(deleteButton as HTMLElement);
 
+    // Wait for modal to open
     await waitFor(
       () => {
-        expect(globalThis.confirm).toHaveBeenCalled();
+        expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
       },
       { timeout: 3000 },
     );
+
+    // Click confirm in modal
+    const confirmButton = screen.getByTestId("delete-drop-confirm");
+    await user.click(confirmButton);
 
     // Wait for the error toast after confirmation
     await waitFor(
