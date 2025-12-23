@@ -113,28 +113,19 @@ test.describe("Pricing Page Flow", () => {
   test("should have working 'Get Started' buttons", async ({ page }) => {
     await page.goto("/pricing");
 
-    // Find Get Started buttons
-    const getStartedButtons = page.getByRole("link", { name: /get started/i });
-    const count = await getStartedButtons.count();
-
-    expect(count).toBeGreaterThan(0);
-
-    // Click first Get Started button
-    const firstButton = getStartedButtons.first();
-    await expect(firstButton).toBeVisible();
-
-    const [response] = await Promise.all([
-      page
-        .waitForURL("https://app.getonelink.io/**", { timeout: 5000 })
-        .catch(() => null),
-      firstButton.click(),
-    ]);
+    // Find Get Started button using data-testid
+    const freePlanCTA = page.getByTestId("pricing-card-cta-free");
+    await expect(freePlanCTA).toBeVisible();
 
     // In CI, external redirects won't work
-    if (process.env.CI) {
-      // Just verify button exists and is clickable
-      expect(firstButton).toBeVisible();
-    } else {
+    if (!process.env.CI) {
+      const [response] = await Promise.all([
+        page
+          .waitForURL("https://app.getonelink.io/**", { timeout: 5000 })
+          .catch(() => null),
+        freePlanCTA.click(),
+      ]);
+
       expect(response).not.toBeNull();
     }
   });

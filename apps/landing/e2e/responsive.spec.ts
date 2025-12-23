@@ -47,10 +47,8 @@ test.describe("Responsive Layout Tests", () => {
       await page.setViewportSize(viewports.mobile);
       await page.goto("/");
 
-      // Check CTA buttons
-      const ctaButton = page
-        .getByRole("button", { name: /get started/i })
-        .first();
+      // Check CTA buttons using data-testid
+      const ctaButton = page.getByTestId("hero-cta-get-started");
       const box = await ctaButton.boundingBox();
 
       if (box) {
@@ -89,15 +87,13 @@ test.describe("Responsive Layout Tests", () => {
       await page.setViewportSize(viewports.mobile);
       await page.goto("/");
 
-      // Check primary CTA
-      const primaryCTA = page
-        .getByRole("button", { name: /get started/i })
-        .first();
+      // Check primary CTA using data-testid
+      const primaryCTA = page.getByTestId("hero-cta-get-started");
       await expect(primaryCTA).toBeVisible();
       await expect(primaryCTA).toBeEnabled();
 
-      // Check secondary CTA
-      const secondaryCTA = page.getByRole("button", { name: /view demo/i });
+      // Check secondary CTA using data-testid
+      const secondaryCTA = page.getByTestId("hero-cta-view-demo");
       await expect(secondaryCTA).toBeVisible();
       await expect(secondaryCTA).toBeEnabled();
     });
@@ -225,8 +221,8 @@ test.describe("Responsive Layout Tests", () => {
         const heroHeading = page.getByText("One Link to Share Everything");
         await expect(heroHeading).toBeVisible();
 
-        // Check CTA is clickable
-        const cta = page.getByRole("button", { name: /get started/i }).first();
+        // Check CTA is clickable using data-testid
+        const cta = page.getByTestId("hero-cta-get-started");
         await expect(cta).toBeVisible();
         await expect(cta).toBeEnabled();
       }

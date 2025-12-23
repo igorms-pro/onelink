@@ -22,6 +22,7 @@ export function CTASection() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
+              data-testid="cta-section-primary"
               size="lg"
               className="bg-white text-purple-600 hover:bg-gray-100 shadow-lg shadow-purple-500/50 dark:bg-gray-900 dark:text-purple-300 dark:hover:bg-gray-800"
               onClick={() => {
@@ -33,6 +34,7 @@ export function CTASection() {
               <ArrowRight className="size-4" />
             </Button>
             <Link
+              data-testid="cta-section-secondary"
               to="/pricing"
               className="text-white/90 hover:text-white underline underline-offset-4 transition-colors text-lg font-medium"
             >

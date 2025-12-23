@@ -131,8 +131,8 @@ test.describe("Accessibility Tests", () => {
   test("should have visible focus indicators", async ({ page }) => {
     await page.goto("/");
 
-    // Focus on a button
-    const button = page.getByRole("button", { name: /get started/i }).first();
+    // Focus on a button using data-testid
+    const button = page.getByTestId("hero-cta-get-started");
     await button.focus();
 
     // Check focus styles
@@ -153,8 +153,8 @@ test.describe("Accessibility Tests", () => {
   test("should meet WCAG AA color contrast standards", async ({ page }) => {
     await page.goto("/");
 
-    // Check text contrast on buttons
-    const button = page.getByRole("button", { name: /get started/i }).first();
+    // Check text contrast on buttons using data-testid
+    const button = page.getByTestId("hero-cta-get-started");
 
     const contrast = await button.evaluate((el) => {
       const styles = window.getComputedStyle(el);

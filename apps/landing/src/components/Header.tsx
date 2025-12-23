@@ -45,6 +45,7 @@ export function Header() {
               <ThemeToggleButton />
             </div>
             <Button
+              data-testid="header-sign-in"
               size="sm"
               className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white min-h-[44px]"
               onClick={() => {

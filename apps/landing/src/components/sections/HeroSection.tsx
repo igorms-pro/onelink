@@ -31,6 +31,7 @@ export default function HeroSection() {
           {/* CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
             <Button
+              data-testid="hero-cta-get-started"
               size="lg"
               className="bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/50"
               onClick={() => {
@@ -42,6 +43,7 @@ export default function HeroSection() {
               <ArrowRight className="size-4" />
             </Button>
             <Button
+              data-testid="hero-cta-view-demo"
               size="lg"
               variant="outline"
               onClick={scrollToDemo}

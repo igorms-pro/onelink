@@ -9,9 +9,7 @@ test.describe("CTA Conversion Flows", () => {
     async ({ page }) => {
       await page.goto("/");
 
-      const heroCTA = page
-        .getByRole("button", { name: /get started free/i })
-        .first();
+      const heroCTA = page.getByTestId("hero-cta-get-started");
       await expect(heroCTA).toBeVisible();
 
       // Click and verify redirect
@@ -69,11 +67,8 @@ test.describe("CTA Conversion Flows", () => {
 
       await page.waitForTimeout(1000);
 
-      // Find Free plan CTA (should be a link with "Get Started" text)
-      const freePlanCTA = page
-        .getByRole("link", { name: /get started/i })
-        .filter({ hasText: /free/i })
-        .first();
+      // Find Free plan CTA using data-testid
+      const freePlanCTA = page.getByTestId("pricing-card-cta-free");
 
       if ((await freePlanCTA.count()) > 0) {
         const [response] = await Promise.all([
@@ -123,10 +118,8 @@ test.describe("CTA Conversion Flows", () => {
 
       await page.waitForTimeout(1000);
 
-      // Find CTA section button
-      const ctaButton = page
-        .getByRole("button", { name: /create your free account|get started/i })
-        .last();
+      // Find CTA section button using data-testid
+      const ctaButton = page.getByTestId("cta-section-primary");
 
       if ((await ctaButton.count()) > 0) {
         const [response] = await Promise.all([
@@ -157,9 +150,7 @@ test.describe("CTA Conversion Flows", () => {
     });
 
     // Click hero CTA
-    const heroCTA = page
-      .getByRole("button", { name: /get started free/i })
-      .first();
+    const heroCTA = page.getByTestId("hero-cta-get-started");
     await heroCTA.click();
 
     // Wait a bit for analytics to fire
@@ -184,13 +175,11 @@ test.describe("CTA Conversion Flows", () => {
     await page.goto("/");
 
     // Check hero CTAs
-    const heroPrimaryCTA = page
-      .getByRole("button", { name: /get started free/i })
-      .first();
+    const heroPrimaryCTA = page.getByTestId("hero-cta-get-started");
     await expect(heroPrimaryCTA).toBeVisible();
     await expect(heroPrimaryCTA).toBeEnabled();
 
-    const heroSecondaryCTA = page.getByRole("button", { name: /view demo/i });
+    const heroSecondaryCTA = page.getByTestId("hero-cta-view-demo");
     await expect(heroSecondaryCTA).toBeVisible();
     await expect(heroSecondaryCTA).toBeEnabled();
 
@@ -218,14 +207,9 @@ test.describe("CTA Conversion Flows", () => {
 
     await page.waitForTimeout(1000);
 
-    // Check CTA section button
-    const ctaSectionButton = page
-      .getByRole("button", { name: /create your free account|get started/i })
-      .last();
-
-    if ((await ctaSectionButton.count()) > 0) {
-      await expect(ctaSectionButton).toBeVisible();
-      await expect(ctaSectionButton).toBeEnabled();
-    }
+    // Check CTA section button using data-testid
+    const ctaSectionButton = page.getByTestId("cta-section-primary");
+    await expect(ctaSectionButton).toBeVisible();
+    await expect(ctaSectionButton).toBeEnabled();
   });
 });

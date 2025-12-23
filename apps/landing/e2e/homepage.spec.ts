@@ -146,7 +146,7 @@ test.describe("Homepage Load & Navigation", () => {
   test("should have working CTA button in header", async ({ page }) => {
     await page.goto("/");
 
-    const signInButton = page.getByRole("button", { name: /sign in/i });
+    const signInButton = page.getByTestId("header-sign-in");
     await expect(signInButton).toBeVisible();
 
     // Click and verify redirect (will navigate away)

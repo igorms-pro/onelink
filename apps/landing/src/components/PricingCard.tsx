@@ -53,6 +53,7 @@ export function PricingCard({
           </p>
         </div>
         <a
+          data-testid={`pricing-card-cta-${name.toLowerCase()}`}
           href={ctaUrl}
           target={ctaUrl.startsWith("http") ? "_blank" : undefined}
           rel={ctaUrl.startsWith("http") ? "noopener noreferrer" : undefined}
