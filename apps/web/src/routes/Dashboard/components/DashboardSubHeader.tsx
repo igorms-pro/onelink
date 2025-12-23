@@ -6,11 +6,13 @@ import type { PlanTypeValue } from "@/lib/types/plan";
 interface DashboardSubHeaderProps {
   plan: PlanTypeValue | null;
   onSignOut: () => void;
+  loading?: boolean;
 }
 
 export function DashboardSubHeader({
   plan,
   onSignOut,
+  loading = false,
 }: DashboardSubHeaderProps) {
   const hasPaidPlan = isPaidPlan(plan);
   const planDisplayName = getPlanName(plan);
@@ -28,24 +30,32 @@ export function DashboardSubHeader({
           <div className="text-2xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
             {t("dashboard_header_title")}
           </div>
-          <span
-            className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide ${
-              hasPaidPlan
-                ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
-                : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
-            }`}
-          >
-            {planDisplayName}
-          </span>
+          {loading ? (
+            <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse" />
+          ) : (
+            <span
+              className={`rounded-full px-2 py-0.5 sm:px-3 sm:py-1 text-[10px] sm:text-xs font-medium uppercase tracking-wide ${
+                hasPaidPlan
+                  ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300"
+                  : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+              }`}
+            >
+              {planDisplayName}
+            </span>
+          )}
         </div>
         <div className="flex items-center justify-end gap-2 shrink-0">
-          {!hasPaidPlan && (
-            <button
-              className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
-              onClick={handleUpgrade}
-            >
-              {t("dashboard_header_upgrade")}
-            </button>
+          {loading ? (
+            <div className="h-9 w-24 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+          ) : (
+            !hasPaidPlan && (
+              <button
+                className="rounded-lg bg-gray-900 dark:bg-gray-800 text-white px-4 py-2.5 sm:px-3 sm:py-2 text-sm font-medium hover:opacity-90 transition-all whitespace-nowrap cursor-pointer"
+                onClick={handleUpgrade}
+              >
+                {t("dashboard_header_upgrade")}
+              </button>
+            )
           )}
           <button
             className="hidden sm:inline-flex rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors whitespace-nowrap cursor-pointer"

@@ -63,7 +63,11 @@ export default function Dashboard() {
       {/* Headers - sticky on mobile, participate in flexbox */}
       <div className="shrink-0">
         <Header onSettingsClick={() => navigate("/settings")} />
-        <DashboardSubHeader plan={plan} onSignOut={() => signOut()} />
+        <DashboardSubHeader
+          plan={plan}
+          onSignOut={() => signOut()}
+          loading={dashboardLoading}
+        />
       </div>
 
       {/* Main content area - takes remaining space and scrolls */}
