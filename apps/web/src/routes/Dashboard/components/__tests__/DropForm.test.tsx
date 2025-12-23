@@ -59,15 +59,45 @@ describe("DropForm", () => {
     expect(screen.getByText(/Free plan limit reached/)).toBeInTheDocument();
   });
 
-  it("shows error when submitting empty label", async () => {
+  it("disables button when label has less than 3 characters", async () => {
     const user = userEvent.setup();
     render(<DropForm {...defaultProps} />);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
-    await user.click(button);
 
-    // The handler checks for empty label and shows toast error
+    // Button should be disabled initially (empty label)
+    expect(button).toBeDisabled();
+
+    // Button should be disabled with 1 character
+    await user.type(input, "A");
+    expect(button).toBeDisabled();
+
+    // Button should be disabled with 2 characters
+    await user.type(input, "B");
+    expect(button).toBeDisabled();
+
+    // Button should be enabled with 3 characters
+    await user.type(input, "C");
+    expect(button).not.toBeDisabled();
+  });
+
+  it("shows error when submitting label with less than 3 characters via Enter key", async () => {
+    const user = userEvent.setup();
+    render(<DropForm {...defaultProps} />);
+    const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
+    const button = screen.getByRole("button", { name: "Add Drop" });
+
+    // Type 2 characters - button should be disabled
+    await user.type(input, "AB");
+    expect(button).toBeDisabled();
+
+    // Press Enter to submit form (works even when button is disabled)
+    await user.type(input, "{Enter}");
+
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Label is required");
+      expect(toast.error).toHaveBeenCalledWith(
+        expect.stringContaining("at least 3 characters"),
+      );
     });
   });
 

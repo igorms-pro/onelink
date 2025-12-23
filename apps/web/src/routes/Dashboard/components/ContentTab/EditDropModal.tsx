@@ -152,7 +152,7 @@ export function EditDropModal({
         type="button"
         disabled={isLoading || !label.trim() || label.trim().length < 3}
         onClick={handleSubmit}
-        className="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-purple-700 text-white text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+        className="px-4 py-2 rounded-lg bg-linear-to-r from-purple-600 to-purple-700 text-white text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
       >
         {isLoading
           ? t("common_saving", { defaultValue: "Saving..." })

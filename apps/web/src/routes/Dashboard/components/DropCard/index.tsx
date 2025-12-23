@@ -1,5 +1,6 @@
 import type { DropRow } from "../../types";
 import { ShareDropModal } from "../ShareDropModal";
+import { EditDropModal } from "../ContentTab/EditDropModal";
 import { OwnerFileUpload } from "../OwnerFileUpload";
 import { DropCardHeader } from "./DropCardHeader";
 import { DropCardActions } from "./DropCardActions";
@@ -24,6 +25,8 @@ export function DropCard({
     shareLink,
     isShareModalOpen,
     setIsShareModalOpen,
+    isEditModalOpen,
+    setIsEditModalOpen,
     showUpload,
     setShowUpload,
     showFiles,
@@ -31,6 +34,7 @@ export function DropCard({
     fileCount,
     isLoadingFiles,
     handleEdit,
+    handleSaveEdit,
     handleToggle,
     handleDelete,
     handleToggleVisibility,
@@ -89,6 +93,13 @@ export function DropCard({
           dropLabel={d.label}
         />
       )}
+
+      <EditDropModal
+        open={isEditModalOpen}
+        onOpenChange={setIsEditModalOpen}
+        drop={d}
+        onSave={handleSaveEdit}
+      />
     </li>
   );
 }

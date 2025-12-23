@@ -644,6 +644,8 @@
   "dashboard_content_drops_label_placeholder": "Label (e.g. Upload assets)",
   "dashboard_content_drops_emoji_placeholder": "Emoji (optional)",
   "dashboard_content_drops_add_button": "Add Drop",
+  "dashboard_content_drops_edit_description": "Update your drop label",
+  "common_label_min_length_hint": "Label must be at least {{min}} characters",
   "dashboard_content_drops_upload_label": "Upload File",
   "dashboard_content_drops_upload_placeholder": "Select a file to upload",
   "dashboard_content_drops_upload_failed": "Failed to upload file",

@@ -38,6 +38,7 @@ export default function Dashboard() {
     downloads,
     unreadCount,
     plan,
+    loading: dashboardLoading,
     refreshInbox,
     clearAllSubmissions,
   } = useDashboardData(userId);
@@ -106,7 +107,7 @@ export default function Dashboard() {
                 profileId={profileId}
                 setSubmissions={setSubmissions}
                 refreshInbox={refreshInbox}
-                loading={loading}
+                loading={dashboardLoading}
               />
             )}
             {activeTab === "content" && (

@@ -1,7 +1,7 @@
 # UI QA Issues - OneLink
 
 **Date:** 2024  
-**Status:** 🟡 In Progress (3/19 completed)  
+**Status:** 🟡 In Progress (5/19 completed)  
 **Priority:** Mixed (High/Medium/Low)
 
 This document contains all UI QA issues identified during testing. Each issue is organized by section and includes description, expected behavior, current implementation, and proposed solutions.
@@ -16,7 +16,7 @@ This document contains all UI QA issues identified during testing. Each issue is
 | 4 | Links edit modal | Medium | 2 | 2h | ✅ |
 | 5 | Links delete modal | Medium | 2 | 1-2h | ✅ |
 | 6 | Drag-drop indicator | Low | 5 | 1h | 🔴 |
-| 7 | Add drop validation | Medium | 2 | 30m | 🔴 |
+| 7 | Add drop validation | Medium | 2 | 30m | ✅ |
 | 8 | Drops edit modal | Medium | 2 | 2h | 🔴 |
 | 9 | Delete active drop | Medium | 5 | 2h | 🔴 |
 | 10 | i18n translation key | Medium | 1 | 15m | ✅ |
@@ -147,13 +147,25 @@ When editing a link, the current implementation shows an alert/prompt dialog. Th
 4. Add form validation
 5. Handle save/cancel actions
 
-**Files to Create:**
-- `apps/web/src/routes/Dashboard/components/ContentTab/EditLinkModal.tsx`
+**Files Created:**
+- ✅ `apps/web/src/routes/Dashboard/components/ContentTab/EditLinkModal.tsx`
+
+**Fix Applied:**
+1. ✅ Created `EditLinkModal` component using Dialog/Drawer pattern
+2. ✅ Replaced `prompt()` with modal trigger in `LinksList.tsx`
+3. ✅ Added form validation (minimum 3 characters for label)
+4. ✅ Added loading states and error handling
+5. ✅ Made modal responsive (Drawer on mobile, Dialog on desktop)
+6. ✅ Added translation keys: `common_save`, `common_saving`, `dashboard_content_links_edit_description`
+
+**Files Updated:**
+- ✅ `apps/web/src/components/LinksList.tsx` (replaced prompt with modal)
+- ✅ `apps/web/src/lib/locales/en.json` (added translation keys)
 
 ---
 
 ### Issue 5: Delete Link Uses Alert Instead of Modal
-**Status:** 🔴 Not Started  
+**Status:** ✅ Completed  
 **Priority:** Medium  
 **Category:** UI/UX
 
@@ -179,8 +191,21 @@ When deleting a link, the current implementation shows a browser alert asking fo
 4. Add destructive styling (red buttons/text)
 5. Handle confirm/cancel actions
 
-**Files to Create:**
-- `apps/web/src/routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx`
+**Files Created:**
+- ✅ `apps/web/src/routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx`
+
+**Fix Applied:**
+1. ✅ Created `DeleteLinkModal` component using Dialog/Drawer pattern
+2. ✅ Replaced `window.confirm()` with modal trigger in `LinksList.tsx`
+3. ✅ Added warning styling (red title and destructive button)
+4. ✅ Displays link details (label, emoji, URL) in confirmation modal
+5. ✅ Added loading states and error handling
+6. ✅ Made modal responsive (Drawer on mobile, Dialog on desktop)
+7. ✅ Added translation keys: `common_deleting`, `dashboard_content_links_delete_description`, `dashboard_content_links_delete_warning`
+
+**Files Updated:**
+- ✅ `apps/web/src/components/LinksList.tsx` (replaced confirm with modal)
+- ✅ `apps/web/src/lib/locales/en.json` (added translation keys)
 
 ---
 
@@ -225,8 +250,8 @@ Users are not aware that they can drag and drop links to reorder them. There's n
 
 ## Content Tab - Drops
 
-### Issue 7: Add Drop Button Should Be Disabled When Label < 3 Characters
-**Status:** 🔴 Not Started  
+### Issue 7: Add Drop Button Should Be Disabled When Label < 3 Characters ✅ COMPLETED
+**Status:** ✅ Completed  
 **Priority:** Medium  
 **Category:** Form Validation / UX
 
@@ -239,15 +264,34 @@ The "Add drop" button should be disabled when the label input has fewer than 3 c
 - Visual feedback (disabled styling) should be clear
 - Tooltip or helper text explaining the requirement would be helpful
 
-**Files to Check:**
-- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
-- Drop-related components in ContentTab
+**Fix Applied:**
+1. ✅ Added controlled input state to track label value in real-time
+2. ✅ Added validation logic: `isLabelValid = label.trim().length >= 3`
+3. ✅ Updated button disabled condition: `disabled={busy || limitReached || !isLabelValid}`
+4. ✅ Added form validation to check minimum length and show error toast
+5. ✅ Added translation key `common_label_min_length` to all 10 locale files
+6. ✅ Updated tests to verify button disabled state and validation
 
-**Proposed Solution:**
-1. Add validation to check label length before enabling the button
-2. Disable button when `label.length < 3`
-3. Add visual disabled state styling
-4. Optionally add helper text: "Label must be at least 3 characters"
+**Files Updated:**
+- ✅ `apps/web/src/routes/Dashboard/components/DropForm.tsx` (added validation logic)
+- ✅ `apps/web/src/lib/locales/en.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/de.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/es.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/fr.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/it.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/ja.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/pt.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/pt-BR.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/ru.json` (added translation key)
+- ✅ `apps/web/src/lib/locales/zh.json` (added translation key)
+- ✅ `apps/web/src/routes/Dashboard/components/__tests__/DropForm.test.tsx` (added tests)
+
+**Current Behavior (After Fix):**
+- ✅ Button is disabled when label has < 3 characters
+- ✅ Button becomes enabled when 3+ characters are entered
+- ✅ Visual disabled state styling is clear (opacity-50, cursor-not-allowed)
+- ✅ Form validation shows error toast if submission attempted with < 3 characters
+- ✅ Works correctly in all supported languages
 
 ---
 
@@ -919,10 +963,11 @@ Since both Privacy and Terms pages use the `LegalPageLayout` component, fixing i
    - **Impact:** High - Consistency across Content tab
    - **Time:** 2 hours (modal + integration)
 
-4. **Issue 7:** Add drop button validation (< 3 chars)
+4. **Issue 7:** Add drop button validation (< 3 chars) ✅ COMPLETED
    - **Why next:** Quick win, prevents invalid data
    - **Impact:** Medium - Better form UX
    - **Time:** 30 min (validation logic)
+   - **Fix:** Added controlled input state, validation logic, button disabled state, and translation keys
 
 5. **Issue 19:** Privacy/Terms scroll position reset
    - **Why last:** Quick fix, polish
