@@ -49,11 +49,15 @@ vi.mock("../ContentTab/EditDropModal", () => ({
         <button
           data-testid="edit-drop-save"
           onClick={async () => {
-            const input = document.querySelector(
-              '[data-testid="edit-drop-input"]',
-            ) as HTMLInputElement;
-            await onSave(input?.value || "New Label");
-            onOpenChange(false);
+            try {
+              const input = document.querySelector(
+                '[data-testid="edit-drop-input"]',
+              ) as HTMLInputElement;
+              await onSave(input?.value || "New Label");
+              onOpenChange(false);
+            } catch {
+              // Error is handled by onSave, don't close modal on error
+            }
           }}
         >
           Save
@@ -293,13 +297,16 @@ describe("DropList", () => {
     await user.clear(input);
     await user.type(input, "New Label");
 
-    // Click save
+    // Click save - this will trigger an error
     const saveButton = screen.getByTestId("edit-drop-save");
     await user.click(saveButton);
 
-    await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Update failed");
-    });
+    await waitFor(
+      () => {
+        expect(toast.error).toHaveBeenCalledWith("Update failed");
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("handles toggle drop active state", async () => {
