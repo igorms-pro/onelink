@@ -249,12 +249,12 @@ export function InboxTab({
       <section data-testid="inbox-scroll-container" className="mt-2 sm:mt-0">
         <div
           data-testid="inbox-empty-state"
-          className="rounded-xl bg-gray-50 dark:bg-gray-800 p-8 text-center border border-gray-200 dark:border-gray-700"
+          className="rounded-xl bg-gray-50 dark:bg-gray-800 p-6 sm:p-8 text-center border border-gray-200 dark:border-gray-700"
         >
-          <Upload className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" />
+          <Upload className="w-10 h-10 sm:w-12 sm:h-12 text-gray-400 dark:text-gray-500 mx-auto mb-3 sm:mb-4" />
           <p
             data-testid="inbox-empty-message"
-            className="text-gray-600 dark:text-gray-400"
+            className="text-sm sm:text-base text-gray-600 dark:text-gray-400 px-2"
           >
             {t("dashboard_inbox_empty") || "No submissions yet"}
           </p>
@@ -267,7 +267,7 @@ export function InboxTab({
     <section
       ref={scrollContainerRef}
       data-testid="inbox-scroll-container"
-      className="mt-2 sm:mt-0 relative"
+      className="mt-2 sm:mt-0 relative w-full overflow-x-hidden"
       style={{
         transform: isPulling
           ? `translateY(${Math.min(pullDistance, 80)}px)`
@@ -294,7 +294,7 @@ export function InboxTab({
       )}
 
       {/* Action buttons */}
-      <div className="mb-4 flex justify-between items-center gap-2">
+      <div className="mb-4 sm:mb-4 flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-2 sm:gap-2 w-full min-w-0">
         {/* Refresh button (desktop) */}
         <button
           data-testid="inbox-refresh-button"
@@ -314,17 +314,27 @@ export function InboxTab({
           <button
             onClick={handleMarkAllAsRead}
             disabled={markingAllRead}
-            className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex items-center justify-center gap-2 px-4 py-3 sm:py-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0"
+            aria-label={
+              markingAllRead
+                ? t("dashboard_inbox_marking_all_read") || "Marking..."
+                : t("dashboard_inbox_mark_all_read") || "Mark all as read"
+            }
           >
-            <CheckCheck className="w-4 h-4" />
-            {markingAllRead
-              ? t("dashboard_inbox_marking_all_read") || "Marking..."
-              : t("dashboard_inbox_mark_all_read") || "Mark all as read"}
+            <CheckCheck className="w-4 h-4 sm:w-4 sm:h-4 shrink-0" />
+            <span className="whitespace-nowrap">
+              {markingAllRead
+                ? t("dashboard_inbox_marking_all_read") || "Marking..."
+                : t("dashboard_inbox_mark_all_read") || "Mark all as read"}
+            </span>
           </button>
         )}
       </div>
 
-      <ul data-testid="inbox-items-list" className="grid gap-3">
+      <ul
+        data-testid="inbox-items-list"
+        className="grid gap-3 sm:gap-3 w-full min-w-0"
+      >
         {/* Submissions and Downloads */}
         {allItems.map((item) => {
           if (item.type === "submission") {
@@ -334,16 +344,16 @@ export function InboxTab({
               <li
                 key={s.submission_id}
                 data-testid="inbox-submission-item"
-                className={`group relative rounded-xl p-4 transition-all duration-200 border ${
+                className={`group relative rounded-xl p-3 sm:p-4 transition-all duration-200 border w-full min-w-0 ${
                   isUnread
                     ? "bg-blue-50 dark:bg-blue-900/10 border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-blue-900/20"
                     : "bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-750"
                 }`}
               >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 flex flex-col items-center gap-2">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className="shrink-0 flex flex-col items-center gap-1.5 sm:gap-2">
                     <div
-                      className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                      className={`w-8 h-8 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center shrink-0 ${
                         isUnread
                           ? "bg-blue-600 dark:bg-blue-500"
                           : "bg-gray-900 dark:bg-gray-700"
@@ -356,10 +366,10 @@ export function InboxTab({
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-2 sm:gap-2">
                       <div className="flex-1 min-w-0">
                         <p
-                          className={`font-medium text-sm ${
+                          className={`font-medium text-sm sm:text-sm wrap-break-words ${
                             isUnread
                               ? "text-blue-900 dark:text-blue-100"
                               : "text-gray-900 dark:text-white"
@@ -367,7 +377,7 @@ export function InboxTab({
                         >
                           {s.drop_label ?? t("dashboard_inbox_drop")}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-0.5 wrap-break-words">
                           {new Date(s.created_at).toLocaleString()}
                         </p>
                       </div>
@@ -375,21 +385,28 @@ export function InboxTab({
                         <button
                           onClick={() => handleMarkAsRead(s.submission_id)}
                           disabled={markingRead === s.submission_id}
-                          className="shrink-0 flex items-center gap-1 px-2 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="shrink-0 flex items-center gap-1 px-3 py-2 sm:px-2 sm:py-1 text-xs font-medium text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px] sm:min-h-0 touch-manipulation"
                           title={
                             t("dashboard_inbox_mark_read") || "Mark as read"
                           }
+                          aria-label={
+                            markingRead === s.submission_id
+                              ? t("dashboard_inbox_marking") || "..."
+                              : t("dashboard_inbox_mark_read") || "Mark as read"
+                          }
                         >
-                          <Check className="w-3 h-3" />
-                          {markingRead === s.submission_id
-                            ? t("dashboard_inbox_marking") || "..."
-                            : t("dashboard_inbox_mark_read") || "Mark read"}
+                          <Check className="w-3.5 h-3.5 sm:w-3 sm:h-3 shrink-0" />
+                          <span className="hidden sm:inline">
+                            {markingRead === s.submission_id
+                              ? t("dashboard_inbox_marking") || "..."
+                              : t("dashboard_inbox_mark_read") || "Mark read"}
+                          </span>
                         </button>
                       )}
                     </div>
-                    <div className="mt-2 grid gap-1 text-sm">
+                    <div className="mt-2 sm:mt-2 grid gap-1.5 sm:gap-1 text-sm sm:text-sm">
                       {s.name && (
-                        <p className="text-gray-700 dark:text-gray-300">
+                        <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                           <span className="text-gray-600 dark:text-gray-400">
                             {t("dashboard_inbox_name")}{" "}
                           </span>
@@ -397,15 +414,20 @@ export function InboxTab({
                         </p>
                       )}
                       {s.email && (
-                        <p className="text-gray-700 dark:text-gray-300">
+                        <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                           <span className="text-gray-600 dark:text-gray-400">
                             {t("dashboard_inbox_email")}{" "}
                           </span>
-                          {s.email}
+                          <a
+                            href={`mailto:${s.email}`}
+                            className="text-blue-600 dark:text-blue-400 hover:underline break-all"
+                          >
+                            {s.email}
+                          </a>
                         </p>
                       )}
                       {s.note && (
-                        <p className="text-gray-700 dark:text-gray-300">
+                        <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                           <span className="text-gray-600 dark:text-gray-400">
                             {t("dashboard_inbox_note")}{" "}
                           </span>
@@ -414,11 +436,11 @@ export function InboxTab({
                       )}
                     </div>
                     {Array.isArray(s.files) && s.files.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-3">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                      <div className="mt-3 sm:mt-3 pt-3 sm:pt-3 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 rounded-lg p-2.5 sm:p-3 w-full min-w-0">
+                        <p className="text-sm sm:text-sm font-semibold text-gray-900 dark:text-white mb-2 sm:mb-2">
                           {t("dashboard_inbox_files")} ({s.files.length})
                         </p>
-                        <ul className="grid gap-2">
+                        <ul className="grid gap-2 sm:gap-2 w-full min-w-0">
                           {s.files.map((f, fileIdx) => {
                             const pub = supabase.storage
                               .from("drops")
@@ -426,9 +448,12 @@ export function InboxTab({
                             const href = pub.data.publicUrl;
                             const name = f.path.split("/").pop();
                             return (
-                              <li key={`${s.submission_id}-${fileIdx}`}>
+                              <li
+                                key={`${s.submission_id}-${fileIdx}`}
+                                className="w-full min-w-0"
+                              >
                                 <a
-                                  className="inline-flex items-center gap-2 text-blue-600 dark:text-blue-300 hover:underline break-all text-sm font-medium"
+                                  className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 text-blue-600 dark:text-blue-300 hover:underline text-sm sm:text-sm font-medium py-1.5 sm:py-0.5 px-1 sm:px-0 -mx-1 sm:mx-0 rounded sm:rounded-none min-h-[44px] sm:min-h-0 touch-manipulation w-full"
                                   href={href}
                                   target="_blank"
                                   rel="noreferrer"
@@ -446,9 +471,11 @@ export function InboxTab({
                                       ]);
                                   }}
                                 >
-                                  <span className="truncate">{name}</span>
+                                  <span className="break-all min-w-0 flex-1">
+                                    {name}
+                                  </span>
                                   {f.size && (
-                                    <span className="text-gray-500 dark:text-gray-400 text-xs whitespace-nowrap">
+                                    <span className="text-gray-500 dark:text-gray-400 text-xs shrink-0">
                                       ({Math.round(f.size / 1024)} KB)
                                     </span>
                                   )}
@@ -470,39 +497,41 @@ export function InboxTab({
               <li
                 key={`download-${d.download_id}`}
                 data-testid="inbox-download-item"
-                className="group relative rounded-xl p-4 transition-all duration-200 border bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/20"
+                className="group relative rounded-xl p-3 sm:p-4 transition-all duration-200 border bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-green-900/20 w-full min-w-0"
               >
-                <div className="flex items-start gap-3">
-                  <div className="shrink-0 w-8 h-8 rounded-lg bg-green-600 dark:bg-green-500 flex items-center justify-center">
+                <div className="flex items-start gap-2 sm:gap-3">
+                  <div className="shrink-0 w-8 h-8 sm:w-8 sm:h-8 rounded-lg bg-green-600 dark:bg-green-500 flex items-center justify-center">
                     <Download className="w-4 h-4 text-white" />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-start justify-between gap-2 sm:gap-2">
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm text-green-900 dark:text-green-100">
+                        <p className="font-medium text-sm sm:text-sm text-green-900 dark:text-green-100 wrap-break-words">
                           {t("dashboard_inbox_file_downloaded") ||
                             "File downloaded"}
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5">
+                        <p className="text-xs text-gray-600 dark:text-gray-400 mt-0.5 sm:mt-0.5 wrap-break-words">
                           {new Date(d.downloaded_at).toLocaleString()}
                         </p>
                       </div>
                     </div>
-                    <div className="mt-2 grid gap-1 text-sm">
-                      <p className="text-gray-700 dark:text-gray-300">
+                    <div className="mt-2 sm:mt-2 grid gap-1.5 sm:gap-1 text-sm sm:text-sm">
+                      <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                         <span className="text-gray-600 dark:text-gray-400">
                           {t("dashboard_inbox_drop")}{" "}
                         </span>
                         {d.drop_label ?? t("dashboard_inbox_drop")}
                       </p>
-                      <p className="text-gray-700 dark:text-gray-300">
+                      <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                         <span className="text-gray-600 dark:text-gray-400">
                           {t("dashboard_inbox_file")}{" "}
                         </span>
-                        <span className="font-medium">{d.file_name}</span>
+                        <span className="font-medium break-all">
+                          {d.file_name}
+                        </span>
                       </p>
                       {(d.submission_name || d.submission_email) && (
-                        <p className="text-gray-700 dark:text-gray-300">
+                        <p className="text-gray-700 dark:text-gray-300 wrap-break-words">
                           <span className="text-gray-600 dark:text-gray-400">
                             {t("dashboard_inbox_from") || "From"}{" "}
                           </span>

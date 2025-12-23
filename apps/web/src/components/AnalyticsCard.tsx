@@ -17,10 +17,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         <button
           onClick={() => setDays(7)}
           data-testid="analytics-filter-7"
-          className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+          className={`px-3 py-2.5 text-sm font-medium rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
             days === 7
-              ? "bg-gray-900 dark:bg-gray-700 text-white"
-              : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              ? "bg-gray-900 dark:bg-white dark:text-gray-900 text-white shadow-sm"
+              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
           }`}
         >
           {t("dashboard_account_analytics_days_7")}
@@ -28,10 +28,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         <button
           onClick={() => setDays(30)}
           data-testid="analytics-filter-30"
-          className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+          className={`px-3 py-2.5 text-sm font-medium rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
             days === 30
-              ? "bg-gray-900 dark:bg-gray-700 text-white"
-              : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              ? "bg-gray-900 dark:bg-white dark:text-gray-900 text-white shadow-sm"
+              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
           }`}
         >
           {t("dashboard_account_analytics_days_30")}
@@ -39,10 +39,10 @@ export function AnalyticsCard({ profileId }: { profileId: string | null }) {
         <button
           onClick={() => setDays(90)}
           data-testid="analytics-filter-90"
-          className={`px-3 py-2 text-sm font-medium rounded-lg transition-all cursor-pointer ${
+          className={`px-3 py-2.5 text-sm font-medium rounded-lg transition-all cursor-pointer min-h-[44px] flex items-center justify-center ${
             days === 90
-              ? "bg-gray-900 dark:bg-gray-700 text-white"
-              : "bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+              ? "bg-gray-900 dark:bg-white dark:text-gray-900 text-white shadow-sm"
+              : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500"
           }`}
         >
           {t("dashboard_account_analytics_days_90")}

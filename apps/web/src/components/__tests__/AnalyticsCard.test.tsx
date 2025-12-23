@@ -90,7 +90,7 @@ describe("AnalyticsCard", () => {
 
     // Initially 7 days should be active
     expect(button7?.className).toContain("bg-gray-900");
-    expect(button30?.className).toContain("bg-gray-50");
+    expect(button30?.className).toContain("bg-white");
 
     await user.click(button30!);
 
