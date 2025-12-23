@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { toast } from "sonner";
 import { supabase } from "./supabase";
 import { createUserSession } from "./sessionTracking";
 import { MFAChallenge } from "@/components/MFAChallenge";
@@ -103,6 +104,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // Only show challenge if user has TOTP factors enabled
             if (data?.totp && data.totp.length > 0) {
+              // Dismiss any existing toasts (like "check your email") since we're showing MFA challenge
+              toast.dismiss();
               setShowMFAChallenge(true);
               // Keep checkingMFA true while MFA challenge is shown
               // This prevents dashboard from rendering
