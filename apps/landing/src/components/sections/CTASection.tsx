@@ -7,7 +7,10 @@ export function CTASection() {
   const { t } = useTranslation();
 
   return (
-    <section className="py-16 sm:py-20 lg:py-24 bg-linear-to-r from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700">
+    <section
+      className="py-16 sm:py-20 lg:py-24 bg-linear-to-r from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 opacity-0"
+      data-scroll-animate
+    >
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
         <div className="text-center space-y-6">
           {/* Headline */}

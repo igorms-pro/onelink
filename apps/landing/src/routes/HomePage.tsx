@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import HeroSection from "@/components/sections/HeroSection";
@@ -8,8 +9,14 @@ import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { DemoSection } from "@/components/sections/DemoSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { Footer } from "@/components/Footer";
+import { initScrollAnimations } from "@/lib/scrollAnimation";
 
 export default function HomePage() {
+  useEffect(() => {
+    // Initialize scroll animations
+    const cleanup = initScrollAnimations();
+    return cleanup;
+  }, []);
   return (
     <SEO
       title="One Link to Share Everything"

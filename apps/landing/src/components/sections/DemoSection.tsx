@@ -6,7 +6,8 @@ export function DemoSection() {
   return (
     <section
       id="demo"
-      className="py-16 sm:py-20 lg:py-24 bg-linear-to-br from-purple-500/5 via-purple-500/3 to-blue-500/5 dark:from-purple-500/10 dark:via-purple-500/5 dark:to-blue-500/10"
+      className="py-16 sm:py-20 lg:py-24 bg-linear-to-br from-purple-500/5 via-purple-500/3 to-blue-500/5 dark:from-purple-500/10 dark:via-purple-500/5 dark:to-blue-500/10 opacity-0"
+      data-scroll-animate
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
