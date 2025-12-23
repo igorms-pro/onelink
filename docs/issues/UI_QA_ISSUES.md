@@ -1,7 +1,7 @@
 # UI QA Issues - OneLink
 
 **Date:** 2024  
-**Status:** 🟡 In Progress (5/19 completed)  
+**Status:** 🟡 In Progress (10/19 completed)  
 **Priority:** Mixed (High/Medium/Low)
 
 This document contains all UI QA issues identified during testing. Each issue is organized by section and includes description, expected behavior, current implementation, and proposed solutions.
@@ -10,14 +10,14 @@ This document contains all UI QA issues identified during testing. Each issue is
 
 | # | Issue | Priority | Phase | Est. Time | Status |
 |---|-------|----------|-------|-----------|--------|
-| 1 | Inbox loading state | High | 2 | 2h | 🔴 |
+| 1 | Inbox loading state | High | 2 | 2h | ✅ |
 | 2 | Inbox mobile version | High | 3 | 3-4h | 🔴 |
 | 3 | Dark mode hover readability | Medium | 4 | 1-2h | 🔴 |
 | 4 | Links edit modal | Medium | 2 | 2h | ✅ |
 | 5 | Links delete modal | Medium | 2 | 1-2h | ✅ |
 | 6 | Drag-drop indicator | Low | 5 | 1h | 🔴 |
 | 7 | Add drop validation | Medium | 2 | 30m | ✅ |
-| 8 | Drops edit modal | Medium | 2 | 2h | 🔴 |
+| 8 | Drops edit modal | Medium | 2 | 2h | ✅ |
 | 9 | Delete active drop | Medium | 5 | 2h | 🔴 |
 | 10 | i18n translation key | Medium | 1 | 15m | ✅ |
 | 11 | File name changes | Medium | 4 | 2-3h | 🔴 |
@@ -36,10 +36,11 @@ This document contains all UI QA issues identified during testing. Each issue is
 
 ## Dashboard - Inbox Tab
 
-### Issue 1: Loading State Missing
-**Status:** 🔴 Not Started  
+### Issue 1: Loading State Missing ✅ COMPLETED
+**Status:** ✅ Completed  
 **Priority:** High  
-**Category:** UI/UX
+**Category:** UI/UX  
+**Time:** ~2 hours
 
 **Description:**
 When loading inbox data, users see the "No submissions yet" empty state UI immediately, before data has finished loading. This creates confusion - users don't know if the inbox is truly empty or still loading.
@@ -48,24 +49,28 @@ When loading inbox data, users see the "No submissions yet" empty state UI immed
 - Show a loading skeleton or spinner while data is being fetched
 - Only show the "No submissions yet" empty state after loading is complete AND there are no submissions
 
-**Current Implementation:**
-The `InboxTab` component receives `submissions` and `downloads` as props from `useDashboardData`. The component immediately renders the empty state if `allItems.length === 0`, without checking if data is still loading.
+**Fix Applied:**
+1. ✅ Created `InboxSkeleton` component with animated skeleton placeholders
+2. ✅ Updated `InboxTab` to accept `loading` prop and show skeleton when loading
+3. ✅ Empty state now only shows when `loading=false` AND `allItems.length === 0`
+4. ✅ Pass `dashboardLoading` state from Dashboard to InboxTab (fixed bug: was passing auth loading instead)
+5. ✅ Added loading skeleton to `DashboardSubHeader` for plan badge and upgrade button
+6. ✅ Added tests for loading state vs empty state
 
-**Files:**
-- `apps/web/src/routes/Dashboard/components/InboxTab.tsx`
-- `apps/web/src/routes/Dashboard/hooks/useDashboardData.ts`
+**Files Created:**
+- ✅ `apps/web/src/routes/Dashboard/components/InboxSkeleton.tsx`
 
-**Proposed Solution:**
-1. Add a `loading` prop to `InboxTab` component
-2. Pass loading state from `useDashboardData` hook
-3. Show skeleton/loader when `loading === true`
-4. Show empty state only when `loading === false && allItems.length === 0`
+**Files Updated:**
+- ✅ `apps/web/src/routes/Dashboard/components/InboxTab.tsx` (added loading prop and skeleton)
+- ✅ `apps/web/src/routes/Dashboard/index.tsx` (pass dashboardLoading to InboxTab and DashboardSubHeader)
+- ✅ `apps/web/src/routes/Dashboard/components/DashboardSubHeader.tsx` (added loading prop and skeleton)
+- ✅ `apps/web/src/routes/Dashboard/components/__tests__/InboxTab.test.tsx` (added loading state tests)
 
-**Implementation Steps:**
-1. Update `useDashboardData` hook to track loading state for submissions/downloads
-2. Pass `isLoading` prop to `InboxTab` component
-3. Create or reuse a skeleton component for inbox items
-4. Conditionally render based on loading state
+**Current Behavior (After Fix):**
+- ✅ Skeleton appears while submissions/downloads are loading
+- ✅ Plan badge and upgrade button show skeleton while plan data loads
+- ✅ Empty state only appears after loading completes AND no items exist
+- ✅ No premature display of "FREE" badge or "Upgrade to Pro" button
 
 ---
 
@@ -295,8 +300,8 @@ The "Add drop" button should be disabled when the label input has fewer than 3 c
 
 ---
 
-### Issue 8: Edit Drop Uses Alert Instead of Modal
-**Status:** 🔴 Not Started  
+### Issue 8: Edit Drop Uses Alert Instead of Modal ✅ COMPLETED
+**Status:** ✅ Completed  
 **Priority:** Medium  
 **Category:** UI/UX
 
@@ -310,19 +315,21 @@ When editing a drop, the current implementation shows an alert/prompt dialog. Th
 - Modal should contain a form for editing drop properties (label, visibility, etc.)
 - Modal should have proper validation and error handling
 
-**Files to Check:**
-- `apps/web/src/routes/Dashboard/components/ContentTab.tsx`
-- Drop-related components (e.g., `DropCard`)
+**Fix Applied:**
+1. ✅ Created `EditDropModal` component using Dialog/Drawer pattern
+2. ✅ Replaced prompt with modal trigger in `DropCard` component
+3. ✅ Added form validation (minimum 3 characters for label)
+4. ✅ Added loading states and error handling
+5. ✅ Made modal responsive (Drawer on mobile, Dialog on desktop)
+6. ✅ Added translation keys: `common_save`, `common_saving`, `dashboard_content_drops_edit_description`, `common_label_min_length_hint`
 
-**Proposed Solution:**
-1. Create an `EditDropModal` component using the existing Dialog/Drawer pattern
-2. Replace alert/prompt with modal trigger
-3. Include form fields for drop editing (label, visibility toggle, etc.)
-4. Add form validation
-5. Handle save/cancel actions
+**Files Created:**
+- ✅ `apps/web/src/routes/Dashboard/components/ContentTab/EditDropModal.tsx`
 
-**Files to Create:**
-- `apps/web/src/routes/Dashboard/components/ContentTab/EditDropModal.tsx`
+**Files Updated:**
+- ✅ `apps/web/src/routes/Dashboard/components/DropCard/index.tsx` (uses EditDropModal)
+- ✅ `apps/web/src/routes/Dashboard/components/DropCard/useDropCard.ts` (handleEdit opens modal)
+- ✅ `apps/web/src/lib/locales/en.json` (added translation keys)
 
 ---
 
@@ -939,6 +946,12 @@ Since both Privacy and Terms pages use the `LegalPageLayout` component, fixing i
 - ✅ Issue 10: i18n translation key + comprehensive translation audit (all locale files synchronized and translated)
 - ✅ Issue 15: Billing UI simplification (removed Payment Method & Invoices sections)
 - ✅ Issue 18: MFA Challenge UX Improvements (fixed auto-submit, improved flow, toast management, routing updates)
+- ✅ Issue 1: Inbox loading state (skeleton component + DashboardSubHeader loading)
+- ✅ Issue 4: Links edit modal (replaced prompt with EditLinkModal)
+- ✅ Issue 5: Links delete modal (replaced confirm with DeleteLinkModal)
+- ✅ Issue 7: Add drop validation (minimum 3 characters)
+- ✅ Issue 8: Drops edit modal (replaced prompt with EditDropModal)
+- ✅ Issue 19: Privacy/Terms scroll position reset (useEffect + useLocation)
 
 ---
 
@@ -948,20 +961,23 @@ Since both Privacy and Terms pages use the `LegalPageLayout` component, fixing i
 **Priority:** High - Significantly improves UX
 
 **Issues:**
-1. **Issue 1:** Inbox loading state (skeleton/loader)
+1. **Issue 1:** Inbox loading state (skeleton/loader) ✅ COMPLETED
    - **Why first:** Core dashboard feature, affects first impression
    - **Impact:** High - Users confused about empty state
    - **Time:** 2 hours (loading state + skeleton component)
+   - **Fix:** Created InboxSkeleton, added loading prop to InboxTab, fixed DashboardSubHeader loading state
 
-2. **Issue 4 & 5:** Links edit/delete modals (replace alerts)
+2. **Issue 4 & 5:** Links edit/delete modals (replace alerts) ✅ COMPLETED
    - **Why together:** Same pattern, can reuse modal components
    - **Impact:** High - Modern UX, consistent with app design
    - **Time:** 3-4 hours (2 modals + integration)
+   - **Fix:** Created EditLinkModal and DeleteLinkModal, replaced prompt/confirm with modals
 
-3. **Issue 8:** Drops edit modal (replace alert)
+3. **Issue 8:** Drops edit modal (replace alert) ✅ COMPLETED
    - **Why next:** Same pattern as links, completes Content tab
    - **Impact:** High - Consistency across Content tab
    - **Time:** 2 hours (modal + integration)
+   - **Fix:** Created EditDropModal, replaced prompt with modal in DropCard
 
 4. **Issue 7:** Add drop button validation (< 3 chars) ✅ COMPLETED
    - **Why next:** Quick win, prevents invalid data
@@ -969,10 +985,11 @@ Since both Privacy and Terms pages use the `LegalPageLayout` component, fixing i
    - **Time:** 30 min (validation logic)
    - **Fix:** Added controlled input state, validation logic, button disabled state, and translation keys
 
-5. **Issue 19:** Privacy/Terms scroll position reset
+5. **Issue 19:** Privacy/Terms scroll position reset ✅ COMPLETED
    - **Why last:** Quick fix, polish
    - **Impact:** Low-Medium - Better navigation UX
    - **Time:** 15 min (useEffect scroll reset)
+   - **Fix:** Added scroll reset in LegalPageLayout using useEffect + useLocation
 
 **Deliverable:** Core user flows feel polished and professional
 
@@ -1220,13 +1237,14 @@ Week 2:
 - ✅ Fix OTP auto-submit (Issue 18) - COMPLETED
 - **Deliverable:** No console errors, all critical bugs fixed ✅
 
-**Agent 2: Core UX** (8-12h)
-- InboxTab loading state
-- Links edit/delete modals
-- Drops edit modal
-- Add drop validation
-- Privacy/Terms scroll reset
-- **Deliverable:** Professional modal UX, loading states
+**Agent 2: Core UX** (8-12h) ✅ COMPLETED
+- ✅ InboxTab loading state (Issue 1)
+- ✅ Links edit/delete modals (Issues 4 & 5)
+- ✅ Drops edit modal (Issue 8)
+- ✅ Add drop validation (Issue 7)
+- ✅ Privacy/Terms scroll reset (Issue 19)
+- ✅ DashboardSubHeader loading skeleton
+- **Deliverable:** Professional modal UX, loading states ✅
 
 **Agent 3: Mobile Polish** (6-8h)
 - InboxTab mobile completion
