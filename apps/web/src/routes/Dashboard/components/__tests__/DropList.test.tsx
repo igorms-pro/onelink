@@ -29,11 +29,48 @@ vi.mock("@/lib/AuthProvider", () => ({
 
 import { supabase } from "@/lib/supabase";
 
-// Mock window.confirm and prompt
+// Mock EditDropModal
+vi.mock("../ContentTab/EditDropModal", () => ({
+  EditDropModal: ({
+    open,
+    onOpenChange,
+    onSave,
+    drop,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSave: (label: string) => Promise<void>;
+    drop: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="edit-drop-modal">
+        <input data-testid="edit-drop-input" defaultValue={drop.label} />
+        <button
+          data-testid="edit-drop-save"
+          onClick={async () => {
+            const input = document.querySelector(
+              '[data-testid="edit-drop-input"]',
+            ) as HTMLInputElement;
+            await onSave(input?.value || "New Label");
+            onOpenChange(false);
+          }}
+        >
+          Save
+        </button>
+        <button
+          data-testid="edit-drop-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
+
+// Mock window.confirm
 globalThis.confirm = vi.fn(() => true);
-globalThis.prompt = vi.fn(
-  (_message?: string, defaultValue?: string) => defaultValue || "New Label",
-);
 
 describe("DropList", () => {
   const mockSetDrops = vi.fn();
@@ -189,6 +226,20 @@ describe("DropList", () => {
       editButtons.find((btn) => !btn.hasAttribute("hidden")) || editButtons[0];
     await user.click(editButton as HTMLElement);
 
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("edit-drop-modal")).toBeInTheDocument();
+    });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-drop-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save
+    const saveButton = screen.getByTestId("edit-drop-save");
+    await user.click(saveButton);
+
     await waitFor(() => {
       expect(mockSetDrops).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Drop updated");
@@ -231,6 +282,20 @@ describe("DropList", () => {
     const editButton =
       editButtons.find((btn) => !btn.hasAttribute("hidden")) || editButtons[0];
     await user.click(editButton as HTMLElement);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("edit-drop-modal")).toBeInTheDocument();
+    });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-drop-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save
+    const saveButton = screen.getByTestId("edit-drop-save");
+    await user.click(saveButton);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("Update failed");

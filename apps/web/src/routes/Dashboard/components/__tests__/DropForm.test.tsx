@@ -86,13 +86,24 @@ describe("DropForm", () => {
     render(<DropForm {...defaultProps} />);
     const input = screen.getByPlaceholderText("Label (e.g. Upload assets)");
     const button = screen.getByRole("button", { name: "Add Drop" });
+    const form = button.closest("form");
 
     // Type 2 characters - button should be disabled
     await user.type(input, "AB");
     expect(button).toBeDisabled();
 
-    // Press Enter to submit form (works even when button is disabled)
-    await user.type(input, "{Enter}");
+    // Submit form directly (simulating Enter key press)
+    if (form) {
+      const submitEvent = new Event("submit", {
+        cancelable: true,
+        bubbles: true,
+      });
+      Object.defineProperty(submitEvent, "currentTarget", {
+        value: form,
+        enumerable: true,
+      });
+      form.dispatchEvent(submitEvent);
+    }
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith(
