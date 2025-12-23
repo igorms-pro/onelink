@@ -593,22 +593,22 @@ CNAME   app     cname.vercel-dns.com     Auto
 ### Phase 2: Core Components & Sections
 
 #### Issue 9: Hero Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 2h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `HeroSection.tsx` component
-- [ ] Add headline: "One Link to Share Everything"
-- [ ] Add subheadline text
-- [ ] Create primary CTA button → `app.getonelink.io/auth`
-- [ ] Create secondary CTA button → Scroll to demo
-- [ ] Add placeholder for visual: `<div>SCREENSHOT: Dashboard Preview</div>`
-- [ ] Style with purple gradient background
-- [ ] Make responsive (mobile-first)
-- [ ] Add animations (fade-in on scroll)
+- [x] Create `HeroSection.tsx` component
+- [x] Add headline: "One Link to Share Everything"
+- [x] Add subheadline text
+- [x] Create primary CTA button → `app.getonelink.io/auth`
+- [x] Create secondary CTA button → Scroll to demo
+- [x] Add placeholder for visual: `<div>SCREENSHOT: Dashboard Preview</div>`
+- [x] Style with purple gradient background
+- [x] Make responsive (mobile-first)
+- [x] Add animations (fade-in on scroll)
 
 **Files to Create:**
 - `apps/landing/src/components/sections/HeroSection.tsx`
@@ -623,26 +623,26 @@ CNAME   app     cname.vercel-dns.com     Auto
 ---
 
 #### Issue 10: Features Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 2h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `FeaturesSection.tsx` component
-- [ ] Create `FeatureCard.tsx` component
-- [ ] Add 6 feature cards:
+- [x] Create `FeaturesSection.tsx` component
+- [x] Create `FeatureCard.tsx` component
+- [x] Add 6 feature cards:
   1. One Link for Everything (Link icon)
   2. File Sharing / Drops (Upload/Cloud icon)
   3. Real-time Notifications (Bell icon)
   4. Customizable Profile (User/Profile icon)
   5. Privacy & Security (Lock icon)
   6. Analytics (Chart icon)
-- [ ] Grid layout: 3x2 (desktop), 1x6 (mobile)
-- [ ] Add hover effects
-- [ ] Use purple accents
-- [ ] Make responsive
+- [x] Grid layout: 3x2 (desktop), 1x6 (mobile)
+- [x] Add hover effects
+- [x] Use purple accents
+- [x] Make responsive
 
 **Files to Create:**
 - `apps/landing/src/components/sections/FeaturesSection.tsx`
@@ -663,24 +663,24 @@ const features = [
 ---
 
 #### Issue 11: How It Works Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 1.5h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `HowItWorksSection.tsx` component
-- [ ] Create `StepCard.tsx` component
-- [ ] Add 4 steps:
+- [x] Create `HowItWorksSection.tsx` component
+- [x] Create `StepCard.tsx` component
+- [x] Add 4 steps:
   1. Sign Up → Create account (free)
   2. Create Your Link → Add links, upload files
   3. Share → One link to share everywhere
   4. Track → See analytics in real-time
-- [ ] Horizontal timeline (desktop)
-- [ ] Vertical timeline (mobile)
-- [ ] Numbered steps with icons
-- [ ] Make responsive
+- [x] Horizontal timeline (desktop)
+- [x] Vertical timeline (mobile)
+- [x] Numbered steps with icons
+- [x] Make responsive
 
 **Files to Create:**
 - `apps/landing/src/components/sections/HowItWorksSection.tsx`
@@ -689,31 +689,31 @@ const features = [
 ---
 
 #### Issue 12: Pricing Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 2h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `PricingSection.tsx` component
-- [ ] Create `PricingCard.tsx` component
-- [ ] Add Free Plan card:
+- [x] Create `PricingSection.tsx` component
+- [x] Create `PricingCard.tsx` component
+- [x] Add Free Plan card:
   - 5 links
   - 3 drops
   - Basic analytics
   - CTA: "Get Started Free" → `app.getonelink.io/auth`
-- [ ] Add Pro Plan card (highlighted):
+- [x] Add Pro Plan card (highlighted):
   - Unlimited links
   - Unlimited drops
   - Advanced analytics
   - Custom domain
   - Priority support
   - CTA: "Upgrade to Pro" → `app.getonelink.io/pricing`
-- [ ] 2-column layout (desktop)
-- [ ] Stacked cards (mobile)
-- [ ] Pro card with purple gradient
-- [ ] Feature comparison table (optional)
+- [x] 2-column layout (desktop)
+- [x] Stacked cards (mobile)
+- [x] Pro card with purple gradient
+- [x] Feature comparison table (optional)
 
 **Files to Create:**
 - `apps/landing/src/components/sections/PricingSection.tsx`
@@ -722,19 +722,19 @@ const features = [
 ---
 
 #### Issue 13: Social Proof / Testimonials Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** Medium  
 **Estimated Time:** 1h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `SocialProofSection.tsx` component
-- [ ] Add user count: "Join X users" (placeholder: "Join 1,000+ users")
-- [ ] Add testimonials placeholder (empty for now, can add later)
-- [ ] Add trust badges placeholder
-- [ ] Create carousel or grid layout
-- [ ] Make responsive
+- [x] Create `SocialProofSection.tsx` component
+- [x] Add user count: "Join X users" (placeholder: "Join 1,000+ users")
+- [x] Add testimonials placeholder (empty for now, can add later)
+- [x] Add trust badges placeholder
+- [x] Create carousel or grid layout
+- [x] Make responsive
 
 **Files to Create:**
 - `apps/landing/src/components/sections/SocialProofSection.tsx`
@@ -747,19 +747,19 @@ const features = [
 ---
 
 #### Issue 14: Demo / Screenshot Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** Medium  
 **Estimated Time:** 1.5h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `DemoSection.tsx` component
-- [ ] Add placeholder: `<div>SCREENSHOT: Dashboard in Action</div>`
-- [ ] Add device mockup wrapper (iPhone/MacBook frame)
-- [ ] Add animated on scroll effect
-- [ ] Add caption/description
-- [ ] Make responsive
+- [x] Create `DemoSection.tsx` component
+- [x] Add placeholder: `<div>SCREENSHOT: Dashboard in Action</div>`
+- [x] Add device mockup wrapper (iPhone/MacBook frame)
+- [x] Add animated on scroll effect
+- [x] Add caption/description
+- [x] Make responsive
 
 **Files to Create:**
 - `apps/landing/src/components/sections/DemoSection.tsx`
@@ -772,21 +772,21 @@ const features = [
 ---
 
 #### Issue 15: Final CTA Section Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 1h  
 **Dependencies:** Issue 1, Issue 6  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `CTASection.tsx` component
-- [ ] Add headline: "Ready to get started?"
-- [ ] Add primary CTA: "Create Your Free Account" → `app.getonelink.io/auth`
-- [ ] Add secondary link: "Or view pricing" → `/pricing`
-- [ ] Purple gradient background
-- [ ] Centered, bold layout
-- [ ] Large button
-- [ ] Make responsive
+- [x] Create `CTASection.tsx` component
+- [x] Add headline: "Ready to get started?"
+- [x] Add primary CTA: "Create Your Free Account" → `app.getonelink.io/auth`
+- [x] Add secondary link: "Or view pricing" → `/pricing`
+- [x] Purple gradient background
+- [x] Centered, bold layout
+- [x] Large button
+- [x] Make responsive
 
 **Files to Create:**
 - `apps/landing/src/components/sections/CTASection.tsx`
@@ -794,36 +794,36 @@ const features = [
 ---
 
 #### Issue 16: Footer Component
-**Status:** 🔴 Not Started  
+**Status:** 🟢 Completed  
 **Priority:** High  
 **Estimated Time:** 1.5h  
 **Dependencies:** Issue 1, Issue 4, Issue 5  
 **Can Parallelize:** Yes
 
 **Tasks:**
-- [ ] Create `Footer.tsx` component
-- [ ] Add Product section:
+- [x] Create `Footer.tsx` component
+- [x] Add Product section:
   - Features → `/features`
   - Pricing → `/pricing`
   - Roadmap (optional)
-- [ ] Add Company section:
+- [x] Add Company section:
   - About → `/about` (optional)
   - Blog (future)
   - Contact
-- [ ] Add Legal section:
+- [x] Add Legal section:
   - Privacy Policy → `/privacy` or `app.getonelink.io/privacy`
   - Terms of Service → `/terms` or `app.getonelink.io/terms`
-- [ ] Add Social section:
+- [x] Add Social section:
   - Twitter/X
   - GitHub (if open source)
   - LinkedIn
-- [ ] Add App section:
+- [x] Add App section:
   - Sign In → `app.getonelink.io/auth`
   - Sign Up → `app.getonelink.io/auth`
-- [ ] Multi-column layout (desktop)
-- [ ] Stacked layout (mobile)
-- [ ] Dark background
-- [ ] Copyright notice
+- [x] Multi-column layout (desktop)
+- [x] Stacked layout (mobile)
+- [x] Dark background
+- [x] Copyright notice
 
 **Files to Create:**
 - `apps/landing/src/components/Footer.tsx`
@@ -1477,14 +1477,14 @@ These are app-specific and don't need to be copied:
 | 6 | Setup Design System | 1 | 🔴 | 1h | Issues 1, 5 |
 | 7 | Setup Unit Testing (Vitest) | 1 | 🔴 | 1h | Issues 1, 4 |
 | 8 | Setup E2E Testing (Playwright) | 1 | 🔴 | 1h | Issue 1 |
-| 9 | Hero Section | 2 | 🔴 | 2h | Issues 1, 6 |
-| 10 | Features Section | 2 | 🔴 | 2h | Issues 1, 6 |
-| 11 | How It Works Section | 2 | 🔴 | 1.5h | Issues 1, 6 |
-| 12 | Pricing Section | 2 | 🔴 | 2h | Issues 1, 6 |
-| 13 | Social Proof Section | 2 | 🔴 | 1h | Issues 1, 6 |
-| 14 | Demo Section | 2 | 🔴 | 1.5h | Issues 1, 6 |
-| 15 | CTA Section | 2 | 🔴 | 1h | Issues 1, 6 |
-| 16 | Footer | 2 | 🔴 | 1.5h | Issues 1, 4, 5 |
+| 9 | Hero Section | 2 | 🟢 | 2h | Issues 1, 6 |
+| 10 | Features Section | 2 | 🟢 | 2h | Issues 1, 6 |
+| 11 | How It Works Section | 2 | 🟢 | 1.5h | Issues 1, 6 |
+| 12 | Pricing Section | 2 | 🟢 | 2h | Issues 1, 6 |
+| 13 | Social Proof Section | 2 | 🟢 | 1h | Issues 1, 6 |
+| 14 | Demo Section | 2 | 🟢 | 1.5h | Issues 1, 6 |
+| 15 | CTA Section | 2 | 🟢 | 1h | Issues 1, 6 |
+| 16 | Footer | 2 | 🟢 | 1.5h | Issues 1, 4, 5 |
 | 17 | Assemble HomePage | 3 | 🔴 | 1h | Issues 9-16 |
 | 18 | Scroll Animations | 3 | 🔴 | 1.5h | Issue 17 |
 | 19 | Responsive Polish | 3 | 🔴 | 2h | Issue 17 |
