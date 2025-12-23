@@ -16,8 +16,8 @@ test.describe("Features Page Flow", () => {
       .first();
     await expect(heroHeading).toBeVisible();
 
-    // Check for hero description
-    const heroDescription = page.getByText(/everything you need/i);
+    // Check for hero description - use first() to handle duplicates
+    const heroDescription = page.getByText(/everything you need/i).first();
     await expect(heroDescription).toBeVisible();
   });
 
