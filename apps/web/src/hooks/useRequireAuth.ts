@@ -8,7 +8,7 @@ import { useAuth } from "@/lib/AuthProvider";
  */
 export function useRequireAuth(redirectPath = "/auth") {
   const navigate = useNavigate();
-  const { user, loading, signOut } = useAuth();
+  const { user, loading, checkingMFA, signOut } = useAuth();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -16,5 +16,5 @@ export function useRequireAuth(redirectPath = "/auth") {
     }
   }, [loading, user, navigate, redirectPath]);
 
-  return { user, loading, signOut };
+  return { user, loading: loading || checkingMFA, signOut };
 }

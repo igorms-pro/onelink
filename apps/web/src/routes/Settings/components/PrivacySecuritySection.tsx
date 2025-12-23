@@ -4,16 +4,17 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/AuthProvider";
 import { useSupabaseMFA } from "@/routes/Settings/pages/TwoFactor/useSupabaseMFA";
-import { ChangePasswordModal } from "./ChangePasswordModal";
 import { DeleteAccountModal } from "./DeleteAccountModal";
+import { ChangePasswordModal } from "./ChangePasswordModal";
 
 export function PrivacySecuritySection() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { signOut } = useAuth();
   const { state: mfaState, loading: loadingMfaStatus } = useSupabaseMFA();
-  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] =
+    useState(false);
 
   const hasMfaEnabled = mfaState === "active";
 
@@ -35,18 +36,18 @@ export function PrivacySecuritySection() {
         </div>
         <div className="space-y-3 pl-7">
           <button
-            data-testid="settings-change-password"
-            onClick={() => setIsChangePasswordOpen(true)}
-            className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
-          >
-            {t("settings_change_password")}
-          </button>
-          <button
             data-testid="settings-two-factor"
             onClick={handle2FA}
             className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
           >
             {t("settings_two_factor")}
+          </button>
+          <button
+            data-testid="settings-change-password"
+            onClick={() => setIsChangePasswordModalOpen(true)}
+            className="w-full text-left text-sm text-blue-600 dark:text-blue-300 hover:underline cursor-pointer"
+          >
+            {t("settings_change_password")}
           </button>
           <button
             data-testid="settings-sign-out"
@@ -111,13 +112,13 @@ export function PrivacySecuritySection() {
           </div>
         </div>
       </section>
-      <ChangePasswordModal
-        open={isChangePasswordOpen}
-        onOpenChange={setIsChangePasswordOpen}
-      />
       <DeleteAccountModal
         open={isDeleteModalOpen}
         onOpenChange={setIsDeleteModalOpen}
+      />
+      <ChangePasswordModal
+        open={isChangePasswordModalOpen}
+        onOpenChange={setIsChangePasswordModalOpen}
       />
     </>
   );

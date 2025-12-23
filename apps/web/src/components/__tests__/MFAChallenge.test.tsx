@@ -43,6 +43,20 @@ describe("MFAChallenge", () => {
   });
 
   it("starts a challenge when opened", () => {
+    // Mock with factors present so challenge will start
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "active",
+      loading: false,
+      submitting: false,
+      factors: { totp: [{ id: "factor-1", friendly_name: "Test Factor" }] },
+      qrCodeData: "",
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge,
+      verifyChallenge,
+      unenroll: vi.fn(),
+    });
+
     render(
       <MemoryRouter>
         <MFAChallenge />
@@ -55,6 +69,20 @@ describe("MFAChallenge", () => {
   it("submits code, verifies challenge and navigates on success", async () => {
     verifyChallenge.mockResolvedValueOnce(true);
     const onVerified = vi.fn();
+
+    // Mock with factors present so challenge will start
+    vi.mocked(useSupabaseMFA).mockReturnValue({
+      state: "active",
+      loading: false,
+      submitting: false,
+      factors: { totp: [{ id: "factor-1", friendly_name: "Test Factor" }] },
+      qrCodeData: "",
+      enroll: vi.fn(),
+      verifyEnrollment: vi.fn(),
+      startChallenge,
+      verifyChallenge,
+      unenroll: vi.fn(),
+    });
 
     render(
       <MemoryRouter>

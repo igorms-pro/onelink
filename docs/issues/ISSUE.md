@@ -20,6 +20,13 @@ Status: ✅ Completed
 - ✅ Spacing improvements (cards, buttons, sections)
 - ✅ Phase 2: Desktop responsive design
 - ✅ Phase 3: Dark theme polish
+- ✅ UI QA Issues (Phase 2, 3, 4, 5) - All 19 issues completed
+  - ✅ Issue 8: Edit Drop Modal (replaced prompt with EditDropModal)
+  - ✅ Issue 13: Analytics day button styling (improved contrast in dark mode)
+  - ✅ Issue 6: Drag and drop visual indicator (added GripVertical icon)
+  - ✅ Issue 4: Links edit modal (already completed)
+  - ✅ Fixed CSS class deprecations (flex-shrink-0 → shrink-0)
+  - ✅ Added translations for drag handle in all 10 languages
 
 ---
 
@@ -354,7 +361,26 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 ### Remaining Tasks
 
 **High Priority:**
-_(None - all critical features completed)_
+1. 🌐 Landing Page / Site Vitrine
+   - **Status:** 🔴 Not Started
+   - **Priority:** High (MVP Launch)
+   - **Estimated Time:** 8-12 hours
+   - **Domain:** `getonelink.io` (à acheter)
+   - **Architecture:** 
+     - `getonelink.io` → Landing page (site vitrine)
+     - `app.getonelink.io` → Application (dashboard actuel)
+   - **Description:** Créer un site vitrine professionnel pour présenter OneLink, convertir les visiteurs, et servir de point d'entrée principal
+   - **Documentation:** Voir `docs/LANDING_PAGE.md` pour le design complet, sections, et implementation steps
+   - **Sections principales:**
+     - Hero section (headline, CTA)
+     - Features (6 features principales)
+     - How It Works (3-4 étapes)
+     - Pricing (Free vs Pro)
+     - Social Proof / Testimonials
+     - Demo / Screenshots
+     - Footer (navigation, legal, social)
+   - **Stack recommandé:** Next.js 14+ (pour SEO) ou Vite + React (si garder stack actuel)
+   - **DNS:** Configuration Hostinger → Vercel pour sous-domaines
 
 **Medium Priority:**
 1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views

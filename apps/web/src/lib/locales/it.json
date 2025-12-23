@@ -77,7 +77,7 @@
   "dashboard_account_profile_qr_pro_feature": "Il codice QR è una funzionalità Pro. Aggiorna per sbloccarlo!",
   "dashboard_account_profile_qr_title": "Codice QR",
   "dashboard_account_profile_qr_description": "Scansiona questo codice QR per accedere al tuo profilo",
-  "dashboard_header_title": "Dashboard",
+  "dashboard_header_title": "Pannello",
   "dashboard_header_free": "Gratuito",
   "dashboard_header_pro": "Pro",
   "dashboard_header_upgrade": "Passa a Pro",
@@ -188,9 +188,9 @@
   "footer_powered": "Fornito da OneLink",
   "legal_back_to_auth": "Torna all'accesso",
   "privacy": {
-    "title": "Privacy Policy",
-    "description": "Learn how OneLink collects, uses, and protects your data.",
-    "last_updated": "Last updated: January 15, 2025",
+    "title": "Informativa sulla Privacy",
+    "description": "Scopri come OneLink raccoglie, utilizza e protegge i tuoi dati.",
+    "last_updated": "Ultimo aggiornamento: 15 gennaio 2025",
     "sections": [
       {
         "id": "introduction",
@@ -370,9 +370,9 @@
     ]
   },
   "terms": {
-    "title": "Terms of Service",
-    "description": "Please read these terms carefully before using OneLink.",
-    "last_updated": "Last updated: January 15, 2025",
+    "title": "Termini di Servizio",
+    "description": "Si prega di leggere attentamente questi termini prima di utilizzare OneLink.",
+    "last_updated": "Ultimo aggiornamento: 15 gennaio 2025",
     "sections": [
       {
         "id": "acceptance",
@@ -482,22 +482,22 @@
     ]
   },
   "pricing": {
-    "title": "Plans & Pricing",
-    "description": "Choose the plan that matches your stage. Start free, upgrade when ready.",
+    "title": "Piani e Prezzi",
+    "description": "Scegli il piano che corrisponde alla tua fase. Inizia gratuitamente, passa a Pro quando sei pronto.",
     "monthly_label": "Mensile",
     "trusted_by": "Fidato da creator di tutto il mondo",
     "currency_note": "Prezzi in USD. Potrebbero applicarsi tasse.",
     "per_month": "al mese",
     "yearly_label": "Annuale (risparmia 20%)",
     "per_year": "all'anno",
-    "includes": "What's included",
-    "most_popular": "Most popular",
-    "loading": "Redirecting...",
+    "includes": "Cosa è incluso",
+    "most_popular": "Più popolare",
+    "loading": "Reindirizzamento...",
     "current_plan": "Il tuo piano attuale",
     "downgrade_to_free": "Passa al gratuito",
-    "cta_title": "Still unsure?",
-    "cta_description": "Our free plan covers the basics. Upgrade to unlock custom domains, unlimited routes, advanced analytics, and more.",
-    "cta_button": "Create your OneLink",
+    "cta_title": "Ancora indeciso?",
+    "cta_description": "Il nostro piano gratuito copre le basi. Passa a Pro per sbloccare domini personalizzati, route illimitate, analisi avanzate e altro ancora.",
+    "cta_button": "Crea il tuo OneLink",
     "plans": {
       "free": {
         "name": "Gratis",
@@ -543,7 +543,7 @@
         ]
       }
     },
-    "faq_title": "Frequently asked questions",
+    "faq_title": "Domande frequenti",
     "faq": [
       {
         "question": "Can I switch plans later?",
@@ -557,20 +557,23 @@
         "question": "Is OneLink GDPR compliant?",
         "answer": "Yes. Data is hosted in the EU with Supabase. You can export or delete your data at any time from Settings."
       }
-    ]
+    ],
+    "contact_title": "Hai domande?",
+    "contact_description": "Contattaci per qualsiasi domanda o supporto.",
+    "contact_email": "support@getonelink.app"
   },
   "checkout_success": {
-    "title": "You're in!",
-    "subtitle": "Thanks for upgrading to OneLink Pro.",
-    "message": "Your subscription is active.",
-    "button": "Go to dashboard"
+    "title": "Sei dentro!",
+    "subtitle": "Grazie per aver aggiornato a OneLink Pro.",
+    "message": "Il tuo abbonamento è attivo. Abbiamo aggiornato la tua dashboard con le funzionalità Pro e inviato un'email di conferma.",
+    "button": "Vai alla dashboard"
   },
   "checkout_cancel": {
-    "title": "Checkout cancelled",
-    "subtitle": "No worries—your account is unchanged.",
-    "message": "Feel free to retry the upgrade or continue exploring the free plan for now.",
-    "back_to_pricing": "Back to pricing",
-    "contact_support": "Contact support"
+    "title": "Checkout annullato",
+    "subtitle": "Nessun problema - il tuo account è invariato.",
+    "message": "Puoi riprovare l'aggiornamento più tardi o continuare a esplorare il piano gratuito per ora.",
+    "back_to_pricing": "Torna ai prezzi",
+    "contact_support": "Contatta il supporto"
   },
   "dashboard_content_links_title": "Collegamenti",
   "dashboard_content_links_description": "Crea pulsanti che collegano al tuo contenuto",
@@ -581,6 +584,7 @@
   "dashboard_content_links_create_success": "Collegamento creato con successo",
   "dashboard_content_links_create_failed": "Impossibile creare il collegamento",
   "dashboard_content_links_invalid_url": "Inserisci un URL http(s) valido.",
+  "dashboard_content_links_drag_handle": "Trascina per riordinare",
   "dashboard_content_drops_title": "Drops",
   "dashboard_content_drops_description": "Crea caselle di posta per file per consentire alle persone di inviare file",
   "common_edit": "Modifica",
@@ -593,6 +597,7 @@
   "common_delete_failed": "Eliminazione fallita",
   "common_toggle_failed": "Cambio stato fallito",
   "common_label_required": "L'etichetta è obbligatoria",
+  "common_label_min_length": "L'etichetta deve contenere almeno {{min}} caratteri",
   "common_show": "Mostra",
   "common_hide": "Nascondi",
   "common_add": "Aggiungi",
@@ -605,6 +610,11 @@
   "dashboard_content_drops_turn_off": "Disattiva",
   "dashboard_content_drops_delete_confirm": "Eliminare il drop?",
   "dashboard_content_drops_delete_success": "Drop eliminato",
+  "dashboard_content_drops_delete_description": "Sei sicuro di voler eliminare questo drop? Questa azione non può essere annullata.",
+  "dashboard_content_drops_delete_warning": "Questa azione non può essere annullata.",
+  "dashboard_content_drops_delete_active_warning_title": "Questo drop è attualmente attivo",
+  "dashboard_content_drops_delete_active_warning": "L'eliminazione di questo drop interromperà tutti i link condivisi. Chiunque tenti di accedere a questo drop vedrà un errore.",
+  "dashboard_content_drops_delete_confirm_checkbox": "Comprendo che l'eliminazione di questo drop attivo interromperà i link condivisi",
   "dashboard_content_drops_create_success": "Drop creato con successo",
   "dashboard_content_drops_create_failed": "Impossibile creare il drop",
   "dashboard_content_drops_limit_reached": "Limite del piano gratuito raggiunto ({limit} azioni). Rimuovine uno o passa a Pro.",
@@ -688,15 +698,15 @@
   "settings_export_data_profile": "Profilo",
   "settings_export_data_links": "Link",
   "settings_export_data_drops": "Drop",
-  "settings_export_data_submissions": "Invii",
+  "settings_export_data_submissions": "Caricamenti",
   "settings_export_data_analytics": "Analisi",
-  "settings_export_gdpr_notice": "Questa esportazione contiene tutti i tuoi dati personali memorizzati in OneLink. Puoi usare questi dati per trasferirli a un altro servizio o conservarli per i tuoi archivi. Il link di download sarà valido per 24 ore.",
+  "settings_export_gdpr_notice": "Questa esportazione contiene tutti i tuoi dati personali memorizzati in OneLink. Puoi utilizzare questi dati per trasferirli a un altro servizio o conservarli per i tuoi archivi. Il link di download sarà valido per 24 ore.",
   "settings_export_generating": "Generazione esportazione...",
   "settings_export_ready": "Esportazione pronta!",
   "settings_export_download_valid_24h": "Link di download valido per 24 ore",
   "settings_export_download": "Scarica",
   "settings_export_generate": "Genera esportazione",
-  "settings_export_no_data_selected": "Per favore seleziona almeno un tipo di dato da esportare",
+  "settings_export_no_data_selected": "Seleziona almeno un tipo di dato da esportare",
   "settings_export_generation_success": "Esportazione generata con successo",
   "settings_export_generation_failed": "Errore nella generazione dell'esportazione. Riprova.",
   "settings_export_download_started": "Download avviato",
@@ -792,5 +802,39 @@
   "settings_domain_dns_apex_title": "Per domini Apex/Root (es., esempio.com)",
   "settings_domain_dns_apex_description": "Aggiungi un record A che punta all'IP di Vercel:",
   "settings_domain_dns_apex_note": "Nota: Alcuni provider DNS supportano record ALIAS o CNAME flattening per domini apex. Controlla la documentazione del tuo provider.",
-  "settings_domain_dns_note": "Dopo aver aggiunto i record DNS, potrebbero volerci da alcuni minuti a ore perché le modifiche si propaghino. Vercel emetterà automaticamente un certificato SSL una volta che il DNS è configurato correttamente."
+  "settings_domain_dns_note": "Dopo aver aggiunto i record DNS, potrebbero volerci da alcuni minuti a ore perché le modifiche si propaghino. Vercel emetterà automaticamente un certificato SSL una volta che il DNS è configurato correttamente.",
+  "dashboard_inbox_refresh": "Aggiorna",
+  "dashboard_inbox_refresh_error": "Errore nell'aggiornamento della posta in arrivo",
+  "dashboard_inbox_mark_read": "Segna come letto",
+  "dashboard_inbox_mark_read_error": "Errore nel segnare il caricamento come letto",
+  "dashboard_inbox_marking": "...",
+  "dashboard_inbox_mark_all_read": "Segna tutto come letto",
+  "dashboard_inbox_mark_all_read_error": "Errore nel segnare tutti i caricamenti come letti",
+  "dashboard_inbox_marking_all_read": "Segnando...",
+  "dashboard_account_analytics_views": "Visualizzazioni",
+  "dashboard_account_analytics_by_you": "da te",
+  "dashboard_account_analytics_by_visitors": "da visitatori",
+  "settings_preferences_load_error": "Errore nel caricamento delle preferenze. Uso dei valori predefiniti.",
+  "settings_2fa_encryption_failed": "Errore nella crittografia dei dati 2FA. Riprova.",
+  "settings_2fa_load_failed": "Errore nel caricamento dello stato 2FA",
+  "settings_2fa_user_required": "Autenticazione utente richiesta",
+  "settings_2fa_setup_required": "Per favore avvia prima la configurazione 2FA",
+  "settings_2fa_activation_failed": "Errore nell'attivazione di 2FA",
+  "settings_2fa_password_incorrect": "Password errata",
+  "settings_2fa_not_active": "2FA non è attiva",
+  "password_strength_weak": "Password debole",
+  "password_strength_fair": "Password discreta",
+  "password_strength_good": "Buona password",
+  "password_strength_strong": "Password forte",
+  "password_rule_min_length": "Almeno 8 caratteri",
+  "password_rule_lowercase": "Contiene lettera minuscola",
+  "password_rule_uppercase": "Contiene lettera maiuscola",
+  "password_rule_number": "Contiene un numero",
+  "password_rule_special": "Contiene carattere speciale",
+  "dashboard_content_drops_preview": "Anteprima",
+  "billing_links_usage": "Uso dei link",
+  "billing_drops_usage": "Uso dei drop",
+  "billing_links": "link",
+  "billing_drops": "drop",
+  "billing_plan_limits_separate": "Piano gratuito: {{links}} link max, {{drops}} drop max"
 }

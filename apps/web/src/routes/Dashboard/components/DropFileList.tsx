@@ -6,6 +6,7 @@ export interface DropFile {
   path: string;
   size: number;
   content_type: string | null;
+  original_name?: string; // Original filename from upload
   submission_id: string;
   created_at: string;
   uploaded_by: string | null;
@@ -16,9 +17,14 @@ interface DropFileListProps {
   isLoading: boolean;
 }
 
-// Extract original filename from path (removes timestamp prefix like "1234567890-")
-function getOriginalFileName(path: string): string {
-  const fileName = path.split("/").pop() || "file";
+// Extract original filename from file metadata or path (fallback for backward compatibility)
+function getOriginalFileName(file: DropFile): string {
+  // Use original_name if available (new files)
+  if (file.original_name) {
+    return file.original_name;
+  }
+  // Fallback: extract from path and remove timestamp prefix (for old files)
+  const fileName = file.path.split("/").pop() || "file";
   // Remove timestamp prefix (13 digits + dash)
   return fileName.replace(/^\d{13}-/, "");
 }
@@ -58,7 +64,7 @@ export function DropFileList({ files, isLoading }: DropFileListProps) {
                 rel="noopener noreferrer"
                 className="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline truncate block"
               >
-                {getOriginalFileName(file.path)}
+                {getOriginalFileName(file)}
               </a>
               <div className="flex items-center gap-2 mt-1">
                 <p className="text-xs text-gray-500 dark:text-gray-400">

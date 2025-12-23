@@ -29,6 +29,8 @@ export function useDropCard({
   const { t } = useTranslation();
   const { user } = useAuth();
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [showUpload, setShowUpload] = useState(false);
   const [showFiles, setShowFiles] = useState(false);
   const [files, setFiles] = useState<DropFile[]>([]);
@@ -37,25 +39,32 @@ export function useDropCard({
 
   const shareLink = getDropShareLink(d.id, d.share_token);
 
-  const handleEdit = useCallback(async () => {
-    const newLabel = prompt(t("common_new_label"), d.label);
-    if (!newLabel) return;
-    const { error } = await supabase
-      .from("drops")
-      .update({ label: newLabel })
-      .eq("id", d.id)
-      .eq("profile_id", profileId);
-    if (error) {
-      toast.error(t("common_update_failed"));
-      return;
-    }
-    setDrops(drops.map((x) => (x.id === d.id ? { ...x, label: newLabel } : x)));
-    toast.success(t("dashboard_content_drops_update_success"));
-    // Track drop update
-    if (user?.id) {
-      trackDropUpdated(user.id, d.id);
-    }
-  }, [d.id, d.label, profileId, drops, setDrops, t, user?.id]);
+  const handleEdit = useCallback(() => {
+    setIsEditModalOpen(true);
+  }, []);
+
+  const handleSaveEdit = useCallback(
+    async (newLabel: string) => {
+      const { error } = await supabase
+        .from("drops")
+        .update({ label: newLabel })
+        .eq("id", d.id)
+        .eq("profile_id", profileId);
+      if (error) {
+        toast.error(t("common_update_failed"));
+        throw error;
+      }
+      setDrops(
+        drops.map((x) => (x.id === d.id ? { ...x, label: newLabel } : x)),
+      );
+      toast.success(t("dashboard_content_drops_update_success"));
+      // Track drop update
+      if (user?.id) {
+        trackDropUpdated(user.id, d.id);
+      }
+    },
+    [d.id, profileId, drops, setDrops, t, user?.id],
+  );
 
   const handleToggle = useCallback(
     async (checked: boolean) => {
@@ -84,8 +93,11 @@ export function useDropCard({
     [d.id, profileId, drops, setDrops, t],
   );
 
-  const handleDelete = useCallback(async () => {
-    if (!confirm(t("dashboard_content_drops_delete_confirm"))) return;
+  const handleDelete = useCallback(() => {
+    setIsDeleteModalOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
     const { error } = await supabase
       .from("drops")
       .delete()
@@ -93,7 +105,7 @@ export function useDropCard({
       .eq("profile_id", profileId);
     if (error) {
       toast.error(t("common_delete_failed"));
-      return;
+      throw error;
     }
     setDrops(drops.filter((x) => x.id !== d.id));
     toast.success(t("dashboard_content_drops_delete_success"));
@@ -183,6 +195,10 @@ export function useDropCard({
     shareLink,
     isShareModalOpen,
     setIsShareModalOpen,
+    isEditModalOpen,
+    setIsEditModalOpen,
+    isDeleteModalOpen,
+    setIsDeleteModalOpen,
     showUpload,
     setShowUpload,
     showFiles,
@@ -190,8 +206,10 @@ export function useDropCard({
     fileCount,
     isLoadingFiles,
     handleEdit,
+    handleSaveEdit,
     handleToggle,
     handleDelete,
+    handleDeleteConfirm,
     handleToggleVisibility,
     handleShare,
     handleUploadComplete,

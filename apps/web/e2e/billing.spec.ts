@@ -133,57 +133,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       ).not.toBeVisible();
     });
 
-    test("FREE plan - does NOT show payment method section", async ({
-      authenticatedPage: page,
-    }) => {
-      await page.route(
-        "**/functions/v1/stripe-get-subscription",
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify({
-              subscription: null,
-              invoices: [],
-              paymentMethods: [],
-            }),
-          });
-        },
-      );
-
-      await gotoBillingPage(page);
-      await expect(page.getByTestId("billing-content")).toBeVisible();
-
-      // FREE plan users should NOT see payment method section
-      await expect(
-        page.getByTestId("payment-method-section"),
-      ).not.toBeVisible();
-    });
-
-    test("FREE plan - does NOT show invoices section", async ({
-      authenticatedPage: page,
-    }) => {
-      await page.route(
-        "**/functions/v1/stripe-get-subscription",
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify({
-              subscription: null,
-              invoices: [],
-              paymentMethods: [],
-            }),
-          });
-        },
-      );
-
-      await gotoBillingPage(page);
-      await expect(page.getByTestId("billing-content")).toBeVisible();
-
-      // FREE plan users should NOT see invoices section
-      await expect(page.getByTestId("invoices-section")).not.toBeVisible();
-    });
+    // Payment Method and Invoices sections removed - available in Stripe portal
 
     test("FREE plan - does NOT show renewal date row", async ({
       authenticatedPage: page,
@@ -321,122 +271,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       }
     });
 
-    test("PAID plan - shows payment method section", async ({
-      authenticatedPage: page,
-    }) => {
-      const renewalDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-      const mockPaymentMethod = {
-        id: "pm_123",
-        type: "card",
-        card: {
-          brand: "visa",
-          last4: "4242",
-          expMonth: 12,
-          expYear: 2025,
-        },
-      };
-
-      await page.route(
-        "**/functions/v1/stripe-get-subscription",
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify({
-              subscription: {
-                status: "active",
-                renewalDate: renewalDate.toISOString(),
-                currentPeriodEnd:
-                  Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
-                cancelAtPeriodEnd: false,
-              },
-              invoices: [],
-              paymentMethods: [mockPaymentMethod],
-            }),
-          });
-        },
-      );
-
-      await gotoBillingPage(page);
-      await expect(page.getByTestId("billing-content")).toBeVisible();
-
-      // Check if user has paid plan
-      const paymentMethodSection = page.getByTestId("payment-method-section");
-      const paymentVisible = await paymentMethodSection
-        .isVisible()
-        .catch(() => false);
-
-      if (paymentVisible) {
-        // User has paid plan - verify payment method section
-        await expect(paymentMethodSection).toBeVisible();
-        await expect(page.getByTestId("payment-method-title")).toBeVisible();
-        await expect(page.getByTestId("payment-method-card")).toBeVisible();
-        await expect(page.getByTestId("payment-method-last4")).toHaveText(
-          "4242",
-        );
-      } else {
-        // User is free - verify section is not visible
-        await expect(paymentMethodSection).not.toBeVisible();
-      }
-    });
-
-    test("PAID plan - shows invoices section", async ({
-      authenticatedPage: page,
-    }) => {
-      const renewalDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-      const mockInvoices = [
-        {
-          id: "inv_123",
-          amount: 999,
-          currency: "eur",
-          status: "paid",
-          created: Math.floor(Date.now() / 1000) - 86400,
-          invoicePdf: "https://pay.stripe.com/invoice/inv_123.pdf",
-          hostedInvoiceUrl: "https://invoice.stripe.com/i/inv_123",
-        },
-      ];
-
-      await page.route(
-        "**/functions/v1/stripe-get-subscription",
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify({
-              subscription: {
-                status: "active",
-                renewalDate: renewalDate.toISOString(),
-                currentPeriodEnd:
-                  Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
-                cancelAtPeriodEnd: false,
-              },
-              invoices: mockInvoices,
-              paymentMethods: [],
-            }),
-          });
-        },
-      );
-
-      await gotoBillingPage(page);
-      await expect(page.getByTestId("billing-content")).toBeVisible();
-
-      // Check if user has paid plan
-      const invoicesSection = page.getByTestId("invoices-section");
-      const invoicesVisible = await invoicesSection
-        .isVisible()
-        .catch(() => false);
-
-      if (invoicesVisible) {
-        // User has paid plan - verify invoices section
-        await expect(invoicesSection).toBeVisible();
-        await expect(page.getByTestId("invoices-title")).toBeVisible();
-        await expect(page.getByTestId("invoices-list")).toBeVisible();
-        await expect(page.getByTestId("invoice-inv_123")).toBeVisible();
-      } else {
-        // User is free - verify section is not visible
-        await expect(invoicesSection).not.toBeVisible();
-      }
-    });
+    // Payment Method and Invoices sections removed - available in Stripe portal via "Manage on Stripe" button
 
     test("PAID plan - shows renewal date row", async ({
       authenticatedPage: page,
@@ -525,48 +360,7 @@ test.describe("Billing Page - Stripe Integration", () => {
       }
     });
 
-    test("PAID plan - shows empty invoices state when no invoices", async ({
-      authenticatedPage: page,
-    }) => {
-      const renewalDate = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-
-      await page.route(
-        "**/functions/v1/stripe-get-subscription",
-        async (route) => {
-          await route.fulfill({
-            status: 200,
-            contentType: "application/json",
-            body: JSON.stringify({
-              subscription: {
-                status: "active",
-                renewalDate: renewalDate.toISOString(),
-                currentPeriodEnd:
-                  Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
-                cancelAtPeriodEnd: false,
-              },
-              invoices: [],
-              paymentMethods: [],
-            }),
-          });
-        },
-      );
-
-      await gotoBillingPage(page);
-      await expect(page.getByTestId("billing-content")).toBeVisible();
-
-      // Check if user has paid plan
-      const invoicesSection = page.getByTestId("invoices-section");
-      const invoicesVisible = await invoicesSection
-        .isVisible()
-        .catch(() => false);
-
-      if (invoicesVisible) {
-        // User has paid plan - verify empty state
-        await expect(page.getByTestId("invoices-title")).toBeVisible();
-        await expect(page.getByTestId("invoices-empty-state")).toBeVisible();
-        await expect(page.getByTestId("invoices-list")).not.toBeVisible();
-      }
-    });
+    // Empty invoices state test removed - invoices section removed
 
     test("PAID plan - manage button is interactive", async ({
       authenticatedPage: page,

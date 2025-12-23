@@ -11,6 +11,7 @@ export interface DropFile {
   path: string;
   size: number;
   content_type: string | null;
+  original_name?: string; // Original filename from upload
   submission_id: string;
   created_at: string;
   uploaded_by: string | null;
@@ -46,9 +47,13 @@ export function DropFileList({ files }: DropFileListProps) {
     <div className="space-y-3">
       {files.map((file, index) => {
         const url = getFileUrl(file.path);
-        // Extract original filename (remove timestamp prefix)
-        const rawFileName = file.path.split("/").pop() || "file";
-        const fileName = rawFileName.replace(/^\d{13}-/, "");
+        // Use original filename if available, otherwise extract from path (backward compatibility)
+        const fileName =
+          file.original_name ||
+          (() => {
+            const rawFileName = file.path.split("/").pop() || "file";
+            return rawFileName.replace(/^\d{13}-/, "");
+          })();
         return (
           <div
             key={`${file.submission_id}-${index}`}

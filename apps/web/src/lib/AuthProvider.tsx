@@ -1,8 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
+import { toast } from "sonner";
 import { supabase } from "./supabase";
-import { createUserSession, logLoginAttempt } from "./sessionTracking";
+import { createUserSession } from "./sessionTracking";
 import { MFAChallenge } from "@/components/MFAChallenge";
 import { trackUserSignedIn, trackUserSignedOut } from "./posthog-events";
 
@@ -10,6 +11,7 @@ type AuthContextValue = {
   session: Session | null;
   user: User | null;
   loading: boolean;
+  checkingMFA: boolean;
   signInWithEmail: (email: string) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 };
@@ -19,6 +21,7 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
+  const [checkingMFA, setCheckingMFA] = useState(false);
   const [showMFAChallenge, setShowMFAChallenge] = useState(false);
 
   useEffect(() => {
@@ -54,14 +57,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clean up both hash (implicit) and query params (PKCE) for safety
       if (event === "SIGNED_IN") {
         const url = new URL(window.location.href);
-        if (url.hash || url.searchParams.has("code")) {
+        const isMagicLinkRedirect = url.hash || url.searchParams.has("code");
+
+        if (isMagicLinkRedirect) {
           window.history.replaceState(null, "", window.location.pathname);
+          // Immediately dismiss any toasts (like "check your email") when magic link is clicked
+          // We'll check MFA and show modal if needed, so don't show success toast
+          toast.dismiss();
         }
 
-        // After a successful sign-in, check if the user has MFA factors
+        // After a successful sign-in, IMMEDIATELY check if the user has MFA factors
+        // This check blocks rendering until complete to show MFA modal before dashboard
         // Only show challenge if session is aal1 (not aal2 - already verified)
-        // Run this asynchronously without blocking the auth flow
-        // This prevents MFA checks from interfering with other Supabase queries
+        setCheckingMFA(true);
         (async () => {
           try {
             const { data: aalData, error: aalError } =
@@ -69,44 +77,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (aalError) {
               console.error("[Auth] Error getting AAL:", aalError);
-            } else if (aalData) {
-              // Show challenge if current level is aal1 but next level is aal2
-              const needsMFA =
-                aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
+              setCheckingMFA(false);
+              return; // Don't show challenge if we can't get AAL
+            }
 
-              if (needsMFA) {
-                const { data, error } = await supabase.auth.mfa.listFactors();
-                if (error) {
-                  console.error("[Auth] Error listing MFA factors:", error);
-                } else if (data?.totp && data.totp.length > 0) {
-                  setShowMFAChallenge(true);
-                }
-              }
+            if (!aalData) {
+              setCheckingMFA(false);
+              return; // No AAL data, don't show challenge
+            }
+
+            // Show challenge ONLY if:
+            // 1. Current level is aal1 (not fully authenticated)
+            // 2. Next level is aal2 (MFA is required)
+            // 3. User actually has MFA factors enabled
+            const needsMFA =
+              aalData.currentLevel === "aal1" && aalData.nextLevel === "aal2";
+
+            if (!needsMFA) {
+              // User doesn't need MFA (either already verified or doesn't have MFA enabled)
+              setCheckingMFA(false);
+              return;
+            }
+
+            // Only proceed if MFA is actually needed
+            const { data, error } = await supabase.auth.mfa.listFactors();
+            if (error) {
+              console.error("[Auth] Error listing MFA factors:", error);
+              setCheckingMFA(false);
+              return; // Don't show challenge if we can't list factors
+            }
+
+            // Only show challenge if user has TOTP factors enabled
+            if (data?.totp && data.totp.length > 0) {
+              setShowMFAChallenge(true);
+              // Keep checkingMFA true while MFA challenge is shown
+              // This prevents dashboard from rendering
+            } else {
+              // If no factors exist, user doesn't have MFA enabled - don't show challenge
+              setCheckingMFA(false);
             }
           } catch (err) {
             console.error("[Auth] Unexpected error checking MFA factors:", err);
+            setCheckingMFA(false);
+            // Don't show challenge on error
           }
         })();
       }
 
-      // Track session and log login history on successful sign-in
+      // Track session on successful sign-in
       // Only do this for SIGNED_IN, not for INITIAL_SESSION (which happens on refresh)
-      // Run these asynchronously without blocking the auth flow
+      // createUserSession now checks for existing sessions and updates last_activity instead of creating duplicates
+      // Run asynchronously without blocking the auth flow
       if (event === "SIGNED_IN" && s?.user) {
         // Don't await - run in background to avoid blocking auth flow
         createUserSession({
           userId: s.user.id,
         }).catch((error) => {
           console.error("[Auth] Error creating session:", error);
-        });
-
-        // Log successful login (also non-blocking)
-        logLoginAttempt({
-          email: s.user.email || "",
-          status: "success",
-          userId: s.user.id,
-        }).catch((error) => {
-          console.error("[Auth] Error logging login attempt:", error);
         });
 
         // Track sign-in in PostHog (non-blocking)
@@ -151,6 +178,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       session,
       user,
       loading,
+      checkingMFA,
       async signInWithEmail(email: string) {
         const { error } = await supabase.auth.signInWithOtp({
           email,
@@ -164,16 +192,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Note: trackUserSignedOut is called in onAuthStateChange when SIGNED_OUT fires
       },
     };
-  }, [session, loading]);
+  }, [session, loading, checkingMFA]);
 
   return (
     <AuthContext.Provider value={value}>
       {children}
+      {/* Show loading overlay while checking MFA */}
+      {checkingMFA && !showMFAChallenge && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+          <div className="rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
+            <div className="flex items-center gap-3">
+              <div className="h-5 w-5 animate-spin rounded-full border-2 border-purple-500 border-t-transparent" />
+              <p className="text-gray-900 dark:text-white">
+                Verifying authentication...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Show MFA challenge modal when needed */}
       {showMFAChallenge && (
         <div data-testid="mfa-challenge-container">
           <MFAChallenge
             onVerified={() => {
               setShowMFAChallenge(false);
+              setCheckingMFA(false);
             }}
           />
         </div>

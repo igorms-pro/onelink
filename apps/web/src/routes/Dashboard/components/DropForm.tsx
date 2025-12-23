@@ -24,7 +24,9 @@ export function DropForm({
   const { t } = useTranslation();
   const { user } = useAuth();
   const [busy, setBusy] = useState(false);
+  const [label, setLabel] = useState("");
   const limitReached = isFree && dropsCount >= freeDropsLimit;
+  const isLabelValid = label.trim().length >= 3;
 
   return (
     <form
@@ -42,9 +44,13 @@ export function DropForm({
         }
         const form = e.currentTarget as HTMLFormElement;
         const fd = new FormData(form);
-        const label = String(fd.get("label") || "").trim();
-        if (!label) {
+        const labelValue = String(fd.get("label") || "").trim();
+        if (!labelValue) {
           toast.error(t("common_label_required"));
+          return;
+        }
+        if (labelValue.length < 3) {
+          toast.error(t("common_label_min_length", { min: 3 }));
           return;
         }
         setBusy(true);
@@ -54,7 +60,7 @@ export function DropForm({
             .insert([
               {
                 profile_id: profileId,
-                label,
+                label: labelValue,
                 emoji: null,
                 order: 1, // Order will be recalculated by parent
                 is_public: true, // Default to public
@@ -65,6 +71,7 @@ export function DropForm({
           if (error) throw error;
           onDropCreated(data as DropRow);
           form.reset();
+          setLabel("");
           toast.success(t("dashboard_content_drops_create_success"));
           // Track drop creation
           if (user?.id) {
@@ -79,13 +86,15 @@ export function DropForm({
     >
       <input
         name="label"
+        value={label}
+        onChange={(e) => setLabel(e.target.value)}
         placeholder={t("dashboard_content_drops_label_placeholder")}
         disabled={limitReached}
         className="rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
       />
       <button
         type="submit"
-        disabled={busy || limitReached}
+        disabled={busy || limitReached || !isLabelValid}
         className="rounded-md bg-linear-to-r from-purple-600 to-purple-700 text-white px-3 py-1.5 text-sm font-medium hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm opacity-100 cursor-pointer"
       >
         {t("dashboard_content_drops_add_button")}

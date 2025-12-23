@@ -3,18 +3,12 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/AuthProvider";
-import type {
-  Session,
-  LoginHistory,
-  DatabaseSession,
-  DatabaseLoginHistory,
-} from "./types";
+import type { Session, DatabaseSession } from "./types";
 
 export function useSessions() {
   const { t } = useTranslation();
   const { user } = useAuth();
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [loginHistory, setLoginHistory] = useState<LoginHistory[]>([]);
   const [loading, setLoading] = useState(true);
   const [revokingSessionId, setRevokingSessionId] = useState<string | null>(
     null,
@@ -28,6 +22,23 @@ export function useSessions() {
 
     setLoading(true);
     try {
+      // First, clean up duplicate sessions (keep only latest per device/browser)
+      // This runs automatically to prevent showing duplicates
+      // Wrap in try-catch to handle if function doesn't exist yet
+      try {
+        const { error: cleanupError } = await supabase.rpc(
+          "cleanup_my_duplicate_sessions",
+          {},
+        );
+        if (cleanupError) {
+          // Don't fail if cleanup fails - just log it (function might not exist yet)
+          console.warn("Failed to cleanup duplicate sessions:", cleanupError);
+        }
+      } catch (cleanupErr) {
+        // Function might not exist yet - that's okay, just continue
+        console.warn("Cleanup function not available:", cleanupErr);
+      }
+
       // Load sessions from database
       const { data: sessionsData, error: sessionsError } = await supabase.rpc(
         "get_user_sessions",
@@ -57,31 +68,6 @@ export function useSessions() {
           isCurrent: s.is_current || false,
         }));
         setSessions(mappedSessions);
-      }
-
-      // Load login history
-      const { data: historyData, error: historyError } = await supabase
-        .from("login_history")
-        .select("*")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(50); // Limit to last 50 entries
-
-      if (historyError) {
-        console.error("Error loading login history:", historyError);
-        setLoginHistory([]);
-      } else {
-        // Map database results to LoginHistory type
-        const mappedHistory: LoginHistory[] = (
-          (historyData as DatabaseLoginHistory[]) || []
-        ).map((h) => ({
-          id: h.id,
-          date: h.created_at,
-          status: h.status,
-          ip: h.ip_address || "Unknown",
-          device: h.device_info || "Unknown",
-        }));
-        setLoginHistory(mappedHistory);
       }
     } catch (error) {
       console.error("Error loading sessions:", error);
@@ -151,7 +137,6 @@ export function useSessions() {
 
   return {
     sessions,
-    loginHistory,
     loading,
     revokingSessionId,
     loadSessions,

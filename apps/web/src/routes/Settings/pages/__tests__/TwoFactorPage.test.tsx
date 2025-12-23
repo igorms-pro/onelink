@@ -80,6 +80,7 @@ describe("TwoFactorPage (Supabase MFA)", () => {
       user: mockUser,
       session: null,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });

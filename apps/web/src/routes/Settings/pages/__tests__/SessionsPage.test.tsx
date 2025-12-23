@@ -3,10 +3,7 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import SessionsPage from "../SessionsPage";
 import type { User } from "@supabase/supabase-js";
-import type {
-  DatabaseSession,
-  DatabaseLoginHistory,
-} from "../SessionsPage/types";
+import type { DatabaseSession } from "../SessionsPage/types";
 
 // Mock dependencies
 vi.mock("@/lib/supabase", () => ({
@@ -56,16 +53,13 @@ vi.mock("react-i18next", () => ({
       const translations: Record<string, string> = {
         settings_back_to_settings: "Back to settings",
         sessions_page_title: "Active Sessions",
-        sessions_page_description:
-          "Manage your active sessions and view login history",
+        sessions_page_description: "Manage your active sessions",
         sessions_active_sessions: "Active Sessions",
         sessions_no_sessions: "No active sessions",
         sessions_revoke_all_other: "Revoke all other sessions",
         sessions_revoking: "Revoking...",
         sessions_revoke: "Revoke",
         sessions_current_session: "Current session",
-        sessions_login_history: "Login History",
-        sessions_no_history: "No login history",
         sessions_status_success: "Success",
         sessions_status_failed: "Failed",
         sessions_revoked_success: "Session revoked successfully",
@@ -118,7 +112,8 @@ const mockSessions: DatabaseSession[] = [
   },
 ];
 
-const mockLoginHistory: DatabaseLoginHistory[] = [
+// Login History removed - no longer needed
+const mockLoginHistory: any[] = [
   {
     id: "history-1",
     created_at: new Date().toISOString(),
@@ -144,6 +139,7 @@ describe("SessionsPage", () => {
       user: mockUser,
       session: null,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
@@ -340,7 +336,7 @@ describe("SessionsPage", () => {
     });
   });
 
-  it("should display login history", async () => {
+  it.skip("should display login history - REMOVED: Login History feature removed", async () => {
     render(
       <MemoryRouter>
         <SessionsPage />
@@ -351,7 +347,7 @@ describe("SessionsPage", () => {
       expect(screen.getByTestId("login-history-title")).toBeInTheDocument();
     });
 
-    // Should show login history entries
+    // REMOVED: Login History feature removed
     expect(screen.getByTestId("login-history-list")).toBeInTheDocument();
     expect(
       screen.getByTestId("login-history-entry-history-1"),
@@ -392,7 +388,7 @@ describe("SessionsPage", () => {
     );
   });
 
-  it("should handle hash navigation to login-history section", async () => {
+  it.skip("should handle hash navigation to login-history section - REMOVED: Login History feature removed", async () => {
     const mockElement = document.createElement("div");
     mockElement.scrollIntoView = vi.fn();
     const mockClassList = {

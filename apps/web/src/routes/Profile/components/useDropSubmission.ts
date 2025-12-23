@@ -76,6 +76,7 @@ export function useDropSubmission(drop: PublicDrop) {
         path: string;
         size: number;
         content_type: string | null;
+        original_name?: string;
       }> = [];
 
       for (const file of files) {
@@ -94,6 +95,7 @@ export function useDropSubmission(drop: PublicDrop) {
           path: key,
           size: file.size,
           content_type: file.type || null,
+          original_name: file.name, // Store original filename
         });
       }
 

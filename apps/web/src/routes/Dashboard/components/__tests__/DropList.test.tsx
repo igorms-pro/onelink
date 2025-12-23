@@ -29,11 +29,88 @@ vi.mock("@/lib/AuthProvider", () => ({
 
 import { supabase } from "@/lib/supabase";
 
-// Mock window.confirm and prompt
-globalThis.confirm = vi.fn(() => true);
-globalThis.prompt = vi.fn(
-  (_message?: string, defaultValue?: string) => defaultValue || "New Label",
-);
+// Mock EditDropModal
+vi.mock("../ContentTab/EditDropModal", () => ({
+  EditDropModal: ({
+    open,
+    onOpenChange,
+    onSave,
+    drop,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSave: (label: string) => Promise<void>;
+    drop: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="edit-drop-modal">
+        <input data-testid="edit-drop-input" defaultValue={drop.label} />
+        <button
+          data-testid="edit-drop-save"
+          onClick={async () => {
+            try {
+              const input = document.querySelector(
+                '[data-testid="edit-drop-input"]',
+              ) as HTMLInputElement;
+              await onSave(input?.value || "New Label");
+              onOpenChange(false);
+            } catch {
+              // Error is handled by onSave, don't close modal on error
+            }
+          }}
+        >
+          Save
+        </button>
+        <button
+          data-testid="edit-drop-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
+
+// Mock DeleteDropModal
+vi.mock("../ContentTab/DeleteDropModal", () => ({
+  DeleteDropModal: ({
+    open,
+    onOpenChange,
+    onConfirm,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onConfirm: () => Promise<void>;
+    drop: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="delete-drop-modal">
+        <button
+          data-testid="delete-drop-confirm"
+          onClick={async () => {
+            try {
+              await onConfirm();
+              onOpenChange(false);
+            } catch {
+              // Error is handled by onConfirm, don't close modal on error
+            }
+          }}
+        >
+          Delete
+        </button>
+        <button
+          data-testid="delete-drop-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
 
 describe("DropList", () => {
   const mockSetDrops = vi.fn();
@@ -189,6 +266,20 @@ describe("DropList", () => {
       editButtons.find((btn) => !btn.hasAttribute("hidden")) || editButtons[0];
     await user.click(editButton as HTMLElement);
 
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("edit-drop-modal")).toBeInTheDocument();
+    });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-drop-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save
+    const saveButton = screen.getByTestId("edit-drop-save");
+    await user.click(saveButton);
+
     await waitFor(() => {
       expect(mockSetDrops).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Drop updated");
@@ -232,9 +323,26 @@ describe("DropList", () => {
       editButtons.find((btn) => !btn.hasAttribute("hidden")) || editButtons[0];
     await user.click(editButton as HTMLElement);
 
+    // Wait for modal to open
     await waitFor(() => {
-      expect(toast.error).toHaveBeenCalledWith("Update failed");
+      expect(screen.getByTestId("edit-drop-modal")).toBeInTheDocument();
     });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-drop-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save - this will trigger an error
+    const saveButton = screen.getByTestId("edit-drop-save");
+    await user.click(saveButton);
+
+    await waitFor(
+      () => {
+        expect(toast.error).toHaveBeenCalledWith("Update failed");
+      },
+      { timeout: 3000 },
+    );
   });
 
   it("handles toggle drop active state", async () => {
@@ -359,8 +467,16 @@ describe("DropList", () => {
       deleteButtons[0];
     await user.click(deleteButton as HTMLElement);
 
+    // Wait for modal to open
     await waitFor(() => {
-      expect(globalThis.confirm).toHaveBeenCalled();
+      expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
+    });
+
+    // Click confirm in modal
+    const confirmButton = screen.getByTestId("delete-drop-confirm");
+    await user.click(confirmButton);
+
+    await waitFor(() => {
       expect(mockSetDrops).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Drop deleted");
     });
@@ -368,7 +484,6 @@ describe("DropList", () => {
 
   it("does not delete when confirmation is cancelled", async () => {
     const user = userEvent.setup();
-    vi.mocked(globalThis.confirm).mockReturnValue(false);
     const drops: DropRow[] = [
       {
         id: "drop-1",
@@ -393,6 +508,15 @@ describe("DropList", () => {
       deleteButtons.find((btn) => !btn.hasAttribute("hidden")) ||
       deleteButtons[0];
     await user.click(deleteButton as HTMLElement);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
+    });
+
+    // Click cancel in modal
+    const cancelButton = screen.getByTestId("delete-drop-cancel");
+    await user.click(cancelButton);
 
     await waitFor(() => {
       expect(mockSetDrops).not.toHaveBeenCalled();
@@ -533,12 +657,17 @@ describe("DropList", () => {
     expect(deleteButton).toBeDefined();
     await user.click(deleteButton as HTMLElement);
 
+    // Wait for modal to open
     await waitFor(
       () => {
-        expect(globalThis.confirm).toHaveBeenCalled();
+        expect(screen.getByTestId("delete-drop-modal")).toBeInTheDocument();
       },
       { timeout: 3000 },
     );
+
+    // Click confirm in modal
+    const confirmButton = screen.getByTestId("delete-drop-confirm");
+    await user.click(confirmButton);
 
     // Wait for the error toast after confirmation
     await waitFor(

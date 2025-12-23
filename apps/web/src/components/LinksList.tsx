@@ -2,9 +2,11 @@ import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
-import { Pencil, Trash2 } from "lucide-react";
+import { Pencil, Trash2, GripVertical } from "lucide-react";
 import { useAuth } from "../lib/AuthProvider";
 import { trackLinkUpdated, trackLinkDeleted } from "../lib/posthog-events";
+import { EditLinkModal } from "../routes/Dashboard/components/ContentTab/EditLinkModal";
+import { DeleteLinkModal } from "../routes/Dashboard/components/ContentTab/DeleteLinkModal";
 
 export type LinkRow = {
   id: string;
@@ -28,6 +30,9 @@ export function LinksList({
   const dragIndex = useRef<number | null>(null);
   const overIndex = useRef<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
+  const [editingLink, setEditingLink] = useState<LinkRow | null>(null);
+  const [deletingLink, setDeletingLink] = useState<LinkRow | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   return (
     <>
@@ -47,10 +52,19 @@ export function LinksList({
           {links.map((l, idx) => (
             <li
               key={l.id}
-              className="flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 hover:shadow-md transition-all cursor-move group"
+              className={`flex items-start justify-between rounded-lg border border-gray-200 dark:border-gray-700 bg-purple-50 dark:bg-purple-900/20 p-4 hover:shadow-md transition-all group ${
+                isDragging && dragIndex.current === idx
+                  ? "cursor-grabbing opacity-50"
+                  : "cursor-move"
+              }`}
               draggable
               onDragStart={() => {
                 dragIndex.current = idx;
+                setIsDragging(true);
+              }}
+              onDragEnd={() => {
+                dragIndex.current = null;
+                setIsDragging(false);
               }}
               onDragOver={(e) => {
                 e.preventDefault();
@@ -61,6 +75,7 @@ export function LinksList({
                 const to = overIndex.current;
                 dragIndex.current = null;
                 overIndex.current = null;
+                setIsDragging(false);
                 if (from == null || to == null || from === to) return;
                 const prev = links;
                 const next = [...links];
@@ -88,45 +103,38 @@ export function LinksList({
                 }
               }}
             >
-              <div className="min-w-0 flex-1 cursor-move pr-4">
-                <p className="font-medium truncate text-gray-900 dark:text-white">
-                  {l.emoji ? `${l.emoji} ` : ""}
-                  {l.label}
-                </p>
-                <a
-                  className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2 cursor-pointer"
-                  href={l.url}
-                  target="_blank"
-                  rel="noreferrer"
+              <div className="flex items-center gap-2 min-w-0 flex-1 pr-4">
+                <div
+                  className="shrink-0 cursor-grab active:cursor-grabbing text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-400 transition-colors group-hover:text-gray-600 dark:group-hover:text-gray-400"
+                  aria-label={t("dashboard_content_links_drag_handle", {
+                    defaultValue: "Drag to reorder",
+                  })}
+                  title={t("dashboard_content_links_drag_handle", {
+                    defaultValue: "Drag to reorder",
+                  })}
                 >
-                  {l.url}
-                </a>
+                  <GripVertical className="w-5 h-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-medium truncate text-gray-900 dark:text-white">
+                    {l.emoji ? `${l.emoji} ` : ""}
+                    {l.label}
+                  </p>
+                  <a
+                    className="text-sm text-blue-600 dark:text-blue-300 hover:underline break-all block mt-2 cursor-pointer"
+                    href={l.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {l.url}
+                  </a>
+                </div>
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <button
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    const newLabel = prompt(t("common_new_label"), l.label);
-                    if (!newLabel) return;
-                    const { error } = await supabase
-                      .from("links")
-                      .update({ label: newLabel })
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_update_failed"));
-                      return;
-                    }
-                    setLinks(
-                      links.map((x) =>
-                        x.id === l.id ? { ...x, label: newLabel } : x,
-                      ),
-                    );
-                    toast.success(t("dashboard_content_links_update_success"));
-                    // Track link update
-                    if (user?.id) {
-                      trackLinkUpdated(user.id, l.id);
-                    }
+                    setEditingLink(l);
                   }}
                   className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                   aria-label={t("common_edit")}
@@ -134,25 +142,9 @@ export function LinksList({
                   <Pencil className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                 </button>
                 <button
-                  onClick={async (e) => {
+                  onClick={(e) => {
                     e.stopPropagation();
-                    if (!confirm(t("dashboard_content_links_delete_confirm")))
-                      return;
-                    const { error } = await supabase
-                      .from("links")
-                      .delete()
-                      .eq("id", l.id)
-                      .eq("profile_id", profileId);
-                    if (error) {
-                      toast.error(t("common_delete_failed"));
-                      return;
-                    }
-                    setLinks(links.filter((x) => x.id !== l.id));
-                    toast.success(t("dashboard_content_links_delete_success"));
-                    // Track link deletion
-                    if (user?.id) {
-                      trackLinkDeleted(user.id, l.id);
-                    }
+                    setDeletingLink(l);
                   }}
                   className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors cursor-pointer"
                   aria-label={t("common_delete")}
@@ -164,6 +156,60 @@ export function LinksList({
           ))}
         </ul>
       )}
+      <EditLinkModal
+        open={editingLink !== null}
+        onOpenChange={(open) => {
+          if (!open) setEditingLink(null);
+        }}
+        link={editingLink}
+        onSave={async (newLabel) => {
+          if (!editingLink) return;
+          const { error } = await supabase
+            .from("links")
+            .update({ label: newLabel })
+            .eq("id", editingLink.id)
+            .eq("profile_id", profileId);
+          if (error) {
+            toast.error(t("common_update_failed"));
+            throw error;
+          }
+          setLinks(
+            links.map((x) =>
+              x.id === editingLink.id ? { ...x, label: newLabel } : x,
+            ),
+          );
+          toast.success(t("dashboard_content_links_update_success"));
+          // Track link update
+          if (user?.id) {
+            trackLinkUpdated(user.id, editingLink.id);
+          }
+        }}
+      />
+      <DeleteLinkModal
+        open={deletingLink !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeletingLink(null);
+        }}
+        link={deletingLink}
+        onConfirm={async () => {
+          if (!deletingLink) return;
+          const { error } = await supabase
+            .from("links")
+            .delete()
+            .eq("id", deletingLink.id)
+            .eq("profile_id", profileId);
+          if (error) {
+            toast.error(t("common_delete_failed"));
+            throw error;
+          }
+          setLinks(links.filter((x) => x.id !== deletingLink.id));
+          toast.success(t("dashboard_content_links_delete_success"));
+          // Track link deletion
+          if (user?.id) {
+            trackLinkDeleted(user.id, deletingLink.id);
+          }
+        }}
+      />
     </>
   );
 }

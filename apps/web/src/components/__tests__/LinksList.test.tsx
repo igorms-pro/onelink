@@ -29,11 +29,88 @@ vi.mock("@/lib/AuthProvider", () => ({
 // Mock toast - already mocked globally, but we can override if needed
 // Mock i18n - using global mock from vitest.setup.ts that returns English translations
 
-// Mock window.confirm
-globalThis.confirm = vi.fn(() => true);
-globalThis.prompt = vi.fn(
-  (_message?: string, defaultValue?: string) => defaultValue || "New Label",
-);
+// Mock EditLinkModal
+vi.mock("../../routes/Dashboard/components/ContentTab/EditLinkModal", () => ({
+  EditLinkModal: ({
+    open,
+    onOpenChange,
+    onSave,
+    link,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onSave: (label: string) => Promise<void>;
+    link: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="edit-link-modal">
+        <input data-testid="edit-link-input" defaultValue={link?.label} />
+        <button
+          data-testid="edit-link-save"
+          onClick={async () => {
+            try {
+              const input = document.querySelector(
+                '[data-testid="edit-link-input"]',
+              ) as HTMLInputElement;
+              await onSave(input?.value || "New Label");
+              onOpenChange(false);
+            } catch {
+              // Error handled in onSave
+            }
+          }}
+        >
+          Save
+        </button>
+        <button
+          data-testid="edit-link-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
+
+// Mock DeleteLinkModal
+vi.mock("../../routes/Dashboard/components/ContentTab/DeleteLinkModal", () => ({
+  DeleteLinkModal: ({
+    open,
+    onOpenChange,
+    onConfirm,
+  }: {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    onConfirm: () => Promise<void>;
+    link: any;
+  }) => {
+    if (!open) return null;
+    return (
+      <div data-testid="delete-link-modal">
+        <button
+          data-testid="delete-link-confirm"
+          onClick={async () => {
+            try {
+              await onConfirm();
+              onOpenChange(false);
+            } catch {
+              // Error handled in onConfirm
+            }
+          }}
+        >
+          Delete
+        </button>
+        <button
+          data-testid="delete-link-cancel"
+          onClick={() => onOpenChange(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    );
+  },
+}));
 
 import { supabase } from "@/lib/supabase";
 
@@ -49,7 +126,7 @@ describe("LinksList", () => {
     vi.clearAllMocks();
     // Reset supabase.from to default mock behavior
     mockFrom.mockImplementation(
-      () =>
+      (_table: string) =>
         ({
           select: vi.fn(() => ({
             eq: vi.fn(() => ({
@@ -65,7 +142,7 @@ describe("LinksList", () => {
           })),
           update: vi.fn(() => ({
             eq: vi.fn(() => ({
-              eq: vi.fn().mockResolvedValue({ data: [], error: null }),
+              eq: vi.fn(() => Promise.resolve({ data: [], error: null })),
             })),
           })),
           delete: vi.fn(() => ({
@@ -126,17 +203,42 @@ describe("LinksList", () => {
 
     const mockUpdate = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
+        eq: vi.fn(() => Promise.resolve({ data: [], error: null })),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      update: mockUpdate,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          update: mockUpdate,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const editButtons = screen.getAllByLabelText("Edit");
     await user.click(editButtons[0]);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("edit-link-modal")).toBeInTheDocument();
+    });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-link-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save
+    const saveButton = screen.getByTestId("edit-link-save");
+    await user.click(saveButton);
 
     await waitFor(() => {
       expect(mockSetLinks).toHaveBeenCalled();
@@ -158,17 +260,44 @@ describe("LinksList", () => {
 
     const mockUpdate = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: { message: "Error" } }),
+        eq: vi.fn(() =>
+          Promise.resolve({ data: [], error: { message: "Error" } }),
+        ),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      update: mockUpdate,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          update: mockUpdate,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const editButtons = screen.getAllByLabelText("Edit");
     await user.click(editButtons[0]);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("edit-link-modal")).toBeInTheDocument();
+    });
+
+    // Update the label in the modal
+    const input = screen.getByTestId("edit-link-input");
+    await user.clear(input);
+    await user.type(input, "New Label");
+
+    // Click save - this will trigger an error
+    const saveButton = screen.getByTestId("edit-link-save");
+    await user.click(saveButton);
 
     await waitFor(() => {
       expect(toast.error).toHaveBeenCalledWith("Update failed");
@@ -189,20 +318,39 @@ describe("LinksList", () => {
 
     const mockDelete = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
+        eq: vi.fn().mockResolvedValue({ data: null, error: null }),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      delete: mockDelete,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          delete: mockDelete,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const deleteButtons = screen.getAllByLabelText("Delete");
     await user.click(deleteButtons[0]);
 
+    // Wait for modal to open
     await waitFor(() => {
-      expect(globalThis.confirm).toHaveBeenCalled();
+      expect(screen.getByTestId("delete-link-modal")).toBeInTheDocument();
+    });
+
+    // Click confirm in modal
+    const confirmButton = screen.getByTestId("delete-link-confirm");
+    await user.click(confirmButton);
+
+    await waitFor(() => {
       expect(mockSetLinks).toHaveBeenCalled();
       expect(toast.success).toHaveBeenCalledWith("Link deleted");
     });
@@ -210,7 +358,6 @@ describe("LinksList", () => {
 
   it("does not delete when confirmation is cancelled", async () => {
     const user = userEvent.setup();
-    vi.mocked(globalThis.confirm).mockReturnValue(false);
     const links: LinkRow[] = [
       {
         id: "link-1",
@@ -224,6 +371,15 @@ describe("LinksList", () => {
     render(<LinksList {...defaultProps} links={links} />);
     const deleteButtons = screen.getAllByLabelText("Delete");
     await user.click(deleteButtons[0]);
+
+    // Wait for modal to open
+    await waitFor(() => {
+      expect(screen.getByTestId("delete-link-modal")).toBeInTheDocument();
+    });
+
+    // Click cancel in modal
+    const cancelButton = screen.getByTestId("delete-link-cancel");
+    await user.click(cancelButton);
 
     await waitFor(() => {
       expect(mockSetLinks).not.toHaveBeenCalled();
@@ -342,13 +498,24 @@ describe("LinksList", () => {
 
     const mockUpdate = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
+        eq: vi.fn(() => Promise.resolve({ data: [], error: null })),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      update: mockUpdate,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          update: mockUpdate,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const linkItems = screen.getAllByRole("listitem");
@@ -385,13 +552,24 @@ describe("LinksList", () => {
 
     const mockUpdate = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockResolvedValue({ error: null }),
+        eq: vi.fn(() => Promise.resolve({ data: [], error: null })),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      update: mockUpdate,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          update: mockUpdate,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const linkItems = screen.getAllByRole("listitem");
@@ -425,13 +603,24 @@ describe("LinksList", () => {
 
     const mockUpdate = vi.fn(() => ({
       eq: vi.fn(() => ({
-        eq: vi.fn().mockRejectedValue(new Error("Update failed")),
+        eq: vi.fn(() => Promise.reject(new Error("Update failed"))),
       })),
     }));
 
-    mockFrom.mockReturnValueOnce({
-      update: mockUpdate,
-    } as unknown as ReturnType<typeof supabase.from>);
+    mockFrom.mockImplementation((table: string) => {
+      if (table === "links") {
+        return {
+          update: mockUpdate,
+        } as unknown as ReturnType<typeof supabase.from>;
+      }
+      return {
+        select: vi.fn(),
+        insert: vi.fn(),
+        update: vi.fn(),
+        delete: vi.fn(),
+        upsert: vi.fn(),
+      } as unknown as ReturnType<typeof supabase.from>;
+    });
 
     render(<LinksList {...defaultProps} links={links} />);
     const linkItems = screen.getAllByRole("listitem");

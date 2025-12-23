@@ -63,6 +63,7 @@ export function useDropSubmission(
         path: string;
         size: number;
         content_type: string | null;
+        original_name?: string;
       }[] = [];
       for (const f of files) {
         const safeName = f.name.replace(/[^a-zA-Z0-9._-]/g, "_");
@@ -78,6 +79,7 @@ export function useDropSubmission(
           path: key,
           size: f.size,
           content_type: f.type || null,
+          original_name: f.name, // Store original filename
         });
       }
 

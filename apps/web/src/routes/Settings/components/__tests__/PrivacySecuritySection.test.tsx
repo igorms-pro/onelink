@@ -28,19 +28,6 @@ vi.mock("@/routes/Settings/pages/TwoFactor/useSupabaseMFA", () => ({
   })),
 }));
 
-// Mock ChangePasswordModal
-vi.mock("../ChangePasswordModal", () => ({
-  ChangePasswordModal: ({
-    open,
-  }: {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-  }) =>
-    open ? (
-      <div data-testid="change-password-modal">Change Password Modal</div>
-    ) : null,
-}));
-
 // Mock DeleteAccountModal
 vi.mock("../DeleteAccountModal", () => ({
   DeleteAccountModal: ({
@@ -84,18 +71,9 @@ describe("PrivacySecuritySection", () => {
 
   it("renders all action buttons", () => {
     renderWithRouter(<PrivacySecuritySection />);
-    expect(screen.getByTestId("settings-change-password")).toBeInTheDocument();
     expect(screen.getByTestId("settings-two-factor")).toBeInTheDocument();
     expect(screen.getByTestId("settings-delete-account")).toBeInTheDocument();
     expect(screen.getByTestId("settings-sign-out")).toBeInTheDocument();
-  });
-
-  it("opens change password modal when button is clicked", async () => {
-    const user = userEvent.setup();
-    renderWithRouter(<PrivacySecuritySection />);
-    const changePasswordButton = screen.getByTestId("settings-change-password");
-    await user.click(changePasswordButton);
-    expect(screen.getByTestId("change-password-modal")).toBeInTheDocument();
   });
 
   it("opens delete account modal when button is clicked", async () => {

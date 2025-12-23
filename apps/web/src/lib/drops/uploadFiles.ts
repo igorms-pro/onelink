@@ -43,6 +43,7 @@ export async function uploadFileToDrop(
               path: key,
               size: file.size,
               content_type: file.type || null,
+              original_name: file.name, // Store original filename
             },
           ],
           user_agent: navigator.userAgent,

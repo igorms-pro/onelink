@@ -74,6 +74,7 @@ describe("Header", () => {
       user: mockUser,
       session: { user: mockUser } as Session,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
@@ -156,6 +157,7 @@ describe("Header", () => {
       user: null,
       session: null,
       loading: false,
+      checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
     });
