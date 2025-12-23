@@ -9,22 +9,12 @@ import { useDashboardData } from "../../Dashboard/hooks/useDashboardData";
 import {
   goToPortal,
   BillingError,
-  getSubscriptionDetails,
-  getInvoices,
-  getPaymentMethods,
+  getSubscriptionData,
   type SubscriptionDetails,
-  type Invoice,
-  type PaymentMethod,
 } from "@/lib/billing";
 import { getPlanLinksLimit, getPlanDropsLimit } from "@/lib/plan-limits";
 import { isPaidPlan, getPlanName, PlanId } from "@/lib/types/plan";
-import {
-  PlanCard,
-  SubscriptionSection,
-  BillingSkeleton,
-  InvoicesList,
-  PaymentMethodCard,
-} from "./Billing";
+import { PlanCard, SubscriptionSection, BillingSkeleton } from "./Billing";
 
 export default function BillingPage() {
   const { t } = useTranslation();
@@ -45,10 +35,6 @@ export default function BillingPage() {
 
   const [subscriptionDetails, setSubscriptionDetails] =
     useState<SubscriptionDetails | null>(null);
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod | null>(
-    null,
-  );
   const [loadingSubscription, setLoadingSubscription] = useState(true);
 
   // Get plan price from translations
@@ -74,15 +60,11 @@ export default function BillingPage() {
     const fetchSubscriptionData = async () => {
       try {
         setLoadingSubscription(true);
-        const [subscription, invoicesData, paymentMethods] = await Promise.all([
-          getSubscriptionDetails(),
-          getInvoices(),
-          getPaymentMethods(),
-        ]);
+        // Optimize: Call getSubscriptionData ONCE and extract subscription data
+        // We only need subscription details - payment methods and invoices are available in Stripe portal
+        const subscriptionData = await getSubscriptionData();
 
-        setSubscriptionDetails(subscription);
-        setInvoices(invoicesData);
-        setPaymentMethod(paymentMethods[0] || null);
+        setSubscriptionDetails(subscriptionData.subscription);
       } catch (error) {
         console.error("Failed to fetch subscription data:", error);
         if (error instanceof BillingError && error.code !== "AUTH_REQUIRED") {
@@ -191,36 +173,6 @@ export default function BillingPage() {
               onManageOnStripe={handleManageOnStripe}
               onUpgrade={handleUpgrade}
             />
-            {hasPaidPlan && (
-              <>
-                <section
-                  className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
-                  data-testid="payment-method-section"
-                >
-                  <h2
-                    className="text-xl font-semibold text-gray-900 dark:text-white mb-4"
-                    data-testid="payment-method-title"
-                  >
-                    {t("billing_payment_method", {
-                      defaultValue: "Payment Method",
-                    })}
-                  </h2>
-                  <PaymentMethodCard paymentMethod={paymentMethod} />
-                </section>
-                <section
-                  className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-800 p-6 shadow-sm"
-                  data-testid="invoices-section"
-                >
-                  <h2
-                    className="text-xl font-semibold text-gray-900 dark:text-white mb-4"
-                    data-testid="invoices-title"
-                  >
-                    {t("billing_invoices", { defaultValue: "Invoices" })}
-                  </h2>
-                  <InvoicesList invoices={invoices} />
-                </section>
-              </>
-            )}
           </div>
         )}
       </main>

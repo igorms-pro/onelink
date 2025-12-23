@@ -34,9 +34,11 @@ vi.mock("@/hooks/useRequireAuth", () => ({
 vi.mock("@/lib/billing", () => ({
   goToCheckout: vi.fn(),
   goToPortal: vi.fn(),
-  getSubscriptionDetails: vi.fn().mockResolvedValue(null),
-  getInvoices: vi.fn().mockResolvedValue([]),
-  getPaymentMethods: vi.fn().mockResolvedValue([]),
+  getSubscriptionData: vi.fn().mockResolvedValue({
+    subscription: null,
+    invoices: [],
+    paymentMethods: [],
+  }),
   BillingError: class BillingError extends Error {
     code: string;
     constructor(message: string, code: string) {
@@ -79,12 +81,7 @@ import { useAuth } from "@/lib/AuthProvider";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
 import { useDashboardData } from "@/routes/Dashboard/hooks/useDashboardData";
 import { useNavigate } from "react-router-dom";
-import {
-  goToPortal,
-  getSubscriptionDetails,
-  getInvoices,
-  getPaymentMethods,
-} from "@/lib/billing";
+import { goToPortal, getSubscriptionData } from "@/lib/billing";
 
 const mockUser = {
   id: "user-1",
@@ -168,9 +165,11 @@ describe("BillingPage", () => {
     vi.mocked(useDashboardData).mockReturnValue(
       createDashboardData({ loading: false }),
     );
-    vi.mocked(getSubscriptionDetails).mockResolvedValue(null);
-    vi.mocked(getInvoices).mockResolvedValue([]);
-    vi.mocked(getPaymentMethods).mockResolvedValue([]);
+    vi.mocked(getSubscriptionData).mockResolvedValue({
+      subscription: null,
+      invoices: [],
+      paymentMethods: [],
+    });
   });
 
   it("should redirect to /auth when user is not logged in", () => {
@@ -201,11 +200,7 @@ describe("BillingPage", () => {
       expect(
         screen.getByRole("heading", { name: /billing/i }),
       ).toBeInTheDocument();
-      expect(
-        screen.getByText(
-          /manage your subscription, payment methods, and billing history/i,
-        ),
-      ).toBeInTheDocument();
+      expect(screen.getByText(/manage your subscription/i)).toBeInTheDocument();
     });
   });
 
@@ -253,33 +248,7 @@ describe("BillingPage", () => {
       });
     });
 
-    it("should NOT show payment method section for free users", async () => {
-      render(
-        <MemoryRouter>
-          <BillingPage />
-        </MemoryRouter>,
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("payment-method-section"),
-        ).not.toBeInTheDocument();
-      });
-    });
-
-    it("should NOT show invoices section for free users", async () => {
-      render(
-        <MemoryRouter>
-          <BillingPage />
-        </MemoryRouter>,
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.queryByTestId("invoices-section"),
-        ).not.toBeInTheDocument();
-      });
-    });
+    // Payment Method and Invoices sections removed - available in Stripe portal
 
     it("should show usage progress bar for free plan", async () => {
       vi.mocked(useDashboardData).mockReturnValue(
@@ -383,9 +352,11 @@ describe("BillingPage", () => {
     ];
 
     beforeEach(() => {
-      vi.mocked(getSubscriptionDetails).mockResolvedValue(mockSubscription);
-      vi.mocked(getPaymentMethods).mockResolvedValue([mockPaymentMethod]);
-      vi.mocked(getInvoices).mockResolvedValue(mockInvoices);
+      vi.mocked(getSubscriptionData).mockResolvedValue({
+        subscription: mockSubscription,
+        invoices: mockInvoices,
+        paymentMethods: [mockPaymentMethod],
+      });
     });
 
     it("should display pro plan badge for pro users", async () => {
@@ -442,67 +413,7 @@ describe("BillingPage", () => {
       });
     });
 
-    it("should show payment method section for paid users", async () => {
-      vi.mocked(useDashboardData).mockReturnValue(
-        createDashboardData({ plan: PlanType.PRO }),
-      );
-
-      render(
-        <MemoryRouter>
-          <BillingPage />
-        </MemoryRouter>,
-      );
-
-      await waitFor(() => {
-        expect(
-          screen.getByTestId("payment-method-section"),
-        ).toBeInTheDocument();
-        expect(screen.getByTestId("payment-method-title")).toBeInTheDocument();
-        expect(screen.getByTestId("payment-method-card")).toBeInTheDocument();
-        expect(screen.getByTestId("payment-method-last4")).toHaveTextContent(
-          "4242",
-        );
-      });
-    });
-
-    it("should show invoices section for paid users", async () => {
-      vi.mocked(useDashboardData).mockReturnValue(
-        createDashboardData({ plan: PlanType.PRO }),
-      );
-
-      render(
-        <MemoryRouter>
-          <BillingPage />
-        </MemoryRouter>,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByTestId("invoices-section")).toBeInTheDocument();
-        expect(screen.getByTestId("invoices-title")).toBeInTheDocument();
-        expect(screen.getByTestId("invoices-list")).toBeInTheDocument();
-        expect(screen.getByTestId("invoice-inv_123")).toBeInTheDocument();
-      });
-    });
-
-    it("should show empty invoices state for paid users with no invoices", async () => {
-      vi.mocked(useDashboardData).mockReturnValue(
-        createDashboardData({ plan: PlanType.PRO }),
-      );
-      vi.mocked(getInvoices).mockResolvedValue([]);
-
-      render(
-        <MemoryRouter>
-          <BillingPage />
-        </MemoryRouter>,
-      );
-
-      await waitFor(() => {
-        expect(screen.getByTestId("invoices-section")).toBeInTheDocument();
-        expect(screen.getByTestId("invoices-title")).toBeInTheDocument();
-        expect(screen.getByTestId("invoices-empty-state")).toBeInTheDocument();
-        expect(screen.queryByTestId("invoices-list")).not.toBeInTheDocument();
-      });
-    });
+    // Payment Method and Invoices sections removed - available in Stripe portal via "Manage on Stripe" button
 
     it("should NOT show usage progress bars for paid users (unlimited)", async () => {
       vi.mocked(useDashboardData).mockReturnValue(
@@ -603,10 +514,8 @@ describe("BillingPage", () => {
         expect(screen.getByTestId("plan-card")).toBeInTheDocument();
       });
 
-      // getSubscriptionDetails should NOT be called for free users
-      expect(getSubscriptionDetails).not.toHaveBeenCalled();
-      expect(getInvoices).not.toHaveBeenCalled();
-      expect(getPaymentMethods).not.toHaveBeenCalled();
+      // getSubscriptionData should NOT be called for free users
+      expect(getSubscriptionData).not.toHaveBeenCalled();
     });
 
     it("should fetch subscription data for paid users", async () => {
@@ -621,9 +530,7 @@ describe("BillingPage", () => {
       );
 
       await waitFor(() => {
-        expect(getSubscriptionDetails).toHaveBeenCalled();
-        expect(getInvoices).toHaveBeenCalled();
-        expect(getPaymentMethods).toHaveBeenCalled();
+        expect(getSubscriptionData).toHaveBeenCalled();
       });
     });
   });
