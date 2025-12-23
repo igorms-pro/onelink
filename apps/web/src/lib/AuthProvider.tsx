@@ -57,8 +57,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Clean up both hash (implicit) and query params (PKCE) for safety
       if (event === "SIGNED_IN") {
         const url = new URL(window.location.href);
-        if (url.hash || url.searchParams.has("code")) {
+        const isMagicLinkRedirect = url.hash || url.searchParams.has("code");
+
+        if (isMagicLinkRedirect) {
           window.history.replaceState(null, "", window.location.pathname);
+          // Immediately dismiss any toasts (like "check your email") when magic link is clicked
+          // We'll check MFA and show modal if needed, so don't show success toast
+          toast.dismiss();
         }
 
         // After a successful sign-in, IMMEDIATELY check if the user has MFA factors
@@ -104,8 +109,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             // Only show challenge if user has TOTP factors enabled
             if (data?.totp && data.totp.length > 0) {
-              // Dismiss any existing toasts (like "check your email") since we're showing MFA challenge
-              toast.dismiss();
               setShowMFAChallenge(true);
               // Keep checkingMFA true while MFA challenge is shown
               // This prevents dashboard from rendering
