@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Layout } from "@/components/Layout";
 
 export function SocialProofSection() {
   const { t } = useTranslation();
@@ -10,7 +11,7 @@ export function SocialProofSection() {
       className="py-12 sm:py-16 bg-gray-50 dark:bg-gray-900 opacity-0"
       data-scroll-animate
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Layout>
         <div className="text-center">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
             {t("landing.socialProof.title")}
@@ -46,7 +47,7 @@ export function SocialProofSection() {
             {/* Placeholder for testimonials carousel - will be added later */}
           </div>
         </div>
-      </div>
+      </Layout>
     </section>
   );
 }

@@ -1,48 +1,67 @@
 import { useTranslation } from "react-i18next";
 import { PricingCard } from "@/components/PricingCard";
+import { Layout } from "@/components/Layout";
 
 export function PricingSection() {
   const { t } = useTranslation();
 
   const freePlan = {
-    name: t("landing.pricing.free.name"),
-    price: t("landing.pricing.free.price"),
-    description: t("landing.pricing.free.description"),
-    cta: t("landing.pricing.free.cta"),
-    features: t("landing.pricing.free.features", { returnObjects: true }) as string[],
+    name: t("pricing.plans.free.name"),
+    price: t("pricing.plans.free.priceMonthly"),
+    description: t("pricing.plans.free.description"),
+    cta: t("pricing.plans.free.cta"),
+    features: t("pricing.plans.free.features", {
+      returnObjects: true,
+    }) as string[],
     ctaUrl: "https://app.getonelink.io/auth",
   };
 
-  const proPlan = {
-    name: t("landing.pricing.pro.name"),
-    price: t("landing.pricing.pro.price"),
-    description: t("landing.pricing.pro.description"),
-    cta: t("landing.pricing.pro.cta"),
-    features: t("landing.pricing.pro.features", { returnObjects: true }) as string[],
+  const starterPlan = {
+    name: t("pricing.plans.starter.name"),
+    price: `${t("pricing.plans.starter.priceMonthly")} ${t("pricing.per_month")}`,
+    description: t("pricing.plans.starter.description"),
+    cta: t("pricing.plans.starter.cta"),
+    features: t("pricing.plans.starter.features", {
+      returnObjects: true,
+    }) as string[],
     highlight: true,
+    ctaUrl: "https://app.getonelink.io/pricing",
+  };
+
+  const proPlan = {
+    name: t("pricing.plans.pro.name"),
+    price: `${t("pricing.plans.pro.priceMonthly")} ${t("pricing.per_month")}`,
+    description: t("pricing.plans.pro.description"),
+    cta: t("pricing.plans.pro.cta"),
+    features: t("pricing.plans.pro.features", {
+      returnObjects: true,
+    }) as string[],
+    highlight: false,
     ctaUrl: "https://app.getonelink.io/pricing",
   };
 
   return (
     <section
+      id="pricing"
       className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-gray-950 opacity-0"
       data-scroll-animate
     >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <Layout>
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-            {t("landing.pricing.title")}
+            {t("pricing.title")}
           </h2>
           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {t("landing.pricing.subtitle")}
+            {t("pricing.description")}
           </p>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-2 max-w-5xl mx-auto">
+        <div className="grid gap-8 lg:grid-cols-3 max-w-7xl mx-auto">
           <PricingCard {...freePlan} />
+          <PricingCard {...starterPlan} />
           <PricingCard {...proPlan} />
         </div>
-      </div>
+      </Layout>
     </section>
   );
 }

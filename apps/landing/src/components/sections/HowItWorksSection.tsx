@@ -1,29 +1,34 @@
 import { UserPlus, Link2, Share2, BarChart3 } from "lucide-react";
 import StepCard from "@/components/StepCard";
+import { Layout } from "@/components/Layout";
 
 const steps = [
   {
     stepNumber: 1,
     title: "Sign Up",
-    description: "Create your free account in seconds. No credit card required.",
+    description:
+      "Create your free account in seconds. No credit card required.",
     icon: UserPlus,
   },
   {
     stepNumber: 2,
     title: "Create Your Link",
-    description: "Add your links, upload files, and customize your profile to match your style.",
+    description:
+      "Add your links, upload files, and customize your profile to match your style.",
     icon: Link2,
   },
   {
     stepNumber: 3,
     title: "Share",
-    description: "One simple link to share everywhere. Put it in your bio, email signature, or anywhere.",
+    description:
+      "One simple link to share everywhere. Put it in your bio, email signature, or anywhere.",
     icon: Share2,
   },
   {
     stepNumber: 4,
     title: "Track",
-    description: "See analytics in real-time. Track clicks, views, and downloads with detailed insights.",
+    description:
+      "See analytics in real-time. Track clicks, views, and downloads with detailed insights.",
     icon: BarChart3,
   },
 ];
@@ -35,7 +40,7 @@ export default function HowItWorksSection() {
       className="py-16 md:py-24 bg-linear-to-br from-purple-500/5 via-transparent to-blue-500/5 dark:from-purple-500/10 dark:via-transparent dark:to-blue-500/10 opacity-0"
       data-scroll-animate
     >
-      <div className="container mx-auto px-4">
+      <Layout>
         <div className="max-w-5xl mx-auto">
           {/* Section Header */}
           <div className="text-center mb-12 md:mb-16">
@@ -81,7 +86,7 @@ export default function HowItWorksSection() {
             </div>
           </div>
         </div>
-      </div>
+      </Layout>
     </section>
   );
 }

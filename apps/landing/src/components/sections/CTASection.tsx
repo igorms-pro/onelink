@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { trackSignUpClick } from "@/lib/analytics";
+import { Layout } from "@/components/Layout";
 
 export function CTASection() {
   const { t } = useTranslation();
@@ -12,7 +12,7 @@ export function CTASection() {
       className="py-16 sm:py-20 lg:py-24 bg-linear-to-r from-purple-500 to-purple-600 dark:from-purple-600 dark:to-purple-700 opacity-0"
       data-scroll-animate
     >
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <Layout className="max-w-4xl mx-auto">
         <div className="text-center space-y-6">
           {/* Headline */}
           <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white tracking-tight">
@@ -33,16 +33,16 @@ export function CTASection() {
               {t("landing.cta.ctaPrimary")}
               <ArrowRight className="size-4" />
             </Button>
-            <Link
+            <a
               data-testid="cta-section-secondary"
-              to="/pricing"
+              href="#pricing"
               className="text-white/90 hover:text-white underline underline-offset-4 transition-colors text-lg font-medium"
             >
               {t("landing.cta.ctaSecondary")}
-            </Link>
+            </a>
           </div>
         </div>
-      </div>
+      </Layout>
     </section>
   );
 }

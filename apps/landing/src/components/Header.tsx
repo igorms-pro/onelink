@@ -1,16 +1,27 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 import { LanguageToggleButton } from "@/components/LanguageToggleButton";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 import { Button } from "@/components/ui/button";
+import { Layout } from "@/components/Layout";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
+  const handleAnchorClick =
+    (anchor: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      if (!isHomePage) {
+        e.preventDefault();
+        window.location.href = `/#${anchor}`;
+      }
+    };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
-      <div className="container mx-auto px-4">
+      <Layout>
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
@@ -24,18 +35,20 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
-            <Link
-              to="/features"
+            <a
+              href={isHomePage ? "#features" : "/#features"}
+              onClick={handleAnchorClick("features")}
               className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
             >
               Features
-            </Link>
-            <Link
-              to="/pricing"
+            </a>
+            <a
+              href={isHomePage ? "#pricing" : "/#pricing"}
+              onClick={handleAnchorClick("pricing")}
               className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
             >
               Pricing
-            </Link>
+            </a>
           </nav>
 
           {/* Actions */}
@@ -75,20 +88,26 @@ export function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4">
             <nav className="flex flex-col gap-4">
-              <Link
-                to="/features"
-                onClick={() => setMobileMenuOpen(false)}
+              <a
+                href={isHomePage ? "#features" : "/#features"}
+                onClick={(e) => {
+                  handleAnchorClick("features")(e);
+                  setMobileMenuOpen(false);
+                }}
                 className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
               >
                 Features
-              </Link>
-              <Link
-                to="/pricing"
-                onClick={() => setMobileMenuOpen(false)}
+              </a>
+              <a
+                href={isHomePage ? "#pricing" : "/#pricing"}
+                onClick={(e) => {
+                  handleAnchorClick("pricing")(e);
+                  setMobileMenuOpen(false);
+                }}
                 className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
               >
                 Pricing
-              </Link>
+              </a>
               <div className="flex items-center gap-2 px-2 pt-2 border-t border-gray-200 dark:border-gray-800">
                 <LanguageToggleButton />
                 <ThemeToggleButton />
@@ -96,7 +115,7 @@ export function Header() {
             </nav>
           </div>
         )}
-      </div>
+      </Layout>
     </header>
   );
 }

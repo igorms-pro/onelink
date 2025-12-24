@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useAuth } from "../lib/AuthProvider";
 import { toast } from "sonner";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
@@ -11,12 +11,32 @@ import { logLoginAttempt } from "@/lib/sessionTracking";
 
 type FormValues = { email: string };
 
+const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
 export default function Auth() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { signInWithEmail } = useAuth();
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
+  const [pendingUsername, setPendingUsername] = useState<string | null>(null);
+
+  // Read username from URL parameter and store it
+  useEffect(() => {
+    const usernameParam = searchParams.get("username");
+    if (usernameParam) {
+      const cleanedUsername = usernameParam.trim().toLowerCase();
+      localStorage.setItem(USERNAME_STORAGE_KEY, cleanedUsername);
+      setPendingUsername(cleanedUsername);
+    } else {
+      // Check if there's a stored username from a previous visit
+      const stored = localStorage.getItem(USERNAME_STORAGE_KEY);
+      if (stored) {
+        setPendingUsername(stored);
+      }
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
@@ -61,6 +81,20 @@ export default function Auth() {
           <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
             {t("app_tagline")}
           </p>
+
+          {/* Show pending username if available */}
+          {pendingUsername && (
+            <div className="mb-6 p-4 rounded-xl bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                {t("auth_creating_profile_for", {
+                  defaultValue: "Creating profile for",
+                })}
+              </p>
+              <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">
+                app.getonelink.io/{pendingUsername}
+              </p>
+            </div>
+          )}
 
           {/* Sign-in form */}
           <form
