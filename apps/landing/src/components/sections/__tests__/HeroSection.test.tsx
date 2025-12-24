@@ -23,15 +23,9 @@ describe("HeroSection", () => {
   it("renders headline and subheadline", () => {
     render(<HeroSection />);
 
-    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
-    expect(
-      screen.getByText("one link to Share Everything"),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(
-        /Share your links, files, and drops with one simple link/,
-      ),
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-subtitle")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-description")).toBeInTheDocument();
   });
 
   it("renders primary CTA button", () => {
@@ -94,7 +88,7 @@ describe("HeroSection", () => {
   it("renders visual placeholder", () => {
     render(<HeroSection />);
 
-    expect(screen.getByText(/PORTRAIT IMAGE/i)).toBeInTheDocument();
+    expect(screen.getByTestId("hero-image-placeholder")).toBeInTheDocument();
   });
 
   it("has responsive layout classes", () => {
@@ -103,9 +97,7 @@ describe("HeroSection", () => {
     const section = container.querySelector("section");
     expect(section).toHaveClass("min-h-[90vh]");
 
-    const headline = screen
-      .getByText("One link. Multiple lives.")
-      .closest("h1");
+    const headline = screen.getByTestId("hero-headline");
     expect(headline).toHaveClass("text-5xl", "md:text-7xl", "lg:text-8xl");
   });
 

@@ -10,7 +10,7 @@ test.describe("Homepage Load & Navigation", () => {
     await page.goto("/");
 
     // Check for hero section
-    await expect(page.getByText("One link. Multiple lives.")).toBeVisible();
+    await expect(page.getByTestId("hero-headline")).toBeVisible();
 
     // Check for features section
     await expect(

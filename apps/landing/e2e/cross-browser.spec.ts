@@ -6,7 +6,7 @@ test.describe("Cross-Browser Compatibility", () => {
     await expect(page).toHaveTitle(/OneLink/i);
 
     // Verify main content is visible
-    const heroHeading = page.getByText("One link. Multiple lives.");
+    const heroHeading = page.getByTestId("hero-headline");
     await expect(heroHeading).toBeVisible();
   });
 
@@ -14,7 +14,7 @@ test.describe("Cross-Browser Compatibility", () => {
     await page.goto("/");
 
     // Check hero section
-    const heroHeading = page.getByText("One link. Multiple lives.");
+    const heroHeading = page.getByTestId("hero-headline");
     await expect(heroHeading).toBeVisible();
 
     // Check features section
@@ -169,14 +169,14 @@ test.describe("Cross-Browser Compatibility", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    const heroMobile = page.getByText("One link. Multiple lives.");
+    const heroMobile = page.getByTestId("hero-headline");
     await expect(heroMobile).toBeVisible();
 
     // Test desktop
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.reload();
 
-    const heroDesktop = page.getByText("One link. Multiple lives.");
+    const heroDesktop = page.getByTestId("hero-headline");
     await expect(heroDesktop).toBeVisible();
   });
 

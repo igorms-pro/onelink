@@ -15,7 +15,7 @@ test.describe("Responsive Layout Tests", () => {
       await page.goto("/");
 
       // Check that hero section is visible
-      const heroHeading = page.getByText("One link. Multiple lives.");
+      const heroHeading = page.getByTestId("hero-headline");
       await expect(heroHeading).toBeVisible();
 
       // Check that features section is below hero
@@ -73,7 +73,7 @@ test.describe("Responsive Layout Tests", () => {
       await page.goto("/");
 
       // Check hero heading is readable
-      const heroHeading = page.getByText("One link. Multiple lives.");
+      const heroHeading = page.getByTestId("hero-headline");
       await expect(heroHeading).toBeVisible();
 
       const headingBox = await heroHeading.boundingBox();
@@ -193,7 +193,7 @@ test.describe("Responsive Layout Tests", () => {
 
       // Check all main sections are visible
       const sections = [
-        page.getByText("One link. Multiple lives."), // Hero
+        page.getByTestId("hero-headline"), // Hero
         page.getByRole("heading", { name: /features/i }), // Features
         page.getByRole("heading", { name: /pricing/i }), // Pricing
         page.getByRole("heading", { name: /ready to get started/i }), // CTA
@@ -218,7 +218,7 @@ test.describe("Responsive Layout Tests", () => {
         await page.goto("/");
 
         // Check hero is visible
-        const heroHeading = page.getByText("One link. Multiple lives.");
+        const heroHeading = page.getByTestId("hero-headline");
         await expect(heroHeading).toBeVisible();
 
         // Check CTA is clickable using data-testid
@@ -234,19 +234,19 @@ test.describe("Responsive Layout Tests", () => {
       // Start mobile
       await page.setViewportSize(viewports.mobile);
       await page.waitForTimeout(500);
-      const heroMobile = page.getByText("One link. Multiple lives.");
+      const heroMobile = page.getByTestId("hero-headline");
       await expect(heroMobile).toBeVisible();
 
       // Switch to desktop
       await page.setViewportSize(viewports.desktop);
       await page.waitForTimeout(500);
-      const heroDesktop = page.getByText("One link. Multiple lives.");
+      const heroDesktop = page.getByTestId("hero-headline");
       await expect(heroDesktop).toBeVisible();
 
       // Switch back to mobile
       await page.setViewportSize(viewports.mobile);
       await page.waitForTimeout(500);
-      const heroMobileAgain = page.getByText("One link. Multiple lives.");
+      const heroMobileAgain = page.getByTestId("hero-headline");
       await expect(heroMobileAgain).toBeVisible();
     });
   });

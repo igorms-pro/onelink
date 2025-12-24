@@ -26,7 +26,7 @@ describe("HomePage Component", () => {
 
     // Check that all main sections are present
     // Hero section
-    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
 
     // Features section - look for feature titles (use getAllByText since "One Link" appears multiple times)
     expect(screen.getAllByText(/One Link/i).length).toBeGreaterThan(0);
@@ -92,7 +92,7 @@ describe("HomePage Component", () => {
     // Since it's mocked, we verify the component renders without errors
     // The hook will be called during render (mocked implementation)
     // We can verify by checking that the page renders successfully
-    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
   });
 
   it("all CTAs are functional", async () => {

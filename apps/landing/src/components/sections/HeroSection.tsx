@@ -32,15 +32,24 @@ export default function HeroSection() {
           <div className="space-y-12 md:space-y-14">
             {/* Headline */}
             <div className="space-y-4">
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight">
+              <h1
+                data-testid="hero-headline"
+                className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight"
+              >
                 <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
                   One link. Multiple lives.
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium">
+              <p
+                data-testid="hero-subtitle"
+                className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium"
+              >
                 one link to Share Everything
               </p>
-              <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+              <p
+                data-testid="hero-description"
+                className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed"
+              >
                 Share your links, files, and drops with one simple link. No more
                 messy bios or multiple links to manage.
               </p>
@@ -97,7 +106,10 @@ export default function HeroSection() {
           <div className="relative w-full mx-auto lg:mx-0">
             <div className="relative rounded-2xl border border-purple-200 dark:border-purple-800 bg-white dark:bg-gray-900 shadow-2xl shadow-purple-500/20 p-4 md:p-6 overflow-hidden">
               <div className="aspect-square w-full flex items-center justify-center bg-linear-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
-                <p className="text-muted-foreground text-sm md:text-base font-medium">
+                <p
+                  data-testid="hero-image-placeholder"
+                  className="text-muted-foreground text-sm md:text-base font-medium"
+                >
                   PORTRAIT IMAGE
                 </p>
               </div>

@@ -59,7 +59,7 @@ describe("Router Configuration", () => {
     renderWithHelmet(<RouterProvider router={memoryRouter} />);
 
     // HomePage should render
-    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
+    expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
   });
 
   it("FeaturesPage route works", () => {
