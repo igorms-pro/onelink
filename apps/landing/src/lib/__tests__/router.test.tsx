@@ -5,8 +5,6 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { router } from "../router";
 import HomePage from "@/routes/HomePage";
-import FeaturesPage from "@/routes/FeaturesPage";
-import PricingPage from "@/routes/PricingPage";
 import AuthRedirect from "@/routes/AuthRedirect";
 import NotFoundPage from "@/routes/NotFoundPage";
 
@@ -32,13 +30,11 @@ describe("Router Configuration", () => {
     // Check that router has all expected routes
     const routes = router.routes;
 
-    expect(routes).toHaveLength(5);
+    expect(routes).toHaveLength(3);
 
     // Check route paths
     const paths = routes.map((route) => route.path);
     expect(paths).toContain("/");
-    expect(paths).toContain("/features");
-    expect(paths).toContain("/pricing");
     expect(paths).toContain("/auth");
     expect(paths).toContain("*");
   });
@@ -60,45 +56,6 @@ describe("Router Configuration", () => {
 
     // HomePage should render
     expect(screen.getByTestId("hero-headline")).toBeInTheDocument();
-  });
-
-  it("FeaturesPage route works", () => {
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/features",
-          element: <FeaturesPage />,
-        },
-      ],
-      {
-        initialEntries: ["/features"],
-      },
-    );
-
-    renderWithHelmet(<RouterProvider router={memoryRouter} />);
-
-    // FeaturesPage should render (use getAllByText since "Powerful Features" appears multiple times)
-    expect(screen.getAllByText("Powerful Features").length).toBeGreaterThan(0);
-  });
-
-  it("PricingPage route works", () => {
-    const memoryRouter = createMemoryRouter(
-      [
-        {
-          path: "/pricing",
-          element: <PricingPage />,
-        },
-      ],
-      {
-        initialEntries: ["/pricing"],
-      },
-    );
-
-    renderWithHelmet(<RouterProvider router={memoryRouter} />);
-
-    // PricingPage should render (use getAllByText since Free/Pro appear multiple times)
-    expect(screen.getAllByText(/Free/i).length).toBeGreaterThan(0);
-    expect(screen.getAllByText(/Pro/i).length).toBeGreaterThan(0);
   });
 
   it("AuthRedirect route works", () => {

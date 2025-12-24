@@ -27,12 +27,12 @@ describe("Footer Component", () => {
   it("all links are correct", () => {
     renderWithRouter(<Footer />);
 
-    // Product links
+    // Product links (using anchor links)
     const featuresLink = screen.getByText("Features");
-    expect(featuresLink).toHaveAttribute("href", "/features");
+    expect(featuresLink).toHaveAttribute("href", "#features");
 
     const pricingLink = screen.getByText("Pricing");
-    expect(pricingLink).toHaveAttribute("href", "/pricing");
+    expect(pricingLink).toHaveAttribute("href", "#pricing");
 
     // Legal links
     const privacyLink = screen.getByText("Privacy Policy");
