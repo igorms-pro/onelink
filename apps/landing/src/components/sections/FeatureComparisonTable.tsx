@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import clsx from "clsx";
+import { Layout } from "@/components/Layout";
 
 interface Feature {
   name: string;
