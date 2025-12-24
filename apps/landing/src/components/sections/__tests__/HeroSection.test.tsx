@@ -23,8 +23,9 @@ describe("HeroSection", () => {
   it("renders headline and subheadline", () => {
     render(<HeroSection />);
 
+    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
     expect(
-      screen.getByText("One Link to Share Everything"),
+      screen.getByText("one link to Share Everything"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -93,9 +94,7 @@ describe("HeroSection", () => {
   it("renders visual placeholder", () => {
     render(<HeroSection />);
 
-    expect(
-      screen.getByText(/SCREENSHOT: Dashboard Preview/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/PORTRAIT IMAGE/i)).toBeInTheDocument();
   });
 
   it("has responsive layout classes", () => {
@@ -105,9 +104,9 @@ describe("HeroSection", () => {
     expect(section).toHaveClass("min-h-[90vh]");
 
     const headline = screen
-      .getByText("One Link to Share Everything")
+      .getByText("One link. Multiple lives.")
       .closest("h1");
-    expect(headline).toHaveClass("text-4xl", "md:text-6xl", "lg:text-7xl");
+    expect(headline).toHaveClass("text-5xl", "md:text-7xl", "lg:text-8xl");
   });
 
   it("is accessible", () => {

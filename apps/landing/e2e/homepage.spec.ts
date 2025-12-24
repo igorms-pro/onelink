@@ -10,7 +10,7 @@ test.describe("Homepage Load & Navigation", () => {
     await page.goto("/");
 
     // Check for hero section
-    await expect(page.getByText("One Link to Share Everything")).toBeVisible();
+    await expect(page.getByText("One link. Multiple lives.")).toBeVisible();
 
     // Check for features section
     await expect(
@@ -194,7 +194,7 @@ test.describe("Homepage Load & Navigation", () => {
     await page.goto("/");
 
     // Check title
-    await expect(page).toHaveTitle(/One Link to Share Everything/i);
+    await expect(page).toHaveTitle(/One link. Multiple lives./i);
 
     // Check meta description
     const metaDescription = page.locator('meta[name="description"]');

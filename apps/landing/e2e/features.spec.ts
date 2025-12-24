@@ -103,7 +103,7 @@ test.describe("Features Page Flow", () => {
     await homeLink.click();
 
     await expect(page).toHaveURL("/");
-    await expect(page).toHaveTitle(/One Link to Share Everything/i);
+    await expect(page).toHaveTitle(/One link. Multiple lives./i);
   });
 
   test("should have correct SEO meta tags", async ({ page }) => {

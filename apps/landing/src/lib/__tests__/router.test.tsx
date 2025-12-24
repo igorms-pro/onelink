@@ -59,9 +59,7 @@ describe("Router Configuration", () => {
     renderWithHelmet(<RouterProvider router={memoryRouter} />);
 
     // HomePage should render
-    expect(
-      screen.getByText("One Link to Share Everything"),
-    ).toBeInTheDocument();
+    expect(screen.getByText("One link. Multiple lives.")).toBeInTheDocument();
   });
 
   it("FeaturesPage route works", () => {
