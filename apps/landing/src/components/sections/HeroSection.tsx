@@ -31,21 +31,23 @@ export default function HeroSection() {
           {/* Left Column - CTA */}
           <div className="space-y-12 md:space-y-14">
             {/* Headline */}
-            <div className="space-y-4">
-              <h1
-                data-testid="hero-headline"
-                className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight"
-              >
-                <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                  One link. Multiple lives.
-                </span>
-              </h1>
-              <p
-                data-testid="hero-subtitle"
-                className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium"
-              >
-                one link to Share Everything
-              </p>
+            <div className="space-y-4 flex flex-col gap-8">
+              <div className="flex flex-col gap-2">
+                <h1
+                  data-testid="hero-headline"
+                  className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight"
+                >
+                  <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+                    One link. Multiple lives.
+                  </span>
+                </h1>
+                <p
+                  data-testid="hero-subtitle"
+                  className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium"
+                >
+                  one link to Share Everything
+                </p>
+              </div>
               <p
                 data-testid="hero-description"
                 className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed"
@@ -78,8 +80,7 @@ export default function HeroSection() {
               </div>
               <Button
                 data-testid="hero-cta-get-started"
-                size="lg"
-                className="flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[220px] px-6 md:px-8 py-4 md:py-5 text-lg md:text-xl bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/50 whitespace-nowrap font-semibold"
+                className="flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[220px] px-6 md:px-8 py-4 md:py-5 h-auto text-lg md:text-xl bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/50 whitespace-nowrap font-semibold rounded-xl"
                 onClick={handleGetStarted}
               >
                 Get Started Free
