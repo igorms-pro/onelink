@@ -49,22 +49,22 @@ export default function FeaturesSection() {
       data-scroll-animate
     >
       <Layout>
-        <div className="max-w-5xl mx-auto">
+        <div className="w-full">
           {/* Section Header */}
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
                 Powerful Features
               </span>
             </h2>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium">
               Everything you need to share your content, files, and links in one
               beautiful place.
             </p>
           </div>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
             {features.map((feature, index) => (
               <FeatureCard
                 key={index}
