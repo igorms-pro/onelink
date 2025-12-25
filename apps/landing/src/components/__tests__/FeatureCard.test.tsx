@@ -124,7 +124,8 @@ describe("FeatureCard Component", () => {
 
     const card = container.firstChild as HTMLElement;
     // Check for responsive padding classes
-    expect(card.className).toContain("p-6");
-    expect(card.className).toContain("md:p-8");
+    expect(card.className).toContain("p-8");
+    expect(card.className).toContain("md:p-10");
+    expect(card.className).toContain("lg:p-12");
   });
 });
