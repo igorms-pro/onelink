@@ -5,7 +5,7 @@ import HeroSection from "@/components/sections/HeroSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
 import ComparisonSection from "@/components/sections/ComparisonSection";
 import { PricingSection } from "@/components/sections/PricingSection";
-import { SocialProofSection } from "@/components/sections/SocialProofSection";
+import { TrustSection } from "@/components/sections/TrustSection";
 import { DemoSection } from "@/components/sections/DemoSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { Footer } from "@/components/Footer";
@@ -44,8 +44,8 @@ export default function HomePage() {
           {/* Pricing Section */}
           <PricingSection />
 
-          {/* Social Proof Section */}
-          <SocialProofSection />
+          {/* Trust & Security Section */}
+          <TrustSection />
 
           {/* Demo Section */}
           <DemoSection />
