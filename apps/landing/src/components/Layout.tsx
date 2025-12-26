@@ -8,7 +8,7 @@ interface LayoutProps {
 export function Layout({ children, className = "" }: LayoutProps) {
   return (
     <div
-      className={`w-full px-2 sm:px-4 md:px-32 lg:px-40 xl:px-48 ${className}`}
+      className={`w-full px-3 sm:px-4 md:px-32 lg:px-40 xl:px-48 ${className}`}
     >
       {children}
     </div>
