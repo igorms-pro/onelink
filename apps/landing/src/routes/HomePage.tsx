@@ -6,7 +6,7 @@ import FeaturesSection from "@/components/sections/FeaturesSection";
 import ComparisonSection from "@/components/sections/ComparisonSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { TrustSection } from "@/components/sections/TrustSection";
-import { DemoSection } from "@/components/sections/DemoSection";
+import { FAQSection } from "@/components/sections/FAQSection";
 import { CTASection } from "@/components/sections/CTASection";
 import { Footer } from "@/components/Footer";
 import { initScrollAnimations } from "@/lib/scrollAnimation";
@@ -47,8 +47,8 @@ export default function HomePage() {
           {/* Trust & Security Section */}
           <TrustSection />
 
-          {/* Demo Section */}
-          <DemoSection />
+          {/* FAQ Section */}
+          <FAQSection />
 
           {/* Final CTA Section */}
           <CTASection />
