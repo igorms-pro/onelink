@@ -3,7 +3,7 @@ import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import HeroSection from "@/components/sections/HeroSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
-import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import ComparisonSection from "@/components/sections/ComparisonSection";
 import { PricingSection } from "@/components/sections/PricingSection";
 import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { DemoSection } from "@/components/sections/DemoSection";
@@ -38,8 +38,8 @@ export default function HomePage() {
           {/* Features Section */}
           <FeaturesSection />
 
-          {/* How It Works Section */}
-          <HowItWorksSection />
+          {/* Comparison Section */}
+          <ComparisonSection />
 
           {/* Pricing Section */}
           <PricingSection />
