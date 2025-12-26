@@ -87,4 +87,57 @@ describe("CTASection", () => {
     const heading = screen.getByRole("heading", { level: 2 });
     expect(heading).toBeInTheDocument();
   });
+
+  it("updates username input value", async () => {
+    const user = userEvent.setup();
+    render(<CTASection />);
+
+    const input = screen.getByPlaceholderText("username");
+    await user.type(input, "testuser");
+
+    expect(input).toHaveValue("testuser");
+  });
+
+  it("includes username in auth URL when provided", async () => {
+    const user = userEvent.setup();
+    render(<CTASection />);
+
+    const input = screen.getByPlaceholderText("username");
+    await user.type(input, "testuser");
+
+    const button = screen.getByTestId("cta-section-primary");
+    await user.click(button);
+
+    expect(window.location.href).toBe(
+      "https://app.getonelink.io/auth?username=testuser",
+    );
+  });
+
+  it("submits on Enter key press", async () => {
+    const user = userEvent.setup();
+    render(<CTASection />);
+
+    const input = screen.getByPlaceholderText("username");
+    await user.type(input, "testuser{Enter}");
+
+    expect(analytics.trackSignUpClick).toHaveBeenCalledWith("cta_section");
+    expect(window.location.href).toBe(
+      "https://app.getonelink.io/auth?username=testuser",
+    );
+  });
+
+  it("trims whitespace from username", async () => {
+    const user = userEvent.setup();
+    render(<CTASection />);
+
+    const input = screen.getByPlaceholderText("username");
+    await user.type(input, "  testuser  ");
+
+    const button = screen.getByTestId("cta-section-primary");
+    await user.click(button);
+
+    expect(window.location.href).toBe(
+      "https://app.getonelink.io/auth?username=testuser",
+    );
+  });
 });
