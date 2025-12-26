@@ -79,6 +79,8 @@ export function getDropLimit(plan: "free" | "pro" | string): number {
   return getPlanItemLimit(plan);
 }
 
+const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
 export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
   // First, ensure public.users row exists (trigger should create it, but just in case)
   const { error: userError } = await supabase.from("users").upsert(
@@ -99,15 +101,61 @@ export async function getOrCreateProfile(userId: string): Promise<ProfileRow> {
 
   if (existing.data) return existing.data as ProfileRow;
 
-  // Create profile if it doesn't exist
-  const fallbackSlug = `user-${userId.slice(0, 8)}`;
+  // Check for pending username from landing page signup
+  let desiredSlug: string | null = null;
+  try {
+    const storedUsername = localStorage.getItem(USERNAME_STORAGE_KEY);
+    if (storedUsername) {
+      desiredSlug = storedUsername.trim().toLowerCase();
+      // Clear it after reading
+      localStorage.removeItem(USERNAME_STORAGE_KEY);
+    }
+  } catch (e) {
+    // localStorage might not be available (SSR, etc.)
+    console.warn("Could not read pending username:", e);
+  }
+
+  // Try to use desired slug, fallback to generated slug
+  let slugToUse = desiredSlug || `user-${userId.slice(0, 8)}`;
+
+  // Check if desired slug is available
+  if (desiredSlug) {
+    const { data: existingSlug } = await supabase
+      .from("profiles")
+      .select("slug")
+      .eq("slug", desiredSlug)
+      .maybeSingle();
+
+    if (existingSlug) {
+      // Slug is taken, use fallback
+      slugToUse = `user-${userId.slice(0, 8)}`;
+    }
+  }
+
   const inserted = await supabase
     .from("profiles")
-    .insert([{ user_id: userId, slug: fallbackSlug }])
+    .insert([{ user_id: userId, slug: slugToUse }])
     .select("id,user_id,slug,display_name,bio,avatar_url")
     .single<ProfileRow>();
 
-  if (inserted.error) throw inserted.error;
+  if (inserted.error) {
+    // If there's a conflict (slug taken), try fallback
+    if (inserted.error.code === "23505" && desiredSlug) {
+      const fallbackSlug = `user-${userId.slice(0, 8)}`;
+      const retryInsert = await supabase
+        .from("profiles")
+        .insert([{ user_id: userId, slug: fallbackSlug }])
+        .select("id,user_id,slug,display_name,bio,avatar_url")
+        .single<ProfileRow>();
+
+      if (retryInsert.error) throw retryInsert.error;
+
+      const profile = retryInsert.data as ProfileRow;
+      trackProfileCreated(userId, profile.slug);
+      return profile;
+    }
+    throw inserted.error;
+  }
 
   // Track profile creation
   const profile = inserted.data as ProfileRow;

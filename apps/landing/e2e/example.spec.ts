@@ -9,7 +9,7 @@ test.describe("Landing Page - Example E2E Test", () => {
   test("should display hero section", async ({ page }) => {
     await page.goto("/");
     // Check for hero headline
-    await expect(page.getByText("One Link to Share Everything")).toBeVisible();
+    await expect(page.getByTestId("hero-headline")).toBeVisible();
   });
 
   test("should have working CTA buttons", async ({ page }) => {

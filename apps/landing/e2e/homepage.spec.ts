@@ -10,7 +10,7 @@ test.describe("Homepage Load & Navigation", () => {
     await page.goto("/");
 
     // Check for hero section
-    await expect(page.getByText("One Link to Share Everything")).toBeVisible();
+    await expect(page.getByTestId("hero-headline")).toBeVisible();
 
     // Check for features section
     await expect(
@@ -29,24 +29,23 @@ test.describe("Homepage Load & Navigation", () => {
   test("should have working navigation links", async ({ page }) => {
     await page.goto("/");
 
-    // Test Features link
+    // Test Features link - should scroll to #features section
     await page
       .getByRole("link", { name: /features/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/features/);
-    await expect(page).toHaveTitle(/Features/i);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#features/);
+    await expect(page).toHaveTitle(/OneLink/i);
 
-    // Go back to homepage
-    await page.goto("/");
-
-    // Test Pricing link
+    // Test Pricing link - should scroll to #pricing section
     await page
       .getByRole("link", { name: /pricing/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/pricing/);
-    await expect(page).toHaveTitle(/Pricing/i);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#pricing/);
+    await expect(page).toHaveTitle(/OneLink/i);
   });
 
   test("should toggle mobile menu", async ({ page }) => {
@@ -84,12 +83,12 @@ test.describe("Homepage Load & Navigation", () => {
     const nav = page.getByRole("navigation");
     const featuresLink = nav.getByRole("link", { name: /features/i });
     await featuresLink.click();
+    await page.waitForTimeout(500);
 
-    // Should navigate to features page
-    await expect(page).toHaveURL(/\/features/);
+    // Should scroll to features section
+    await expect(page).toHaveURL(/#features/);
 
-    // Menu should be closed (check by going back and verifying menu button state)
-    await page.goBack();
+    // Menu should be closed (check by verifying menu button is visible but menu is closed)
     const menuButton = page.getByRole("button", { name: /toggle menu/i });
     await expect(menuButton).toBeVisible();
   });
@@ -168,43 +167,46 @@ test.describe("Homepage Load & Navigation", () => {
 
     // Scroll to footer
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
 
     // Test footer Features link
     const footerFeaturesLink = page
       .getByRole("link", { name: /features/i })
       .last();
     await footerFeaturesLink.click();
-    await expect(page).toHaveURL(/\/features/);
-
-    // Go back
-    await page.goBack();
+    await page.waitForTimeout(500);
+    await expect(page).toHaveURL(/#features/);
 
     // Scroll to footer again
     await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
 
     // Test footer Pricing link
     const footerPricingLink = page
       .getByRole("link", { name: /pricing/i })
       .last();
     await footerPricingLink.click();
-    await expect(page).toHaveURL(/\/pricing/);
+    await page.waitForTimeout(500);
+    await expect(page).toHaveURL(/#pricing/);
   });
 
   test("should have correct page title and meta tags", async ({ page }) => {
     await page.goto("/");
 
     // Check title
-    await expect(page).toHaveTitle(/One Link to Share Everything/i);
+    await expect(page).toHaveTitle(/OneLink/i);
 
     // Check meta description
-    const metaDescription = page.locator('meta[name="description"]');
+    const metaDescription = page.locator('meta[name="description"]').first();
     await expect(metaDescription).toHaveAttribute("content", /.+/);
 
     // Check Open Graph tags
-    const ogTitle = page.locator('meta[property="og:title"]');
+    const ogTitle = page.locator('meta[property="og:title"]').first();
     await expect(ogTitle).toHaveAttribute("content", /.+/);
 
-    const ogDescription = page.locator('meta[property="og:description"]');
+    const ogDescription = page
+      .locator('meta[property="og:description"]')
+      .first();
     await expect(ogDescription).toHaveAttribute("content", /.+/);
   });
 });

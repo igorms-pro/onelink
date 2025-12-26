@@ -216,7 +216,7 @@ test.describe("Performance Tests", () => {
 
     // Should still work correctly
     await expect(page).toHaveTitle(/OneLink/i);
-    const heroHeading = page.getByText("One Link to Share Everything");
+    const heroHeading = page.getByTestId("hero-headline");
     await expect(heroHeading).toBeVisible();
   });
 });

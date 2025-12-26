@@ -18,20 +18,20 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link
-                  to="/features"
+                <a
+                  href="#features"
                   className="hover:text-white transition-colors text-sm"
                 >
                   {t("landing.footer.features")}
-                </Link>
+                </a>
               </li>
               <li>
-                <Link
-                  to="/pricing"
+                <a
+                  href="#pricing"
                   className="hover:text-white transition-colors text-sm"
                 >
                   {t("landing.footer.pricing")}
-                </Link>
+                </a>
               </li>
             </ul>
           </div>

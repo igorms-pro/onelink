@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import clsx from "clsx";
+import { Layout } from "@/components/Layout";
 
 interface Feature {
   name: string;
@@ -53,7 +54,7 @@ export function FeatureComparisonTable() {
 
   return (
     <section className="py-12 sm:py-16 bg-gray-50 dark:bg-gray-900">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+      <Layout className="max-w-5xl mx-auto">
         <div className="text-center mb-8">
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             Compare Plans
@@ -122,7 +123,7 @@ export function FeatureComparisonTable() {
             </tbody>
           </table>
         </div>
-      </div>
+      </Layout>
     </section>
   );
 }

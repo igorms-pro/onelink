@@ -6,7 +6,7 @@ test.describe("Cross-Browser Compatibility", () => {
     await expect(page).toHaveTitle(/OneLink/i);
 
     // Verify main content is visible
-    const heroHeading = page.getByText("One Link to Share Everything");
+    const heroHeading = page.getByTestId("hero-headline");
     await expect(heroHeading).toBeVisible();
   });
 
@@ -14,7 +14,7 @@ test.describe("Cross-Browser Compatibility", () => {
     await page.goto("/");
 
     // Check hero section
-    const heroHeading = page.getByText("One Link to Share Everything");
+    const heroHeading = page.getByTestId("hero-headline");
     await expect(heroHeading).toBeVisible();
 
     // Check features section
@@ -37,23 +37,21 @@ test.describe("Cross-Browser Compatibility", () => {
   test("should have working navigation on all browsers", async ({ page }) => {
     await page.goto("/");
 
-    // Test Features link
+    // Test Features link - should scroll to #features section
     await page
       .getByRole("link", { name: /features/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/features/);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#features/);
 
-    // Go back
-    await page.goBack();
-    await expect(page).toHaveURL("/");
-
-    // Test Pricing link
+    // Test Pricing link - should scroll to #pricing section
     await page
       .getByRole("link", { name: /pricing/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/pricing/);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#pricing/);
   });
 
   test("should handle CTA clicks correctly", async ({ page }) => {
@@ -138,7 +136,7 @@ test.describe("Cross-Browser Compatibility", () => {
   });
 
   test("should handle form interactions on all browsers", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
 
     // Scroll to FAQ section
     await page.evaluate(() => {
@@ -169,14 +167,14 @@ test.describe("Cross-Browser Compatibility", () => {
     await page.setViewportSize({ width: 375, height: 667 });
     await page.goto("/");
 
-    const heroMobile = page.getByText("One Link to Share Everything");
+    const heroMobile = page.getByTestId("hero-headline");
     await expect(heroMobile).toBeVisible();
 
     // Test desktop
     await page.setViewportSize({ width: 1280, height: 720 });
     await page.reload();
 
-    const heroDesktop = page.getByText("One Link to Share Everything");
+    const heroDesktop = page.getByTestId("hero-headline");
     await expect(heroDesktop).toBeVisible();
   });
 

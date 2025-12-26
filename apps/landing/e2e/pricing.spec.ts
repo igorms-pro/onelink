@@ -1,14 +1,25 @@
 import { test, expect } from "@playwright/test";
 
-test.describe("Pricing Page Flow", () => {
-  test("should load pricing page successfully", async ({ page }) => {
-    await page.goto("/pricing");
-    await expect(page).toHaveTitle(/Pricing/i);
-    await expect(page).toHaveURL(/\/pricing/);
+test.describe("Pricing Section Flow", () => {
+  test("should navigate to pricing section successfully", async ({ page }) => {
+    await page.goto("/");
+    // Navigate to pricing section via anchor link
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#pricing/);
+    await expect(page).toHaveTitle(/OneLink/i);
   });
 
   test("should display Free and Pro plans", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     // Check for Free plan
     const freePlan = page.getByText(/free/i).first();
@@ -20,7 +31,12 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should highlight Pro plan", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     // Check if Pro plan has highlight badge
     const highlightBadge = page.getByText(/most popular|recommended/i);
@@ -30,18 +46,11 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should display feature comparison table", async ({ page }) => {
-    await page.goto("/pricing");
-
-    // Scroll to feature comparison section
-    await page.evaluate(() => {
-      const comparisonSection = document.querySelector(
-        '[class*="comparison"], [class*="table"]',
-      );
-      if (comparisonSection) {
-        comparisonSection.scrollIntoView({ behavior: "smooth" });
-      }
-    });
-
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
     await page.waitForTimeout(1000);
 
     // Check for table headers or comparison content
@@ -60,7 +69,12 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should expand and collapse FAQ items", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     // Scroll to FAQ section
     await page.evaluate(() => {
@@ -111,7 +125,12 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should have working 'Get Started' buttons", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     // Find Get Started button using data-testid
     const freePlanCTA = page.getByTestId("pricing-card-cta-free");
@@ -145,8 +164,12 @@ test.describe("Pricing Page Flow", () => {
       };
     });
 
-    // Navigate to pricing page
-    await page.goto("/pricing");
+    // Navigate to pricing section
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
     await page.waitForTimeout(1000);
 
     // Check if pricing page view event was captured
@@ -163,7 +186,12 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should display all plan features", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     // Check for feature lists in pricing cards
     const featureLists = page.locator("ul").filter({ hasText: /.+/ });
@@ -176,17 +204,22 @@ test.describe("Pricing Page Flow", () => {
   });
 
   test("should have correct SEO meta tags", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
-    // Check title
-    await expect(page).toHaveTitle(/Pricing/i);
+    // Check title (should be homepage title since it's a section, not a page)
+    await expect(page).toHaveTitle(/OneLink/i);
 
     // Check meta description
-    const metaDescription = page.locator('meta[name="description"]');
+    const metaDescription = page.locator('meta[name="description"]').first();
     await expect(metaDescription).toHaveAttribute("content", /.+/);
 
     // Check Open Graph tags
-    const ogTitle = page.locator('meta[property="og:title"]');
+    const ogTitle = page.locator('meta[property="og:title"]').first();
     await expect(ogTitle).toHaveAttribute("content", /.+/);
   });
 });
