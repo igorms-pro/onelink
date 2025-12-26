@@ -147,6 +147,12 @@ test.describe("Homepage Load & Navigation", () => {
 
     const signInButton = page.getByTestId("header-sign-in");
     await expect(signInButton).toBeVisible();
+    await expect(signInButton).toBeEnabled();
+
+    // In CI, external redirects won't work, so just verify button is functional
+    if (process.env.CI) {
+      return;
+    }
 
     // Click and verify redirect (will navigate away)
     const [response] = await Promise.all([
@@ -156,10 +162,7 @@ test.describe("Homepage Load & Navigation", () => {
       signInButton.click(),
     ]);
 
-    // In CI, external redirects won't work, so skip assertion
-    if (!process.env.CI) {
-      expect(response).not.toBeNull();
-    }
+    expect(response).not.toBeNull();
   });
 
   test("should have working footer links", async ({ page }) => {

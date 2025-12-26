@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
-import clsx from "clsx";
+import { FAQItem } from "@/components/faq/FAQItem";
 
 export function FAQSection() {
   const { t } = useTranslation();
@@ -45,43 +44,15 @@ export function FAQSection() {
 
           {/* FAQ Items */}
           <div className="max-w-4xl mx-auto space-y-4">
-            {faqItems.map((item, index) => {
-              const isExpanded = expandedItems.has(index);
-              return (
-                <div
-                  key={index}
-                  className="rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-all overflow-hidden"
-                >
-                  <button
-                    onClick={() => toggleItem(index)}
-                    className="w-full flex items-center justify-between p-6 md:p-8 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors cursor-pointer"
-                  >
-                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-foreground pr-6">
-                      {item.question}
-                    </h3>
-                    <div className="shrink-0">
-                      {isExpanded ? (
-                        <ChevronUp className="h-6 w-6 md:h-7 md:w-7 text-purple-600 dark:text-purple-400" />
-                      ) : (
-                        <ChevronDown className="h-6 w-6 md:h-7 md:w-7 text-purple-600 dark:text-purple-400" />
-                      )}
-                    </div>
-                  </button>
-                  <div
-                    className={clsx(
-                      "overflow-hidden transition-all duration-300 ease-in-out",
-                      isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
-                    )}
-                  >
-                    <div className="border-t border-gray-200 dark:border-gray-800">
-                      <p className="px-6 md:px-8 py-4 md:py-6 text-base md:text-lg text-muted-foreground leading-relaxed">
-                        {item.answer}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+            {faqItems.map((item, index) => (
+              <FAQItem
+                key={index}
+                question={item.question}
+                answer={item.answer}
+                isExpanded={expandedItems.has(index)}
+                onToggle={() => toggleItem(index)}
+              />
+            ))}
           </div>
         </div>
       </Layout>

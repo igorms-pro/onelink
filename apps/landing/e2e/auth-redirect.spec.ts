@@ -8,7 +8,6 @@ test.describe("Auth Redirect Flow", () => {
     "should redirect /auth route to app.getonelink.io/auth",
     async ({ page }) => {
       // Navigate to /auth
-
       const [response] = await Promise.all([
         page
           .waitForURL("https://app.getonelink.io/auth", { timeout: 10000 })
@@ -17,6 +16,7 @@ test.describe("Auth Redirect Flow", () => {
       ]);
 
       // Should redirect to app auth page
+      // If redirect doesn't work (network issues), test will fail gracefully
       expect(response).not.toBeNull();
       expect(page.url()).toContain("app.getonelink.io/auth");
     },
