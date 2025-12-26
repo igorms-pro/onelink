@@ -30,7 +30,9 @@ describe("PricingSection", () => {
   it("Pro plan is highlighted", () => {
     const { container } = render(<PricingSection />);
 
-    const cards = container.querySelectorAll('[class*="ring-purple-500"]');
+    const cards = container.querySelectorAll(
+      '[class*="border-purple-500"][class*="border-2"]',
+    );
     // Pro plan should have highlight styling
     expect(cards.length).toBeGreaterThan(0);
   });

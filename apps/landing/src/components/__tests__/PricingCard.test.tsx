@@ -66,9 +66,8 @@ describe("PricingCard Component", () => {
     // Find the card wrapper (the outermost div with rounded-2xl)
     const card = container.querySelector('[class*="rounded-2xl"]');
     expect(card).toBeInTheDocument();
+    expect(card).toHaveClass("border-2");
     expect(card).toHaveClass("border-purple-500");
-    expect(card).toHaveClass("ring-2");
-    expect(card).toHaveClass("ring-purple-500");
   });
 
   it("displays all features correctly", () => {
