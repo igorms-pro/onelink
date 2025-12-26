@@ -37,23 +37,21 @@ test.describe("Cross-Browser Compatibility", () => {
   test("should have working navigation on all browsers", async ({ page }) => {
     await page.goto("/");
 
-    // Test Features link
+    // Test Features link - should scroll to #features section
     await page
       .getByRole("link", { name: /features/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/features/);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#features/);
 
-    // Go back
-    await page.goBack();
-    await expect(page).toHaveURL("/");
-
-    // Test Pricing link
+    // Test Pricing link - should scroll to #pricing section
     await page
       .getByRole("link", { name: /pricing/i })
       .first()
       .click();
-    await expect(page).toHaveURL(/\/pricing/);
+    await page.waitForTimeout(500); // Wait for scroll
+    await expect(page).toHaveURL(/#pricing/);
   });
 
   test("should handle CTA clicks correctly", async ({ page }) => {
@@ -138,7 +136,7 @@ test.describe("Cross-Browser Compatibility", () => {
   });
 
   test("should handle form interactions on all browsers", async ({ page }) => {
-    await page.goto("/pricing");
+    await page.goto("/");
 
     // Scroll to FAQ section
     await page.evaluate(() => {

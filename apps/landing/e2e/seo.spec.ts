@@ -10,58 +10,68 @@ test.describe("SEO Tests", () => {
     expect(title).toContain("OneLink");
   });
 
-  test("should have unique title on pricing page", async ({ page }) => {
-    await page.goto("/pricing");
+  test("should navigate to pricing section", async ({ page }) => {
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /pricing/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     const title = await page.title();
     expect(title).toBeTruthy();
     expect(title.length).toBeGreaterThan(0);
-    expect(title).toContain("Pricing");
+    expect(title).toContain("OneLink");
+    await expect(page).toHaveURL(/#pricing/);
   });
 
-  test("should have unique title on features page", async ({ page }) => {
-    await page.goto("/features");
+  test("should navigate to features section", async ({ page }) => {
+    await page.goto("/");
+    await page
+      .getByRole("link", { name: /features/i })
+      .first()
+      .click();
+    await page.waitForTimeout(500);
 
     const title = await page.title();
     expect(title).toBeTruthy();
     expect(title.length).toBeGreaterThan(0);
-    expect(title).toContain("Features");
+    expect(title).toContain("OneLink");
+    await expect(page).toHaveURL(/#features/);
   });
 
-  test("should have meta descriptions on all pages", async ({ page }) => {
-    const pages = ["/", "/pricing", "/features"];
+  test("should have meta descriptions on homepage", async ({ page }) => {
+    await page.goto("/");
 
-    for (const path of pages) {
-      await page.goto(path);
+    const metaDescription = page.locator('meta[name="description"]').first();
+    const content = await metaDescription.getAttribute("content");
 
-      const metaDescription = page.locator('meta[name="description"]');
-      const content = await metaDescription.getAttribute("content");
-
-      expect(content).toBeTruthy();
-      expect(content?.length).toBeGreaterThan(0);
-      expect(content?.length).toBeLessThan(160); // Should be under 160 chars
-    }
+    expect(content).toBeTruthy();
+    expect(content?.length).toBeGreaterThan(0);
+    expect(content?.length).toBeLessThan(160); // Should be under 160 chars
   });
 
   test("should have Open Graph tags", async ({ page }) => {
     await page.goto("/");
 
     // Check for OG title
-    const ogTitle = page.locator('meta[property="og:title"]');
+    const ogTitle = page.locator('meta[property="og:title"]').first();
     await expect(ogTitle).toHaveAttribute("content", /.+/);
 
     // Check for OG description
-    const ogDescription = page.locator('meta[property="og:description"]');
+    const ogDescription = page
+      .locator('meta[property="og:description"]')
+      .first();
     await expect(ogDescription).toHaveAttribute("content", /.+/);
 
     // Check for OG type
-    const ogType = page.locator('meta[property="og:type"]');
+    const ogType = page.locator('meta[property="og:type"]').first();
     if ((await ogType.count()) > 0) {
       await expect(ogType).toHaveAttribute("content", /.+/);
     }
 
     // Check for OG URL
-    const ogUrl = page.locator('meta[property="og:url"]');
+    const ogUrl = page.locator('meta[property="og:url"]').first();
     if ((await ogUrl.count()) > 0) {
       await expect(ogUrl).toHaveAttribute("content", /.+/);
     }
@@ -89,22 +99,14 @@ test.describe("SEO Tests", () => {
     }
   });
 
-  test("should have canonical URLs", async ({ page }) => {
-    const pages = [
-      { path: "/", expectedCanonical: "/" },
-      { path: "/pricing", expectedCanonical: "/pricing" },
-      { path: "/features", expectedCanonical: "/features" },
-    ];
+  test("should have canonical URL", async ({ page }) => {
+    await page.goto("/");
 
-    for (const { path } of pages) {
-      await page.goto(path);
-
-      const canonical = page.locator('link[rel="canonical"]');
-      if ((await canonical.count()) > 0) {
-        const href = await canonical.getAttribute("href");
-        expect(href).toBeTruthy();
-        expect(href).toContain(path);
-      }
+    const canonical = page.locator('link[rel="canonical"]');
+    if ((await canonical.count()) > 0) {
+      const href = await canonical.getAttribute("href");
+      expect(href).toBeTruthy();
+      expect(href).toContain("/");
     }
   });
 
@@ -134,8 +136,10 @@ test.describe("SEO Tests", () => {
   test("should have no broken internal links", async ({ page }) => {
     await page.goto("/");
 
-    // Find all internal links
-    const internalLinks = page.locator('a[href^="/"]');
+    // Find all internal links (excluding hash anchors)
+    const internalLinks = page
+      .locator('a[href^="/"]')
+      .filter({ hasNotText: /#/ });
     const linkCount = await internalLinks.count();
 
     const brokenLinks: string[] = [];
@@ -144,7 +148,7 @@ test.describe("SEO Tests", () => {
       const link = internalLinks.nth(i);
       const href = await link.getAttribute("href");
 
-      if (href && !href.startsWith("http")) {
+      if (href && !href.startsWith("http") && !href.includes("#")) {
         // Try to navigate and check if page loads
         try {
           await page.goto(href);
