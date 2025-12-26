@@ -43,23 +43,27 @@ export function PricingSection() {
   return (
     <section
       id="pricing"
-      className="py-16 sm:py-20 lg:py-24 bg-white dark:bg-gray-950 opacity-0"
+      className="py-16 md:py-24 bg-white dark:bg-gray-950 opacity-0"
       data-scroll-animate
     >
       <Layout>
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white tracking-tight">
-            {t("pricing.title")}
-          </h2>
-          <p className="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            {t("pricing.description")}
-          </p>
-        </div>
+        <div className="w-full">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
+              <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+                {t("pricing.title")}
+              </span>
+            </h2>
+            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium">
+              {t("pricing.description")}
+            </p>
+          </div>
 
-        <div className="grid gap-8 lg:grid-cols-3 max-w-7xl mx-auto">
-          <PricingCard {...freePlan} />
-          <PricingCard {...starterPlan} />
-          <PricingCard {...proPlan} />
+          <div className="grid gap-8 md:gap-10 lg:gap-12 lg:grid-cols-3">
+            <PricingCard {...freePlan} />
+            <PricingCard {...starterPlan} />
+            <PricingCard {...proPlan} />
+          </div>
         </div>
       </Layout>
     </section>
