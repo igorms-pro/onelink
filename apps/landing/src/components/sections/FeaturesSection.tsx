@@ -1,47 +1,43 @@
 import { Link, Upload, Bell, User, Lock, BarChart3 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import FeatureCard from "@/components/FeatureCard";
 import { Layout } from "@/components/Layout";
 
-const features = [
-  {
-    title: "One Link for Everything",
-    description:
-      "Un seul lien pour partager tout. Bio link moderne et élégant pour centraliser tous vos contenus.",
-    icon: Link,
-  },
-  {
-    title: "File Sharing / Drops",
-    description:
-      "Partage de fichiers facile avec upload multiple. Contrôlez la visibilité avec des drops publics ou privés.",
-    icon: Upload,
-  },
-  {
-    title: "Real-time Notifications",
-    description:
-      "Notifications en temps réel pour chaque interaction. Emails automatiques et badge de comptage.",
-    icon: Bell,
-  },
-  {
-    title: "Customizable Profile",
-    description:
-      "Profil entièrement personnalisable. Thème dark/light, analytics intégrés et design sur mesure.",
-    icon: User,
-  },
-  {
-    title: "Privacy & Security",
-    description:
-      "Contrôle total sur vos données. Drops privés/publics et authentification à deux facteurs disponible.",
-    icon: Lock,
-  },
-  {
-    title: "Analytics",
-    description:
-      "Statistiques en temps réel. Suivez les clics, vues et téléchargements avec des insights détaillés.",
-    icon: BarChart3,
-  },
-];
-
 export default function FeaturesSection() {
+  const { t } = useTranslation();
+
+  const features = [
+    {
+      title: t("landing.features.oneLink.title"),
+      description: t("landing.features.oneLink.description"),
+      icon: Link,
+    },
+    {
+      title: t("landing.features.fileSharing.title"),
+      description: t("landing.features.fileSharing.description"),
+      icon: Upload,
+    },
+    {
+      title: t("landing.features.notifications.title"),
+      description: t("landing.features.notifications.description"),
+      icon: Bell,
+    },
+    {
+      title: t("landing.features.customizable.title"),
+      description: t("landing.features.customizable.description"),
+      icon: User,
+    },
+    {
+      title: t("landing.features.privacy.title"),
+      description: t("landing.features.privacy.description"),
+      icon: Lock,
+    },
+    {
+      title: t("landing.features.analytics.title"),
+      description: t("landing.features.analytics.description"),
+      icon: BarChart3,
+    },
+  ];
   return (
     <section
       id="features"
@@ -54,12 +50,11 @@ export default function FeaturesSection() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                Powerful Features
+                {t("landing.features.title")}
               </span>
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium">
-              Everything you need to share your content, files, and links in one
-              beautiful place.
+              {t("landing.features.subtitle")}
             </p>
           </div>
 

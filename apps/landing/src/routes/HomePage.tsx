@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import HeroSection from "@/components/sections/HeroSection";
@@ -13,6 +14,7 @@ import { initScrollAnimations } from "@/lib/scrollAnimation";
 import { useScrollDepth } from "@/hooks/useScrollDepth";
 
 export default function HomePage() {
+  const { t } = useTranslation();
   // Track scroll depth
   useScrollDepth();
 
@@ -23,8 +25,8 @@ export default function HomePage() {
   }, []);
   return (
     <SEO
-      title="One Link to Share Everything"
-      description="Share your links, files, and drops with one simple link. No more messy bios or multiple links."
+      title={t("landing.hero.headline")}
+      description={t("landing.hero.description")}
     >
       <div className="min-h-screen bg-background text-foreground">
         {/* Header */}

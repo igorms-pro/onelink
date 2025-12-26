@@ -1,7 +1,9 @@
 import { Shield, Lock, Database, CheckCircle2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
 
 export function TrustSection() {
+  const { t } = useTranslation();
   return (
     <section
       id="trust"
@@ -15,17 +17,16 @@ export function TrustSection() {
             <div className="inline-flex items-center gap-2 mb-4 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 rounded-full">
               <Shield className="h-5 w-5 text-purple-600 dark:text-purple-400" />
               <span className="text-sm md:text-base font-semibold text-purple-600 dark:text-purple-400 uppercase tracking-wide">
-                Sécurité & Conformité
+                {t("landing.trust.badge")}
               </span>
             </div>
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                Vos données en sécurité
+                {t("landing.trust.title")}
               </span>
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-3xl mx-auto font-medium">
-              Conformité RGPD garantie. Infrastructure européenne. Transparence
-              totale.
+              {t("landing.trust.subtitle")}
             </p>
           </div>
 
@@ -38,16 +39,15 @@ export function TrustSection() {
                   <Shield className="w-12 h-12 md:w-16 md:h-16 text-white" />
                 </div>
                 <h3 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center mb-4 text-foreground">
-                  Conforme RGPD
+                  {t("landing.trust.gdprTitle")}
                 </h3>
                 <p className="text-base md:text-lg text-center text-muted-foreground mb-6">
-                  Vos données sont protégées selon les normes européennes les
-                  plus strictes. Conformité totale avec le RGPD.
+                  {t("landing.trust.gdprDescription")}
                 </p>
                 <div className="flex items-center justify-center gap-2 text-purple-600 dark:text-purple-400">
                   <CheckCircle2 className="h-5 w-5" />
                   <span className="text-sm md:text-base font-medium">
-                    Certifié et vérifié
+                    {t("landing.trust.certified")}
                   </span>
                 </div>
               </div>
@@ -64,11 +64,10 @@ export function TrustSection() {
                 </div>
                 <div>
                   <h4 className="text-xl md:text-2xl font-bold mb-2 text-foreground">
-                    Chiffrement de bout en bout
+                    {t("landing.trust.encryption.title")}
                   </h4>
                   <p className="text-sm md:text-base text-muted-foreground">
-                    Tous vos fichiers sont chiffrés. Seul vous avez accès à vos
-                    données.
+                    {t("landing.trust.encryption.description")}
                   </p>
                 </div>
               </div>
@@ -82,11 +81,10 @@ export function TrustSection() {
                 </div>
                 <div>
                   <h4 className="text-xl md:text-2xl font-bold mb-2 text-foreground">
-                    Hébergement européen
+                    {t("landing.trust.hosting.title")}
                   </h4>
                   <p className="text-sm md:text-base text-muted-foreground">
-                    Infrastructure 100% européenne. Vos données ne quittent
-                    jamais l'UE.
+                    {t("landing.trust.hosting.description")}
                   </p>
                 </div>
               </div>
@@ -100,11 +98,10 @@ export function TrustSection() {
                 </div>
                 <div>
                   <h4 className="text-xl md:text-2xl font-bold mb-2 text-foreground">
-                    Contrôle total
+                    {t("landing.trust.control.title")}
                   </h4>
                   <p className="text-sm md:text-base text-muted-foreground">
-                    Exportez ou supprimez vos données à tout moment. Vous gardez
-                    le contrôle.
+                    {t("landing.trust.control.description")}
                   </p>
                 </div>
               </div>

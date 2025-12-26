@@ -1,39 +1,37 @@
 import { UserPlus, Link2, Share2, BarChart3 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import StepCard from "@/components/StepCard";
 import { Layout } from "@/components/Layout";
 
-const steps = [
-  {
-    stepNumber: 1,
-    title: "Sign Up",
-    description:
-      "Create your free account in seconds. No credit card required.",
-    icon: UserPlus,
-  },
-  {
-    stepNumber: 2,
-    title: "Create Your Link",
-    description:
-      "Add your links, upload files, and customize your profile to match your style.",
-    icon: Link2,
-  },
-  {
-    stepNumber: 3,
-    title: "Share",
-    description:
-      "One simple link to share everywhere. Put it in your bio, email signature, or anywhere.",
-    icon: Share2,
-  },
-  {
-    stepNumber: 4,
-    title: "Track",
-    description:
-      "See analytics in real-time. Track clicks, views, and downloads with detailed insights.",
-    icon: BarChart3,
-  },
-];
-
 export default function HowItWorksSection() {
+  const { t } = useTranslation();
+
+  const steps = [
+    {
+      stepNumber: 1,
+      title: t("landing.howItWorks.step1.title"),
+      description: t("landing.howItWorks.step1.description"),
+      icon: UserPlus,
+    },
+    {
+      stepNumber: 2,
+      title: t("landing.howItWorks.step2.title"),
+      description: t("landing.howItWorks.step2.description"),
+      icon: Link2,
+    },
+    {
+      stepNumber: 3,
+      title: t("landing.howItWorks.step3.title"),
+      description: t("landing.howItWorks.step3.description"),
+      icon: Share2,
+    },
+    {
+      stepNumber: 4,
+      title: t("landing.howItWorks.step4.title"),
+      description: t("landing.howItWorks.step4.description"),
+      icon: BarChart3,
+    },
+  ];
   return (
     <section
       id="how-it-works"
@@ -46,11 +44,11 @@ export default function HowItWorksSection() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                How It Works
+                {t("landing.howItWorks.title")}
               </span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get started in minutes. It's that simple.
+              {t("landing.howItWorks.subtitle")}
             </p>
           </div>
 

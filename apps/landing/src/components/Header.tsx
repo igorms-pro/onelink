@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { LanguageToggleButton } from "@/components/LanguageToggleButton";
 import { ThemeToggleButton } from "@/components/ThemeToggleButton";
 import { Button } from "@/components/ui/button";
 import { Layout } from "@/components/Layout";
 
 export function Header() {
+  const { t } = useTranslation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
@@ -40,14 +42,14 @@ export function Header() {
               onClick={handleAnchorClick("features")}
               className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
             >
-              Features
+              {t("landing.header.features")}
             </a>
             <a
               href={isHomePage ? "#pricing" : "/#pricing"}
               onClick={handleAnchorClick("pricing")}
               className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
             >
-              Pricing
+              {t("landing.header.pricing")}
             </a>
           </nav>
 
@@ -65,8 +67,7 @@ export function Header() {
                 window.location.href = "https://app.getonelink.io/auth";
               }}
             >
-              <span className="hidden sm:inline">Sign In</span>
-              <span className="sm:hidden">Sign In</span>
+              {t("landing.header.signIn")}
             </Button>
 
             {/* Mobile Menu Button */}
@@ -96,7 +97,7 @@ export function Header() {
                 }}
                 className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
               >
-                Features
+                {t("landing.header.features")}
               </a>
               <a
                 href={isHomePage ? "#pricing" : "/#pricing"}
@@ -106,7 +107,7 @@ export function Header() {
                 }}
                 className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
               >
-                Pricing
+                {t("landing.header.pricing")}
               </a>
               <div className="flex items-center gap-2 px-2 pt-2 border-t border-gray-200 dark:border-gray-800">
                 <LanguageToggleButton />

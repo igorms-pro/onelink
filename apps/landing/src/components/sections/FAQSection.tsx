@@ -1,58 +1,17 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
 import clsx from "clsx";
 
-interface FAQItem {
-  question: string;
-  answer: string;
-}
-
-const faqItems: FAQItem[] = [
-  {
-    question: "Pour qui est fait OneLink ?",
-    answer:
-      "OneLink est parfait pour les créateurs de contenu, freelancers, petites entreprises et professionnels qui veulent centraliser tous leurs liens en un seul endroit. Que vous partagiez votre portfolio, vos réseaux sociaux, ou que vous collectiez des fichiers de clients, OneLink simplifie votre présence en ligne.",
-  },
-  {
-    question: "Comment fonctionne la collecte de fichiers (Drops) ?",
-    answer:
-      "Créez un 'Drop' public ou privé, partagez le lien, et vos clients/collaborateurs peuvent y téléverser des fichiers directement. Vous recevez des notifications en temps réel et pouvez télécharger tous les fichiers depuis votre tableau de bord. Parfait pour collecter des briefs, portfolios, ou documents.",
-  },
-  {
-    question: "Le plan gratuit est-il vraiment gratuit ?",
-    answer:
-      "Oui, absolument ! Le plan gratuit inclut 5 liens et 3 drops, avec analytics de base. Aucune carte bancaire requise. Vous pouvez commencer immédiatement et passer au plan Pro quand vous avez besoin de plus de fonctionnalités.",
-  },
-  {
-    question: "Puis-je utiliser mon propre domaine ?",
-    answer:
-      "Oui, avec le plan Pro, vous pouvez connecter votre propre domaine personnalisé (ex: links.votrenom.com). Cela donne une image plus professionnelle et renforce votre marque.",
-  },
-  {
-    question: "Mes données sont-elles sécurisées ?",
-    answer:
-      "Absolument. OneLink est conforme RGPD, hébergé en Europe, et utilise un chiffrement de bout en bout. Vos données ne sont jamais vendues à des tiers. Vous avez un contrôle total et pouvez exporter ou supprimer vos données à tout moment.",
-  },
-  {
-    question: "Combien de temps mes fichiers sont-ils conservés ?",
-    answer:
-      "Sur le plan gratuit, les fichiers sont conservés 7 jours. Sur le plan Pro, vous avez 90 jours de rétention. Cela vous donne amplement le temps de télécharger et sauvegarder vos fichiers importants.",
-  },
-  {
-    question: "Puis-je personnaliser l'apparence de mon profil ?",
-    answer:
-      "Oui ! Personnalisez votre profil avec des thèmes dark/light, ajoutez votre photo de profil, et organisez vos liens comme vous le souhaitez. Le plan Pro offre encore plus d'options de personnalisation.",
-  },
-  {
-    question: "Comment puis-je suivre les performances de mes liens ?",
-    answer:
-      "OneLink inclut des analytics en temps réel. Voyez combien de clics chaque lien reçoit, d'où viennent vos visiteurs, et quels fichiers sont les plus téléchargés. Le plan Pro offre des analytics avancés avec historique sur 30 et 90 jours.",
-  },
-];
-
 export function FAQSection() {
+  const { t } = useTranslation();
   const [expandedItems, setExpandedItems] = useState<Set<number>>(new Set());
+
+  const faqItems = t("landing.faq.items", { returnObjects: true }) as Array<{
+    question: string;
+    answer: string;
+  }>;
 
   const toggleItem = (index: number) => {
     const newExpanded = new Set(expandedItems);
@@ -76,11 +35,11 @@ export function FAQSection() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                Questions fréquentes
+                {t("landing.faq.title")}
               </span>
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium">
-              Tout ce que vous devez savoir sur OneLink
+              {t("landing.faq.subtitle")}
             </p>
           </div>
 

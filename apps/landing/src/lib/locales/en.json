@@ -854,31 +854,31 @@
       "ctaSecondary": "View Demo"
     },
     "features": {
-      "title": "Everything You Need",
-      "subtitle": "All the features you need to share everything in one place",
+      "title": "Powerful Features",
+      "subtitle": "Everything you need to share your content, files, and links in one beautiful place",
       "oneLink": {
         "title": "One Link for Everything",
-        "description": "Un seul lien pour partager tout"
+        "description": "One link to share everything. Modern and elegant bio link to centralize all your content."
       },
       "fileSharing": {
-        "title": "File Sharing (Drops)",
-        "description": "Partage de fichiers facile"
+        "title": "File Sharing / Drops",
+        "description": "Easy file sharing with multiple uploads. Control visibility with public or private drops."
       },
       "notifications": {
         "title": "Real-time Notifications",
-        "description": "Notifications en temps réel"
+        "description": "Real-time notifications for every interaction. Automatic emails and count badges."
       },
       "customizable": {
         "title": "Customizable Profile",
-        "description": "Profil personnalisable"
+        "description": "Fully customizable profile. Dark/light theme, integrated analytics and custom design."
       },
       "privacy": {
         "title": "Privacy & Security",
-        "description": "Contrôle total"
+        "description": "Full control over your data. Private/public drops and two-factor authentication available."
       },
       "analytics": {
         "title": "Analytics",
-        "description": "Stats en temps réel"
+        "description": "Real-time statistics. Track clicks, views and downloads with detailed insights."
       }
     },
     "howItWorks": {
@@ -909,11 +909,7 @@
         "price": "Free",
         "description": "Perfect to get started",
         "cta": "Get Started Free",
-        "features": [
-          "5 links",
-          "3 drops",
-          "Basic analytics"
-        ]
+        "features": ["5 links", "3 drops", "Basic analytics"]
       },
       "pro": {
         "name": "Pro",
@@ -956,6 +952,94 @@
       "app": "App",
       "signIn": "Sign In",
       "signUp": "Sign Up"
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Everything you need to know about OneLink",
+      "items": [
+        {
+          "question": "Who is OneLink for?",
+          "answer": "OneLink is perfect for content creators, freelancers, small businesses, and professionals who want to centralize all their links in one place. Whether you're sharing your portfolio, social networks, or collecting client files, OneLink simplifies your online presence."
+        },
+        {
+          "question": "How does file collection (Drops) work?",
+          "answer": "Create a public or private 'Drop', share the link, and your clients/collaborators can upload files directly. You receive real-time notifications and can download all files from your dashboard. Perfect for collecting briefs, portfolios, or documents."
+        },
+        {
+          "question": "Is the free plan really free?",
+          "answer": "Yes, absolutely! The free plan includes 5 links and 3 drops, with basic analytics. No credit card required. You can start immediately and upgrade to the Pro plan when you need more features."
+        },
+        {
+          "question": "Can I use my own domain?",
+          "answer": "Yes, with the Pro plan, you can connect your own custom domain (e.g., links.yourname.com). This gives a more professional image and strengthens your brand."
+        },
+        {
+          "question": "Is my data secure?",
+          "answer": "Absolutely. OneLink is GDPR compliant, hosted in Europe, and uses end-to-end encryption. Your data is never sold to third parties. You have full control and can export or delete your data at any time."
+        },
+        {
+          "question": "How long are my files kept?",
+          "answer": "On the free plan, files are kept for 7 days. On the Pro plan, you have 90 days of retention. This gives you plenty of time to download and save your important files."
+        },
+        {
+          "question": "Can I customize the appearance of my profile?",
+          "answer": "Yes! Customize your profile with dark/light themes, add your profile picture, and organize your links however you want. The Pro plan offers even more customization options."
+        },
+        {
+          "question": "How can I track the performance of my links?",
+          "answer": "OneLink includes real-time analytics. See how many clicks each link receives, where your visitors come from, and which files are downloaded most. The Pro plan offers advanced analytics with 30 and 90-day history."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Why OneLink?",
+      "subtitle": "More than just links. Everything you need in one powerful platform",
+      "feature": "Feature",
+      "onelink": "OneLink",
+      "others": "Common Bio Links",
+      "features": {
+        "bioLinks": "Bio Links",
+        "fileSharing": "File Sharing / Drops",
+        "fileCollection": "File Collection from Others",
+        "notifications": "Real-time Notifications",
+        "analytics": "Analytics",
+        "customDomain": "Custom Domain",
+        "privacyControls": "Privacy Controls",
+        "theme": "Dark/Light Theme"
+      }
+    },
+    "trust": {
+      "badge": "Security & Compliance",
+      "title": "Your data is secure",
+      "subtitle": "GDPR compliance guaranteed. European infrastructure. Total transparency.",
+      "gdprTitle": "GDPR Compliant",
+      "gdprDescription": "Your data is protected according to the strictest European standards. Full compliance with GDPR.",
+      "certified": "Certified and verified",
+      "encryption": {
+        "title": "End-to-end encryption",
+        "description": "All your files are encrypted. Only you have access to your data."
+      },
+      "hosting": {
+        "title": "European hosting",
+        "description": "100% European infrastructure. Your data never leaves the EU."
+      },
+      "control": {
+        "title": "Full control",
+        "description": "Export or delete your data at any time. You stay in control."
+      }
+    },
+    "header": {
+      "features": "Features",
+      "pricing": "Pricing",
+      "signIn": "Sign In"
+    },
+    "hero": {
+      "tagline": "One link. Multiple lives.",
+      "headline": "one link to Share Everything",
+      "description": "Share your links, files, and drops with one simple link. No more messy bios or multiple links to manage.",
+      "usernamePlaceholder": "username",
+      "ctaPrimary": "Get Started Free",
+      "ctaSecondary": "View Demo"
     }
   }
 }

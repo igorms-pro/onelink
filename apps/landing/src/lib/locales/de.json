@@ -836,5 +836,201 @@
   "billing_drops_usage": "Drop-Nutzung",
   "billing_links": "Links",
   "billing_drops": "Drops",
-  "billing_plan_limits_separate": "Kostenloser Plan: {{links}} Links max, {{drops}} Drops max"
+  "billing_plan_limits_separate": "Kostenloser Plan: {{links}} Links max, {{drops}} Drops max",
+  "landing": {
+    "hero": {
+      "headline": "Ein Link für alles",
+      "subheadline": "Teilen Sie Ihre Links, Dateien und Drops mit einem einfachen Link. Keine chaotischen Bios oder mehrere Links mehr zu verwalten.",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Demo ansehen"
+    },
+    "features": {
+      "title": "Leistungsstarke Funktionen",
+      "subtitle": "Alles, was Sie brauchen, um Ihre Inhalte, Dateien und Links an einem schönen Ort zu teilen",
+      "oneLink": {
+        "title": "Ein Link für alles",
+        "description": "Ein Link, um alles zu teilen. Moderner und eleganter Bio-Link zur Zentralisierung all Ihrer Inhalte."
+      },
+      "fileSharing": {
+        "title": "Dateifreigabe / Drops",
+        "description": "Einfache Dateifreigabe mit mehreren Uploads. Kontrollieren Sie die Sichtbarkeit mit öffentlichen oder privaten Drops."
+      },
+      "notifications": {
+        "title": "Echtzeit-Benachrichtigungen",
+        "description": "Echtzeit-Benachrichtigungen für jede Interaktion. Automatische E-Mails und Zählbadges."
+      },
+      "customizable": {
+        "title": "Anpassbares Profil",
+        "description": "Vollständig anpassbares Profil. Dunkles/Helles Theme, integrierte Analysen und benutzerdefiniertes Design."
+      },
+      "privacy": {
+        "title": "Datenschutz & Sicherheit",
+        "description": "Vollständige Kontrolle über Ihre Daten. Private/öffentliche Drops und Zwei-Faktor-Authentifizierung verfügbar."
+      },
+      "analytics": {
+        "title": "Analysen",
+        "description": "Echtzeit-Statistiken. Verfolgen Sie Klicks, Ansichten und Downloads mit detaillierten Einblicken."
+      }
+    },
+    "howItWorks": {
+      "title": "Wie es funktioniert",
+      "subtitle": "In wenigen Minuten loslegen",
+      "step1": {
+        "title": "Registrieren",
+        "description": "Konto erstellen (kostenlos)"
+      },
+      "step2": {
+        "title": "Ihren Link erstellen",
+        "description": "Links hinzufügen, Dateien hochladen"
+      },
+      "step3": {
+        "title": "Teilen",
+        "description": "Ein Link zum Teilen überall"
+      },
+      "step4": {
+        "title": "Verfolgen",
+        "description": "Analysen in Echtzeit ansehen"
+      }
+    },
+    "pricing": {
+      "title": "Einfache, transparente Preise",
+      "subtitle": "Wählen Sie den Plan, der zu Ihren Bedürfnissen passt",
+      "free": {
+        "name": "Kostenlos",
+        "price": "Kostenlos",
+        "description": "Perfekt zum Starten",
+        "cta": "Kostenlos starten",
+        "features": ["5 Links", "3 Drops", "Grundlegende Analysen"]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€12/Monat",
+        "description": "Für Profis",
+        "cta": "Auf Pro upgraden",
+        "features": [
+          "Unbegrenzte Links",
+          "Unbegrenzte Drops",
+          "Erweiterte Analysen",
+          "Benutzerdefinierte Domain",
+          "Prioritätssupport"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Tausenden von Creators beitreten",
+      "userCount": "{{count}}+ Benutzern beitreten"
+    },
+    "demo": {
+      "title": "In Aktion sehen",
+      "description": "Sehen Sie, wie einfach es ist, Ihre Links und Dateien zu verwalten"
+    },
+    "cta": {
+      "title": "Bereit loszulegen?",
+      "ctaPrimary": "Ihr kostenloses Konto erstellen",
+      "ctaSecondary": "Oder Preise ansehen"
+    },
+    "footer": {
+      "product": "Produkt",
+      "features": "Funktionen",
+      "pricing": "Preise",
+      "company": "Unternehmen",
+      "about": "Über uns",
+      "contact": "Kontakt",
+      "legal": "Rechtliches",
+      "privacy": "Datenschutzerklärung",
+      "terms": "Nutzungsbedingungen",
+      "social": "Social",
+      "app": "App",
+      "signIn": "Anmelden",
+      "signUp": "Registrieren"
+    },
+    "faq": {
+      "title": "Häufig gestellte Fragen",
+      "subtitle": "Alles, was Sie über OneLink wissen müssen",
+      "items": [
+        {
+          "question": "Für wen ist OneLink?",
+          "answer": "OneLink ist perfekt für Content-Ersteller, Freelancer, kleine Unternehmen und Profis, die alle ihre Links an einem Ort zentralisieren möchten. Ob Sie Ihr Portfolio, soziale Netzwerke teilen oder Kundendateien sammeln, OneLink vereinfacht Ihre Online-Präsenz."
+        },
+        {
+          "question": "Wie funktioniert die Dateisammlung (Drops)?",
+          "answer": "Erstellen Sie einen öffentlichen oder privaten \"Drop\", teilen Sie den Link, und Ihre Kunden/Mitarbeiter können Dateien direkt hochladen. Sie erhalten Echtzeit-Benachrichtigungen und können alle Dateien von Ihrem Dashboard herunterladen. Perfekt zum Sammeln von Briefings, Portfolios oder Dokumenten."
+        },
+        {
+          "question": "Ist der kostenlose Plan wirklich kostenlos?",
+          "answer": "Ja, absolut! Der kostenlose Plan umfasst 5 Links und 3 Drops mit grundlegenden Analysen. Keine Kreditkarte erforderlich. Sie können sofort beginnen und auf den Pro-Plan upgraden, wenn Sie mehr Funktionen benötigen."
+        },
+        {
+          "question": "Kann ich meine eigene Domain verwenden?",
+          "answer": "Ja, mit dem Pro-Plan können Sie Ihre eigene benutzerdefinierte Domain verbinden (z.B. links.yourname.com). Dies verleiht ein professionelleres Image und stärkt Ihre Marke."
+        },
+        {
+          "question": "Sind meine Daten sicher?",
+          "answer": "Absolut. OneLink ist DSGVO-konform, wird in Europa gehostet und verwendet End-to-End-Verschlüsselung. Ihre Daten werden niemals an Dritte verkauft. Sie haben vollständige Kontrolle und können Ihre Daten jederzeit exportieren oder löschen."
+        },
+        {
+          "question": "Wie lange werden meine Dateien aufbewahrt?",
+          "answer": "Im kostenlosen Plan werden Dateien 7 Tage aufbewahrt. Im Pro-Plan haben Sie 90 Tage Aufbewahrung. Dies gibt Ihnen genügend Zeit, um Ihre wichtigen Dateien herunterzuladen und zu speichern."
+        },
+        {
+          "question": "Kann ich das Aussehen meines Profils anpassen?",
+          "answer": "Ja! Passen Sie Ihr Profil mit dunklen/hellen Themes an, fügen Sie Ihr Profilbild hinzu und organisieren Sie Ihre Links nach Belieben. Der Pro-Plan bietet noch mehr Anpassungsoptionen."
+        },
+        {
+          "question": "Wie kann ich die Leistung meiner Links verfolgen?",
+          "answer": "OneLink enthält Echtzeit-Analysen. Sehen Sie, wie viele Klicks jeder Link erhält, woher Ihre Besucher kommen und welche Dateien am häufigsten heruntergeladen werden. Der Pro-Plan bietet erweiterte Analysen mit 30- und 90-Tage-Verlauf."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Warum OneLink?",
+      "subtitle": "Mehr als nur Links. Alles, was Sie auf einer leistungsstarken Plattform benötigen",
+      "feature": "Funktion",
+      "onelink": "OneLink",
+      "others": "Gängige Bio-Links",
+      "features": {
+        "bioLinks": "Bio-Links",
+        "fileSharing": "Dateifreigabe / Drops",
+        "fileCollection": "Dateisammlung von anderen",
+        "notifications": "Echtzeit-Benachrichtigungen",
+        "analytics": "Analysen",
+        "customDomain": "Benutzerdefinierte Domain",
+        "privacyControls": "Datenschutzkontrollen",
+        "theme": "Dunkles/Helles Theme"
+      }
+    },
+    "trust": {
+      "badge": "Sicherheit & Compliance",
+      "title": "Ihre Daten sind sicher",
+      "subtitle": "DSGVO-Konformität garantiert. Europäische Infrastruktur. Völlige Transparenz.",
+      "gdprTitle": "DSGVO-konform",
+      "gdprDescription": "Ihre Daten werden nach den strengsten europäischen Standards geschützt. Volle Einhaltung der DSGVO.",
+      "certified": "Zertifiziert und verifiziert",
+      "encryption": {
+        "title": "End-to-End-Verschlüsselung",
+        "description": "Alle Ihre Dateien sind verschlüsselt. Nur Sie haben Zugriff auf Ihre Daten."
+      },
+      "hosting": {
+        "title": "Europäisches Hosting",
+        "description": "100% europäische Infrastruktur. Ihre Daten verlassen niemals die EU."
+      },
+      "control": {
+        "title": "Vollständige Kontrolle",
+        "description": "Exportieren oder löschen Sie Ihre Daten jederzeit. Sie behalten die Kontrolle."
+      }
+    },
+    "header": {
+      "features": "Funktionen",
+      "pricing": "Preise",
+      "signIn": "Anmelden"
+    },
+    "hero": {
+      "tagline": "Ein Link. Mehrere Leben.",
+      "headline": "ein Link für alles",
+      "description": "Teilen Sie Ihre Links, Dateien und Drops mit einem einfachen Link. Keine chaotischen Bios oder mehrere Links mehr zu verwalten.",
+      "usernamePlaceholder": "Benutzername",
+      "ctaPrimary": "Kostenlos starten",
+      "ctaSecondary": "Demo ansehen"
+    }
+  }
 }
