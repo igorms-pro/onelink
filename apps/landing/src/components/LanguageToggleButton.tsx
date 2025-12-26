@@ -1,20 +1,8 @@
 import { Languages } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { setLanguage } from "../lib/i18n";
-
-const languages = [
-  { code: "EN", name: "English", flag: "🇬🇧" },
-  { code: "FR", name: "Français", flag: "🇫🇷" },
-  { code: "ES", name: "Español", flag: "🇪🇸" },
-  { code: "PT", name: "Português", flag: "🇵🇹" },
-  { code: "BR", name: "Português (Brasil)", flag: "🇧🇷", langCode: "pt-BR" },
-  { code: "JA", name: "日本語", flag: "🇯🇵" },
-  { code: "ZH", name: "中文", flag: "🇨🇳" },
-  { code: "DE", name: "Deutsch", flag: "🇩🇪" },
-  { code: "IT", name: "Italiano", flag: "🇮🇹" },
-  { code: "RU", name: "Русский", flag: "🇷🇺" },
-];
+import { LanguageDropdown } from "@/components/language/LanguageDropdown";
+import { languages } from "@/data/languages";
 
 export function LanguageToggleButton() {
   const { i18n, t } = useTranslation();
@@ -52,31 +40,13 @@ export function LanguageToggleButton() {
         <Languages className="w-5 h-5" />
       </button>
 
-      {/* Language Dropdown */}
-      {isLangOpen && (
-        <div className="absolute right-0 top-full mt-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg z-50 min-w-[180px] max-h-[320px] overflow-y-auto pointer-events-auto">
-          {languages.map((lang) => {
-            const actualLangCode = lang.langCode || lang.code.toLowerCase();
-            return (
-              <button
-                key={lang.code}
-                onClick={() => {
-                  setLanguage(actualLangCode);
-                  setIsLangOpen(false);
-                }}
-                className={`w-full px-4 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center gap-2 cursor-pointer ${
-                  currentLangCode === actualLangCode
-                    ? "bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white font-medium"
-                    : "text-gray-700 dark:text-gray-300"
-                }`}
-              >
-                <span className="text-base">{lang.flag}</span>
-                <span className="text-sm font-medium">{lang.code}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+      <LanguageDropdown
+        isOpen={isLangOpen}
+        currentLangCode={currentLangCode}
+        onLanguageSelect={() => {}}
+        onClose={() => setIsLangOpen(false)}
+        languages={languages}
+      />
     </div>
   );
 }
