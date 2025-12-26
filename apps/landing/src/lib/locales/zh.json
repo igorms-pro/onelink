@@ -836,5 +836,201 @@
   "billing_drops_usage": "文件箱使用情况",
   "billing_links": "链接",
   "billing_drops": "文件箱",
-  "billing_plan_limits_separate": "免费计划: {{links}}个链接最大，{{drops}}个文件箱最大"
+  "billing_plan_limits_separate": "免费计划: {{links}}个链接最大，{{drops}}个文件箱最大",
+  "landing": {
+    "hero": {
+      "headline": "一个链接分享一切",
+      "subheadline": "用一个简单的链接分享您的链接、文件和文件箱。不再需要管理混乱的个人简介或多个链接。",
+      "ctaPrimary": "免费开始",
+      "ctaSecondary": "查看演示"
+    },
+    "features": {
+      "title": "强大功能",
+      "subtitle": "在一个美丽的地方分享您的内容、文件和链接所需的一切",
+      "oneLink": {
+        "title": "一个链接搞定一切",
+        "description": "一个链接分享一切。现代优雅的个人简介链接，集中管理所有内容。"
+      },
+      "fileSharing": {
+        "title": "文件共享 / 文件箱",
+        "description": "轻松的文件共享，支持多文件上传。通过公开或私密文件箱控制可见性。"
+      },
+      "notifications": {
+        "title": "实时通知",
+        "description": "每次交互的实时通知。自动邮件和计数徽章。"
+      },
+      "customizable": {
+        "title": "可自定义个人资料",
+        "description": "完全可自定义的个人资料。深色/浅色主题、集成分析和自定义设计。"
+      },
+      "privacy": {
+        "title": "隐私和安全",
+        "description": "完全控制您的数据。私密/公开文件箱和双因素身份验证可用。"
+      },
+      "analytics": {
+        "title": "分析",
+        "description": "实时统计。通过详细洞察跟踪点击、浏览和下载。"
+      }
+    },
+    "howItWorks": {
+      "title": "工作原理",
+      "subtitle": "几分钟即可开始",
+      "step1": {
+        "title": "注册",
+        "description": "创建账户（免费）"
+      },
+      "step2": {
+        "title": "创建您的链接",
+        "description": "添加链接，上传文件"
+      },
+      "step3": {
+        "title": "分享",
+        "description": "一个链接，随处分享"
+      },
+      "step4": {
+        "title": "跟踪",
+        "description": "实时查看分析"
+      }
+    },
+    "pricing": {
+      "title": "简单透明的定价",
+      "subtitle": "选择适合您需求的计划",
+      "free": {
+        "name": "免费",
+        "price": "免费",
+        "description": "完美开始",
+        "cta": "免费开始",
+        "features": ["5个链接", "3个文件箱", "基本分析"]
+      },
+      "pro": {
+        "name": "专业版",
+        "price": "€12/月",
+        "description": "适合专业人士",
+        "cta": "升级到专业版",
+        "features": [
+          "无限链接",
+          "无限文件箱",
+          "高级分析",
+          "自定义域名",
+          "优先支持"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "加入数千名创作者",
+      "userCount": "加入{{count}}+用户"
+    },
+    "demo": {
+      "title": "查看实际效果",
+      "description": "了解管理链接和文件是多么容易"
+    },
+    "cta": {
+      "title": "准备开始了吗？",
+      "ctaPrimary": "创建您的免费账户",
+      "ctaSecondary": "或查看定价"
+    },
+    "footer": {
+      "product": "产品",
+      "features": "功能",
+      "pricing": "定价",
+      "company": "公司",
+      "about": "关于",
+      "contact": "联系",
+      "legal": "法律",
+      "privacy": "隐私政策",
+      "terms": "服务条款",
+      "social": "社交",
+      "app": "应用",
+      "signIn": "登录",
+      "signUp": "注册"
+    },
+    "faq": {
+      "title": "常见问题",
+      "subtitle": "关于OneLink您需要了解的一切",
+      "items": [
+        {
+          "question": "OneLink适合谁？",
+          "answer": "OneLink非常适合想要将所有链接集中在一个地方的内容创作者、自由职业者、小企业和专业人士。无论您是分享作品集、社交网络还是收集客户文件，OneLink都能简化您的在线形象。"
+        },
+        {
+          "question": "文件收集（文件箱）如何工作？",
+          "answer": "创建一个公开或私密的\"文件箱\"，分享链接，您的客户/合作者可以直接上传文件。您会收到实时通知，并可以从仪表板下载所有文件。非常适合收集简报、作品集或文档。"
+        },
+        {
+          "question": "免费计划真的免费吗？",
+          "answer": "是的，绝对免费！免费计划包括5个链接和3个文件箱，以及基本分析。无需信用卡。您可以立即开始，在需要更多功能时升级到专业版计划。"
+        },
+        {
+          "question": "我可以使用自己的域名吗？",
+          "answer": "可以，使用专业版计划，您可以连接自己的自定义域名（例如：links.yourname.com）。这提供了更专业的形象并增强了您的品牌。"
+        },
+        {
+          "question": "我的数据安全吗？",
+          "answer": "绝对安全。OneLink符合GDPR标准，托管在欧洲，并使用端到端加密。您的数据永远不会出售给第三方。您拥有完全控制权，可以随时导出或删除您的数据。"
+        },
+        {
+          "question": "我的文件保存多长时间？",
+          "answer": "在免费计划中，文件保存7天。在专业版计划中，您有90天的保留期。这为您提供了充足的时间来下载和保存重要文件。"
+        },
+        {
+          "question": "我可以自定义个人资料的外观吗？",
+          "answer": "可以！使用深色/浅色主题自定义您的个人资料，添加您的个人资料图片，并按照您想要的方式组织链接。专业版计划提供更多自定义选项。"
+        },
+        {
+          "question": "如何跟踪我的链接性能？",
+          "answer": "OneLink包括实时分析。查看每个链接收到多少点击、访问者来自哪里以及哪些文件下载最多。专业版计划提供具有30天和90天历史记录的高级分析。"
+        }
+      ]
+    },
+    "comparison": {
+      "title": "为什么选择OneLink？",
+      "subtitle": "不仅仅是链接。一个强大平台中您需要的一切",
+      "feature": "功能",
+      "onelink": "OneLink",
+      "others": "常见个人简介链接",
+      "features": {
+        "bioLinks": "个人简介链接",
+        "fileSharing": "文件共享 / 文件箱",
+        "fileCollection": "从他人收集文件",
+        "notifications": "实时通知",
+        "analytics": "分析",
+        "customDomain": "自定义域名",
+        "privacyControls": "隐私控制",
+        "theme": "深色/浅色主题"
+      }
+    },
+    "trust": {
+      "badge": "安全和合规",
+      "title": "您的数据是安全的",
+      "subtitle": "保证GDPR合规。欧洲基础设施。完全透明。",
+      "gdprTitle": "符合GDPR",
+      "gdprDescription": "您的数据按照最严格的欧洲标准受到保护。完全符合GDPR。",
+      "certified": "已认证和验证",
+      "encryption": {
+        "title": "端到端加密",
+        "description": "您的所有文件都已加密。只有您可以访问您的数据。"
+      },
+      "hosting": {
+        "title": "欧洲托管",
+        "description": "100%欧洲基础设施。您的数据永远不会离开欧盟。"
+      },
+      "control": {
+        "title": "完全控制",
+        "description": "随时导出或删除您的数据。您保持控制。"
+      }
+    },
+    "header": {
+      "features": "功能",
+      "pricing": "定价",
+      "signIn": "登录"
+    },
+    "hero": {
+      "tagline": "一个链接。多种生活。",
+      "headline": "一个链接分享一切",
+      "description": "用一个简单的链接分享您的链接、文件和文件箱。不再需要管理混乱的个人简介或多个链接。",
+      "usernamePlaceholder": "用户名",
+      "ctaPrimary": "免费开始",
+      "ctaSecondary": "查看演示"
+    }
+  }
 }

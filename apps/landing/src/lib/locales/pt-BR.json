@@ -836,5 +836,201 @@
   "billing_drops_usage": "Uso de drops",
   "billing_links": "links",
   "billing_drops": "drops",
-  "billing_plan_limits_separate": "Plano gratuito: {{links}} links máx, {{drops}} drops máx"
+  "billing_plan_limits_separate": "Plano gratuito: {{links}} links máx, {{drops}} drops máx",
+  "landing": {
+    "hero": {
+      "headline": "Um Link para Compartilhar Tudo",
+      "subheadline": "Compartilhe seus links, arquivos e drops com um único link simples. Chega de biografias desorganizadas ou múltiplos links.",
+      "ctaPrimary": "Começar Grátis",
+      "ctaSecondary": "Ver Demonstração"
+    },
+    "features": {
+      "title": "Funcionalidades Poderosas",
+      "subtitle": "Tudo que você precisa para compartilhar seu conteúdo, arquivos e links em um lugar bonito",
+      "oneLink": {
+        "title": "Um Link para Tudo",
+        "description": "Um link para compartilhar tudo. Link de biografia moderno e elegante para centralizar todo o seu conteúdo."
+      },
+      "fileSharing": {
+        "title": "Compartilhamento de Arquivos / Drops",
+        "description": "Compartilhamento fácil de arquivos com múltiplos uploads. Controle a visibilidade com drops públicos ou privados."
+      },
+      "notifications": {
+        "title": "Notificações em Tempo Real",
+        "description": "Notificações em tempo real para cada interação. E-mails automáticos e badges de contagem."
+      },
+      "customizable": {
+        "title": "Perfil Personalizável",
+        "description": "Perfil totalmente personalizável. Tema escuro/claro, analytics integrados e design personalizado."
+      },
+      "privacy": {
+        "title": "Privacidade e Segurança",
+        "description": "Controle total sobre seus dados. Drops privados/públicos e autenticação de dois fatores disponível."
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Estatísticas em tempo real. Rastreie cliques, visualizações e downloads com insights detalhados."
+      }
+    },
+    "howItWorks": {
+      "title": "Como Funciona",
+      "subtitle": "Comece em minutos",
+      "step1": {
+        "title": "Cadastre-se",
+        "description": "Criar conta (grátis)"
+      },
+      "step2": {
+        "title": "Crie Seu Link",
+        "description": "Adicionar links, fazer upload de arquivos"
+      },
+      "step3": {
+        "title": "Compartilhe",
+        "description": "Um link para compartilhar em todos os lugares"
+      },
+      "step4": {
+        "title": "Acompanhe",
+        "description": "Veja analytics em tempo real"
+      }
+    },
+    "pricing": {
+      "title": "Preços Simples e Transparentes",
+      "subtitle": "Escolha o plano que se adapta às suas necessidades",
+      "free": {
+        "name": "Grátis",
+        "price": "Grátis",
+        "description": "Perfeito para começar",
+        "cta": "Começar Grátis",
+        "features": ["5 links", "3 drops", "Analytics básicos"]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€12/mês",
+        "description": "Para profissionais",
+        "cta": "Atualizar para Pro",
+        "features": [
+          "Links ilimitados",
+          "Drops ilimitados",
+          "Analytics avançados",
+          "Domínio personalizado",
+          "Suporte prioritário"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Junte-se a milhares de criadores",
+      "userCount": "Junte-se a {{count}}+ usuários"
+    },
+    "demo": {
+      "title": "Veja em Ação",
+      "description": "Veja como é fácil gerenciar seus links e arquivos"
+    },
+    "cta": {
+      "title": "Pronto para começar?",
+      "ctaPrimary": "Crie Sua Conta Grátis",
+      "ctaSecondary": "Ou ver preços"
+    },
+    "footer": {
+      "product": "Produto",
+      "features": "Funcionalidades",
+      "pricing": "Preços",
+      "company": "Empresa",
+      "about": "Sobre",
+      "contact": "Contato",
+      "legal": "Legal",
+      "privacy": "Política de Privacidade",
+      "terms": "Termos de Serviço",
+      "social": "Social",
+      "app": "App",
+      "signIn": "Entrar",
+      "signUp": "Cadastrar"
+    },
+    "faq": {
+      "title": "Perguntas Frequentes",
+      "subtitle": "Tudo que você precisa saber sobre OneLink",
+      "items": [
+        {
+          "question": "Para quem é o OneLink?",
+          "answer": "OneLink é perfeito para criadores de conteúdo, freelancers, pequenas empresas e profissionais que querem centralizar todos os seus links em um só lugar. Seja compartilhando seu portfólio, redes sociais ou coletando arquivos de clientes, OneLink simplifica sua presença online."
+        },
+        {
+          "question": "Como funciona a coleta de arquivos (Drops)?",
+          "answer": "Crie um 'Drop' público ou privado, compartilhe o link, e seus clientes/colaboradores podem fazer upload de arquivos diretamente. Você recebe notificações em tempo real e pode baixar todos os arquivos do seu painel. Perfeito para coletar briefings, portfólios ou documentos."
+        },
+        {
+          "question": "O plano gratuito é realmente gratuito?",
+          "answer": "Sim, absolutamente! O plano gratuito inclui 5 links e 3 drops, com analytics básicos. Nenhum cartão de crédito necessário. Você pode começar imediatamente e atualizar para o plano Pro quando precisar de mais funcionalidades."
+        },
+        {
+          "question": "Posso usar meu próprio domínio?",
+          "answer": "Sim, com o plano Pro, você pode conectar seu próprio domínio personalizado (ex: links.seunome.com). Isso dá uma imagem mais profissional e fortalece sua marca."
+        },
+        {
+          "question": "Meus dados estão seguros?",
+          "answer": "Absolutamente. OneLink é compatível com GDPR, hospedado na Europa e usa criptografia de ponta a ponta. Seus dados nunca são vendidos a terceiros. Você tem controle total e pode exportar ou excluir seus dados a qualquer momento."
+        },
+        {
+          "question": "Por quanto tempo meus arquivos são mantidos?",
+          "answer": "No plano gratuito, os arquivos são mantidos por 7 dias. No plano Pro, você tem 90 dias de retenção. Isso dá tempo suficiente para baixar e salvar seus arquivos importantes."
+        },
+        {
+          "question": "Posso personalizar a aparência do meu perfil?",
+          "answer": "Sim! Personalize seu perfil com temas escuro/claro, adicione sua foto de perfil e organize seus links como quiser. O plano Pro oferece ainda mais opções de personalização."
+        },
+        {
+          "question": "Como posso rastrear o desempenho dos meus links?",
+          "answer": "OneLink inclui analytics em tempo real. Veja quantos cliques cada link recebe, de onde vêm seus visitantes e quais arquivos são mais baixados. O plano Pro oferece analytics avançados com histórico de 30 e 90 dias."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Por que OneLink?",
+      "subtitle": "Mais do que apenas links. Tudo que você precisa em uma plataforma poderosa",
+      "feature": "Funcionalidade",
+      "onelink": "OneLink",
+      "others": "Links de Biografia Comuns",
+      "features": {
+        "bioLinks": "Links de Biografia",
+        "fileSharing": "Compartilhamento de Arquivos / Drops",
+        "fileCollection": "Coleta de Arquivos de Outros",
+        "notifications": "Notificações em Tempo Real",
+        "analytics": "Analytics",
+        "customDomain": "Domínio Personalizado",
+        "privacyControls": "Controles de Privacidade",
+        "theme": "Tema Escuro/Claro"
+      }
+    },
+    "trust": {
+      "badge": "Segurança e Conformidade",
+      "title": "Seus dados estão seguros",
+      "subtitle": "Conformidade GDPR garantida. Infraestrutura europeia. Total transparência.",
+      "gdprTitle": "Compatível com GDPR",
+      "gdprDescription": "Seus dados estão protegidos de acordo com os padrões europeus mais rigorosos. Conformidade total com GDPR.",
+      "certified": "Certificado e verificado",
+      "encryption": {
+        "title": "Criptografia de ponta a ponta",
+        "description": "Todos os seus arquivos são criptografados. Apenas você tem acesso aos seus dados."
+      },
+      "hosting": {
+        "title": "Hospedagem europeia",
+        "description": "Infraestrutura 100% europeia. Seus dados nunca saem da UE."
+      },
+      "control": {
+        "title": "Controle total",
+        "description": "Exporte ou exclua seus dados a qualquer momento. Você mantém o controle."
+      }
+    },
+    "header": {
+      "features": "Funcionalidades",
+      "pricing": "Preços",
+      "signIn": "Entrar"
+    },
+    "hero": {
+      "tagline": "Um link. Múltiplas vidas.",
+      "headline": "um link para compartilhar tudo",
+      "description": "Compartilhe seus links, arquivos e drops com um único link simples. Chega de biografias desorganizadas ou múltiplos links para gerenciar.",
+      "usernamePlaceholder": "nome de usuário",
+      "ctaPrimary": "Começar Grátis",
+      "ctaSecondary": "Ver Demonstração"
+    }
+  }
 }

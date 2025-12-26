@@ -34,11 +34,11 @@ describe("HowItWorksSection", () => {
   it("renders step descriptions", () => {
     render(<HowItWorksSection />);
 
-    // Descriptions come from the component, not translations
+    // Descriptions come from translations
     const descriptions = [
-      /Create your free account in seconds/,
-      /Add your links, upload files/,
-      /One simple link to share everywhere/,
+      /Create account \(free\)/,
+      /Add links, upload files/,
+      /One link to share everywhere/,
       /See analytics in real-time/,
     ];
 

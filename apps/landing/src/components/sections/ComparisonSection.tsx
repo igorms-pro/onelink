@@ -1,5 +1,6 @@
 import { Check, X } from "lucide-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
 
 interface ComparisonFeature {
@@ -9,44 +10,45 @@ interface ComparisonFeature {
 }
 
 export default function ComparisonSection() {
+  const { t } = useTranslation();
   const features: ComparisonFeature[] = [
     {
-      name: "Bio Links",
+      name: t("landing.comparison.features.bioLinks"),
       onelink: true,
       others: true,
     },
     {
-      name: "File Sharing / Drops",
+      name: t("landing.comparison.features.fileSharing"),
       onelink: true,
       others: false,
     },
     {
-      name: "File Collection from Others",
+      name: t("landing.comparison.features.fileCollection"),
       onelink: true,
       others: false,
     },
     {
-      name: "Real-time Notifications",
+      name: t("landing.comparison.features.notifications"),
       onelink: true,
       others: "Limited",
     },
     {
-      name: "Analytics",
+      name: t("landing.comparison.features.analytics"),
       onelink: true,
       others: true,
     },
     {
-      name: "Custom Domain",
+      name: t("landing.comparison.features.customDomain"),
       onelink: true,
       others: true,
     },
     {
-      name: "Privacy Controls",
+      name: t("landing.comparison.features.privacyControls"),
       onelink: true,
       others: "Limited",
     },
     {
-      name: "Dark/Light Theme",
+      name: t("landing.comparison.features.theme"),
       onelink: true,
       others: true,
     },
@@ -64,12 +66,11 @@ export default function ComparisonSection() {
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                Why OneLink?
+                {t("landing.comparison.title")}
               </span>
             </h2>
             <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-medium">
-              More than just links. Everything you need in one powerful
-              platform.
+              {t("landing.comparison.subtitle")}
             </p>
           </div>
 
@@ -80,13 +81,13 @@ export default function ComparisonSection() {
                 <thead>
                   <tr className="border-b-2 border-gray-300 dark:border-gray-700">
                     <th className="text-left py-4 px-3 sm:py-6 sm:px-6 font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-foreground">
-                      Feature
+                      {t("landing.comparison.feature")}
                     </th>
                     <th className="text-center py-4 px-2 sm:py-6 sm:px-6 font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-foreground bg-purple-50/50 dark:bg-purple-900/20">
-                      OneLink
+                      {t("landing.comparison.onelink")}
                     </th>
                     <th className="text-center py-4 px-2 sm:py-6 sm:px-6 font-bold text-base sm:text-lg md:text-xl lg:text-2xl text-foreground">
-                      Common Bio Links
+                      {t("landing.comparison.others")}
                     </th>
                   </tr>
                 </thead>

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { trackSignUpClick, trackCTAClick } from "@/lib/analytics";
 import { Layout } from "@/components/Layout";
 
 export default function HeroSection() {
+  const { t } = useTranslation();
   const [username, setUsername] = useState("");
 
   const scrollToDemo = () => {
@@ -36,22 +38,21 @@ export default function HeroSection() {
                 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight"
               >
                 <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-                  One link. Multiple lives.
+                  {t("landing.hero.tagline")}
                 </span>
               </h1>
               <p
                 data-testid="hero-subtitle"
                 className="text-xl md:text-2xl lg:text-3xl text-muted-foreground font-medium"
               >
-                one link to Share Everything
+                {t("landing.hero.headline")}
               </p>
             </div>
             <p
               data-testid="hero-description"
               className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed"
             >
-              Share your links, files, and drops with one simple link. No more
-              messy bios or multiple links to manage.
+              {t("landing.hero.description")}
             </p>
           </div>
 
@@ -72,7 +73,7 @@ export default function HeroSection() {
                     handleGetStarted();
                   }
                 }}
-                placeholder="username"
+                placeholder={t("landing.hero.usernamePlaceholder")}
                 className="w-full pl-[160px] md:pl-[180px] pr-5 py-4 md:py-5 rounded-xl border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-lg md:text-xl placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all"
               />
             </div>
@@ -81,7 +82,7 @@ export default function HeroSection() {
               className="flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[220px] px-6 md:px-8 py-4 md:py-5 h-auto text-lg md:text-xl bg-linear-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white shadow-lg shadow-purple-500/50 whitespace-nowrap font-semibold rounded-xl"
               onClick={handleGetStarted}
             >
-              Get Started Free
+              {t("landing.hero.ctaPrimary")}
               <ArrowRight className="size-5 ml-2" />
             </Button>
           </div>
@@ -110,7 +111,7 @@ export default function HeroSection() {
               className="border-2 px-6 md:px-8 py-4 md:py-5 text-base md:text-lg"
             >
               <Play className="size-5 mr-2" />
-              View Demo
+              {t("landing.hero.ctaSecondary")}
             </Button>
           </div>
         </div>

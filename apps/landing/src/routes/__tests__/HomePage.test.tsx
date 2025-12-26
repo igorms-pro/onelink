@@ -67,7 +67,7 @@ describe("HomePage Component", () => {
 
     // Wait for Helmet to update the document
     await waitFor(() => {
-      expect(document.title).toContain("One Link to Share Everything");
+      expect(document.title).toContain("one link to Share Everything");
     });
 
     // Check for meta description

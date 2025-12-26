@@ -836,5 +836,201 @@
   "billing_drops_usage": "Uso dei drop",
   "billing_links": "link",
   "billing_drops": "drop",
-  "billing_plan_limits_separate": "Piano gratuito: {{links}} link max, {{drops}} drop max"
+  "billing_plan_limits_separate": "Piano gratuito: {{links}} link max, {{drops}} drop max",
+  "landing": {
+    "hero": {
+      "headline": "Un link per condividere tutto",
+      "subheadline": "Condividi i tuoi link, file e drop con un semplice link. Niente più bio disordinate o più link da gestire.",
+      "ctaPrimary": "Inizia gratuitamente",
+      "ctaSecondary": "Visualizza demo"
+    },
+    "features": {
+      "title": "Funzionalità potenti",
+      "subtitle": "Tutto ciò di cui hai bisogno per condividere i tuoi contenuti, file e link in un unico posto bellissimo",
+      "oneLink": {
+        "title": "Un link per tutto",
+        "description": "Un link per condividere tutto. Link bio moderno ed elegante per centralizzare tutti i tuoi contenuti."
+      },
+      "fileSharing": {
+        "title": "Condivisione file / Drop",
+        "description": "Facile condivisione di file con più caricamenti. Controlla la visibilità con drop pubblici o privati."
+      },
+      "notifications": {
+        "title": "Notifiche in tempo reale",
+        "description": "Notifiche in tempo reale per ogni interazione. Email automatiche e badge di conteggio."
+      },
+      "customizable": {
+        "title": "Profilo personalizzabile",
+        "description": "Profilo completamente personalizzabile. Tema scuro/chiaro, analisi integrate e design personalizzato."
+      },
+      "privacy": {
+        "title": "Privacy e sicurezza",
+        "description": "Controllo completo sui tuoi dati. Drop privati/pubblici e autenticazione a due fattori disponibile."
+      },
+      "analytics": {
+        "title": "Analisi",
+        "description": "Statistiche in tempo reale. Traccia clic, visualizzazioni e download con approfondimenti dettagliati."
+      }
+    },
+    "howItWorks": {
+      "title": "Come funziona",
+      "subtitle": "Inizia in pochi minuti",
+      "step1": {
+        "title": "Registrati",
+        "description": "Crea account (gratuito)"
+      },
+      "step2": {
+        "title": "Crea il tuo link",
+        "description": "Aggiungi link, carica file"
+      },
+      "step3": {
+        "title": "Condividi",
+        "description": "Un link da condividere ovunque"
+      },
+      "step4": {
+        "title": "Traccia",
+        "description": "Vedi le analisi in tempo reale"
+      }
+    },
+    "pricing": {
+      "title": "Prezzi semplici e trasparenti",
+      "subtitle": "Scegli il piano che si adatta alle tue esigenze",
+      "free": {
+        "name": "Gratuito",
+        "price": "Gratuito",
+        "description": "Perfetto per iniziare",
+        "cta": "Inizia gratuitamente",
+        "features": ["5 link", "3 drop", "Analisi di base"]
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "€12/mese",
+        "description": "Per professionisti",
+        "cta": "Passa a Pro",
+        "features": [
+          "Link illimitati",
+          "Drop illimitati",
+          "Analisi avanzate",
+          "Dominio personalizzato",
+          "Supporto prioritario"
+        ]
+      }
+    },
+    "socialProof": {
+      "title": "Unisciti a migliaia di creatori",
+      "userCount": "Unisciti a {{count}}+ utenti"
+    },
+    "demo": {
+      "title": "Vedilo in azione",
+      "description": "Vedi quanto è facile gestire i tuoi link e file"
+    },
+    "cta": {
+      "title": "Pronto per iniziare?",
+      "ctaPrimary": "Crea il tuo account gratuito",
+      "ctaSecondary": "Oppure visualizza i prezzi"
+    },
+    "footer": {
+      "product": "Prodotto",
+      "features": "Funzionalità",
+      "pricing": "Prezzi",
+      "company": "Azienda",
+      "about": "Chi siamo",
+      "contact": "Contatto",
+      "legal": "Legale",
+      "privacy": "Informativa sulla privacy",
+      "terms": "Termini di servizio",
+      "social": "Social",
+      "app": "App",
+      "signIn": "Accedi",
+      "signUp": "Registrati"
+    },
+    "faq": {
+      "title": "Domande frequenti",
+      "subtitle": "Tutto ciò che devi sapere su OneLink",
+      "items": [
+        {
+          "question": "Per chi è OneLink?",
+          "answer": "OneLink è perfetto per creatori di contenuti, freelancer, piccole imprese e professionisti che vogliono centralizzare tutti i loro link in un unico posto. Che tu stia condividendo il tuo portfolio, i social network o raccogliendo file dei clienti, OneLink semplifica la tua presenza online."
+        },
+        {
+          "question": "Come funziona la raccolta di file (Drop)?",
+          "answer": "Crea un \"Drop\" pubblico o privato, condividi il link e i tuoi clienti/collaboratori possono caricare file direttamente. Ricevi notifiche in tempo reale e puoi scaricare tutti i file dalla tua dashboard. Perfetto per raccogliere brief, portfolio o documenti."
+        },
+        {
+          "question": "Il piano gratuito è davvero gratuito?",
+          "answer": "Sì, assolutamente! Il piano gratuito include 5 link e 3 drop, con analisi di base. Nessuna carta di credito richiesta. Puoi iniziare immediatamente e passare al piano Pro quando hai bisogno di più funzionalità."
+        },
+        {
+          "question": "Posso usare il mio dominio?",
+          "answer": "Sì, con il piano Pro, puoi collegare il tuo dominio personalizzato (es. links.tuonome.com). Questo dà un'immagine più professionale e rafforza il tuo brand."
+        },
+        {
+          "question": "I miei dati sono sicuri?",
+          "answer": "Assolutamente. OneLink è conforme al GDPR, ospitato in Europa e utilizza la crittografia end-to-end. I tuoi dati non vengono mai venduti a terze parti. Hai il controllo completo e puoi esportare o eliminare i tuoi dati in qualsiasi momento."
+        },
+        {
+          "question": "Per quanto tempo vengono conservati i miei file?",
+          "answer": "Nel piano gratuito, i file vengono conservati per 7 giorni. Nel piano Pro, hai 90 giorni di conservazione. Questo ti dà tutto il tempo necessario per scaricare e salvare i tuoi file importanti."
+        },
+        {
+          "question": "Posso personalizzare l'aspetto del mio profilo?",
+          "answer": "Sì! Personalizza il tuo profilo con temi scuri/chiari, aggiungi la tua foto del profilo e organizza i tuoi link come preferisci. Il piano Pro offre ancora più opzioni di personalizzazione."
+        },
+        {
+          "question": "Come posso tracciare le prestazioni dei miei link?",
+          "answer": "OneLink include analisi in tempo reale. Vedi quanti clic riceve ogni link, da dove provengono i tuoi visitatori e quali file vengono scaricati di più. Il piano Pro offre analisi avanzate con storico di 30 e 90 giorni."
+        }
+      ]
+    },
+    "comparison": {
+      "title": "Perché OneLink?",
+      "subtitle": "Più di semplici link. Tutto ciò di cui hai bisogno in una piattaforma potente",
+      "feature": "Funzionalità",
+      "onelink": "OneLink",
+      "others": "Link bio comuni",
+      "features": {
+        "bioLinks": "Link bio",
+        "fileSharing": "Condivisione file / Drop",
+        "fileCollection": "Raccolta file da altri",
+        "notifications": "Notifiche in tempo reale",
+        "analytics": "Analisi",
+        "customDomain": "Dominio personalizzato",
+        "privacyControls": "Controlli privacy",
+        "theme": "Tema scuro/chiaro"
+      }
+    },
+    "trust": {
+      "badge": "Sicurezza e conformità",
+      "title": "I tuoi dati sono sicuri",
+      "subtitle": "Conformità GDPR garantita. Infrastruttura europea. Trasparenza totale.",
+      "gdprTitle": "Conforme al GDPR",
+      "gdprDescription": "I tuoi dati sono protetti secondo gli standard europei più rigorosi. Piena conformità al GDPR.",
+      "certified": "Certificato e verificato",
+      "encryption": {
+        "title": "Crittografia end-to-end",
+        "description": "Tutti i tuoi file sono crittografati. Solo tu hai accesso ai tuoi dati."
+      },
+      "hosting": {
+        "title": "Hosting europeo",
+        "description": "Infrastruttura 100% europea. I tuoi dati non lasciano mai l'UE."
+      },
+      "control": {
+        "title": "Controllo completo",
+        "description": "Esporta o elimina i tuoi dati in qualsiasi momento. Mantieni il controllo."
+      }
+    },
+    "header": {
+      "features": "Funzionalità",
+      "pricing": "Prezzi",
+      "signIn": "Accedi"
+    },
+    "hero": {
+      "tagline": "Un link. Multiple vite.",
+      "headline": "un link per condividere tutto",
+      "description": "Condividi i tuoi link, file e drop con un semplice link. Niente più bio disordinate o più link da gestire.",
+      "usernamePlaceholder": "nome utente",
+      "ctaPrimary": "Inizia gratuitamente",
+      "ctaSecondary": "Visualizza demo"
+    }
+  }
 }
