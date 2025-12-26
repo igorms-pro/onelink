@@ -40,12 +40,12 @@ describe("FeaturesSection", () => {
     render(<FeaturesSection />);
 
     const descriptions = [
-      /Un seul lien pour partager tout/,
-      /Partage de fichiers facile/,
-      /Notifications en temps réel/,
-      /Profil entièrement personnalisable/,
-      /Contrôle total sur vos données/,
-      /Statistiques en temps réel/,
+      /One link to share everything/,
+      /Easy file sharing with multiple uploads/,
+      /Real-time notifications for every interaction/,
+      /Fully customizable profile/,
+      /Full control over your data/,
+      /Real-time statistics/,
     ];
 
     descriptions.forEach((description) => {
