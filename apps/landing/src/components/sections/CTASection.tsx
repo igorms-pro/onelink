@@ -32,7 +32,7 @@ export function CTASection() {
 
             {/* Input and Button */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-4xl mx-auto">
-              <div className="flex-[0.75] sm:flex-[0.8] relative w-full sm:w-auto min-w-[300px] sm:min-w-[400px]">
+              <div className="relative w-full sm:flex-[0.8] sm:w-auto sm:min-w-[400px]">
                 <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                   <span className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium">
                     app.getonelink.io/
@@ -53,7 +53,7 @@ export function CTASection() {
               </div>
               <Button
                 data-testid="cta-section-primary"
-                className="flex-1 sm:flex-initial sm:min-w-[200px] md:min-w-[220px] px-6 md:px-8 py-4 md:py-5 h-auto text-lg md:text-xl bg-white text-purple-600 hover:bg-gray-100 shadow-lg shadow-purple-500/50 whitespace-nowrap font-semibold rounded-xl"
+                className="w-full sm:flex-initial sm:min-w-[200px] md:min-w-[220px] px-6 md:px-8 py-4 md:py-5 h-auto text-lg md:text-xl bg-white text-purple-600 hover:bg-gray-100 shadow-lg shadow-purple-500/50 whitespace-nowrap font-semibold rounded-xl"
                 onClick={handleGetStarted}
               >
                 {t("landing.cta.ctaPrimary")}
