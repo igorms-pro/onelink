@@ -85,10 +85,12 @@ describe("HeroSection", () => {
     document.body.removeChild(mockDemoSection);
   });
 
-  it("renders visual placeholder", () => {
+  it("renders hero images carousel", () => {
     render(<HeroSection />);
 
-    expect(screen.getByTestId("hero-image-placeholder")).toBeInTheDocument();
+    const images = screen.getAllByTestId(/hero-marketing-image-\d+/);
+    expect(images.length).toBeGreaterThan(0);
+    expect(images[0]).toBeInTheDocument();
   });
 
   it("renders section with correct structure", () => {

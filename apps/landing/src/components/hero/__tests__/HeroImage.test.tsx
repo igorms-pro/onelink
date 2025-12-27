@@ -1,40 +1,29 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { HeroImage } from "../HeroImage";
 
 describe("HeroImage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    // Reset env
-    delete import.meta.env.VITE_HERO_IMAGE_URL;
-    delete import.meta.env.VITE_HERO_IMAGES;
+    vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
-    delete import.meta.env.VITE_HERO_IMAGE_URL;
-    delete import.meta.env.VITE_HERO_IMAGES;
+    vi.useRealTimers();
   });
 
-  it("renders placeholder when no images are configured", () => {
-    delete import.meta.env.VITE_HERO_IMAGE_URL;
-    delete import.meta.env.VITE_HERO_IMAGES;
-
+  it("renders all hero images in carousel", () => {
     render(<HeroImage />);
 
-    expect(screen.getByText(/Marketing Images Carousel/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Add your marketing\/lifestyle images/i),
-    ).toBeInTheDocument();
-  });
-
-  it("renders placeholder correctly", () => {
-    render(<HeroImage />);
-
-    expect(screen.getByText(/Marketing Images Carousel/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Add your marketing\/lifestyle images/i),
-    ).toBeInTheDocument();
+    const images = screen.getAllByTestId(/hero-marketing-image-\d+/);
+    expect(images.length).toBe(6);
+    expect(images[0]).toHaveAttribute("src", "/images/hero/nora_hero_1.png");
+    expect(images[1]).toHaveAttribute("src", "/images/hero/elias_hero_1.png");
+    expect(images[2]).toHaveAttribute("src", "/images/hero/nora_hero_2.png");
+    expect(images[3]).toHaveAttribute("src", "/images/hero/elias_hero_2.png");
+    expect(images[4]).toHaveAttribute("src", "/images/hero/nora_hero_3.png");
+    expect(images[5]).toHaveAttribute("src", "/images/hero/elias_hero_3.png");
   });
 
   it("has correct structure and classes", () => {
@@ -42,188 +31,89 @@ describe("HeroImage", () => {
 
     const wrapper = container.querySelector(".relative.rounded-2xl");
     expect(wrapper).toBeInTheDocument();
-  });
 
-  it("renders image ideas in placeholder", () => {
-    render(<HeroImage />);
-
-    expect(screen.getByText(/Creator using OneLink/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Freelancer portfolio showcase/i),
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Business professional sharing/i),
-    ).toBeInTheDocument();
-  });
-
-  it("renders single image when VITE_HERO_IMAGE_URL is set", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGE_URL;
-    import.meta.env.VITE_HERO_IMAGE_URL = "/test-image.jpg";
-
-    render(<HeroImage />);
-
-    const image = screen.getByTestId("hero-marketing-image");
-    expect(image).toBeInTheDocument();
-    expect(image).toHaveAttribute("src", "/test-image.jpg");
-    expect(image).toHaveAttribute(
-      "alt",
-      "OneLink - Share everything with one link",
+    const slidingContainer = container.querySelector(
+      ".flex.h-full.transition-transform",
     );
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGE_URL = originalEnv;
+    expect(slidingContainer).toBeInTheDocument();
   });
 
-  it("renders carousel when VITE_HERO_IMAGES is set", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-      "/image3.jpg",
-    ]);
+  it("starts with first image visible (transform at 0%)", () => {
+    const { container } = render(<HeroImage />);
 
-    render(<HeroImage />);
-
-    const images = screen.getAllByTestId("hero-marketing-image");
-    expect(images.length).toBe(3);
-    expect(images[0]).toHaveAttribute("src", "/image1.jpg");
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
+    const slidingContainer = container.querySelector(
+      ".flex.h-full.transition-transform",
+    ) as HTMLElement;
+    expect(slidingContainer).toBeInTheDocument();
+    expect(slidingContainer.style.transform).toBe("translateX(-0%)");
   });
 
-  it("shows navigation arrows when multiple images", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-    ]);
+  it("auto-rotates to next image after 4 seconds", async () => {
+    const { container } = render(<HeroImage />);
 
-    render(<HeroImage />);
+    const slidingContainer = container.querySelector(
+      ".flex.h-full.transition-transform",
+    ) as HTMLElement;
 
-    const prevButton = screen.getByLabelText("Previous image");
-    const nextButton = screen.getByLabelText("Next image");
-    expect(prevButton).toBeInTheDocument();
-    expect(nextButton).toBeInTheDocument();
+    // Initially at 0%
+    expect(slidingContainer.style.transform).toBe("translateX(-0%)");
 
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
+    // Fast-forward 4 seconds
+    vi.advanceTimersByTime(4000);
+
+    await waitFor(() => {
+      // Should move to next image (16.67% for 1/6 of container)
+      expect(slidingContainer.style.transform).toBe(
+        "translateX(-16.666666666666668%)",
+      );
+    });
   });
 
-  it("shows dots indicator when multiple images", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-      "/image3.jpg",
-    ]);
-
-    render(<HeroImage />);
-
-    const dot1 = screen.getByLabelText("Go to image 1");
-    const dot2 = screen.getByLabelText("Go to image 2");
-    const dot3 = screen.getByLabelText("Go to image 3");
-    expect(dot1).toBeInTheDocument();
-    expect(dot2).toBeInTheDocument();
-    expect(dot3).toBeInTheDocument();
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
-  });
-
-  it("does not show navigation when single image", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGE_URL;
-    import.meta.env.VITE_HERO_IMAGE_URL = "/test-image.jpg";
-
+  it("does not show navigation buttons", () => {
     render(<HeroImage />);
 
     expect(screen.queryByLabelText("Previous image")).not.toBeInTheDocument();
     expect(screen.queryByLabelText("Next image")).not.toBeInTheDocument();
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGE_URL = originalEnv;
   });
 
-  it("navigates to next image when next button is clicked", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-    ]);
-
+  it("does not show dots indicator", () => {
     render(<HeroImage />);
 
-    const images = screen.getAllByTestId("hero-marketing-image");
-    // First image container should be visible initially
-    const firstContainer = images[0].closest("div");
-    const secondContainer = images[1].closest("div");
-    expect(firstContainer).toHaveClass("opacity-100");
-    expect(secondContainer).toHaveClass("opacity-0");
-
-    const nextButton = screen.getByLabelText("Next image");
-    fireEvent.click(nextButton);
-
-    // After clicking next, second image container should be visible
-    expect(firstContainer).toHaveClass("opacity-0");
-    expect(secondContainer).toHaveClass("opacity-100");
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
+    expect(screen.queryByLabelText(/Go to image \d+/)).not.toBeInTheDocument();
   });
 
-  it("navigates to previous image when previous button is clicked", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-    ]);
+  it("cycles through all images and loops back", async () => {
+    const { container } = render(<HeroImage />);
 
-    render(<HeroImage />);
+    const slidingContainer = container.querySelector(
+      ".flex.h-full.transition-transform",
+    ) as HTMLElement;
 
-    const images = screen.getAllByTestId("hero-marketing-image");
-    const firstContainer = images[0].closest("div");
-    const secondContainer = images[1].closest("div");
-    const nextButton = screen.getByLabelText("Next image");
-    const prevButton = screen.getByLabelText("Previous image");
+    // Start at 0%
+    expect(slidingContainer.style.transform).toBe("translateX(-0%)");
 
-    // Go to second image first
-    fireEvent.click(nextButton);
-    expect(secondContainer).toHaveClass("opacity-100");
+    // Advance through all 6 images (4 seconds each = 24 seconds total)
+    for (let i = 1; i <= 6; i++) {
+      vi.advanceTimersByTime(4000);
+      await waitFor(() => {
+        const expectedTransform = `translateX(-${(i * 100) / 6}%)`;
+        expect(slidingContainer.style.transform).toBe(expectedTransform);
+      });
+    }
 
-    // Then go back to first image
-    fireEvent.click(prevButton);
-    expect(firstContainer).toHaveClass("opacity-100");
-    expect(secondContainer).toHaveClass("opacity-0");
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
+    // After 6 images, should loop back to first (index 0 = 0%)
+    vi.advanceTimersByTime(4000);
+    await waitFor(() => {
+      expect(slidingContainer.style.transform).toBe("translateX(-0%)");
+    });
   });
 
-  it("navigates to specific image when dot is clicked", () => {
-    const originalEnv = import.meta.env.VITE_HERO_IMAGES;
-    import.meta.env.VITE_HERO_IMAGES = JSON.stringify([
-      "/image1.jpg",
-      "/image2.jpg",
-      "/image3.jpg",
-    ]);
-
+  it("has correct image alt text", () => {
     render(<HeroImage />);
 
-    const images = screen.getAllByTestId("hero-marketing-image");
-    const firstContainer = images[0].closest("div");
-    const secondContainer = images[1].closest("div");
-    const thirdContainer = images[2].closest("div");
-    const dot3 = screen.getByLabelText("Go to image 3");
-
-    // Click on third dot
-    fireEvent.click(dot3);
-
-    // Third image container should be visible
-    expect(firstContainer).toHaveClass("opacity-0");
-    expect(secondContainer).toHaveClass("opacity-0");
-    expect(thirdContainer).toHaveClass("opacity-100");
-
-    // Restore
-    import.meta.env.VITE_HERO_IMAGES = originalEnv;
+    const images = screen.getAllByTestId(/hero-marketing-image-\d+/);
+    expect(images[0]).toHaveAttribute("alt", "OneLink hero image 1");
+    expect(images[1]).toHaveAttribute("alt", "OneLink hero image 2");
+    expect(images[2]).toHaveAttribute("alt", "OneLink hero image 3");
   });
 });
