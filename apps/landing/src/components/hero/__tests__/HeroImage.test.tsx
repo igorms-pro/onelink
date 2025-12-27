@@ -149,8 +149,8 @@ describe("HeroImage", () => {
   });
 
   it("cleans up interval on unmount", async () => {
+    const clearIntervalSpy = vi.spyOn(globalThis, "clearInterval");
     const { unmount } = render(<HeroImage />);
-    const clearIntervalSpy = vi.spyOn(global, "clearInterval");
 
     unmount();
 
