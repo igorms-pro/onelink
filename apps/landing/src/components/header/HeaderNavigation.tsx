@@ -14,7 +14,10 @@ export function HeaderNavigation({
   const { t } = useTranslation();
 
   return (
-    <nav className="hidden md:flex items-center gap-6">
+    <nav
+      data-testid="header-navigation"
+      className="hidden md:flex items-center gap-6"
+    >
       <a
         href={isHomePage ? "#features" : "/#features"}
         onClick={handleAnchorClick("features")}

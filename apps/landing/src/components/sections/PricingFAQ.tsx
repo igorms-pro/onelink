@@ -25,7 +25,7 @@ export function PricingFAQ() {
   };
 
   return (
-    <section className="py-12">
+    <section data-testid="pricing-faq-section" className="py-12">
       <Layout className="max-w-4xl mx-auto">
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">
           {t("pricing.faq_title")}
@@ -36,6 +36,7 @@ export function PricingFAQ() {
             return (
               <div
                 key={item.question}
+                data-testid={`pricing-faq-item-${index}`}
                 className="rounded-lg border border-gray-200 bg-white/80 shadow-sm dark:border-gray-800 dark:bg-gray-900/70 overflow-hidden"
               >
                 <button
@@ -52,10 +53,12 @@ export function PricingFAQ() {
                   )}
                 </button>
                 <div
+                  data-testid={`pricing-faq-content-${index}`}
                   className={clsx(
                     "overflow-hidden transition-all duration-200 ease-in-out",
                     isExpanded ? "max-h-96 opacity-100" : "max-h-0 opacity-0",
                   )}
+                  aria-expanded={isExpanded}
                 >
                   <div className="border-t border-gray-200 dark:border-gray-800">
                     <p className="px-4 py-3 text-sm text-gray-600 dark:text-gray-300">

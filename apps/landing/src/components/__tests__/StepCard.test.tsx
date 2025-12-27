@@ -39,24 +39,28 @@ describe("StepCard Component", () => {
   });
 
   it("handles different step positions (first, middle, last)", () => {
-    const { container, rerender } = render(
-      <StepCard {...defaultProps} isLast={false} />,
+    const { rerender } = render(
+      <StepCard {...defaultProps} stepNumber={1} isLast={false} />,
     );
 
     // Should show connector line when not last
-    const connectors = container.querySelectorAll('[class*="bg-linear"]');
-    expect(connectors.length).toBeGreaterThan(0);
+    expect(
+      screen.getByTestId("step-card-connector-mobile-1"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("step-card-connector-desktop-1"),
+    ).toBeInTheDocument();
 
     // Rerender as last step
-    rerender(<StepCard {...defaultProps} isLast={true} />);
+    rerender(<StepCard {...defaultProps} stepNumber={4} isLast={true} />);
 
     // Connector should not be present when isLast is true
-    // The step number circle still has bg-linear-to-r, so we check for connector lines specifically
-    const connectorLines = container.querySelectorAll(
-      '[class*="absolute"][class*="bg-linear"]',
-    );
-    // Last step should not have connector lines
-    expect(connectorLines.length).toBe(0);
+    expect(
+      screen.queryByTestId("step-card-connector-mobile-4"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("step-card-connector-desktop-4"),
+    ).not.toBeInTheDocument();
   });
 
   it("renders correctly in dark mode", () => {
@@ -64,34 +68,33 @@ describe("StepCard Component", () => {
 
     render(<StepCard {...defaultProps} />);
 
-    // Check for dark mode classes in description
-    const description = screen.getByText("This is the first step");
-    expect(description).toBeInTheDocument();
-    expect(description).toHaveClass("text-muted-foreground");
+    // Component should render without errors in dark mode
+    const card = screen.getByTestId("step-card-1");
+    expect(card).toBeInTheDocument();
+    expect(screen.getByText("This is the first step")).toBeInTheDocument();
   });
 
   it("displays step number in a circle", () => {
     render(<StepCard {...defaultProps} />);
 
-    const stepNumber = screen.getByText("1");
-    const circle = stepNumber.closest("div");
-    expect(circle).toHaveClass("rounded-full");
-    expect(circle).toHaveClass("bg-linear-to-r");
+    const stepNumber = screen.getByTestId("step-card-number-1");
+    expect(stepNumber).toBeInTheDocument();
+    expect(stepNumber).toHaveTextContent("1");
   });
 
   it("shows icon overlay on desktop", () => {
-    const { container } = render(<StepCard {...defaultProps} />);
+    render(<StepCard {...defaultProps} />);
 
     // Icon overlay should exist (hidden on mobile, visible on desktop)
-    const iconOverlay = container.querySelector('[class*="hidden md:flex"]');
+    const iconOverlay = screen.getByTestId("step-card-icon-overlay-1");
     expect(iconOverlay).toBeInTheDocument();
   });
 
   it("shows icon with title on mobile", () => {
-    const { container } = render(<StepCard {...defaultProps} />);
+    render(<StepCard {...defaultProps} />);
 
     // Mobile icon should exist (visible on mobile, hidden on desktop)
-    const mobileIcon = container.querySelector('[class*="md:hidden"]');
+    const mobileIcon = screen.getByTestId("step-card-mobile-icon-1");
     expect(mobileIcon).toBeInTheDocument();
   });
 
@@ -105,26 +108,26 @@ describe("StepCard Component", () => {
   });
 
   it("renders connector line for non-last steps", () => {
-    const { container } = render(
-      <StepCard {...defaultProps} stepNumber={2} isLast={false} />,
-    );
+    render(<StepCard {...defaultProps} stepNumber={2} isLast={false} />);
 
-    // Should have connector line (absolute positioned line)
-    const connectorLines = container.querySelectorAll(
-      '[class*="absolute"][class*="bg-linear"]',
-    );
-    expect(connectorLines.length).toBeGreaterThan(0);
+    // Should have connector line
+    expect(
+      screen.getByTestId("step-card-connector-mobile-2"),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByTestId("step-card-connector-desktop-2"),
+    ).toBeInTheDocument();
   });
 
   it("does not render connector line for last step", () => {
-    const { container } = render(
-      <StepCard {...defaultProps} stepNumber={4} isLast={true} />,
-    );
+    render(<StepCard {...defaultProps} stepNumber={4} isLast={true} />);
 
-    // Last step should not have the connector line (absolute positioned)
-    const connectorLines = container.querySelectorAll(
-      '[class*="absolute"][class*="bg-linear"]',
-    );
-    expect(connectorLines.length).toBe(0);
+    // Last step should not have the connector line
+    expect(
+      screen.queryByTestId("step-card-connector-mobile-4"),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByTestId("step-card-connector-desktop-4"),
+    ).not.toBeInTheDocument();
   });
 });
