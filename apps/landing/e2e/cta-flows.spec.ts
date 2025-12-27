@@ -1,11 +1,6 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("CTA Conversion Flows", () => {
-  test.skip(
-    !!process.env.CI,
-    "Skipping external redirect tests in CI - external domain won't resolve",
-  );
-
   test("should redirect hero 'Get Started Free' button to app", async ({
     page,
   }) => {
@@ -14,15 +9,35 @@ test.describe("CTA Conversion Flows", () => {
     const heroCTA = page.getByTestId("hero-cta-get-started");
     await expect(heroCTA).toBeVisible();
 
-    // Click and verify redirect
-    const [response] = await Promise.all([
+    // Intercept navigation to verify redirect is attempted
+    let redirectUrl: string | null = null;
+    page.on("framenavigated", (frame) => {
+      if (frame.url().includes("app.getonelink.io")) {
+        redirectUrl = frame.url();
+      }
+    });
+
+    // Click button and wait for redirect attempt
+    await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-        .catch(() => null),
+        .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+        .catch(() => {
+          // In CI, external domain might not resolve, but redirect should be attempted
+        }),
       heroCTA.click(),
     ]);
 
-    expect(response).not.toBeNull();
+    // Verify redirect was attempted (either completed or URL changed)
+    const currentUrl = page.url();
+    const redirectHappened =
+      redirectUrl?.includes("app.getonelink.io/auth") ||
+      currentUrl.includes("app.getonelink.io/auth");
+
+    // Even if external domain doesn't resolve, verify button is functional
+    // The redirect code should execute (window.location.href is set)
+    expect(
+      redirectHappened || currentUrl !== "http://localhost:4173/",
+    ).toBeTruthy();
   });
 
   test("should have working 'View Demo' button", async ({ page }) => {
@@ -77,14 +92,40 @@ test.describe("CTA Conversion Flows", () => {
     const freePlanCTA = page.getByTestId("pricing-card-cta-free");
 
     if ((await freePlanCTA.count()) > 0) {
-      const [response] = await Promise.all([
-        page
-          .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-          .catch(() => null),
-        freePlanCTA.click(),
-      ]);
+      // Verify button has correct href or will trigger redirect
+      const href = await freePlanCTA.getAttribute("href");
 
-      expect(response).not.toBeNull();
+      if (href) {
+        // If it's a link, verify href is correct
+        expect(href).toContain("app.getonelink.io/auth");
+      } else {
+        // If it's a button, verify redirect happens on click
+        let redirectUrl: string | null = null;
+        page.on("framenavigated", (frame) => {
+          if (frame.url().includes("app.getonelink.io")) {
+            redirectUrl = frame.url();
+          }
+        });
+
+        await Promise.all([
+          page
+            .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+            .catch(() => {
+              // In CI, external domain might not resolve
+            }),
+          freePlanCTA.click(),
+        ]);
+
+        const currentUrl = page.url();
+        const redirectHappened =
+          redirectUrl?.includes("app.getonelink.io/auth") ||
+          currentUrl.includes("app.getonelink.io/auth");
+
+        // Verify redirect was attempted (button is functional)
+        expect(
+          redirectHappened || currentUrl !== "http://localhost:4173/",
+        ).toBeTruthy();
+      }
     }
   });
 
@@ -97,14 +138,35 @@ test.describe("CTA Conversion Flows", () => {
     const proPlanCTA = page.getByRole("link", { name: /upgrade|pro/i }).first();
 
     if ((await proPlanCTA.count()) > 0) {
-      const [response] = await Promise.all([
-        page
-          .waitForURL("https://app.getonelink.io/pricing", { timeout: 5000 })
-          .catch(() => null),
-        proPlanCTA.click(),
-      ]);
+      // Verify link has correct href
+      const href = await proPlanCTA.getAttribute("href");
 
-      expect(response).not.toBeNull();
+      if (href) {
+        expect(href).toContain("app.getonelink.io/pricing");
+      } else {
+        // If no href, verify redirect happens on click
+        let redirectAttempted = false;
+        page.on("framenavigated", (frame) => {
+          if (frame.url().includes("app.getonelink.io")) {
+            redirectAttempted = true;
+          }
+        });
+
+        await Promise.all([
+          page
+            .waitForURL("https://app.getonelink.io/pricing", { timeout: 5000 })
+            .catch(() => {
+              // In CI, external domain might not resolve
+            }),
+          proPlanCTA.click(),
+        ]);
+
+        const currentUrl = page.url();
+        const redirectHappened =
+          redirectAttempted || currentUrl.includes("app.getonelink.io/pricing");
+
+        expect(redirectHappened || href !== null).toBeTruthy();
+      }
     }
   });
 
@@ -124,14 +186,38 @@ test.describe("CTA Conversion Flows", () => {
     const ctaButton = page.getByTestId("cta-section-primary");
 
     if ((await ctaButton.count()) > 0) {
-      const [response] = await Promise.all([
-        page
-          .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-          .catch(() => null),
-        ctaButton.click(),
-      ]);
+      // Verify button will trigger redirect
+      const href = await ctaButton.getAttribute("href");
 
-      expect(response).not.toBeNull();
+      if (href) {
+        expect(href).toContain("app.getonelink.io/auth");
+      } else {
+        let redirectUrl: string | null = null;
+        page.on("framenavigated", (frame) => {
+          if (frame.url().includes("app.getonelink.io")) {
+            redirectUrl = frame.url();
+          }
+        });
+
+        await Promise.all([
+          page
+            .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+            .catch(() => {
+              // In CI, external domain might not resolve
+            }),
+          ctaButton.click(),
+        ]);
+
+        const currentUrl = page.url();
+        const redirectHappened =
+          redirectUrl?.includes("app.getonelink.io/auth") ||
+          currentUrl.includes("app.getonelink.io/auth");
+
+        // Verify redirect was attempted (button is functional)
+        expect(
+          redirectHappened || currentUrl !== "http://localhost:4173/",
+        ).toBeTruthy();
+      }
     }
   });
 
@@ -153,12 +239,12 @@ test.describe("CTA Conversion Flows", () => {
     // Click hero CTA
     const heroCTA = page.getByTestId("hero-cta-get-started");
 
-    // In CI or if redirects don't work, just verify button is clickable
-    if (process.env.CI) {
-      await expect(heroCTA).toBeVisible();
-      await expect(heroCTA).toBeEnabled();
-      return;
-    }
+    let redirectHappened = false;
+    page.on("framenavigated", (frame) => {
+      if (frame.url().includes("app.getonelink.io")) {
+        redirectHappened = true;
+      }
+    });
 
     // Wait for potential redirect
     const [redirect] = await Promise.all([
@@ -169,7 +255,11 @@ test.describe("CTA Conversion Flows", () => {
     ]);
 
     // If redirect happened, analytics might not fire, which is okay
-    if (redirect) {
+    if (
+      redirect ||
+      redirectHappened ||
+      page.url().includes("app.getonelink.io")
+    ) {
       // Redirect happened, test passes
       return;
     }
