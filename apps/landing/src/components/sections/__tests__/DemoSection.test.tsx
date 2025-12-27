@@ -3,12 +3,10 @@ import { render, screen } from "@testing-library/react";
 import { DemoSection } from "../DemoSection";
 
 describe("DemoSection", () => {
-  it("renders screenshot placeholder", () => {
+  it("renders video placeholder when no YouTube ID is set", () => {
     render(<DemoSection />);
 
-    expect(
-      screen.getByText(/SCREENSHOT: Dashboard in Action/i),
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Video Tutorial Coming Soon/i)).toBeInTheDocument();
   });
 
   it("renders device mockup", () => {

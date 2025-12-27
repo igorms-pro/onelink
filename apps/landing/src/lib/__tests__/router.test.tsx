@@ -30,12 +30,16 @@ describe("Router Configuration", () => {
     // Check that router has all expected routes
     const routes = router.routes;
 
-    expect(routes).toHaveLength(3);
+    expect(routes).toHaveLength(7);
 
     // Check route paths
     const paths = routes.map((route) => route.path);
     expect(paths).toContain("/");
+    expect(paths).toContain("/features");
+    expect(paths).toContain("/pricing");
     expect(paths).toContain("/auth");
+    expect(paths).toContain("/privacy");
+    expect(paths).toContain("/terms");
     expect(paths).toContain("*");
   });
 
