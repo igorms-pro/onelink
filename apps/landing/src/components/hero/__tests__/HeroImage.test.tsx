@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import { HeroImage } from "../HeroImage";
 
 describe("HeroImage", () => {
@@ -58,15 +58,15 @@ describe("HeroImage", () => {
     // Initially at 0%
     expect(slidingContainer.style.transform).toBe("translateX(-0%)");
 
-    // Fast-forward 4 seconds
-    vi.advanceTimersByTime(4000);
-
-    await waitFor(() => {
-      // Should move to next image (16.67% for 1/6 of container)
-      expect(slidingContainer.style.transform).toBe(
-        "translateX(-16.666666666666668%)",
-      );
+    // Fast-forward 4 seconds with act
+    await act(async () => {
+      vi.advanceTimersByTime(4000);
     });
+
+    // Should move to next image (16.67% for 1/6 of container)
+    expect(slidingContainer.style.transform).toBe(
+      "translateX(-16.666666666666668%)",
+    );
   });
 
   it("does not show navigation buttons", () => {
@@ -94,18 +94,18 @@ describe("HeroImage", () => {
 
     // Advance through all 6 images (4 seconds each = 24 seconds total)
     for (let i = 1; i <= 6; i++) {
-      vi.advanceTimersByTime(4000);
-      await waitFor(() => {
-        const expectedTransform = `translateX(-${(i * 100) / 6}%)`;
-        expect(slidingContainer.style.transform).toBe(expectedTransform);
+      await act(async () => {
+        vi.advanceTimersByTime(4000);
       });
+      const expectedTransform = `translateX(-${(i * 100) / 6}%)`;
+      expect(slidingContainer.style.transform).toBe(expectedTransform);
     }
 
     // After 6 images, should loop back to first (index 0 = 0%)
-    vi.advanceTimersByTime(4000);
-    await waitFor(() => {
-      expect(slidingContainer.style.transform).toBe("translateX(-0%)");
+    await act(async () => {
+      vi.advanceTimersByTime(4000);
     });
+    expect(slidingContainer.style.transform).toBe("translateX(-0%)");
   });
 
   it("has correct image alt text", () => {
