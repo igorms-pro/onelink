@@ -15,16 +15,24 @@ describe("PrivacyPage", () => {
     vi.clearAllMocks();
     // Mock window.location.href
     delete (window as any).location;
-    window.location = {
-      ...originalLocation,
-      href: "",
-    } as Location;
+    Object.defineProperty(window, "location", {
+      value: {
+        ...originalLocation,
+        href: "",
+      },
+      writable: true,
+      configurable: true,
+    });
 
     delete import.meta.env.VITE_APP_URL;
   });
 
   afterEach(() => {
-    window.location = originalLocation;
+    Object.defineProperty(window, "location", {
+      value: originalLocation,
+      writable: true,
+      configurable: true,
+    });
     vi.restoreAllMocks();
     delete import.meta.env.VITE_APP_URL;
   });
