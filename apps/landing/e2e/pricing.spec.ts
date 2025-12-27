@@ -139,6 +139,9 @@ test.describe("Pricing Section Flow", () => {
 
     // In CI, external redirects won't work, so just verify button is functional
     if (process.env.CI) {
+      // Just verify button exists and is clickable
+      await expect(freePlanCTA).toBeVisible();
+      await expect(freePlanCTA).toBeEnabled();
       return;
     }
 

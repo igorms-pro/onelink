@@ -151,6 +151,9 @@ test.describe("Homepage Load & Navigation", () => {
 
     // In CI, external redirects won't work, so just verify button is functional
     if (process.env.CI) {
+      // Just verify button exists and is clickable
+      await expect(signInButton).toBeVisible();
+      await expect(signInButton).toBeEnabled();
       return;
     }
 

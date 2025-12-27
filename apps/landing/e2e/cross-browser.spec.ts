@@ -63,6 +63,9 @@ test.describe("Cross-Browser Compatibility", () => {
 
     // In CI, external redirects won't work, so just verify button works
     if (process.env.CI) {
+      // Just verify button exists and is clickable
+      await expect(heroCTA).toBeVisible();
+      await expect(heroCTA).toBeEnabled();
       return;
     }
 
@@ -186,6 +189,10 @@ test.describe("Cross-Browser Compatibility", () => {
   }) => {
     // Skip external redirect test in CI
     if (process.env.CI) {
+      // Just verify /auth route exists
+      await page.goto("/auth");
+      // In CI, redirect won't work, so just verify page loaded
+      expect(page.url()).toContain("/auth");
       return;
     }
 

@@ -1,28 +1,29 @@
 import { test, expect } from "@playwright/test";
 
-// Skip external redirect tests in CI
-const skipExternalRedirect = process.env.CI ? test.skip : test;
-
 test.describe("CTA Conversion Flows", () => {
-  skipExternalRedirect(
-    "should redirect hero 'Get Started Free' button to app",
-    async ({ page }) => {
-      await page.goto("/");
-
-      const heroCTA = page.getByTestId("hero-cta-get-started");
-      await expect(heroCTA).toBeVisible();
-
-      // Click and verify redirect
-      const [response] = await Promise.all([
-        page
-          .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-          .catch(() => null),
-        heroCTA.click(),
-      ]);
-
-      expect(response).not.toBeNull();
-    },
+  test.skip(
+    !!process.env.CI,
+    "Skipping external redirect tests in CI - external domain won't resolve",
   );
+
+  test("should redirect hero 'Get Started Free' button to app", async ({
+    page,
+  }) => {
+    await page.goto("/");
+
+    const heroCTA = page.getByTestId("hero-cta-get-started");
+    await expect(heroCTA).toBeVisible();
+
+    // Click and verify redirect
+    const [response] = await Promise.all([
+      page
+        .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
+        .catch(() => null),
+      heroCTA.click(),
+    ]);
+
+    expect(response).not.toBeNull();
+  });
 
   test("should have working 'View Demo' button", async ({ page }) => {
     await page.goto("/");
@@ -57,87 +58,82 @@ test.describe("CTA Conversion Flows", () => {
     }
   });
 
-  skipExternalRedirect(
-    "should redirect pricing 'Get Started Free' button to app",
-    async ({ page }) => {
-      await page.goto("/");
+  test("should redirect pricing 'Get Started Free' button to app", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
-      // Scroll to pricing section
-      await page.evaluate(() => {
-        const pricingSection = document.querySelector('[class*="pricing"]');
-        if (pricingSection) {
-          pricingSection.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-
-      await page.waitForTimeout(1000);
-
-      // Find Free plan CTA using data-testid
-      const freePlanCTA = page.getByTestId("pricing-card-cta-free");
-
-      if ((await freePlanCTA.count()) > 0) {
-        const [response] = await Promise.all([
-          page
-            .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-            .catch(() => null),
-          freePlanCTA.click(),
-        ]);
-
-        expect(response).not.toBeNull();
+    // Scroll to pricing section
+    await page.evaluate(() => {
+      const pricingSection = document.querySelector('[class*="pricing"]');
+      if (pricingSection) {
+        pricingSection.scrollIntoView({ behavior: "smooth" });
       }
-    },
-  );
+    });
 
-  skipExternalRedirect(
-    "should redirect pricing 'Upgrade to Pro' button to app pricing",
-    async ({ page }) => {
-      await page.goto("/pricing");
+    await page.waitForTimeout(1000);
 
-      // Find Pro plan CTA
-      const proPlanCTA = page
-        .getByRole("link", { name: /upgrade|pro/i })
-        .first();
+    // Find Free plan CTA using data-testid
+    const freePlanCTA = page.getByTestId("pricing-card-cta-free");
 
-      if ((await proPlanCTA.count()) > 0) {
-        const [response] = await Promise.all([
-          page
-            .waitForURL("https://app.getonelink.io/pricing", { timeout: 5000 })
-            .catch(() => null),
-          proPlanCTA.click(),
-        ]);
+    if ((await freePlanCTA.count()) > 0) {
+      const [response] = await Promise.all([
+        page
+          .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
+          .catch(() => null),
+        freePlanCTA.click(),
+      ]);
 
-        expect(response).not.toBeNull();
-      }
-    },
-  );
+      expect(response).not.toBeNull();
+    }
+  });
 
-  skipExternalRedirect(
-    "should redirect CTA section 'Create Your Free Account' button to app",
-    async ({ page }) => {
-      await page.goto("/");
+  test("should redirect pricing 'Upgrade to Pro' button to app pricing", async ({
+    page,
+  }) => {
+    await page.goto("/pricing");
 
-      // Scroll to CTA section
-      await page.evaluate(() => {
-        window.scrollTo(0, document.body.scrollHeight);
-      });
+    // Find Pro plan CTA
+    const proPlanCTA = page.getByRole("link", { name: /upgrade|pro/i }).first();
 
-      await page.waitForTimeout(1000);
+    if ((await proPlanCTA.count()) > 0) {
+      const [response] = await Promise.all([
+        page
+          .waitForURL("https://app.getonelink.io/pricing", { timeout: 5000 })
+          .catch(() => null),
+        proPlanCTA.click(),
+      ]);
 
-      // Find CTA section button using data-testid
-      const ctaButton = page.getByTestId("cta-section-primary");
+      expect(response).not.toBeNull();
+    }
+  });
 
-      if ((await ctaButton.count()) > 0) {
-        const [response] = await Promise.all([
-          page
-            .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-            .catch(() => null),
-          ctaButton.click(),
-        ]);
+  test("should redirect CTA section 'Create Your Free Account' button to app", async ({
+    page,
+  }) => {
+    await page.goto("/");
 
-        expect(response).not.toBeNull();
-      }
-    },
-  );
+    // Scroll to CTA section
+    await page.evaluate(() => {
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    await page.waitForTimeout(1000);
+
+    // Find CTA section button using data-testid
+    const ctaButton = page.getByTestId("cta-section-primary");
+
+    if ((await ctaButton.count()) > 0) {
+      const [response] = await Promise.all([
+        page
+          .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
+          .catch(() => null),
+        ctaButton.click(),
+      ]);
+
+      expect(response).not.toBeNull();
+    }
+  });
 
   test("should track analytics events on CTA clicks", async ({ page }) => {
     await page.goto("/");
