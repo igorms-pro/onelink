@@ -4,8 +4,11 @@ import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
 import HeroSection from "@/components/sections/HeroSection";
 import FeaturesSection from "@/components/sections/FeaturesSection";
+import HowItWorksSection from "@/components/sections/HowItWorksSection";
+import { DemoSection } from "@/components/sections/DemoSection";
 import ComparisonSection from "@/components/sections/ComparisonSection";
 import { PricingSection } from "@/components/sections/PricingSection";
+// import { SocialProofSection } from "@/components/sections/SocialProofSection";
 import { TrustSection } from "@/components/sections/TrustSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { CTASection } from "@/components/sections/CTASection";
@@ -40,11 +43,20 @@ export default function HomePage() {
           {/* Features Section */}
           <FeaturesSection />
 
+          {/* How It Works Section */}
+          <HowItWorksSection />
+
+          {/* Demo Section */}
+          <DemoSection />
+
           {/* Comparison Section */}
           <ComparisonSection />
 
           {/* Pricing Section */}
           <PricingSection />
+
+          {/* Social Proof Section */}
+          {/* <SocialProofSection /> */}
 
           {/* Trust & Security Section */}
           <TrustSection />

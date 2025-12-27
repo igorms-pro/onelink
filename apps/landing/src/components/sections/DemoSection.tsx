@@ -1,8 +1,18 @@
 import { useTranslation } from "react-i18next";
 import { Layout } from "@/components/Layout";
 
+// YouTube video ID - Replace with your actual video ID when ready
+// You can also use environment variable: import.meta.env.VITE_YOUTUBE_VIDEO_ID
+const YOUTUBE_VIDEO_ID = ""; // e.g., "dQw4w9WgXcQ" (replace with your video ID)
+
 export function DemoSection() {
   const { t } = useTranslation();
+
+  // Get video ID from env or use default
+  const videoId = import.meta.env.VITE_YOUTUBE_VIDEO_ID || YOUTUBE_VIDEO_ID;
+  const youtubeEmbedUrl = videoId
+    ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`
+    : null;
 
   return (
     <section
@@ -28,13 +38,29 @@ export function DemoSection() {
               {/* MacBook Top Bar */}
               <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-32 h-6 bg-gray-800 dark:bg-gray-700 rounded-t-lg"></div>
 
-              {/* Screen Content */}
+              {/* Screen Content - YouTube Video Embed */}
               <div className="aspect-video bg-white dark:bg-gray-900 rounded overflow-hidden">
-                <div className="h-full flex items-center justify-center bg-linear-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
-                  <p className="text-muted-foreground text-sm md:text-base font-medium">
-                    SCREENSHOT: Dashboard in Action
-                  </p>
-                </div>
+                {youtubeEmbedUrl ? (
+                  <iframe
+                    src={youtubeEmbedUrl}
+                    title={t("landing.demo.title")}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                ) : (
+                  <div className="h-full flex items-center justify-center bg-linear-to-br from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20">
+                    <div className="text-center px-4">
+                      <p className="text-muted-foreground text-sm md:text-base font-medium mb-2">
+                        Video Tutorial Coming Soon
+                      </p>
+                      <p className="text-muted-foreground text-xs md:text-sm opacity-70">
+                        Add your YouTube video ID in DemoSection.tsx or set
+                        VITE_YOUTUBE_VIDEO_ID
+                      </p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
