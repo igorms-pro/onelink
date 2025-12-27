@@ -27,6 +27,7 @@ export function PricingCard({
 
   return (
     <div
+      data-testid={`pricing-card-${name.toLowerCase()}`}
       className={clsx(
         "relative flex h-full flex-col rounded-2xl p-8 md:p-10 lg:p-12 shadow-sm transition-all",
         highlight

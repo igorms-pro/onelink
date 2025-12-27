@@ -22,7 +22,10 @@ export function HeaderMobileMenu({
   if (!isOpen) return null;
 
   return (
-    <div className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4">
+    <div
+      data-testid="header-mobile-menu"
+      className="md:hidden border-t border-gray-200 dark:border-gray-800 py-4"
+    >
       <nav className="flex flex-col gap-4">
         <a
           href={isHomePage ? "#features" : "/#features"}

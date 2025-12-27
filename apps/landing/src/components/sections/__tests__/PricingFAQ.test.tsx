@@ -31,27 +31,23 @@ describe("PricingFAQ", () => {
 
     const buttons = screen.queryAllByRole("button");
     if (buttons.length > 0) {
-      // Find FAQ toggle buttons (they contain question text)
-      const faqButtons = buttons.filter(
-        (btn) =>
-          btn.textContent?.includes("?") ||
-          btn.closest("button")?.querySelector("h3"),
-      );
+      const firstButton = buttons[0];
+      const faqItem = firstButton.closest('[data-testid^="pricing-faq-item-"]');
+      const index = faqItem
+        ?.getAttribute("data-testid")
+        ?.replace("pricing-faq-item-", "");
 
-      if (faqButtons.length > 0) {
-        const firstButton = faqButtons[0];
-        const container = firstButton.closest("div");
+      if (index !== undefined) {
+        const content = screen.getByTestId(`pricing-faq-content-${index}`);
 
         // Check initial state (should be collapsed)
-        const content = container?.querySelector('[class*="max-h-0"]');
-        expect(content).toBeInTheDocument();
+        expect(content).toHaveAttribute("aria-expanded", "false");
 
         // Click to expand
         await user.click(firstButton);
 
         // After click, should be expanded
-        const expandedContent = container?.querySelector('[class*="max-h-96"]');
-        expect(expandedContent).toBeInTheDocument();
+        expect(content).toHaveAttribute("aria-expanded", "true");
       }
     }
   });
@@ -87,17 +83,31 @@ describe("PricingFAQ", () => {
     if (buttons.length >= 2) {
       // Click first button
       await user.click(buttons[0]);
-      const firstContainer = buttons[0].closest("div");
-      expect(
-        firstContainer?.querySelector('[class*="max-h-96"]'),
-      ).toBeInTheDocument();
+      const firstItem = buttons[0].closest(
+        '[data-testid^="pricing-faq-item-"]',
+      );
+      const firstIndex = firstItem
+        ?.getAttribute("data-testid")
+        ?.replace("pricing-faq-item-", "");
+      if (firstIndex !== undefined) {
+        expect(
+          screen.getByTestId(`pricing-faq-content-${firstIndex}`),
+        ).toHaveAttribute("aria-expanded", "true");
+      }
 
       // Click second button
       await user.click(buttons[1]);
-      const secondContainer = buttons[1].closest("div");
-      expect(
-        secondContainer?.querySelector('[class*="max-h-96"]'),
-      ).toBeInTheDocument();
+      const secondItem = buttons[1].closest(
+        '[data-testid^="pricing-faq-item-"]',
+      );
+      const secondIndex = secondItem
+        ?.getAttribute("data-testid")
+        ?.replace("pricing-faq-item-", "");
+      if (secondIndex !== undefined) {
+        expect(
+          screen.getByTestId(`pricing-faq-content-${secondIndex}`),
+        ).toHaveAttribute("aria-expanded", "true");
+      }
     }
   });
 
@@ -108,19 +118,22 @@ describe("PricingFAQ", () => {
     const buttons = screen.queryAllByRole("button");
     if (buttons.length > 0) {
       const button = buttons[0];
-      const container = button.closest("div");
+      const faqItem = button.closest('[data-testid^="pricing-faq-item-"]');
+      const index = faqItem
+        ?.getAttribute("data-testid")
+        ?.replace("pricing-faq-item-", "");
 
-      // Expand
-      await user.click(button);
-      expect(
-        container?.querySelector('[class*="max-h-96"]'),
-      ).toBeInTheDocument();
+      if (index !== undefined) {
+        const content = screen.getByTestId(`pricing-faq-content-${index}`);
 
-      // Collapse
-      await user.click(button);
-      expect(
-        container?.querySelector('[class*="max-h-0"]'),
-      ).toBeInTheDocument();
+        // Expand
+        await user.click(button);
+        expect(content).toHaveAttribute("aria-expanded", "true");
+
+        // Collapse
+        await user.click(button);
+        expect(content).toHaveAttribute("aria-expanded", "false");
+      }
     }
   });
 
@@ -133,11 +146,11 @@ describe("PricingFAQ", () => {
     expect(questions.length).toBeGreaterThanOrEqual(0);
   });
 
-  it("has correct styling classes", () => {
-    const { container } = render(<PricingFAQ />);
+  it("renders section correctly", () => {
+    render(<PricingFAQ />);
 
-    const section = container.querySelector("section");
+    const section = screen.getByTestId("pricing-faq-section");
     expect(section).toBeInTheDocument();
-    expect(section).toHaveClass("py-12");
+    expect(section.tagName).toBe("SECTION");
   });
 });

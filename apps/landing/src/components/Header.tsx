@@ -20,7 +20,10 @@ export function Header() {
     };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
+    <header
+      data-testid="header"
+      className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm"
+    >
       <Layout>
         <div className="flex h-16 items-center justify-between">
           <HeaderLogo />
