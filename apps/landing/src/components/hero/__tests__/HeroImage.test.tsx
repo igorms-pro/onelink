@@ -92,8 +92,8 @@ describe("HeroImage", () => {
     // Start at 0%
     expect(slidingContainer.style.transform).toBe("translateX(-0%)");
 
-    // Advance through all 6 images (4 seconds each = 24 seconds total)
-    for (let i = 1; i <= 6; i++) {
+    // Advance through first 5 images
+    for (let i = 1; i <= 5; i++) {
       await act(async () => {
         vi.advanceTimersByTime(4000);
       });
@@ -101,7 +101,7 @@ describe("HeroImage", () => {
       expect(slidingContainer.style.transform).toBe(expectedTransform);
     }
 
-    // After 6 images, should loop back to first (index 0 = 0%)
+    // After 6th advance, should loop back to first (index 0 = 0%)
     await act(async () => {
       vi.advanceTimersByTime(4000);
     });
