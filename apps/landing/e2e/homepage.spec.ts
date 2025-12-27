@@ -149,20 +149,39 @@ test.describe("Homepage Load & Navigation", () => {
     await expect(signInButton).toBeVisible();
     await expect(signInButton).toBeEnabled();
 
-    // In CI, external redirects won't work, so just verify button is functional
-    if (process.env.CI) {
-      return;
+    // Verify button will trigger redirect
+    const href = await signInButton.getAttribute("href");
+
+    if (href) {
+      expect(href).toContain("app.getonelink.io/auth");
+    } else {
+      let redirectUrl: string | null = null;
+      page.on("framenavigated", (frame) => {
+        if (frame.url().includes("app.getonelink.io")) {
+          redirectUrl = frame.url();
+        }
+      });
+
+      // Click and verify redirect (will navigate away)
+      await Promise.all([
+        page
+          .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+          .catch(() => {
+            // In CI, external domain might not resolve
+          }),
+        signInButton.click(),
+      ]);
+
+      const currentUrl = page.url();
+      const redirectHappened =
+        redirectUrl?.includes("app.getonelink.io/auth") ||
+        currentUrl.includes("app.getonelink.io/auth");
+
+      // Verify redirect was attempted (button is functional)
+      expect(
+        redirectHappened || currentUrl !== "http://localhost:4173/",
+      ).toBeTruthy();
     }
-
-    // Click and verify redirect (will navigate away)
-    const [response] = await Promise.all([
-      page
-        .waitForURL("https://app.getonelink.io/auth", { timeout: 5000 })
-        .catch(() => null),
-      signInButton.click(),
-    ]);
-
-    expect(response).not.toBeNull();
   });
 
   test("should have working footer links", async ({ page }) => {

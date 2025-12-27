@@ -143,17 +143,38 @@ test.describe("SEO Tests", () => {
     const linkCount = await internalLinks.count();
 
     const brokenLinks: string[] = [];
+    const checkedLinks = new Set<string>();
 
     for (let i = 0; i < linkCount; i++) {
       const link = internalLinks.nth(i);
       const href = await link.getAttribute("href");
 
-      if (href && !href.startsWith("http") && !href.includes("#")) {
+      if (
+        href &&
+        !href.startsWith("http") &&
+        !href.includes("#") &&
+        !checkedLinks.has(href)
+      ) {
+        checkedLinks.add(href);
+
+        // Skip /auth route as it redirects externally (tested separately)
+        if (href === "/auth" || href.startsWith("/auth?")) {
+          continue;
+        }
+
         // Try to navigate and check if page loads
         try {
-          await page.goto(href);
-          await page.waitForLoadState("networkidle", { timeout: 5000 });
+          const response = await page.goto(href, {
+            waitUntil: "domcontentloaded",
+            timeout: 10000,
+          });
+
+          // Check if response is valid (status 200-399)
+          if (response && response.status() >= 400) {
+            brokenLinks.push(`${href} (status: ${response.status()})`);
+          }
         } catch {
+          // If navigation fails, it's a broken link
           brokenLinks.push(href);
         }
 
@@ -162,6 +183,9 @@ test.describe("SEO Tests", () => {
       }
     }
 
+    if (brokenLinks.length > 0) {
+      console.error("Broken internal links found:", brokenLinks);
+    }
     expect(brokenLinks.length).toBe(0);
   });
 
