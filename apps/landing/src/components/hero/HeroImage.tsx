@@ -58,7 +58,7 @@ export function HeroImage() {
   return (
     <div className="relative w-full mx-auto lg:mx-0 order-3 lg:col-span-1 lg:col-start-2 lg:row-start-1 lg:row-end-3">
       <div className="relative rounded-2xl overflow-hidden shadow-2xl shadow-purple-500/20">
-        <div className="relative aspect-[4/5] md:aspect-square w-full overflow-hidden">
+        <div className="relative aspect-4/5 md:aspect-square w-full overflow-hidden">
           {/* Sliding container with all images (including duplicates) */}
           <div
             ref={containerRef}
@@ -79,7 +79,7 @@ export function HeroImage() {
               return (
                 <div
                   key={index}
-                  className="h-full flex-shrink-0"
+                  className="h-full shrink-0"
                   style={{ width: `${100 / infiniteImages.length}%` }}
                 >
                   <img
