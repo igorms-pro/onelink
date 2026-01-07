@@ -2,6 +2,5 @@
   "buildCommand": "pnpm build",
   "outputDirectory": "dist",
   "installCommand": "pnpm install",
-  "framework": "vite",
-  "rootDirectory": "apps/landing"
+  "framework": "vite"
 }
