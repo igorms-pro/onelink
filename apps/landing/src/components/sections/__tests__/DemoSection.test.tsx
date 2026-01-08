@@ -4,9 +4,18 @@ import { DemoSection } from "../DemoSection";
 
 describe("DemoSection", () => {
   it("renders video placeholder when no YouTube ID is set", () => {
+    // Mock env to ensure no video ID is set
+    const originalEnv = import.meta.env.VITE_YOUTUBE_VIDEO_ID;
+    delete (import.meta.env as any).VITE_YOUTUBE_VIDEO_ID;
+
     render(<DemoSection />);
 
     expect(screen.getByText(/Video Tutorial Coming Soon/i)).toBeInTheDocument();
+
+    // Restore original env
+    if (originalEnv) {
+      (import.meta.env as any).VITE_YOUTUBE_VIDEO_ID = originalEnv;
+    }
   });
 
   it("renders device mockup", () => {

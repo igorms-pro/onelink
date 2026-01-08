@@ -7,6 +7,18 @@ import HomePage from "../HomePage";
 import * as analytics from "@/lib/analytics";
 import * as scrollAnimation from "@/lib/scrollAnimation";
 
+// Mock analytics
+vi.mock("@/lib/analytics", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/analytics")>();
+  return {
+    ...actual,
+    trackSignUpClick: vi.fn(),
+    trackCTAClick: vi.fn(),
+    trackUsernameEntered: vi.fn(),
+    trackScrollDepth: vi.fn(),
+  };
+});
+
 const renderWithRouter = (component: React.ReactElement) => {
   return render(
     <HelmetProvider>

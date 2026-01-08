@@ -3,6 +3,11 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { HeroInput } from "../HeroInput";
 
+// Mock analytics
+vi.mock("@/lib/analytics", () => ({
+  trackUsernameEntered: vi.fn(),
+}));
+
 describe("HeroInput", () => {
   beforeEach(() => {
     vi.clearAllMocks();

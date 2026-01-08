@@ -9,6 +9,7 @@ import React from "react";
 vi.mock("@/lib/analytics", () => ({
   trackSignUpClick: vi.fn(),
   trackCTAClick: vi.fn(),
+  trackUsernameEntered: vi.fn(),
 }));
 
 const renderWithRouter = (component: React.ReactElement) => {

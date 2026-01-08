@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { trackSignUpClick } from "@/lib/analytics";
+import { trackSignUpClick, trackUsernameEntered } from "@/lib/analytics";
 import { Layout } from "@/components/Layout";
 
 export function CTASection() {
   const { t } = useTranslation();
   const [username, setUsername] = useState("");
+  const hasTrackedUsername = useRef(false);
+
+  const handleUsernameChange = (value: string) => {
+    setUsername(value);
+
+    // Track only once when user starts typing (transitions from empty to non-empty)
+    if (!hasTrackedUsername.current && value.trim().length > 0) {
+      hasTrackedUsername.current = true;
+      trackUsernameEntered("cta_section", value.trim().length);
+    }
+  };
 
   const handleGetStarted = () => {
     trackSignUpClick("cta_section");
@@ -41,7 +52,7 @@ export function CTASection() {
                 <input
                   type="text"
                   value={username}
-                  onChange={(e) => setUsername(e.target.value)}
+                  onChange={(e) => handleUsernameChange(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       handleGetStarted();
