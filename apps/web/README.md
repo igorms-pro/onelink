@@ -1,98 +1,144 @@
-# OneLink Web
+# OneLink Web App
 
-## Apply SQL (Supabase)
+Main web application for OneLink, deployed at [app.getonelink.io](https://app.getonelink.io).
 
-Run this in Supabase SQL Editor (or CLI) before running locally:
+## Overview
 
-1. Create the core schema (users, profiles, links, custom_domains, link_clicks) and RPC `get_links_by_slug`.
-2. Apply RLS + plan helpers and RPCs in `supabase/sql/001_rls_and_plan.sql`.
-   - Removes anon SELECT on `links` (public reads via RPC only)
-   - Grants execute on `public.get_links_by_slug`
-   - Adds `v_profiles_with_plan`, `get_plan_by_slug`, `get_plan_by_user`
-   - Optional: 3-link cap policy for Free, analytics RPC `get_clicks_by_profile`
+OneLink is a unified link-in-bio platform that combines routing and file sharing into a single branded profile. The web app provides:
 
-## Required Supabase Function secrets (set in each function env)
+- **Public Profile Pages**: Customizable profile pages (`/:slug` or custom domain)
+- **Routes (OneMeet)**: Intent-first buttons linking to external destinations
+- **Drops (DropRequest)**: Public file inboxes with optional metadata
+- **Dashboard**: Profile management, analytics, and settings
+- **Billing**: Stripe integration for subscriptions
 
-- SUPABASE_URL
-- SUPABASE_ANON_KEY
-- SUPABASE_SERVICE_ROLE_KEY
-- STRIPE_SECRET_KEY
-- STRIPE_WEBHOOK_SECRET
-- PRICE_ID
-- SITE_URL
+## Tech Stack
 
----
+- **Framework**: React 19 + Vite
+- **Backend**: Supabase (Auth, Postgres, Storage)
+- **Styling**: Tailwind CSS
+- **Routing**: React Router v7
+- **Billing**: Stripe (Checkout + Portal)
+- **Analytics**: PostHog, Sentry
+- **i18n**: i18next
+- **Testing**: Vitest + Playwright
 
-# React + TypeScript + Vite
+## Prerequisites
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Supabase Setup
 
-Currently, two official plugins are available:
+1. **Apply SQL Scripts** (in order):
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+   ```bash
+   # Run in Supabase SQL Editor:
+   - supabase/sql/000_base_schema.sql
+   - supabase/sql/001_rls_and_plan.sql
+   - supabase/sql/002_drops_and_submissions.sql
+   - supabase/sql/003_retention_job.sql (optional)
+   ```
 
-## React Compiler
+2. **Storage Setup**:
+   - Create bucket `drops` (public: Yes)
+   - Apply storage policies (see `docs/storage-setup.md`)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **Edge Functions** (set in each function environment):
+   - `SUPABASE_URL`
+   - `SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+   - `STRIPE_SECRET_KEY`
+   - `STRIPE_WEBHOOK_SECRET`
+   - `PRICE_ID`
+   - `SITE_URL`
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+```bash
+# Install dependencies
+pnpm install
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# Start dev server
+pnpm dev
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+# Build for production
+pnpm build
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Preview production build
+pnpm preview
+
+# Run tests
+pnpm test
+
+# Run E2E tests
+pnpm e2e:ci
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment Variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Required variables (see `.env.local.example`):
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Required:**
+
+- `VITE_SUPABASE_URL` - Supabase project URL
+- `VITE_SUPABASE_ANON_KEY` - Supabase anonymous key
+
+**Optional:**
+
+- `VITE_POSTHOG_KEY` - PostHog analytics API key
+- `VITE_POSTHOG_HOST` - PostHog host (default: https://app.posthog.com)
+- `VITE_SENTRY_DSN` - Sentry DSN for error tracking
+- `VITE_SENTRY_ENVIRONMENT` - Sentry environment (default: development)
+
+## Deployment
+
+Deployed on Vercel at `app.getonelink.io`:
+
+1. **Root Directory**: `apps/web`
+2. **Framework**: Vite
+3. **Build Command**: `pnpm build`
+4. **Output Directory**: `dist`
+5. **Rewrites**: All routes redirect to `/index.html` for SPA routing
+
+## Features
+
+### Plans
+
+- **Free**: 1 profile, 3 actions, 50MB/file, 7-day retention
+- **Starter ($5/mo)**: Unlimited actions, 1GB/file, 30-day retention, custom domain
+- **Pro ($10/mo)**: 5GB/file, 90-day retention, advanced fields, GA integration
+
+### Routes
+
+- `/` - Onboarding/landing (redirects to dashboard if logged in)
+- `/auth` - Authentication (sign in/sign up)
+- `/dashboard` - Main dashboard
+- `/settings` - Settings page
+- `/pricing` - Pricing page
+- `/privacy` - Privacy policy
+- `/terms` - Terms of service
+- `/:slug` - Public profile page
+- `/drop/:token` - Drop submission page
+
+## Project Structure
+
 ```
+apps/web/
+├── src/
+│   ├── components/     # Reusable components
+│   ├── routes/         # Page components
+│   ├── lib/            # Utilities, Supabase client, etc.
+│   ├── hooks/          # Custom React hooks
+│   └── main.tsx        # App entry point
+├── e2e/                # Playwright E2E tests
+├── supabase/           # SQL scripts and Supabase config
+└── vercel.json         # Vercel deployment config
+```
+
+## Testing
+
+- **Unit Tests**: Vitest (`pnpm test`)
+- **E2E Tests**: Playwright (`pnpm e2e:ci`)
+- **Coverage**: Run `pnpm coverage` for coverage report
+
+## Internationalization
+
+Supports multiple languages via i18next. Language files in `src/lib/locales/`.
