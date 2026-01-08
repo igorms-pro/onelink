@@ -5,7 +5,15 @@ import HeroSection from "../HeroSection";
 import * as analytics from "@/lib/analytics";
 
 // Mock analytics
-vi.mock("@/lib/analytics");
+vi.mock("@/lib/analytics", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/analytics")>();
+  return {
+    ...actual,
+    trackSignUpClick: vi.fn(),
+    trackCTAClick: vi.fn(),
+    trackUsernameEntered: vi.fn(),
+  };
+});
 
 describe("HeroSection", () => {
   beforeEach(() => {

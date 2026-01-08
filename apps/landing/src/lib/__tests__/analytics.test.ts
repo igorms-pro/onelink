@@ -266,4 +266,56 @@ describe("Analytics Utilities", () => {
       });
     });
   });
+
+  describe("trackUsernameEntered()", () => {
+    beforeEach(() => {
+      mockPostHog.__loaded = true;
+    });
+
+    it("tracks with correct source and username length", () => {
+      Object.defineProperty(window, "location", {
+        value: { pathname: "/" },
+        writable: true,
+      });
+
+      analytics.trackUsernameEntered("hero", 8);
+
+      expect(mockPostHog.capture).toHaveBeenCalledWith("username_entered", {
+        source: "hero",
+        username_length: 8,
+        page: "/",
+      });
+    });
+
+    it("tracks from different sources", () => {
+      Object.defineProperty(window, "location", {
+        value: { pathname: "/" },
+        writable: true,
+      });
+
+      analytics.trackUsernameEntered("cta_section", 12);
+
+      expect(mockPostHog.capture).toHaveBeenCalledWith("username_entered", {
+        source: "cta_section",
+        username_length: 12,
+        page: "/",
+      });
+    });
+
+    it("includes current page pathname", () => {
+      Object.defineProperty(window, "location", {
+        value: { pathname: "/features" },
+        writable: true,
+      });
+
+      analytics.trackUsernameEntered("hero", 5);
+
+      expect(mockPostHog.capture).toHaveBeenCalledWith(
+        "username_entered",
+        expect.objectContaining({
+          page: "/features",
+        }),
+      );
+    });
+  });
 });

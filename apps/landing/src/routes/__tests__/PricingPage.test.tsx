@@ -7,7 +7,15 @@ import PricingPage from "../PricingPage";
 import * as analytics from "@/lib/analytics";
 
 // Mock analytics
-vi.mock("@/lib/analytics");
+vi.mock("@/lib/analytics", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@/lib/analytics")>();
+  return {
+    ...actual,
+    trackPricingView: vi.fn(),
+    trackSignUpClick: vi.fn(),
+    trackUsernameEntered: vi.fn(),
+  };
+});
 
 const renderWithRouter = (component: React.ReactElement) => {
   return render(

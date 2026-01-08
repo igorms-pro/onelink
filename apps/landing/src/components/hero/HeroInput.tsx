@@ -1,6 +1,8 @@
+import { useRef } from "react";
 import { ArrowRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { trackUsernameEntered } from "@/lib/analytics";
 
 interface HeroInputProps {
   username: string;
@@ -14,6 +16,17 @@ export function HeroInput({
   onSubmit,
 }: HeroInputProps) {
   const { t } = useTranslation();
+  const hasTrackedUsername = useRef(false);
+
+  const handleChange = (value: string) => {
+    onUsernameChange(value);
+
+    // Track only once when user starts typing (transitions from empty to non-empty)
+    if (!hasTrackedUsername.current && value.trim().length > 0) {
+      hasTrackedUsername.current = true;
+      trackUsernameEntered("hero", value.trim().length);
+    }
+  };
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 order-2 lg:col-span-1">
@@ -26,7 +39,7 @@ export function HeroInput({
         <input
           type="text"
           value={username}
-          onChange={(e) => onUsernameChange(e.target.value)}
+          onChange={(e) => handleChange(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
               onSubmit();

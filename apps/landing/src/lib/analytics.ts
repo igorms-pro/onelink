@@ -92,3 +92,15 @@ export function trackScrollDepth(depth: number) {
     page: window.location.pathname,
   });
 }
+
+/**
+ * Track username entered (when user starts typing in username field)
+ * This helps measure engagement and abandonment rate
+ */
+export function trackUsernameEntered(source: string, usernameLength: number) {
+  trackEvent("username_entered", {
+    source, // e.g., "hero", "cta_section"
+    username_length: usernameLength,
+    page: window.location.pathname,
+  });
+}
