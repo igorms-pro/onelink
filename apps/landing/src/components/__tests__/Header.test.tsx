@@ -119,8 +119,9 @@ describe("Header Component", () => {
   it("renders logo link correctly", () => {
     renderWithRouter(<Header />);
 
-    const logo = screen.getByText("OneLink");
+    const logo = screen.getByAltText("OneLink");
     expect(logo).toBeInTheDocument();
+    expect(logo).toHaveAttribute("src", "/onelink-logo.png");
     expect(logo.closest("a")).toHaveAttribute("href", "/");
   });
 
