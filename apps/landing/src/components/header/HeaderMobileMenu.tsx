@@ -33,7 +33,7 @@ export function HeaderMobileMenu({
             handleAnchorClick("features")(e);
             onClose();
           }}
-          className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
+          className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2 cursor-pointer"
         >
           {t("landing.header.features")}
         </a>
@@ -43,7 +43,7 @@ export function HeaderMobileMenu({
             handleAnchorClick("pricing")(e);
             onClose();
           }}
-          className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2"
+          className="text-base font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center px-2 cursor-pointer"
         >
           {t("landing.header.pricing")}
         </a>

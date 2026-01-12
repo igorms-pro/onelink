@@ -77,7 +77,7 @@ export function CTASection() {
               <a
                 data-testid="cta-section-secondary"
                 href="#pricing"
-                className="text-white/90 hover:text-white underline underline-offset-4 transition-colors text-base md:text-lg font-medium"
+                className="text-white/90 hover:text-white underline underline-offset-4 transition-colors text-base md:text-lg font-medium cursor-pointer"
               >
                 {t("landing.cta.ctaSecondary")}
               </a>

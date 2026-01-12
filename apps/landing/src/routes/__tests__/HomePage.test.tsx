@@ -78,15 +78,19 @@ describe("HomePage Component", () => {
     renderWithRouter(<HomePage />);
 
     // Wait for Helmet to update the document
-    await waitFor(() => {
-      expect(document.title).toContain("one link to Share Everything");
-    });
+    await waitFor(
+      () => {
+        // Default SEO title should be "OneLink. Multiple lives."
+        expect(document.title).toBe("OneLink. Multiple lives.");
+      },
+      { timeout: 5000 },
+    );
 
     // Check for meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     expect(metaDescription).toBeInTheDocument();
-    expect(metaDescription?.getAttribute("content")).toContain(
-      "Share your links, files, and drops with one simple link",
+    expect(metaDescription?.getAttribute("content")).toBe(
+      "Share your links, files, and drops with one simple link. No more messy bios or multiple links.",
     );
   });
 

@@ -36,7 +36,7 @@ export function HeaderActions({
       <button
         data-testid="header-mobile-menu-button"
         onClick={onToggleMobileMenu}
-        className="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+        className="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors cursor-pointer"
         aria-label="Toggle menu"
       >
         {mobileMenuOpen ? (

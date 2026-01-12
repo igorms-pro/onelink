@@ -68,7 +68,7 @@ export function LegalPageLayout({
           >
             <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-1.5 sm:p-2">
               <img
-                src="/logo.png"
+                src="/onelink-logo-64.png"
                 alt="OneLink"
                 className="w-full h-full object-contain"
               />

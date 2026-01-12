@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 
 export function HeaderLogo() {
   return (
-    <Link to="/" className="flex items-center gap-2 min-h-[44px] min-w-[44px]">
+    <Link
+      to="/"
+      className="flex items-center gap-2 min-h-[44px] min-w-[44px] cursor-pointer"
+    >
       <img
         src="/onelink-logo.png"
         alt="OneLink"

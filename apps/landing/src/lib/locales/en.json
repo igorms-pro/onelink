@@ -850,6 +850,7 @@
     "hero": {
       "headline": "One Link to Share Everything",
       "subheadline": "Share your links, files, and drops with one simple link. No more messy bios or multiple links.",
+      "description": "One link to share everything. Modern and elegant bio link to centralize all your content.",
       "ctaPrimary": "Get Started Free",
       "ctaSecondary": "View Demo"
     },
@@ -1035,7 +1036,7 @@
     },
     "hero": {
       "tagline": "One link. Multiple lives.",
-      "headline": "one link to Share Everything",
+      "headline": "OneLink. Multiple lives.",
       "description": "Share your links, files, and drops with one simple link. No more messy bios or multiple links to manage.",
       "usernamePlaceholder": "username",
       "ctaPrimary": "Get Started Free",
