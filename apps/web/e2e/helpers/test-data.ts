@@ -16,7 +16,11 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
  */
 export async function createNotificationsTestData(
   userId: string,
-): Promise<{ dropId: string; submissionIds: string[] }> {
+): Promise<{
+  dropId: string;
+  dropToken: string | null;
+  submissionIds: string[];
+}> {
   if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     throw new Error(
       "VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY must be set",
@@ -100,16 +104,18 @@ export async function createNotificationsTestData(
 
   // Step 3: Get or create a drop for this profile
   let dropId: string;
+  let dropToken: string | null;
 
   const { data: existingDrop, error: _dropError } = await supabaseAdmin
     .from("drops")
-    .select("id")
+    .select("id, share_token")
     .eq("profile_id", profileId)
     .limit(1)
     .maybeSingle();
 
   if (existingDrop) {
     dropId = existingDrop.id;
+    dropToken = existingDrop.share_token;
   } else {
     // Create a test drop
     const { data: newDrop, error: createDropError } = await supabaseAdmin
@@ -122,7 +128,7 @@ export async function createNotificationsTestData(
           max_file_size_mb: 50,
         },
       ])
-      .select("id")
+      .select("id, share_token")
       .single();
 
     if (createDropError || !newDrop) {
@@ -132,6 +138,7 @@ export async function createNotificationsTestData(
     }
 
     dropId = newDrop.id;
+    dropToken = newDrop.share_token;
   }
 
   // Step 4: Create unread submissions (these will show badges)
@@ -159,7 +166,7 @@ export async function createNotificationsTestData(
     }
   }
 
-  return { dropId, submissionIds };
+  return { dropId, dropToken, submissionIds };
 }
 
 /**

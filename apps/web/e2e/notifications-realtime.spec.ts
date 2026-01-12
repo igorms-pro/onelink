@@ -4,6 +4,7 @@ import { createNotificationsTestData } from "./helpers/test-data";
 
 test.describe("Notifications Realtime", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
+    test.setTimeout(60000); // 60 seconds for beforeEach (includes RLS propagation wait)
     await setupPostHogInterception(page);
 
     // Navigate to a page that doesn't require profile to access localStorage
@@ -26,6 +27,8 @@ test.describe("Notifications Realtime", () => {
 
       if (userId) {
         await createNotificationsTestData(userId);
+        // Wait for profile to be committed and visible to user session (RLS propagation)
+        await page.waitForTimeout(3000);
       }
     } catch (error) {
       console.warn("Failed to create test data:", error);
@@ -36,9 +39,20 @@ test.describe("Notifications Realtime", () => {
   test("new submission appears in realtime", async ({
     authenticatedPage: page,
   }) => {
-    // Open Dashboard in one tab
-    await page.goto("/dashboard");
-    await page.waitForLoadState("networkidle");
+    // Open Dashboard - profile already exists, just wait for RLS propagation
+    await page.waitForTimeout(5000); // Wait for RLS to propagate after profile creation
+
+    // Navigate to dashboard - profile exists, so should go directly to dashboard
+    await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
+    await page.waitForTimeout(2000);
+
+    // Verify we're on dashboard (profile exists, so welcome shouldn't appear)
+    const currentUrl = page.url();
+    if (currentUrl.includes("/welcome")) {
+      throw new Error(
+        "Unexpected redirect to welcome - profile should exist. RLS may not have propagated yet.",
+      );
+    }
 
     const inboxButton = page
       .locator(
@@ -100,8 +114,10 @@ test.describe("Notifications Realtime", () => {
   test("download notification appears in realtime", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/dashboard");
-    await page.waitForLoadState("networkidle");
+    // Navigate to dashboard - profile already exists
+    await page.waitForTimeout(5000); // Wait for RLS to propagate
+    await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
+    await page.waitForTimeout(2000);
 
     const inboxButton = page
       .locator(
@@ -130,8 +146,10 @@ test.describe("Notifications Realtime", () => {
   test("multiple submissions appear rapidly", async ({
     authenticatedPage: page,
   }) => {
-    await page.goto("/dashboard");
-    await page.waitForLoadState("networkidle");
+    // Navigate to dashboard - profile already exists
+    await page.waitForTimeout(5000); // Wait for RLS to propagate
+    await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
+    await page.waitForTimeout(2000);
 
     const inboxButton = page
       .locator(

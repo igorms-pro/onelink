@@ -29,9 +29,14 @@ BEGIN
   LIMIT 1;
   
   IF v_drop_id IS NULL THEN
-    INSERT INTO drops (profile_id, label, is_public, max_file_size_mb)
-    VALUES (v_profile_id, 'Test Drop', true, 50)
+    INSERT INTO drops (profile_id, label, is_public, max_file_size_mb, share_token)
+    VALUES (v_profile_id, 'Test Drop', true, 50, gen_random_uuid()::text)
     RETURNING id INTO v_drop_id;
+  ELSE
+    -- Ensure existing drop has share_token (in case it was created before share_token was added)
+    UPDATE drops 
+    SET share_token = COALESCE(share_token, gen_random_uuid()::text)
+    WHERE id = v_drop_id AND share_token IS NULL;
   END IF;
   
   -- Create one unread submission if doesn't exist
@@ -54,6 +59,7 @@ SELECT
   p.id as profile_id,
   p.slug,
   (SELECT COUNT(*)::int FROM drops WHERE profile_id = p.id) as drops,
+  (SELECT COUNT(*)::int FROM drops WHERE profile_id = p.id AND share_token IS NOT NULL) as drops_with_token,
   (SELECT COUNT(*)::int FROM submissions s 
    INNER JOIN drops d ON s.drop_id = d.id 
    WHERE d.profile_id = p.id) as submissions,

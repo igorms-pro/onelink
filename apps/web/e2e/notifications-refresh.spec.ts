@@ -4,6 +4,7 @@ import { createNotificationsTestData } from "./helpers/test-data";
 
 test.describe("Notifications Refresh Functionality", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
+    test.setTimeout(60000); // 60 seconds for beforeEach (includes RLS propagation wait)
     await setupPostHogInterception(page);
 
     // Navigate to a page that doesn't require profile to access localStorage
@@ -26,15 +27,28 @@ test.describe("Notifications Refresh Functionality", () => {
 
       if (userId) {
         await createNotificationsTestData(userId);
+        // Wait for profile to be committed and visible to user session (RLS propagation)
+        await page.waitForTimeout(3000);
       }
     } catch (error) {
       console.warn("Failed to create test data:", error);
       // Continue anyway - test will skip if no data exists
     }
 
-    // Now navigate to dashboard - profile should exist, so no redirect to /welcome
-    await page.goto("/dashboard");
-    await page.waitForLoadState("networkidle");
+    // Now navigate to dashboard - profile already exists, just wait for RLS propagation
+    await page.waitForTimeout(5000); // Wait for RLS to propagate after profile creation
+
+    // Navigate to dashboard - profile exists, so should go directly to dashboard
+    await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
+    await page.waitForTimeout(2000);
+
+    // Verify we're on dashboard (profile exists, so welcome shouldn't appear)
+    const currentUrl = page.url();
+    if (currentUrl.includes("/welcome")) {
+      throw new Error(
+        "Unexpected redirect to welcome - profile should exist. RLS may not have propagated yet.",
+      );
+    }
 
     // Use data-testid - will match the visible navigation (desktop or mobile)
     const inboxButton = page

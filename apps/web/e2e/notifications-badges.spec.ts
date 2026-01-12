@@ -4,6 +4,7 @@ import { createNotificationsTestData } from "./helpers/test-data";
 
 test.describe("Notifications Badges", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
+    test.setTimeout(60000); // 60 seconds for beforeEach (includes RLS propagation wait)
     await setupPostHogInterception(page);
 
     // Navigate to a page that doesn't require profile to access localStorage
@@ -36,16 +37,22 @@ test.describe("Notifications Badges", () => {
       throw error;
     }
 
-    // Now navigate to dashboard - profile should exist, so no redirect to /welcome
-    await page.goto("/dashboard", { waitUntil: "networkidle" });
+    // Now navigate to dashboard - profile already exists, just wait for RLS propagation
+    await page.waitForTimeout(5000); // Wait for RLS to propagate after profile creation
 
-    // Wait for dashboard to fully load and check for profile
-    await page.waitForTimeout(1000);
+    // Navigate to dashboard - profile exists, so should go directly to dashboard
+    await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
 
-    // If redirected to welcome, wait longer and try again (RLS might need time)
-    if (page.url().includes("/welcome")) {
-      await page.waitForTimeout(3000);
-      await page.goto("/dashboard", { waitUntil: "networkidle" });
+    // Wait for dashboard to load (check for navigation elements)
+    // If we're on welcome, it means profile wasn't found - but it should exist
+    await page.waitForTimeout(2000);
+
+    // Verify we're on dashboard (profile exists, so welcome shouldn't appear)
+    const currentUrl = page.url();
+    if (currentUrl.includes("/welcome")) {
+      throw new Error(
+        "Unexpected redirect to welcome - profile should exist. RLS may not have propagated yet.",
+      );
     }
   });
 
