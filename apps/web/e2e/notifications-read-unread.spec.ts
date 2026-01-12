@@ -1,10 +1,41 @@
 import { test, expect } from "./fixtures/auth";
 import { setupPostHogInterception } from "./helpers/posthog";
+import { createNotificationsTestData } from "./helpers/test-data";
 
 test.describe("Notifications Read/Unread Functionality", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
+
+    // Navigate to a page that doesn't require profile to access localStorage
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Create test data (including profile) BEFORE navigating to dashboard
+    try {
+      const userId = await page.evaluate(() => {
+        const authToken = localStorage.getItem(
+          Object.keys(localStorage).find((key) => key.includes("auth-token")) ||
+            "",
+        );
+        if (authToken) {
+          const parsed = JSON.parse(authToken);
+          return parsed.user?.id;
+        }
+        return null;
+      });
+
+      if (userId) {
+        await createNotificationsTestData(userId);
+      }
+    } catch (error) {
+      console.warn("Failed to create test data:", error);
+      // Continue anyway - test will skip if no data exists
+    }
+
+    // Now navigate to dashboard - profile should exist, so no redirect to /welcome
     await page.goto("/dashboard");
+    await page.waitForLoadState("networkidle");
+
     // Use data-testid - will match the visible navigation (desktop or mobile)
     const inboxButton = page
       .locator(

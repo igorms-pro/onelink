@@ -11,6 +11,19 @@ const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || "";
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 /**
+ * Check if E2E test credentials are properly configured
+ * Returns true if credentials should cause tests to be skipped
+ */
+function shouldSkipDueToCredentials(): boolean {
+  return (
+    !SUPABASE_URL ||
+    !SUPABASE_ANON_KEY ||
+    SUPABASE_URL.includes("placeholder") ||
+    SUPABASE_ANON_KEY === "placeholder-key"
+  );
+}
+
+/**
  * Helper function to delete a user's profile (for testing users without profiles)
  */
 async function deleteUserProfile(userId: string): Promise<void> {
@@ -68,12 +81,7 @@ test.describe("Welcome Page Flow", () => {
     page,
   }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -117,12 +125,7 @@ test.describe("Welcome Page Flow", () => {
 
   test("welcome page loads with username input", async ({ page }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -172,12 +175,7 @@ test.describe("Welcome Page Flow", () => {
 
   test("username from localStorage is pre-filled", async ({ page }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -227,12 +225,7 @@ test.describe("Welcome Page Flow", () => {
 
   test("validates username format (invalid characters)", async ({ page }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -289,12 +282,7 @@ test.describe("Welcome Page Flow", () => {
     page,
   }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -367,12 +355,7 @@ test.describe("Welcome Page Flow", () => {
 
   test("creates profile and redirects to dashboard", async ({ page }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }
@@ -436,12 +419,7 @@ test.describe("Welcome Page Flow", () => {
 
   test("full flow: landing → auth → welcome → dashboard", async ({ page }) => {
     // Skip if credentials are not configured
-    if (
-      !SUPABASE_URL ||
-      !SUPABASE_ANON_KEY ||
-      SUPABASE_URL.includes("placeholder") ||
-      SUPABASE_ANON_KEY === "placeholder-key"
-    ) {
+    if (shouldSkipDueToCredentials()) {
       test.skip();
       return;
     }

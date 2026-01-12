@@ -1,9 +1,36 @@
 import { test, expect } from "./fixtures/auth";
 import { setupPostHogInterception } from "./helpers/posthog";
+import { createNotificationsTestData } from "./helpers/test-data";
 
 test.describe("Notifications Realtime", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
+
+    // Navigate to a page that doesn't require profile to access localStorage
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+
+    // Create test data (including profile) BEFORE navigating to dashboard
+    try {
+      const userId = await page.evaluate(() => {
+        const authToken = localStorage.getItem(
+          Object.keys(localStorage).find((key) => key.includes("auth-token")) ||
+            "",
+        );
+        if (authToken) {
+          const parsed = JSON.parse(authToken);
+          return parsed.user?.id;
+        }
+        return null;
+      });
+
+      if (userId) {
+        await createNotificationsTestData(userId);
+      }
+    } catch (error) {
+      console.warn("Failed to create test data:", error);
+      // Continue anyway - test will skip if no data exists
+    }
   });
 
   test("new submission appears in realtime", async ({
@@ -11,6 +38,8 @@ test.describe("Notifications Realtime", () => {
   }) => {
     // Open Dashboard in one tab
     await page.goto("/dashboard");
+    await page.waitForLoadState("networkidle");
+
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
@@ -72,6 +101,8 @@ test.describe("Notifications Realtime", () => {
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard");
+    await page.waitForLoadState("networkidle");
+
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
@@ -100,6 +131,8 @@ test.describe("Notifications Realtime", () => {
     authenticatedPage: page,
   }) => {
     await page.goto("/dashboard");
+    await page.waitForLoadState("networkidle");
+
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
