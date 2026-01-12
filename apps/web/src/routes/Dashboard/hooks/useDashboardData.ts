@@ -31,6 +31,13 @@ export function useDashboardData(userId: string | null) {
       const prof = await getOrCreateProfile(userId);
       if (!mounted) return;
 
+      // If profile doesn't exist, don't load data
+      // The App.tsx will handle redirection to /welcome
+      if (!prof) {
+        setLoading(false);
+        return;
+      }
+
       setProfileId(prof.id);
       setProfileFormInitial({
         slug: prof.slug,

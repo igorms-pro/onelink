@@ -771,4 +771,25 @@ describe("useDashboardData", () => {
     expect(result.current.profileId).toBe(null);
     expect(getOrCreateProfile).not.toHaveBeenCalled();
   });
+
+  it("should not load data if profile does not exist (returns null)", async () => {
+    // Mock getOrCreateProfile to return null (profile doesn't exist)
+    (getOrCreateProfile as ReturnType<typeof vi.fn>).mockResolvedValue(null);
+
+    const { result } = renderHook(() => useDashboardData(mockUserId));
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.profileId).toBe(null);
+    expect(result.current.profileFormInitial).toBe(null);
+    expect(result.current.links).toEqual([]);
+    expect(result.current.drops).toEqual([]);
+    expect(result.current.submissions).toEqual([]);
+    expect(result.current.downloads).toEqual([]);
+    // Should not call supabase.from for links/drops since profile doesn't exist
+    expect(supabase.from).not.toHaveBeenCalledWith("links");
+    expect(supabase.from).not.toHaveBeenCalledWith("drops");
+  });
 });

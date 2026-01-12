@@ -18,16 +18,8 @@ describe("profile utils", () => {
     vi.clearAllMocks();
   });
 
-  it("getOrCreateProfile creates profile if missing", async () => {
+  it("getOrCreateProfile returns null if profile missing", async () => {
     const mockUserId = "123e4567-e89b-12d3-a456-426614174000";
-    const mockProfile = {
-      id: "profile-id",
-      user_id: mockUserId,
-      slug: "test-slug",
-      display_name: "Test User",
-      bio: null,
-      avatar_url: null,
-    };
 
     // Mock auth.getUser
     (supabase.auth.getUser as unknown as Mock).mockResolvedValue({
@@ -39,16 +31,10 @@ describe("profile utils", () => {
       error: null,
     });
 
-    // Mock profiles table: profile doesn't exist, then create
+    // Mock profiles table: profile doesn't exist
     const mockProfilesSelect = vi.fn().mockReturnValue({
       eq: vi.fn().mockReturnValue({
         maybeSingle: vi.fn().mockResolvedValue({ data: null, error: null }),
-      }),
-    });
-
-    const mockProfilesInsert = vi.fn().mockReturnValue({
-      select: vi.fn().mockReturnValue({
-        single: vi.fn().mockResolvedValue({ data: mockProfile, error: null }),
       }),
     });
 
@@ -61,14 +47,15 @@ describe("profile utils", () => {
       if (table === "profiles") {
         return {
           select: mockProfilesSelect,
-          insert: mockProfilesInsert,
         };
       }
       return {};
     });
 
     const result = await getOrCreateProfile(mockUserId);
-    expect(result.slug).toBe("test-slug");
+    expect(result).toBeNull();
+    // Should not call insert - profile creation is now handled separately
+    expect(mockProfilesSelect).toHaveBeenCalled();
   });
 
   it("getOrCreateProfile returns existing profile", async () => {
