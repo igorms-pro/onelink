@@ -22,5 +22,9 @@ verify_jwt = false
 [functions."storage-cleanup"]
 verify_jwt = false
 
+# Create profile with username; requires auth
+[functions."create-profile"]
+verify_jwt = true
+
 # NOTE: Schedules are created and managed via CLI/API. See commands we provide.
 

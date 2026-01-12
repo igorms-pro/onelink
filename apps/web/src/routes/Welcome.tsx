@@ -19,19 +19,24 @@ export default function Welcome() {
   const [error, setError] = useState<string | null>(null);
 
   // Load username from localStorage on mount
+  const [initialUsernameLoaded, setInitialUsernameLoaded] = useState(false);
+
   useEffect(() => {
     const stored = localStorage.getItem(USERNAME_STORAGE_KEY);
     if (stored) {
-      setUsername(stored.trim().toLowerCase());
+      const cleaned = stored.trim().toLowerCase();
+      setUsername(cleaned);
+      setInitialUsernameLoaded(true);
     }
   }, []);
 
   // Check username availability
+  // Use shorter debounce (100ms) for initial load from localStorage, normal (500ms) for typing
   const {
     available,
     checking,
     error: availabilityError,
-  } = useUsernameAvailability(username);
+  } = useUsernameAvailability(username, initialUsernameLoaded ? 100 : 500);
 
   // Determine if the form can be submitted
   const canSubmit =
