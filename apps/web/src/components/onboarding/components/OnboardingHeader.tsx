@@ -13,13 +13,16 @@ export function OnboardingHeader({ onSkip }: OnboardingHeaderProps) {
     <div className="absolute top-0 left-0 right-0 z-50">
       <div className="max-w-3xl mx-auto w-full flex items-center justify-between p-4 md:p-6 lg:p-8">
         {/* Logo */}
-        <div className="w-12 h-12 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-2">
-          <img
-            src="/logo.png"
-            alt="OneLink"
-            className="w-full h-full object-contain"
-          />
-        </div>
+        <img
+          src="/onelink-logo.png"
+          alt="OneLink"
+          className="h-12 sm:h-14 w-auto object-contain dark:hidden"
+        />
+        <img
+          src="/onelink-logo-white.png"
+          alt="OneLink"
+          className="h-12 sm:h-14 w-auto object-contain hidden dark:block"
+        />
 
         {/* Theme, Language toggles, and Skip button */}
         <div className="flex items-center gap-2">
