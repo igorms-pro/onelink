@@ -80,7 +80,7 @@ cd apps/web && pnpm dev
 
 ## 🧪 Testing
 
-```bash
+    ```bash
 # Run all tests
 pnpm test
 

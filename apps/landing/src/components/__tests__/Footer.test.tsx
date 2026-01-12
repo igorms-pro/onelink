@@ -46,23 +46,23 @@ describe("Footer Component", () => {
     renderWithRouter(<Footer />);
 
     // Check for social media links
-    const twitterLink = screen.getByLabelText("Twitter");
-    expect(twitterLink).toHaveAttribute(
-      "href",
-      "https://twitter.com/getonelink",
-    );
+    const twitterLink = screen.getByLabelText("X (formerly Twitter)");
+    expect(twitterLink).toHaveAttribute("href", "https://x.com/GetOneLink");
     expect(twitterLink).toHaveAttribute("target", "_blank");
     expect(twitterLink).toHaveAttribute("rel", "noopener noreferrer");
 
     const githubLink = screen.getByLabelText("GitHub");
-    expect(githubLink).toHaveAttribute("href", "https://github.com/getonelink");
+    expect(githubLink).toHaveAttribute(
+      "href",
+      "https://github.com/igorms-pro/onelink",
+    );
     expect(githubLink).toHaveAttribute("target", "_blank");
     expect(githubLink).toHaveAttribute("rel", "noopener noreferrer");
 
     const linkedinLink = screen.getByLabelText("LinkedIn");
     expect(linkedinLink).toHaveAttribute(
       "href",
-      "https://linkedin.com/company/getonelink",
+      "https://www.linkedin.com/company/getonelink/",
     );
     expect(linkedinLink).toHaveAttribute("target", "_blank");
     expect(linkedinLink).toHaveAttribute("rel", "noopener noreferrer");
@@ -96,7 +96,7 @@ describe("Footer Component", () => {
     expect(links.length).toBeGreaterThan(0);
 
     // Social links should have aria-labels
-    expect(screen.getByLabelText("Twitter")).toBeInTheDocument();
+    expect(screen.getByLabelText("X (formerly Twitter)")).toBeInTheDocument();
     expect(screen.getByLabelText("GitHub")).toBeInTheDocument();
     expect(screen.getByLabelText("LinkedIn")).toBeInTheDocument();
   });

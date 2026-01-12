@@ -42,7 +42,7 @@ export function Footer({
                 <div className="flex items-center gap-2">
                   <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
                     <img
-                      src="/logo.png"
+                      src="/onelink-logo-64.png"
                       alt="OneLink"
                       className="w-full h-full object-contain"
                     />

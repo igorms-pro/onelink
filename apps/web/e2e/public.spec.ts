@@ -11,8 +11,10 @@ test.describe("Public Profile", () => {
   test("auth page loads with theme and language toggles", async ({ page }) => {
     await page.goto("/auth");
 
-    // Check that OneLink title is visible
-    await expect(page.locator("h1:has-text('OneLink')")).toBeVisible();
+    // Check that OneLink logo is visible (there are two images - one for light, one for dark)
+    // Use first() to get the visible one, or check that at least one is visible
+    await expect(page.locator('img[alt="OneLink"]').first()).toBeVisible();
+    // Check for tagline text
     await expect(page.locator("text=Share a single link")).toBeVisible();
 
     // Theme toggle should be visible

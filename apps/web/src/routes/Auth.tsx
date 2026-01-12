@@ -66,18 +66,18 @@ export default function Auth() {
         <div className="flex flex-col justify-center text-center">
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <div className="w-24 h-24 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-4">
-              <img
-                src="/logo.png"
-                alt="OneLink"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <img
+              src="/onelink-logo.png"
+              alt="OneLink"
+              className="h-20 sm:h-24 w-auto object-contain dark:hidden"
+            />
+            <img
+              src="/onelink-logo-white.png"
+              alt="OneLink"
+              className="h-20 sm:h-24 w-auto object-contain hidden dark:block"
+            />
           </div>
 
-          <h1 className="text-5xl sm:text-6xl font-bold bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent mb-4">
-            {t("app_title")}
-          </h1>
           <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-8">
             {t("app_tagline")}
           </p>

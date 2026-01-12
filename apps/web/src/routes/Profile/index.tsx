@@ -41,7 +41,8 @@ export default function Profile() {
     const profileUrl = `${window.location.origin}/${slug}`;
     const displayName = profile.display_name || profile.slug || "Profile";
     const description = profile.bio || `${displayName}'s OneLink profile`;
-    const ogImage = profile.avatar_url || `${window.location.origin}/logo.png`;
+    const ogImage =
+      profile.avatar_url || `${window.location.origin}/onelink-logo-64.png`;
 
     // Update title
     document.title = `${displayName} | OneLink`;

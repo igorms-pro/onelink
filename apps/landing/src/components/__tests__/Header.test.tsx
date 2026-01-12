@@ -119,9 +119,12 @@ describe("Header Component", () => {
   it("renders logo link correctly", () => {
     renderWithRouter(<Header />);
 
-    const logo = screen.getByText("OneLink");
-    expect(logo).toBeInTheDocument();
-    expect(logo.closest("a")).toHaveAttribute("href", "/");
+    // Should have both logos (one for light, one for dark)
+    const logos = screen.getAllByAltText("OneLink");
+    expect(logos.length).toBe(2);
+    expect(logos[0]).toHaveAttribute("src", "/onelink-logo.png");
+    expect(logos[1]).toHaveAttribute("src", "/onelink-logo-white.png");
+    expect(logos[0].closest("a")).toHaveAttribute("href", "/");
   });
 
   it("has accessible interactive elements", () => {

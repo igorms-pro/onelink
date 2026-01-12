@@ -116,12 +116,16 @@ describe("SEO Component", () => {
 
     // Should use default values
     await waitFor(() => {
-      expect(document.title).toBe("OneLink - One Link to Share Everything");
+      expect(document.title).toBe("OneLink. Multiple lives.");
 
       const metaDescription = document.querySelector(
         'meta[name="description"]',
       );
       expect(metaDescription).toBeInTheDocument();
+      expect(metaDescription).toHaveAttribute(
+        "content",
+        "Share your links, files, and drops with one simple link. No more messy bios or multiple links.",
+      );
     });
   });
 

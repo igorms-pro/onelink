@@ -21,14 +21,14 @@ export function HeaderNavigation({
       <a
         href={isHomePage ? "#features" : "/#features"}
         onClick={handleAnchorClick("features")}
-        className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
+        className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center cursor-pointer"
       >
         {t("landing.header.features")}
       </a>
       <a
         href={isHomePage ? "#pricing" : "/#pricing"}
         onClick={handleAnchorClick("pricing")}
-        className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center"
+        className="text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors min-h-[44px] flex items-center cursor-pointer"
       >
         {t("landing.header.pricing")}
       </a>

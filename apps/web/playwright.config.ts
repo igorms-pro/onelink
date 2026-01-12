@@ -82,7 +82,7 @@ export default defineConfig({
   webServer: {
     // In CI, we already built, so just preview. Locally, build + preview.
     command: process.env.CI
-      ? "pnpm preview --port 4173"
+      ? "pnpm preview --port 4173 --host"
       : "pnpm build && pnpm preview --port 4173",
     url: "http://localhost:4173",
     reuseExistingServer: !process.env.CI,

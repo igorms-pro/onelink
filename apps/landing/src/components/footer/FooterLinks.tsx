@@ -13,21 +13,21 @@ export function FooterLinks({ links }: FooterLinksProps) {
           {link.isExternal ? (
             <a
               href={link.href}
-              className="hover:text-white transition-colors text-sm"
+              className="hover:text-white transition-colors text-sm cursor-pointer"
             >
               {link.label}
             </a>
           ) : link.href.startsWith("/") ? (
             <Link
               to={link.href}
-              className="hover:text-white transition-colors text-sm"
+              className="hover:text-white transition-colors text-sm cursor-pointer"
             >
               {link.label}
             </Link>
           ) : (
             <a
               href={link.href}
-              className="hover:text-white transition-colors text-sm"
+              className="hover:text-white transition-colors text-sm cursor-pointer"
             >
               {link.label}
             </a>
