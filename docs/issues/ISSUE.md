@@ -397,6 +397,107 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - ✅ Build & Deployment Configuration (ready for Vercel)
    - **Progress:** See `docs/LANDING_PAGE.md` for detailed issue tracker (26/28 issues completed)
 
+2. 👋 Welcome Page / Username Selection Flow
+   - **Status:** 🔴 Not Started
+   - **Priority:** High (Critical for first-time user experience)
+   - **Estimated Time:** 3-4 hours
+   - **Location:** `apps/web/src/routes/Welcome.tsx`
+   - **Description:** Créer une page "Welcome" qui s'affiche après la première connexion pour permettre à l'utilisateur de choisir/réserver son username (comme Linktree)
+   - **Problem Statement:**
+     - Actuellement, le username est stocké dans localStorage mais pas réservé en backend
+     - Pas de page "Welcome, choose your username" après la première connexion
+     - Le profile est créé automatiquement avec un slug généré dans `getOrCreateProfile()`
+     - Si quelqu'un d'autre crée un compte avec le même username entre-temps, ça échoue
+   - **Flow Proposé:**
+     1. Landing → utilisateur entre username → redirige vers `/auth?username=xxx`
+     2. Auth → connexion (email magic link OU social: Google, Meta/Facebook, Apple)
+     3. Après connexion → vérifier si profile existe
+     4. Si pas de profile (première fois) → rediriger vers `/welcome` (au lieu de `/dashboard`)
+     5. Page Welcome → formulaire pour choisir/réserver le username
+        - Afficher le username du localStorage s'il existe
+        - Vérifier la disponibilité en temps réel (debounce)
+        - Bouton "Continue" pour créer le profile
+     6. Après création → rediriger vers `/dashboard`
+   - **Important:**
+     - ✅ Garder le système actuel de magic link (email avec code) - PAS de changement
+     - ✅ La page Welcome s'affiche pour TOUS les nouveaux users (email OU social)
+     - ✅ Détection "première fois" = vérifier si profile existe dans la DB
+     - ⚠️ **Note:** Les connexions sociales (Google, Apple, Meta) seront implémentées dans une tâche séparée (voir ci-dessous)
+   - **Implementation Tasks:**
+     - [ ] **Welcome Page:**
+       - [ ] Créer route `/welcome` dans `apps/web/src/routes/Welcome.tsx`
+       - [ ] Créer hook `useUsernameAvailability()` pour vérifier la disponibilité en temps réel
+       - [ ] Modifier `App.tsx` pour rediriger vers `/welcome` si pas de profile après connexion
+       - [ ] Modifier `getOrCreateProfile()` pour ne PAS créer automatiquement le profile
+       - [ ] Créer fonction `createProfileWithUsername(username: string)` pour créer le profile avec le username choisi
+       - [ ] Ajouter validation du username (caractères autorisés, longueur min/max)
+       - [ ] Ajouter messages d'erreur (username pris, caractères invalides, etc.)
+       - [ ] Ajouter traductions pour la page Welcome (10 langues)
+     - [ ] **Tests:**
+       - [ ] Tests unitaires pour `Welcome.tsx`
+       - [ ] Tests E2E pour le flow email (landing → auth → welcome → dashboard)
+       - [ ] Tests E2E pour le flow social (auth → welcome → dashboard) - après implémentation des providers sociaux
+   - **Design Requirements:**
+     - Style similaire à la page Auth (logo, background, centré)
+     - Input pour username avec préfixe `app.getonelink.io/`
+     - Indicateur de disponibilité (✓ disponible, ✗ pris, ⏳ vérification...)
+     - Message d'aide: "You can always change it later"
+     - Bouton "Continue" désactivé si username invalide ou pris
+   - **Backend Requirements:**
+     - Fonction pour vérifier la disponibilité du username (query Supabase)
+     - Fonction pour créer le profile avec le username choisi
+     - Gestion des conflits (username pris entre le check et la création)
+   - **Auth System:**
+     - ✅ **Garder le magic link actuel** (email avec code) - PAS de changement
+     - ✅ **Flow identique pour email ET social:** Après connexion, vérifier si profile existe
+     - ✅ **Page Welcome pour TOUS les nouveaux users** (email ou social)
+     - ⚠️ **Note:** Les providers sociaux seront ajoutés dans une tâche séparée
+   - **Edge Function (Recommandé):**
+     - Créer `supabase/functions/create-profile/index.ts`
+     - **Pourquoi:** Éviter les race conditions (deux utilisateurs créent le même username simultanément)
+     - **Fonctionnalités:**
+       - Vérifier la disponibilité du username
+       - Créer le profile de manière atomique (transaction)
+       - Retourner erreur si username déjà pris
+       - Utiliser service role pour bypass RLS si nécessaire
+     - **Alternative:** Faire depuis le client avec RLS + transaction SQL, mais moins sûr pour les race conditions
+   - **Dependencies:**
+     - `apps/web/src/lib/profile.ts` - Modifier `getOrCreateProfile()` pour ne PAS créer automatiquement
+     - `apps/web/src/routes/App.tsx` - Ajouter redirection vers `/welcome` si pas de profile
+     - `apps/web/src/lib/router.tsx` - Ajouter route `/welcome`
+     - `supabase/functions/create-profile/` - Nouvelle edge function (optionnel mais recommandé)
+
+3. 🔐 Social Authentication Providers (Google, Apple, Meta)
+   - **Status:** 🔴 Not Started
+   - **Priority:** High (Important for user onboarding)
+   - **Estimated Time:** 2-3 hours
+   - **Location:** `apps/web/src/routes/Auth.tsx`, `apps/web/src/lib/AuthProvider.tsx`
+   - **Description:** Ajouter les connexions sociales (OAuth) en plus du magic link email
+   - **Providers à ajouter:**
+     - ✅ **Google** - Le plus populaire, facile à configurer
+     - ✅ **Apple** - Important pour iOS users, bon pour la privacy
+     - ✅ **Meta/Facebook** - Large base d'utilisateurs
+   - **Implementation Tasks:**
+     - [ ] Configurer les providers dans Supabase Dashboard (Google, Apple, Meta)
+     - [ ] Ajouter boutons "Continue with Google" dans `Auth.tsx`
+     - [ ] Ajouter bouton "Continue with Apple" dans `Auth.tsx`
+     - [ ] Ajouter bouton "Continue with Meta/Facebook" dans `Auth.tsx`
+     - [ ] Implémenter `signInWithOAuth(provider: string)` dans `AuthProvider.tsx`
+     - [ ] Gérer les redirects après OAuth (garder le username du localStorage si présent)
+     - [ ] Gérer les erreurs OAuth (utilisateur annule, erreur de config, etc.)
+     - [ ] Ajouter traductions pour les boutons sociaux (10 langues)
+     - [ ] Tests E2E pour chaque provider
+   - **Design Requirements:**
+     - Style similaire aux boutons sociaux de Linktree
+     - Icônes officielles (Google, Apple, Meta)
+     - Boutons avec bordures arrondies, hover effects
+     - Disposition verticale sous le formulaire email
+   - **Dependencies:**
+     - Supabase Dashboard configuration (OAuth credentials)
+     - `apps/web/src/lib/AuthProvider.tsx` - Ajouter `signInWithOAuth()`
+     - `apps/web/src/routes/Auth.tsx` - Ajouter les boutons sociaux
+   - **Note:** Cette tâche peut être faite en parallèle avec la Welcome Page
+
 **Medium Priority:**
 1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
    - Route: `/dashboard/analytics` or `/analytics`
