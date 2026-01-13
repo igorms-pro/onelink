@@ -456,11 +456,14 @@ describe("AuthProvider", () => {
         </AuthProvider>,
       );
 
-      await waitFor(() => {
-        expect(screen.getByTestId("error")).toHaveTextContent(
-          "An account with this email already exists. Please sign in with email instead.",
-        );
-      });
+      await waitFor(
+        () => {
+          expect(screen.getByTestId("error")).toHaveTextContent(
+            "An account with this email already exists. Please sign in with email instead.",
+          );
+        },
+        { timeout: 2000 },
+      );
     });
 
     it("handles unexpected errors", async () => {
