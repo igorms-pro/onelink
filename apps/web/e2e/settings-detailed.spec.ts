@@ -511,10 +511,10 @@ test.describe("Settings - Detailed Features", () => {
     await page.waitForLoadState("networkidle");
 
     // Wait for MFA challenge to be dismissed if it appears
-    // Check both the container and the backdrop overlay
+    // Check both the container and any backdrop overlays
     const mfaChallenge = page.getByTestId("mfa-challenge-container");
     const mfaBackdrop = page.locator(
-      '.fixed.inset-0.z-50:has-text("Verifying authentication")',
+      ".fixed.inset-0.z-50.bg-black\\/40.backdrop-blur-sm",
     );
 
     // Wait for both to be hidden or removed
