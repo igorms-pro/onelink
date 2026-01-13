@@ -69,6 +69,12 @@ test.describe("Settings Navigation", () => {
       page.getByTestId("settings-active-sessions-section"),
     ).toBeVisible({ timeout: 30000 });
 
+    // Wait for MFA challenge to be dismissed if it appears
+    const mfaChallenge = page.getByTestId("mfa-challenge-container");
+    await mfaChallenge.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {
+      // MFA challenge didn't appear, that's fine
+    });
+
     const sessionsLink = page
       .getByTestId("settings-active-sessions")
       .or(page.getByRole("button", { name: /active sessions/i }))
@@ -146,6 +152,12 @@ test.describe("Settings Navigation", () => {
     await expect(
       page.getByTestId("settings-privacy-security-section"),
     ).toBeVisible({ timeout: 30000 });
+
+    // Wait for MFA challenge to be dismissed if it appears
+    const mfaChallenge = page.getByTestId("mfa-challenge-container");
+    await mfaChallenge.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {
+      // MFA challenge didn't appear, that's fine
+    });
 
     const changePasswordButton = page.getByTestId("settings-change-password");
     await expect(changePasswordButton).toBeVisible();

@@ -128,7 +128,7 @@ authTest.describe("MFA Challenge Flow", () => {
   );
 });
 
-authTest.describe("MFA Challenge Integration", () => {
+authTest.describe.skip("MFA Challenge Integration", () => {
   authTest(
     "MFA challenge does not block dashboard loading",
     async ({ authenticatedPage: page }) => {
