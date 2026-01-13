@@ -108,7 +108,9 @@ export function resetUser() {
 /**
  * Flush queued events to PostHog
  */
-function flushEventQueue(posthogInstance: typeof posthog) {
+function flushEventQueue(posthogInstance: {
+  capture: (event: string, properties?: Record<string, unknown>) => void;
+}) {
   if (eventQueue.length === 0) return;
 
   // Send all queued events
