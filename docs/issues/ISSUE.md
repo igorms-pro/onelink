@@ -366,7 +366,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 **High Priority:**
 1. 🌐 Landing Page / Site Vitrine
-   - **Status:** 🟢 Completed (93% - 26/28 issues)
+   - **Status:** ✅ Completed
    - **Priority:** High (MVP Launch)
    - **Estimated Time:** 8-12 hours (✅ Completed)
    - **Domain:** `getonelink.io` (à acheter)
@@ -391,11 +391,10 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
    - **Location:** ✅ `apps/landing/` folder in monorepo (Pattern 1 - separate app, same repo)
    - **Routes:** ✅ `/`, `/features`, `/pricing`, `/auth`, `/privacy`, `/terms`
    - **Infrastructure:** ✅ i18n (10 langues), ✅ Dark/Light mode, ✅ Analytics (PostHog), ✅ Tests (Vitest + Playwright)
-   - **Remaining Manual Tasks:**
-     - 🟡 Domain Configuration (DNS setup in Hostinger → Vercel)
-     - 🟡 Cross-Browser Testing (Manual testing required)
+   - **Completed Tasks:**
+     - ✅ Domain Configuration (DNS setup in Hostinger → Vercel)
+     - ✅ Cross-Browser Testing (Manual testing completed)
      - ✅ Build & Deployment Configuration (ready for Vercel)
-   - **Progress:** See `docs/LANDING_PAGE.md` for detailed issue tracker (26/28 issues completed)
 
 2. 👋 Welcome Page / Username Selection Flow
    - **Status:** ✅ Completed
@@ -478,38 +477,92 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - `supabase/functions/create-profile/` - Nouvelle edge function (optionnel mais recommandé)
 
 3. 🔐 Social Authentication Providers (Google, Apple, Meta)
-   - **Status:** 🔴 Not Started
-   - **Priority:** High (Important for user onboarding) - **NEXT TASK**
+   - **Status:** ✅ Completed (Google only)
+   - **Priority:** High (Important for user onboarding)
    - **Estimated Time:** 2-3 hours
    - **Location:** `apps/web/src/routes/Auth.tsx`, `apps/web/src/lib/AuthProvider.tsx`
    - **Description:** Ajouter les connexions sociales (OAuth) en plus du magic link email
    - **Providers à ajouter:**
-     - ✅ **Google** - Le plus populaire, facile à configurer
-     - ✅ **Apple** - Important pour iOS users, bon pour la privacy
-     - ✅ **Meta/Facebook** - Large base d'utilisateurs
+     - ✅ **Google** - Implemented and tested
+     - ⏸️ **Apple** - Skipped (requires $99/year Apple Developer fee)
+     - ⏸️ **Meta/Facebook** - Skipped (requires app review process)
    - **Implementation Tasks:**
-     - [ ] Configurer les providers dans Supabase Dashboard (Google, Apple, Meta)
-     - [ ] Ajouter boutons "Continue with Google" dans `Auth.tsx`
-     - [ ] Ajouter bouton "Continue with Apple" dans `Auth.tsx`
-     - [ ] Ajouter bouton "Continue with Meta/Facebook" dans `Auth.tsx`
-     - [ ] Implémenter `signInWithOAuth(provider: string)` dans `AuthProvider.tsx`
-     - [ ] Gérer les redirects après OAuth (garder le username du localStorage si présent)
-     - [ ] Gérer les erreurs OAuth (utilisateur annule, erreur de config, etc.)
-     - [ ] Ajouter traductions pour les boutons sociaux (10 langues)
-     - [ ] Tests E2E pour chaque provider
+     - [x] Configurer les providers dans Supabase Dashboard (Google)
+     - [x] Ajouter boutons "Continue with Google" dans `Auth.tsx`
+     - [x] Implémenter `signInWithOAuth(provider: string)` dans `AuthProvider.tsx`
+     - [x] Gérer les redirects après OAuth (garder le username du localStorage si présent)
+     - [x] Gérer les erreurs OAuth (utilisateur annule, erreur de config, etc.)
+     - [x] Ajouter traductions pour les boutons sociaux (10 langues)
+     - [x] Tests unitaires et E2E pour Google OAuth
    - **Design Requirements:**
-     - Style similaire aux boutons sociaux de Linktree
-     - Icônes officielles (Google, Apple, Meta)
-     - Boutons avec bordures arrondies, hover effects
-     - Disposition verticale sous le formulaire email
+     - ✅ Style similaire aux boutons sociaux de Linktree
+     - ✅ Icônes officielles (Google - custom SVG suivant guidelines)
+     - ✅ Boutons avec bordures arrondies, hover effects
+     - ✅ Disposition verticale sous le formulaire email
    - **Dependencies:**
-     - Supabase Dashboard configuration (OAuth credentials)
-     - `apps/web/src/lib/AuthProvider.tsx` - Ajouter `signInWithOAuth()`
-     - `apps/web/src/routes/Auth.tsx` - Ajouter les boutons sociaux
-   - **Note:** Cette tâche peut être faite en parallèle avec la Welcome Page
+     - ✅ Supabase Dashboard configuration (OAuth credentials)
+     - ✅ `apps/web/src/lib/AuthProvider.tsx` - `signInWithOAuth()` implémenté
+     - ✅ `apps/web/src/routes/Auth.tsx` - Bouton Google ajouté
+   - **Note:** Google OAuth fonctionne en local et production. Apple et Meta peuvent être ajoutés plus tard si nécessaire.
+
+4. 🎥 Upload "How It Works" Video from YouTube
+   - **Status:** 🔴 Not Started
+   - **Priority:** High (Important for user onboarding and conversion)
+   - **Estimated Time:** 1-2 hours
+   - **Location:** Landing page "How It Works" section
+   - **Description:** Upload and embed a "How It Works" video from YouTube to the landing page
+   - **Implementation Tasks:**
+     - [ ] Upload video to YouTube (or use existing video)
+     - [ ] Get YouTube video ID
+     - [ ] Embed YouTube video in landing page "How It Works" section
+     - [ ] Add responsive video player (iframe with proper aspect ratio)
+     - [ ] Test video playback on mobile and desktop
+     - [ ] Add video thumbnail/placeholder
+     - [ ] Ensure video is accessible (alt text, captions if available)
+   - **Files to Update:**
+     - `apps/landing/src/routes/Home.tsx` or `apps/landing/src/components/sections/HowItWorksSection.tsx`
+     - Add YouTube embed component
+   - **Design Requirements:**
+     - Responsive video player (16:9 aspect ratio)
+     - Centered in "How It Works" section
+     - Optional: Add play button overlay
+     - Optional: Add video title/description
+   - **Notes:**
+     - Can use `react-player` or native iframe
+     - Ensure video is mobile-friendly
+     - Consider lazy loading for performance
 
 **Medium Priority:**
-1. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
+1. 🔍 SEO Optimization - Improve search engine visibility
+   - **Status:** 🔴 Not Started
+   - **Priority:** Medium (Important for landing page conversion)
+   - **Estimated Time:** 
+     - Phase 1: 2-3 hours (Basic SEO)
+     - Phase 2: 3-4 hours (Pre-rendering)
+     - Phase 3: 4-6 hours (Advanced SEO)
+   - **Location:** `apps/landing/`, `apps/web/`
+   - **Description:** Implement SEO best practices for better search engine visibility and social sharing
+   - **Implementation Tasks:**
+     - [ ] Phase 1: Install `react-helmet-async` and replace manual meta tags
+     - [ ] Phase 1: Add proper meta tags to all routes
+     - [ ] Phase 1: Add Open Graph and Twitter Card tags
+     - [ ] Phase 2: Install `vite-plugin-prerender` for static routes
+     - [ ] Phase 2: Configure pre-rendering for landing pages
+     - [ ] Phase 3: Add structured data (JSON-LD)
+     - [ ] Phase 3: Generate `sitemap.xml`
+     - [ ] Phase 3: Create `robots.txt`
+     - [ ] Phase 3: Submit to Google Search Console
+   - **Files to Create/Update:**
+     - `apps/landing/src/lib/seo.ts` - SEO utilities
+     - `apps/landing/public/sitemap.xml`
+     - `apps/landing/public/robots.txt`
+     - Update all route components with `<Helmet>`
+   - **Dependencies:**
+     - `react-helmet-async` package
+     - `vite-plugin-prerender` (optional, Phase 2)
+   - **See detailed plan:** See "SEO Optimization" section below for full implementation details
+
+2. 📊 Analytics Detail Page - Create dedicated analytics page with detailed views
    - Route: `/dashboard/analytics` or `/analytics`
    - Detailed charts and graphs for links and drops analytics
    - Time range selection (7/30/90 days, custom range)
