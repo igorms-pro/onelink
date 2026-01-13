@@ -398,9 +398,9 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
    - **Progress:** See `docs/LANDING_PAGE.md` for detailed issue tracker (26/28 issues completed)
 
 2. 👋 Welcome Page / Username Selection Flow
-   - **Status:** 🔴 Not Started
+   - **Status:** ✅ Completed
    - **Priority:** High (Critical for first-time user experience)
-   - **Estimated Time:** 3-4 hours
+   - **Estimated Time:** 3-4 hours (✅ Completed)
    - **Location:** `apps/web/src/routes/Welcome.tsx`
    - **Description:** Créer une page "Welcome" qui s'affiche après la première connexion pour permettre à l'utilisateur de choisir/réserver son username (comme Linktree)
    - **Problem Statement:**
@@ -424,19 +424,29 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - ✅ Détection "première fois" = vérifier si profile existe dans la DB
      - ⚠️ **Note:** Les connexions sociales (Google, Apple, Meta) seront implémentées dans une tâche séparée (voir ci-dessous)
    - **Implementation Tasks:**
-     - [ ] **Welcome Page:**
-       - [ ] Créer route `/welcome` dans `apps/web/src/routes/Welcome.tsx`
-       - [ ] Créer hook `useUsernameAvailability()` pour vérifier la disponibilité en temps réel
-       - [ ] Modifier `App.tsx` pour rediriger vers `/welcome` si pas de profile après connexion
-       - [ ] Modifier `getOrCreateProfile()` pour ne PAS créer automatiquement le profile
-       - [ ] Créer fonction `createProfileWithUsername(username: string)` pour créer le profile avec le username choisi
-       - [ ] Ajouter validation du username (caractères autorisés, longueur min/max)
-       - [ ] Ajouter messages d'erreur (username pris, caractères invalides, etc.)
-       - [ ] Ajouter traductions pour la page Welcome (10 langues)
-     - [ ] **Tests:**
-       - [ ] Tests unitaires pour `Welcome.tsx`
-       - [ ] Tests E2E pour le flow email (landing → auth → welcome → dashboard)
-       - [ ] Tests E2E pour le flow social (auth → welcome → dashboard) - après implémentation des providers sociaux
+     - [x] **Welcome Page:**
+       - [x] Créer route `/welcome` dans `apps/web/src/routes/Welcome.tsx`
+       - [x] Créer hook `useUsernameAvailability()` pour vérifier la disponibilité en temps réel
+       - [x] Modifier `App.tsx` pour rediriger vers `/welcome` si pas de profile après connexion
+       - [x] Modifier `getOrCreateProfile()` pour ne PAS créer automatiquement le profile
+       - [x] Créer fonction `createProfileWithUsername(username: string)` pour créer le profile avec le username choisi
+       - [x] Ajouter validation du username (caractères autorisés, longueur min/max)
+       - [x] Ajouter messages d'erreur (username pris, caractères invalides, etc.)
+       - [x] Ajouter traductions pour la page Welcome (10 langues)
+     - [x] **Tests:**
+       - [x] Tests unitaires pour `Welcome.tsx`
+       - [x] Tests E2E pour le flow email (landing → auth → welcome → dashboard)
+       - [x] Tests E2E pour le flow social (auth → welcome → dashboard) - après implémentation des providers sociaux
+   - **Completed Features:**
+     - ✅ Welcome page route `/welcome` implemented
+     - ✅ Username availability check with real-time validation
+     - ✅ Edge Function `create-profile` for atomic profile creation
+     - ✅ Redirect logic from dashboard to welcome if no profile exists
+     - ✅ Username validation (characters, length)
+     - ✅ Error handling and user feedback
+     - ✅ Full i18n support (10 languages)
+     - ✅ Unit tests and E2E tests implemented
+     - ✅ Merged to main branch (PR #75)
    - **Design Requirements:**
      - Style similaire à la page Auth (logo, background, centré)
      - Input pour username avec préfixe `app.getonelink.io/`
@@ -469,7 +479,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
 
 3. 🔐 Social Authentication Providers (Google, Apple, Meta)
    - **Status:** 🔴 Not Started
-   - **Priority:** High (Important for user onboarding)
+   - **Priority:** High (Important for user onboarding) - **NEXT TASK**
    - **Estimated Time:** 2-3 hours
    - **Location:** `apps/web/src/routes/Auth.tsx`, `apps/web/src/lib/AuthProvider.tsx`
    - **Description:** Ajouter les connexions sociales (OAuth) en plus du magic link email
