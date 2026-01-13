@@ -498,13 +498,15 @@ describe("AuthProvider", () => {
     it("handles OAuth errors in URL after callback", async () => {
       // Mock window.location to include error params
       const originalLocation = window.location;
-      delete (window as any).location;
-      window.location = {
-        ...originalLocation,
-        href: "http://localhost:3000/dashboard?error=access_denied&error_description=User%20cancelled",
-        pathname: "/dashboard",
-        search: "?error=access_denied&error_description=User%20cancelled",
-      } as any;
+      Object.defineProperty(window, "location", {
+        writable: true,
+        value: {
+          ...originalLocation,
+          href: "http://localhost:3000/dashboard?error=access_denied&error_description=User%20cancelled",
+          pathname: "/dashboard",
+          search: "?error=access_denied&error_description=User%20cancelled",
+        },
+      });
 
       const mockSession = {
         user: { id: "user-123", email: "test@example.com" },
@@ -537,7 +539,10 @@ describe("AuthProvider", () => {
       });
 
       // Restore window.location
-      window.location = originalLocation;
+      Object.defineProperty(window, "location", {
+        writable: true,
+        value: originalLocation,
+      });
     });
   });
 });
