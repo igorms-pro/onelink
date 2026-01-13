@@ -29,7 +29,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -58,7 +58,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -86,7 +86,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -122,11 +122,13 @@ jobs:
           echo "VITE_SUPABASE_ANON_KEY=${E2E_SUPABASE_ANON_KEY:-placeholder-key}" >> $GITHUB_ENV
           echo "E2E_TEST_EMAIL=${E2E_TEST_EMAIL:-test@example.com}" >> $GITHUB_ENV
           echo "E2E_TEST_PASSWORD=${E2E_TEST_PASSWORD:-testpassword123}" >> $GITHUB_ENV
+          echo "SUPABASE_SERVICE_ROLE_KEY=${SUPABASE_SERVICE_ROLE_KEY:-}" >> $GITHUB_ENV
         env:
           E2E_SUPABASE_URL: ${{ secrets.E2E_SUPABASE_URL }}
           E2E_SUPABASE_ANON_KEY: ${{ secrets.E2E_SUPABASE_ANON_KEY }}
           E2E_TEST_EMAIL: ${{ secrets.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ secrets.E2E_TEST_PASSWORD }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
       
       - name: Build app
         run: pnpm build
@@ -151,6 +153,7 @@ jobs:
           VITE_SUPABASE_ANON_KEY: ${{ env.VITE_SUPABASE_ANON_KEY }}
           E2E_TEST_EMAIL: ${{ env.E2E_TEST_EMAIL }}
           E2E_TEST_PASSWORD: ${{ env.E2E_TEST_PASSWORD }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ env.SUPABASE_SERVICE_ROLE_KEY }}
       
       - name: Upload Playwright report
         if: always()
@@ -193,7 +196,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v2
         with:
-          version: 8
+          version: 10
       
       - name: Setup Node.js
         uses: actions/setup-node@v4

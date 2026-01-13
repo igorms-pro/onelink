@@ -9,6 +9,7 @@ import { initPostHog } from "./lib/posthog";
 import App from "./routes/App";
 import Profile from "./routes/Profile/index";
 import Auth from "./routes/Auth";
+import Welcome from "./routes/Welcome";
 import Dashboard from "./routes/Dashboard/index";
 import Settings from "./routes/Settings/index";
 import BillingPage from "./routes/Settings/pages/BillingPage";
@@ -51,6 +52,7 @@ if (actualTheme === "dark") {
 const router = createBrowserRouter([
   { path: "/", element: <App /> },
   { path: "/auth", element: <Auth /> },
+  { path: "/welcome", element: <Welcome /> },
   { path: "/dashboard", element: <Dashboard /> },
   { path: "/settings", element: <Settings /> },
   { path: "/settings/billing", element: <BillingPage /> },

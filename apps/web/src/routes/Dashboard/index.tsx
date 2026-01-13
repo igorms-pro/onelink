@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
@@ -43,9 +43,21 @@ export default function Dashboard() {
     clearAllSubmissions,
   } = useDashboardData(userId);
 
+  // Redirect to /welcome if profile doesn't exist (after loading completes)
+  useEffect(() => {
+    if (!loading && !dashboardLoading && user && !profileId) {
+      navigate("/welcome", { replace: true });
+    }
+  }, [loading, dashboardLoading, user, profileId, navigate]);
+
   // Don't render dashboard content while checking MFA or if user is not loaded
   if (loading || !user) {
     return null; // Will redirect via useRequireAuth or show MFA challenge
+  }
+
+  // Don't render dashboard if profile doesn't exist (will redirect to /welcome)
+  if (!dashboardLoading && !profileId) {
+    return null; // useEffect above will handle redirect to /welcome
   }
 
   const isFree = !isPaidPlan(plan);
