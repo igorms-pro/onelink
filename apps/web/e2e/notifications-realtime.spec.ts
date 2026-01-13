@@ -39,26 +39,35 @@ test.describe("Notifications Realtime", () => {
   test("new submission appears in realtime", async ({
     authenticatedPage: page,
   }) => {
-    // Open Dashboard - profile already exists, just wait for RLS propagation
-    await page.waitForTimeout(5000); // Wait for RLS to propagate after profile creation
-
-    // Navigate to dashboard - profile exists, so should go directly to dashboard
+    // Navigate to dashboard - wait for profile to be visible (RLS propagation)
     await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
-    await page.waitForTimeout(2000);
 
-    // Verify we're on dashboard (profile exists, so welcome shouldn't appear)
-    const currentUrl = page.url();
-    if (currentUrl.includes("/welcome")) {
-      throw new Error(
-        "Unexpected redirect to welcome - profile should exist. RLS may not have propagated yet.",
-      );
-    }
-
+    // Wait for either navigation OR redirect to welcome
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
       )
       .first();
+
+    const currentUrl = page.url();
+
+    // If redirected to welcome, profile isn't visible yet - wait a bit and retry navigation
+    if (currentUrl.includes("/welcome")) {
+      await page.waitForTimeout(3000);
+      await page.goto("/dashboard", {
+        waitUntil: "networkidle",
+        timeout: 30000,
+      });
+
+      if (page.url().includes("/welcome")) {
+        throw new Error(
+          "Profile not visible after RLS propagation wait - profile may not exist",
+        );
+      }
+    }
+
+    // Now wait for navigation to appear
+    await expect(inboxButton).toBeVisible({ timeout: 10000 });
     await inboxButton.click();
 
     // Wait for initial load
@@ -114,16 +123,33 @@ test.describe("Notifications Realtime", () => {
   test("download notification appears in realtime", async ({
     authenticatedPage: page,
   }) => {
-    // Navigate to dashboard - profile already exists
-    await page.waitForTimeout(5000); // Wait for RLS to propagate
+    // Navigate to dashboard - wait for profile to be visible (RLS propagation)
     await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
-    await page.waitForTimeout(2000);
 
+    // Wait for either navigation OR redirect to welcome
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
       )
       .first();
+
+    // If redirected to welcome, profile isn't visible yet - wait a bit and retry navigation
+    if (page.url().includes("/welcome")) {
+      await page.waitForTimeout(3000);
+      await page.goto("/dashboard", {
+        waitUntil: "networkidle",
+        timeout: 30000,
+      });
+
+      if (page.url().includes("/welcome")) {
+        throw new Error(
+          "Profile not visible after RLS propagation wait - profile may not exist",
+        );
+      }
+    }
+
+    // Now wait for navigation to appear
+    await expect(inboxButton).toBeVisible({ timeout: 10000 });
     await inboxButton.click();
     await page.waitForLoadState("networkidle");
 
@@ -146,16 +172,33 @@ test.describe("Notifications Realtime", () => {
   test("multiple submissions appear rapidly", async ({
     authenticatedPage: page,
   }) => {
-    // Navigate to dashboard - profile already exists
-    await page.waitForTimeout(5000); // Wait for RLS to propagate
+    // Navigate to dashboard - wait for profile to be visible (RLS propagation)
     await page.goto("/dashboard", { waitUntil: "networkidle", timeout: 30000 });
-    await page.waitForTimeout(2000);
 
+    // Wait for either navigation OR redirect to welcome
     const inboxButton = page
       .locator(
         '[data-testid="tab-navigation-inbox"], [data-testid="bottom-navigation-inbox"]',
       )
       .first();
+
+    // If redirected to welcome, profile isn't visible yet - wait a bit and retry navigation
+    if (page.url().includes("/welcome")) {
+      await page.waitForTimeout(3000);
+      await page.goto("/dashboard", {
+        waitUntil: "networkidle",
+        timeout: 30000,
+      });
+
+      if (page.url().includes("/welcome")) {
+        throw new Error(
+          "Profile not visible after RLS propagation wait - profile may not exist",
+        );
+      }
+    }
+
+    // Now wait for navigation to appear
+    await expect(inboxButton).toBeVisible({ timeout: 10000 });
     await inboxButton.click();
     await page.waitForLoadState("networkidle");
 

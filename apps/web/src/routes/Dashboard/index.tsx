@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   // Don't render dashboard if profile doesn't exist (will redirect to /welcome)
   if (!dashboardLoading && !profileId) {
-    return null;
+    return null; // useEffect above will handle redirect to /welcome
   }
 
   const isFree = !isPaidPlan(plan);

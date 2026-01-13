@@ -14,9 +14,7 @@ const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
  * Create test data for notifications tests
  * Creates a drop and unread submissions for the test user
  */
-export async function createNotificationsTestData(
-  userId: string,
-): Promise<{
+export async function createNotificationsTestData(userId: string): Promise<{
   dropId: string;
   dropToken: string | null;
   submissionIds: string[];
@@ -165,6 +163,10 @@ export async function createNotificationsTestData(
       submissionIds.push(submission.id);
     }
   }
+
+  // Small delay to ensure profile is committed and visible to user sessions
+  // This helps with Supabase's internal caching/connection pooling
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   return { dropId, dropToken, submissionIds };
 }
