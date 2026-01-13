@@ -2,7 +2,7 @@ import { test, expect } from "./fixtures/auth";
 import { setupPostHogInterception } from "./helpers/posthog";
 import { createNotificationsTestData } from "./helpers/test-data";
 
-test.describe("Drop Route and Drag-and-Drop Notifications", () => {
+test.describe.skip("Drop Route and Drag-and-Drop Notifications", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
 

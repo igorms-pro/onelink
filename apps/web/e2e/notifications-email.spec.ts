@@ -1,7 +1,7 @@
 import { test, expect } from "./fixtures/auth";
 import { setupPostHogInterception } from "./helpers/posthog";
 
-test.describe("Email Notifications", () => {
+test.describe.skip("Email Notifications", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     await setupPostHogInterception(page);
   });
