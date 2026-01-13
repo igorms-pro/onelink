@@ -235,26 +235,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             let errorMessage = error.message;
 
             // Check for common OAuth error patterns
+            const errorMsgLower = error.message.toLowerCase();
             if (
-              error.message.includes("configuration") ||
-              error.message.includes("not configured")
+              errorMsgLower.includes("configuration") ||
+              errorMsgLower.includes("not configured")
             ) {
               errorMessage =
                 "OAuth provider is not configured. Please contact support.";
             } else if (
-              error.message.includes("network") ||
-              error.message.includes("fetch")
+              errorMsgLower.includes("network") ||
+              errorMsgLower.includes("fetch")
             ) {
               errorMessage =
                 "Network error. Please check your connection and try again.";
             } else if (
-              error.message.includes("cancelled") ||
-              error.message.includes("denied")
+              errorMsgLower.includes("cancelled") ||
+              errorMsgLower.includes("denied")
             ) {
               errorMessage = "Sign in was cancelled.";
             } else if (
-              error.message.includes("email") &&
-              error.message.includes("already")
+              errorMsgLower.includes("email") &&
+              errorMsgLower.includes("already")
             ) {
               errorMessage =
                 "An account with this email already exists. Please sign in with email instead.";
