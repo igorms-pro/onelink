@@ -203,6 +203,7 @@ describe("Settings", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
     vi.mocked(useNavigate).mockReturnValue(mockNavigate);
     mockUseDashboardData.mockReturnValue({
@@ -226,6 +227,7 @@ describe("Settings", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
 
     render(
@@ -375,6 +377,7 @@ describe("Settings", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
 
     const { container } = render(

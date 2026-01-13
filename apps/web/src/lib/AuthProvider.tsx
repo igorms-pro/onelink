@@ -13,6 +13,9 @@ type AuthContextValue = {
   loading: boolean;
   checkingMFA: boolean;
   signInWithEmail: (email: string) => Promise<{ error?: string }>;
+  signInWithOAuth: (
+    provider: "google" | "apple" | "facebook",
+  ) => Promise<{ error?: string }>;
   signOut: () => Promise<void>;
 };
 
@@ -185,6 +188,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           options: { emailRedirectTo: window.location.origin + "/dashboard" },
         });
         if (error) return { error: error.message };
+        return {};
+      },
+      async signInWithOAuth(provider: "google" | "apple" | "facebook") {
+        // Username is already stored in localStorage by Auth.tsx if it came from URL param
+        // The Welcome page will read it from localStorage after OAuth callback
+        // No need to pass it via queryParams - localStorage persists across redirects
+        const { error } = await supabase.auth.signInWithOAuth({
+          provider,
+          options: {
+            redirectTo: `${window.location.origin}/dashboard`,
+          },
+        });
+
+        if (error) {
+          return { error: error.message };
+        }
+
+        // OAuth redirect will happen automatically
+        // After OAuth callback:
+        // 1. User is redirected to /dashboard
+        // 2. App.tsx checks if profile exists
+        // 3. If no profile → redirects to /welcome
+        // 4. Welcome.tsx reads username from localStorage (USERNAME_STORAGE_KEY)
         return {};
       },
       async signOut() {

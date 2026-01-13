@@ -26,6 +26,7 @@ vi.mock("@/lib/AuthProvider", () => ({
     loading: false,
     signOut: vi.fn(),
     signInWithEmail: vi.fn(),
+    signInWithOAuth: vi.fn(),
   }),
 }));
 

@@ -142,6 +142,7 @@ describe("SessionsPage", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
     vi.mocked(useRequireAuth).mockReturnValue({
       user: mockUser,
