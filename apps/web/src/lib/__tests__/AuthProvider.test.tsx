@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
+import React from "react";
 import { AuthProvider } from "../AuthProvider";
 import { supabase } from "../supabase";
 
@@ -9,6 +10,7 @@ vi.mock("../supabase", () => ({
       getSession: vi.fn(),
       onAuthStateChange: vi.fn(),
       signInWithOtp: vi.fn(),
+      signInWithOAuth: vi.fn(),
       signOut: vi.fn(),
       mfa: {
         getAuthenticatorAssuranceLevel: vi.fn(),
@@ -295,5 +297,247 @@ describe("AuthProvider", () => {
     unmount();
 
     expect(unsubscribe).toHaveBeenCalled();
+  });
+
+  describe("signInWithOAuth", () => {
+    it("successfully initiates OAuth flow", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: { url: "https://google.com/oauth", provider: "google" },
+        error: null,
+      } as any);
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        React.useEffect(() => {
+          signInWithOAuth("google");
+        }, [signInWithOAuth]);
+        return <div>Test</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(supabase.auth.signInWithOAuth).toHaveBeenCalledWith({
+          provider: "google",
+          options: {
+            redirectTo: expect.stringContaining("/dashboard"),
+          },
+        });
+      });
+    });
+
+    it("handles OAuth configuration errors", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: null,
+        error: { message: "OAuth provider is not configured" },
+      } as any);
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        const [error, setError] = React.useState<string | null>(null);
+
+        React.useEffect(() => {
+          signInWithOAuth("google").then((res) => {
+            if (res.error) setError(res.error);
+          });
+        }, [signInWithOAuth]);
+
+        return <div>{error && <span data-testid="error">{error}</span>}</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("error")).toHaveTextContent(
+          "OAuth provider is not configured. Please contact support.",
+        );
+      });
+    });
+
+    it("handles network errors", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: null,
+        error: { message: "Network error: fetch failed" },
+      } as any);
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        const [error, setError] = React.useState<string | null>(null);
+
+        React.useEffect(() => {
+          signInWithOAuth("google").then((res) => {
+            if (res.error) setError(res.error);
+          });
+        }, [signInWithOAuth]);
+
+        return <div>{error && <span data-testid="error">{error}</span>}</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("error")).toHaveTextContent(
+          "Network error. Please check your connection and try again.",
+        );
+      });
+    });
+
+    it("handles user cancellation", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: null,
+        error: { message: "User cancelled the sign in" },
+      } as any);
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        const [error, setError] = React.useState<string | null>(null);
+
+        React.useEffect(() => {
+          signInWithOAuth("google").then((res) => {
+            if (res.error) setError(res.error);
+          });
+        }, [signInWithOAuth]);
+
+        return <div>{error && <span data-testid="error">{error}</span>}</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("error")).toHaveTextContent(
+          "Sign in was cancelled.",
+        );
+      });
+    });
+
+    it("handles email conflict errors", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockResolvedValue({
+        data: null,
+        error: { message: "Email already exists" },
+      } as any);
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        const [error, setError] = React.useState<string | null>(null);
+
+        React.useEffect(() => {
+          signInWithOAuth("google").then((res) => {
+            if (res.error) setError(res.error);
+          });
+        }, [signInWithOAuth]);
+
+        return <div>{error && <span data-testid="error">{error}</span>}</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("error")).toHaveTextContent(
+          "An account with this email already exists. Please sign in with email instead.",
+        );
+      });
+    });
+
+    it("handles unexpected errors", async () => {
+      vi.mocked(supabase.auth.signInWithOAuth).mockRejectedValue(
+        new Error("Unexpected error"),
+      );
+
+      const { useAuth } = await import("../AuthProvider");
+      const TestComponent = () => {
+        const { signInWithOAuth } = useAuth();
+        const [error, setError] = React.useState<string | null>(null);
+
+        React.useEffect(() => {
+          signInWithOAuth("google").then((res) => {
+            if (res.error) setError(res.error);
+          });
+        }, [signInWithOAuth]);
+
+        return <div>{error && <span data-testid="error">{error}</span>}</div>;
+      };
+
+      render(
+        <AuthProvider>
+          <TestComponent />
+        </AuthProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByTestId("error")).toHaveTextContent(
+          "Unexpected error",
+        );
+      });
+    });
+
+    it("handles OAuth errors in URL after callback", async () => {
+      // Mock window.location to include error params
+      const originalLocation = window.location;
+      delete (window as any).location;
+      window.location = {
+        ...originalLocation,
+        href: "http://localhost:3000/dashboard?error=access_denied&error_description=User%20cancelled",
+        pathname: "/dashboard",
+        search: "?error=access_denied&error_description=User%20cancelled",
+      } as any;
+
+      const mockSession = {
+        user: { id: "user-123", email: "test@example.com" },
+        access_token: "token",
+      };
+
+      vi.mocked(supabase.auth.getSession).mockResolvedValue({
+        data: { session: mockSession },
+        error: null,
+      } as any);
+
+      const { toast } = await import("sonner");
+      const toastErrorSpy = vi.spyOn(toast, "error");
+
+      render(
+        <AuthProvider>
+          <div>Test</div>
+        </AuthProvider>,
+      );
+
+      // Simulate SIGNED_IN event with error in URL
+      const callback = vi.mocked(supabase.auth.onAuthStateChange).mock
+        .calls[0][0];
+      await callback("SIGNED_IN", mockSession as any);
+
+      await waitFor(() => {
+        expect(toastErrorSpy).toHaveBeenCalledWith(
+          "Sign in with Google was cancelled.",
+        );
+      });
+
+      // Restore window.location
+      window.location = originalLocation;
+    });
   });
 });
