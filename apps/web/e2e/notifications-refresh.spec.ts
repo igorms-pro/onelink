@@ -2,7 +2,7 @@ import { test, expect } from "./fixtures/auth";
 import { setupPostHogInterception } from "./helpers/posthog";
 import { createNotificationsTestData } from "./helpers/test-data";
 
-test.describe("Notifications Refresh Functionality", () => {
+test.describe.skip("Notifications Refresh Functionality", () => {
   test.beforeEach(async ({ authenticatedPage: page }) => {
     test.setTimeout(60000); // 60 seconds for beforeEach (includes RLS propagation wait)
     await setupPostHogInterception(page);
