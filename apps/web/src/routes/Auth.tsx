@@ -8,18 +8,48 @@ import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 import { setOnboardingIncomplete } from "../lib/onboarding";
 import { Footer } from "@/components/Footer";
 import { logLoginAttempt } from "@/lib/sessionTracking";
+import { Loader2 } from "lucide-react";
 
 type FormValues = { email: string };
 
 const USERNAME_STORAGE_KEY = "onelink_pending_username";
 
+// Google icon SVG component
+function GoogleIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+        fill="#4285F4"
+      />
+      <path
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+        fill="#34A853"
+      />
+      <path
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+        fill="#FBBC05"
+      />
+      <path
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+        fill="#EA4335"
+      />
+    </svg>
+  );
+}
+
 export default function Auth() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail, signInWithOAuth } = useAuth();
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
   const [pendingUsername, setPendingUsername] = useState<string | null>(null);
 
   // Read username from URL parameter and store it
@@ -37,6 +67,39 @@ export default function Auth() {
       }
     }
   }, [searchParams]);
+
+  // Check for OAuth errors in URL (e.g., from OAuth callback)
+  useEffect(() => {
+    const oauthError = searchParams.get("error");
+    const oauthErrorDescription = searchParams.get("error_description");
+
+    if (oauthError) {
+      let errorMessage = t("auth_oauth_error");
+
+      if (oauthError === "access_denied" || oauthError === "user_cancelled") {
+        errorMessage = t("auth_oauth_cancelled");
+      } else if (oauthErrorDescription) {
+        // Use the error description if available, but translate common messages
+        if (
+          oauthErrorDescription.includes("cancelled") ||
+          oauthErrorDescription.includes("denied")
+        ) {
+          errorMessage = t("auth_oauth_cancelled");
+        } else {
+          errorMessage = oauthErrorDescription;
+        }
+      }
+
+      toast.error(errorMessage);
+
+      // Clean up error params from URL
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("error");
+      newSearchParams.delete("error_description");
+      newSearchParams.delete("error_code");
+      navigate(`/auth?${newSearchParams.toString()}`, { replace: true });
+    }
+  }, [searchParams, navigate, t]);
 
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
@@ -134,6 +197,83 @@ export default function Auth() {
               {loading ? t("auth_sending") : t("auth_send_link")}
             </button>
           </form>
+
+          {/* Divider */}
+          <div className="relative my-6 max-w-sm mx-auto">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400">
+                {t("auth_or", { defaultValue: "or" })}
+              </span>
+            </div>
+          </div>
+
+          {/* Google OAuth button - Following Google Branding Guidelines */}
+          <div className="max-w-sm mx-auto w-full">
+            <button
+              type="button"
+              onClick={async () => {
+                setOauthLoading(true);
+                try {
+                  const res = await signInWithOAuth("google");
+
+                  if (res.error) {
+                    // Show user-friendly error message
+                    const errorMessage = res.error.includes("cancelled")
+                      ? t("auth_oauth_cancelled")
+                      : t("auth_oauth_error");
+                    toast.error(errorMessage);
+
+                    // Log failed login attempt
+                    await logLoginAttempt({
+                      email: "oauth_google",
+                      status: "failed",
+                    });
+                    setOauthLoading(false);
+                  } else {
+                    // OAuth redirect will happen automatically on success
+                    // Don't set loading to false - user will be redirected
+                  }
+                } catch (err) {
+                  // Handle unexpected errors
+                  const errorMessage =
+                    err instanceof Error ? err.message : t("auth_oauth_error");
+                  toast.error(errorMessage);
+                  setOauthLoading(false);
+
+                  // Log failed login attempt
+                  await logLoginAttempt({
+                    email: "oauth_google",
+                    status: "failed",
+                  });
+                }
+              }}
+              disabled={loading || oauthLoading}
+              className="w-full rounded-xl bg-white dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm flex items-center justify-center py-3.5 border border-[#747775] dark:border-[#8E918F]"
+              style={{
+                paddingLeft: "12px",
+                paddingRight: "12px",
+              }}
+            >
+              {oauthLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin mr-2.5" />
+                  <span>
+                    {t("auth_oauth_loading", { defaultValue: "Connecting..." })}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="mr-2.5">
+                    <GoogleIcon className="w-5 h-5" />
+                  </div>
+                  <span>{t("auth_continue_with_google")}</span>
+                </>
+              )}
+            </button>
+          </div>
 
           {/* Link to onboarding */}
           <button

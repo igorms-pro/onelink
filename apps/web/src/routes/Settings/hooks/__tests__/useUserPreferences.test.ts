@@ -51,6 +51,7 @@ describe("useUserPreferences", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
 
     // Default mock Supabase to return no data (will create default entry)
@@ -219,6 +220,7 @@ describe("useUserPreferences", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
 
     const { result } = renderHook(() => useUserPreferences());
@@ -386,6 +388,7 @@ describe("useUserPreferences", () => {
       checkingMFA: false,
       signOut: vi.fn(),
       signInWithEmail: vi.fn(),
+      signInWithOAuth: vi.fn(),
     });
 
     const { result } = renderHook(() => useUserPreferences());

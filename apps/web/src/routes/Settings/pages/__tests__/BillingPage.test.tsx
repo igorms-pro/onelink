@@ -148,6 +148,7 @@ const createAuthValue = (overrides: Partial<AuthValue> = {}): AuthValue => ({
   checkingMFA: false,
   signOut: vi.fn(async () => {}),
   signInWithEmail: vi.fn(async () => ({})),
+  signInWithOAuth: vi.fn(async () => ({})),
   ...overrides,
 });
 
