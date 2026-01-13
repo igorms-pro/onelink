@@ -68,6 +68,39 @@ export default function Auth() {
     }
   }, [searchParams]);
 
+  // Check for OAuth errors in URL (e.g., from OAuth callback)
+  useEffect(() => {
+    const oauthError = searchParams.get("error");
+    const oauthErrorDescription = searchParams.get("error_description");
+
+    if (oauthError) {
+      let errorMessage = t("auth_oauth_error");
+
+      if (oauthError === "access_denied" || oauthError === "user_cancelled") {
+        errorMessage = t("auth_oauth_cancelled");
+      } else if (oauthErrorDescription) {
+        // Use the error description if available, but translate common messages
+        if (
+          oauthErrorDescription.includes("cancelled") ||
+          oauthErrorDescription.includes("denied")
+        ) {
+          errorMessage = t("auth_oauth_cancelled");
+        } else {
+          errorMessage = oauthErrorDescription;
+        }
+      }
+
+      toast.error(errorMessage);
+
+      // Clean up error params from URL
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete("error");
+      newSearchParams.delete("error_description");
+      newSearchParams.delete("error_code");
+      navigate(`/auth?${newSearchParams.toString()}`, { replace: true });
+    }
+  }, [searchParams, navigate, t]);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors relative">
       {/* Background image - light mode */}
@@ -183,18 +216,39 @@ export default function Auth() {
               type="button"
               onClick={async () => {
                 setOauthLoading(true);
-                const res = await signInWithOAuth("google");
-                setOauthLoading(false);
+                try {
+                  const res = await signInWithOAuth("google");
 
-                if (res.error) {
-                  toast.error(res.error);
+                  if (res.error) {
+                    // Show user-friendly error message
+                    const errorMessage = res.error.includes("cancelled")
+                      ? t("auth_oauth_cancelled")
+                      : t("auth_oauth_error");
+                    toast.error(errorMessage);
+
+                    // Log failed login attempt
+                    await logLoginAttempt({
+                      email: "oauth_google",
+                      status: "failed",
+                    });
+                    setOauthLoading(false);
+                  } else {
+                    // OAuth redirect will happen automatically on success
+                    // Don't set loading to false - user will be redirected
+                  }
+                } catch (err) {
+                  // Handle unexpected errors
+                  const errorMessage =
+                    err instanceof Error ? err.message : t("auth_oauth_error");
+                  toast.error(errorMessage);
+                  setOauthLoading(false);
+
                   // Log failed login attempt
                   await logLoginAttempt({
                     email: "oauth_google",
                     status: "failed",
                   });
                 }
-                // OAuth redirect will happen automatically on success
               }}
               disabled={loading || oauthLoading}
               className="w-full rounded-xl bg-white dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm flex items-center justify-center py-3.5 border border-[#747775] dark:border-[#8E918F]"

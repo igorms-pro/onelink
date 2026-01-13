@@ -62,6 +62,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const url = new URL(window.location.href);
         const isMagicLinkRedirect = url.hash || url.searchParams.has("code");
 
+        // Check for OAuth error in URL (e.g., ?error=access_denied)
+        const oauthError = url.searchParams.get("error");
+        const oauthErrorDescription = url.searchParams.get("error_description");
+
+        if (oauthError) {
+          // Handle OAuth callback errors
+          let errorMessage = "Failed to sign in with Google. Please try again.";
+
+          if (
+            oauthError === "access_denied" ||
+            oauthError === "user_cancelled"
+          ) {
+            errorMessage = "Sign in with Google was cancelled.";
+          } else if (oauthErrorDescription) {
+            // Use the error description if available
+            errorMessage = oauthErrorDescription;
+          }
+
+          toast.error(errorMessage);
+
+          // Clean up error params from URL
+          url.searchParams.delete("error");
+          url.searchParams.delete("error_description");
+          url.searchParams.delete("error_code");
+          window.history.replaceState(null, "", url.toString());
+          return;
+        }
+
         if (isMagicLinkRedirect) {
           window.history.replaceState(null, "", window.location.pathname);
           // Immediately dismiss any toasts (like "check your email") when magic link is clicked
@@ -194,24 +222,62 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // Username is already stored in localStorage by Auth.tsx if it came from URL param
         // The Welcome page will read it from localStorage after OAuth callback
         // No need to pass it via queryParams - localStorage persists across redirects
-        const { error } = await supabase.auth.signInWithOAuth({
-          provider,
-          options: {
-            redirectTo: `${window.location.origin}/dashboard`,
-          },
-        });
+        try {
+          const { error } = await supabase.auth.signInWithOAuth({
+            provider,
+            options: {
+              redirectTo: `${window.location.origin}/dashboard`,
+            },
+          });
 
-        if (error) {
-          return { error: error.message };
+          if (error) {
+            // Handle specific error types
+            let errorMessage = error.message;
+
+            // Check for common OAuth error patterns
+            if (
+              error.message.includes("configuration") ||
+              error.message.includes("not configured")
+            ) {
+              errorMessage =
+                "OAuth provider is not configured. Please contact support.";
+            } else if (
+              error.message.includes("network") ||
+              error.message.includes("fetch")
+            ) {
+              errorMessage =
+                "Network error. Please check your connection and try again.";
+            } else if (
+              error.message.includes("cancelled") ||
+              error.message.includes("denied")
+            ) {
+              errorMessage = "Sign in was cancelled.";
+            } else if (
+              error.message.includes("email") &&
+              error.message.includes("already")
+            ) {
+              errorMessage =
+                "An account with this email already exists. Please sign in with email instead.";
+            }
+
+            return { error: errorMessage };
+          }
+
+          // OAuth redirect will happen automatically
+          // After OAuth callback:
+          // 1. User is redirected to /dashboard
+          // 2. App.tsx checks if profile exists
+          // 3. If no profile → redirects to /welcome
+          // 4. Welcome.tsx reads username from localStorage (USERNAME_STORAGE_KEY)
+          return {};
+        } catch (err) {
+          // Handle unexpected errors
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : "An unexpected error occurred. Please try again.";
+          return { error: errorMessage };
         }
-
-        // OAuth redirect will happen automatically
-        // After OAuth callback:
-        // 1. User is redirected to /dashboard
-        // 2. App.tsx checks if profile exists
-        // 3. If no profile → redirects to /welcome
-        // 4. Welcome.tsx reads username from localStorage (USERNAME_STORAGE_KEY)
-        return {};
       },
       async signOut() {
         await supabase.auth.signOut();
