@@ -437,11 +437,6 @@ describe("AuthProvider", () => {
       } as any);
 
       const { useAuth } = await import("../AuthProvider");
-      let resolveError: (error: string | null) => void;
-      const errorPromise = new Promise<string | null>((resolve) => {
-        resolveError = resolve;
-      });
-
       const TestComponent = () => {
         const { signInWithOAuth } = useAuth();
         const [error, setError] = React.useState<string | null>(null);
@@ -450,7 +445,6 @@ describe("AuthProvider", () => {
           signInWithOAuth("google").then((res) => {
             if (res.error) {
               setError(res.error);
-              resolveError(res.error);
             }
           });
         }, [signInWithOAuth]);
@@ -464,9 +458,14 @@ describe("AuthProvider", () => {
         </AuthProvider>,
       );
 
-      const errorMessage = await errorPromise;
-      expect(errorMessage).toBe(
-        "An account with this email already exists. Please sign in with email instead.",
+      await waitFor(
+        () => {
+          const errorElement = screen.getByTestId("error");
+          expect(errorElement).toHaveTextContent(
+            "An account with this email already exists. Please sign in with email instead.",
+          );
+        },
+        { timeout: 3000 },
       );
     });
 
