@@ -42,6 +42,21 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
+// Facebook icon SVG component - Following Facebook Branding Guidelines
+// Official Facebook Blue: #1877F2
+function FacebookIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="currentColor"
+    >
+      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
+    </svg>
+  );
+}
+
 export default function Auth() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -50,6 +65,7 @@ export default function Auth() {
   const { register, handleSubmit, reset } = useForm<FormValues>();
   const [loading, setLoading] = useState(false);
   const [oauthLoading, setOauthLoading] = useState(false);
+  const [facebookLoading, setFacebookLoading] = useState(false);
   const [pendingUsername, setPendingUsername] = useState<string | null>(null);
 
   // Read username from URL parameter and store it
@@ -210,8 +226,9 @@ export default function Auth() {
             </div>
           </div>
 
-          {/* Google OAuth button - Following Google Branding Guidelines */}
-          <div className="max-w-sm mx-auto w-full">
+          {/* Social OAuth buttons */}
+          <div className="max-w-sm mx-auto w-full space-y-3">
+            {/* Google OAuth button - Following Google Branding Guidelines */}
             <button
               type="button"
               onClick={async () => {
@@ -250,8 +267,8 @@ export default function Auth() {
                   });
                 }
               }}
-              disabled={loading || oauthLoading}
-              className="w-full rounded-xl bg-white dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm flex items-center justify-center py-3.5 border border-[#747775] dark:border-[#8E918F]"
+              disabled={loading || oauthLoading || facebookLoading}
+              className="w-full rounded-xl bg-white dark:bg-[#131314] text-[#1F1F1F] dark:text-[#E3E3E3] text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm flex items-center justify-center h-[42px] sm:h-[51px] border border-[#747775] dark:border-[#8E918F]"
               style={{
                 paddingLeft: "12px",
                 paddingRight: "12px",
@@ -273,6 +290,71 @@ export default function Auth() {
                 </>
               )}
             </button>
+
+            {/* Facebook OAuth button - Following Facebook Branding Guidelines */}
+            <button
+              type="button"
+              onClick={async () => {
+                setFacebookLoading(true);
+                try {
+                  const res = await signInWithOAuth("facebook");
+
+                  if (res.error) {
+                    // Show user-friendly error message
+                    const errorMessage = res.error.includes("cancelled")
+                      ? t("auth_oauth_facebook_cancelled")
+                      : t("auth_oauth_facebook_error");
+                    toast.error(errorMessage);
+
+                    // Log failed login attempt
+                    await logLoginAttempt({
+                      email: "oauth_facebook",
+                      status: "failed",
+                    });
+                    setFacebookLoading(false);
+                  } else {
+                    // OAuth redirect will happen automatically on success
+                    // Don't set loading to false - user will be redirected
+                  }
+                } catch (err) {
+                  // Handle unexpected errors
+                  const errorMessage =
+                    err instanceof Error
+                      ? err.message
+                      : t("auth_oauth_facebook_error");
+                  toast.error(errorMessage);
+                  setFacebookLoading(false);
+
+                  // Log failed login attempt
+                  await logLoginAttempt({
+                    email: "oauth_facebook",
+                    status: "failed",
+                  });
+                }
+              }}
+              disabled={loading || oauthLoading || facebookLoading}
+              className="w-full rounded-xl bg-[#1877F2] text-white text-sm font-medium hover:bg-[#166FE5] active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-sm flex items-center justify-center h-[42px] sm:h-[51px] border-0"
+              style={{
+                paddingLeft: "12px",
+                paddingRight: "12px",
+              }}
+            >
+              {facebookLoading ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin mr-2.5" />
+                  <span>
+                    {t("auth_oauth_loading", { defaultValue: "Connecting..." })}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="mr-2.5 text-white">
+                    <FacebookIcon className="w-5 h-5" />
+                  </div>
+                  <span>{t("auth_continue_with_facebook")}</span>
+                </>
+              )}
+            </button>
           </div>
 
           {/* Link to onboarding */}
@@ -287,7 +369,7 @@ export default function Auth() {
           </button>
         </div>
       </main>
-      <Footer className="relative z-10" />
+      <Footer className="relative z-10" hideBrandName />
     </div>
   );
 }

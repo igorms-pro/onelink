@@ -11,6 +11,7 @@ interface FooterProps {
   variant?: "default" | "transparent";
   showControls?: boolean; // Show language/theme toggles (for profile pages)
   showLegalLinks?: boolean; // Show Privacy/Terms links (default: true)
+  hideBrandName?: boolean; // Hide brand name completely (for /auth endpoint)
 }
 
 export function Footer({
@@ -20,6 +21,7 @@ export function Footer({
   variant = "default",
   showControls = false,
   showLegalLinks = true,
+  hideBrandName = false,
 }: FooterProps) {
   const { t } = useTranslation();
 
@@ -37,39 +39,41 @@ export function Footer({
           <div className="flex flex-col gap-3 sm:gap-4 sm:flex-row sm:items-center sm:justify-between">
             {/* Mobile: Logo + Slogan + Language/Theme on same line */}
             {/* Desktop: Logo + Slogan on left */}
-            <div className="flex justify-between items-center gap-2 sm:gap-4 sm:justify-start">
-              {showBranding && brandingText ? (
-                <div className="flex items-center gap-2">
-                  <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
-                    <img
-                      src="/onelink-logo-64.png"
-                      alt="OneLink"
-                      className="w-full h-full object-contain"
-                    />
+            {!hideBrandName && (
+              <div className="flex justify-between items-center gap-2 sm:gap-4 sm:justify-start">
+                {showBranding && brandingText ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
+                      <img
+                        src="/onelink-logo-64.png"
+                        alt="OneLink"
+                        className="w-full h-full object-contain"
+                      />
+                    </div>
+                    <span className="font-medium text-gray-800 dark:text-gray-100 text-sm sm:text-base">
+                      {brandingText}
+                    </span>
                   </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-100 text-sm sm:text-base">
-                    {brandingText}
+                ) : (
+                  <span className="font-medium text-gray-800 dark:text-gray-100">
+                    {t("footer_brand_name", { defaultValue: "OneLink" })}
                   </span>
-                </div>
-              ) : (
-                <span className="font-medium text-gray-800 dark:text-gray-100">
-                  {t("footer_brand_name", { defaultValue: "OneLink" })}
-                </span>
-              )}
-              {/* Language & Theme Controls - same line as slogan on mobile, right side on desktop */}
-              {showControls && (
-                <div className="flex items-center gap-2 ml-2 sm:hidden">
-                  <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1">
-                    <ProfileLanguageToggleButton />
+                )}
+                {/* Language & Theme Controls - same line as slogan on mobile, right side on desktop */}
+                {showControls && (
+                  <div className="flex items-center gap-2 ml-2 sm:hidden">
+                    <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                    <div className="flex items-center gap-1">
+                      <ProfileLanguageToggleButton />
+                    </div>
+                    <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                    <div className="flex items-center gap-1">
+                      <ThemeToggleButton />
+                    </div>
                   </div>
-                  <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
-                  <div className="flex items-center gap-1">
-                    <ThemeToggleButton />
-                  </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
             {/* Privacy & Terms - separate line on mobile, center on desktop */}
             {showLegalLinks && (
               <div className="flex items-center justify-center gap-4">
