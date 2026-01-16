@@ -28,11 +28,9 @@ export function LegalPageLayout({
   sections,
   className,
 }: LegalPageLayoutProps) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const appTitle =
-    i18n?.exists && i18n.exists("app_title") ? t("app_title") : "OneLink";
 
   // Scroll to top when navigating to privacy/terms pages
   useEffect(() => {
@@ -64,18 +62,18 @@ export function LegalPageLayout({
           <Link
             to="/"
             data-testid="legal-header-logo-link"
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity cursor-pointer"
+            className="flex items-center min-h-[44px] min-w-[44px] cursor-pointer"
           >
-            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-1.5 sm:p-2">
-              <img
-                src="/onelink-logo-64.png"
-                alt="OneLink"
-                className="w-full h-full object-contain"
-              />
-            </div>
-            <span className="text-xl sm:text-2xl font-bold bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
-              {appTitle}
-            </span>
+            <img
+              src="/onelink-logo.png"
+              alt="OneLink"
+              className="h-10 sm:h-12 w-auto object-contain dark:hidden"
+            />
+            <img
+              src="/onelink-logo-white.png"
+              alt="OneLink"
+              className="h-10 sm:h-12 w-auto object-contain hidden dark:block"
+            />
           </Link>
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div className="scale-100 sm:scale-110">
