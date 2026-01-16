@@ -7,12 +7,14 @@ import { isProPlan } from "@/lib/types/plan";
 import { useProfileData } from "./hooks/useProfileData";
 import { useAuth } from "@/lib/AuthProvider";
 import { trackProfileViewed } from "@/lib/posthog-events";
+import { isSocialLink } from "./utils/socialDetection";
 import {
   LoadingState,
   ErrorState,
   ProfileHeader,
   LinksSection,
   DropsSection,
+  EmptyState,
 } from "./components";
 
 export default function Profile() {
@@ -136,6 +138,20 @@ export default function Profile() {
               <ProfileHeader profile={profile} links={links} />
               <LinksSection links={links} />
               <DropsSection drops={drops} />
+              {(() => {
+                // Check if there are any non-social links or drops
+                const hasNonSocialLinks = links.some(
+                  (link) => !isSocialLink(link.url),
+                );
+                const hasDrops = drops.length > 0;
+                const hasContent = hasNonSocialLinks || hasDrops;
+                const isOwner = user?.id === profile.user_id;
+
+                if (!hasContent) {
+                  return <EmptyState isOwner={isOwner} />;
+                }
+                return null;
+              })()}
             </>
           )}
         </main>
