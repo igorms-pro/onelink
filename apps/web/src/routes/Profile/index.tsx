@@ -158,9 +158,7 @@ export default function Profile() {
 
         {/* Unified Footer with controls - naturally at bottom */}
         <Footer
-          variant={
-            isBaseHost(host) && !isProPlan(plan) ? "transparent" : "default"
-          }
+          variant="transparent"
           showBranding={isBaseHost(host) && !isProPlan(plan)}
           brandingText={
             isBaseHost(host) && !isProPlan(plan)

@@ -9,6 +9,7 @@ import { setOnboardingIncomplete } from "../lib/onboarding";
 import { Footer } from "@/components/Footer";
 import { logLoginAttempt } from "@/lib/sessionTracking";
 import { Loader2 } from "lucide-react";
+import { ONELINK_APP } from "@/lib/constants";
 
 type FormValues = { email: string };
 
@@ -170,7 +171,7 @@ export default function Auth() {
                 })}
               </p>
               <p className="text-lg font-semibold text-purple-600 dark:text-purple-400">
-                app.getonelink.io/{pendingUsername}
+                {ONELINK_APP}/{pendingUsername}
               </p>
             </div>
           )}

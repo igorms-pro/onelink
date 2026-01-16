@@ -26,9 +26,10 @@ export function Footer({
   const { t } = useTranslation();
 
   const containerClasses = clsx(
-    "w-full border-t border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm",
-    variant === "transparent" &&
-      "border-transparent bg-transparent backdrop-blur-0",
+    "w-full border-t",
+    variant === "transparent"
+      ? "border-transparent bg-transparent backdrop-blur-0"
+      : "border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm",
   );
 
   return (
@@ -43,7 +44,7 @@ export function Footer({
               <div className="flex justify-between items-center gap-2 sm:gap-4 sm:justify-start">
                 {showBranding && brandingText ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-gray-300 dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
+                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
                       <img
                         src="/onelink-logo-O.png"
                         alt="OneLink"

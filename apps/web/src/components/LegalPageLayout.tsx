@@ -1,10 +1,11 @@
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { ArrowLeft } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
 import { ThemeToggleButton } from "./ThemeToggleButton";
 import { LanguageToggleButton } from "./LanguageToggleButton";
+import { ONELINK_LANDING, ONELINK_APP } from "@/lib/constants";
 
 export interface LegalSectionContent {
   id: string;
@@ -31,6 +32,31 @@ export function LegalPageLayout({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Check if user came from app.getonelink.io (should show back button)
+  // Don't show back button if coming from getonelink.io (landing page)
+  const shouldShowBackButton = useMemo(() => {
+    if (typeof window === "undefined") return false;
+    const referrer = document.referrer;
+    const currentHost = window.location.host;
+
+    // Always show back button in localhost
+    if (currentHost.includes("localhost")) {
+      return true;
+    }
+
+    // Don't show back button if we came from landing page (getonelink.io without app.)
+    if (
+      referrer &&
+      referrer.includes(ONELINK_LANDING) &&
+      !referrer.includes(ONELINK_APP)
+    ) {
+      return false;
+    }
+
+    // Show back button if we're on app.getonelink.io
+    return currentHost.includes(ONELINK_APP);
+  }, []);
 
   // Scroll to top when navigating to privacy/terms pages
   useEffect(() => {
@@ -88,14 +114,16 @@ export function LegalPageLayout({
       <div className="relative isolate overflow-hidden bg-linear-to-r from-purple-500/10 via-purple-500/5 to-blue-500/10 dark:from-purple-500/20 dark:via-purple-500/10 dark:to-blue-500/20">
         <div className="absolute inset-y-0 right-0 -z-10 w-1/2 bg-linear-to-l from-purple-500/10 to-transparent blur-3xl"></div>
         <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 pb-8 pt-6 sm:px-6 sm:pt-8 lg:px-8">
-          <button
-            onClick={handleBack}
-            data-testid="legal-back-button"
-            className="inline-flex w-fit items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-purple-700 shadow-sm transition hover:bg-white dark:bg-white/10 dark:text-purple-200 dark:hover:bg-white/20 cursor-pointer"
-          >
-            <ArrowLeft className="h-3.5 w-3.5" />
-            {t("back", { defaultValue: "Back" })}
-          </button>
+          {shouldShowBackButton && (
+            <button
+              onClick={handleBack}
+              data-testid="legal-back-button"
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-purple-700 shadow-sm transition hover:bg-white dark:bg-white/10 dark:text-purple-200 dark:hover:bg-white/20 cursor-pointer"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" />
+              {t("back", { defaultValue: "Back" })}
+            </button>
+          )}
           <div className="space-y-4">
             <h1
               data-testid="legal-page-title"
