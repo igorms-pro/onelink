@@ -5,7 +5,9 @@ describe("domain utils", () => {
   it("isBaseHost detects localhost and base domain", () => {
     expect(isBaseHost("localhost")).toBe(true);
     expect(isBaseHost("localhost:5173")).toBe(true);
+    expect(isBaseHost("localhost:5174")).toBe(true);
     expect(isBaseHost("example.getonelink.app")).toBe(true);
+    expect(isBaseHost("app.getonelink.io")).toBe(true);
     expect(isBaseHost("foo.bar")).toBe(false);
   });
 

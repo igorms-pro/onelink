@@ -61,6 +61,11 @@ vi.mock("../components", () => ({
   ProfileBottomBar: () => (
     <div data-testid="profile-bottom-bar">Bottom Bar</div>
   ),
+  EmptyState: ({ isOwner }: { isOwner: boolean }) => (
+    <div data-testid="empty-state">
+      Empty State {isOwner ? "Owner" : "Visitor"}
+    </div>
+  ),
 }));
 
 vi.mock("@/components/Footer", () => ({

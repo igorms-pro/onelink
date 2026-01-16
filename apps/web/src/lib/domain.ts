@@ -1,10 +1,12 @@
 export function isBaseHost(host: string): boolean {
-  // Treat app base like getonelink.app or localhost as base host
+  // Treat app base like getonelink.app, getonelink.io or localhost as base host
   const lower = host.toLowerCase();
   return (
-    lower === "localhost:5173" ||
     lower === "localhost" ||
-    lower.endsWith("getonelink.app")
+    lower === "localhost:5173" ||
+    lower === "localhost:5174" ||
+    lower.endsWith("getonelink.app") ||
+    lower.endsWith("getonelink.io")
   );
 }
 
