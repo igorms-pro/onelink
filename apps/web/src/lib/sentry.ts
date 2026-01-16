@@ -21,7 +21,7 @@ export function initSentry() {
     dsn,
     environment,
 
-    // Integrations
+    // Integrations - Capture ALL errors automatically
     integrations: [
       Sentry.browserTracingIntegration(), // Enable browser tracing for performance monitoring
       Sentry.replayIntegration({
@@ -29,6 +29,17 @@ export function initSentry() {
         maskAllText: true, // Mask all text for privacy
         blockAllMedia: true, // Block all media for privacy
       }),
+      Sentry.globalHandlersIntegration({
+        onerror: true, // Capture unhandled errors
+        onunhandledrejection: true, // Capture unhandled promise rejections
+      }),
+    ],
+
+    // Capture ALL errors (not just some)
+    ignoreErrors: [
+      // Ignore common browser extensions errors
+      /ResizeObserver loop limit exceeded/,
+      /Non-Error promise rejection captured/,
     ],
 
     // Performance Monitoring
@@ -49,7 +60,7 @@ export function initSentry() {
     // Release tracking (useful for debugging)
     release: import.meta.env.VITE_APP_VERSION || undefined,
 
-    // Before send hook - filter sensitive data
+    // Before send hook - filter sensitive data and add context
     beforeSend(event, hint) {
       void hint; // hint parameter is required by Sentry API but not used
       // Filter out sensitive data from error messages
@@ -65,6 +76,16 @@ export function initSentry() {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { email, ...userWithoutEmail } = event.user;
         event.user = userWithoutEmail;
+      }
+
+      // Add useful context
+      if (typeof window !== "undefined") {
+        event.extra = {
+          ...event.extra,
+          url: window.location.href,
+          userAgent: navigator.userAgent,
+          timestamp: new Date().toISOString(),
+        };
       }
 
       return event;

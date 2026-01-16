@@ -27,15 +27,16 @@ describe("HeaderMobileDashboard", () => {
     vi.clearAllMocks();
   });
 
-  it("renders logo and app title", () => {
+  it("renders logo", () => {
     render(
       <MemoryRouter>
         <HeaderMobileDashboard />
       </MemoryRouter>,
     );
 
-    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
-    expect(screen.getByText("app_title")).toBeInTheDocument();
+    const logos = screen.getAllByAltText("OneLink");
+    expect(logos).toHaveLength(2); // One for light mode, one for dark mode
+    expect(logos[0]).toBeInTheDocument();
   });
 
   it("renders theme and language toggles when onSettingsClick is provided", () => {
@@ -84,7 +85,8 @@ describe("HeaderMobileDashboard", () => {
       </MemoryRouter>,
     );
 
-    const logoLink = screen.getByAltText("OneLink").closest("a");
+    const logos = screen.getAllByAltText("OneLink");
+    const logoLink = logos[0].closest("a");
     expect(logoLink).toHaveAttribute("href", "/");
   });
 });

@@ -1,11 +1,21 @@
 import { describe, it, expect } from "vitest";
 import { isBaseHost, isSafeHttpUrl } from "../src/lib/domain";
+import {
+  ONELINK_APP,
+  ONELINK_LANDING,
+  ONELINK_APP_DEV,
+  LOCALHOST_PORT_DEV,
+  LOCALHOST_PORT_ALT,
+} from "../src/lib/constants";
 
 describe("domain utils", () => {
   it("isBaseHost detects localhost and base domain", () => {
     expect(isBaseHost("localhost")).toBe(true);
-    expect(isBaseHost("localhost:5173")).toBe(true);
-    expect(isBaseHost("example.getonelink.app")).toBe(true);
+    expect(isBaseHost(`localhost:${LOCALHOST_PORT_DEV}`)).toBe(true);
+    expect(isBaseHost(`localhost:${LOCALHOST_PORT_ALT}`)).toBe(true);
+    expect(isBaseHost(`example.${ONELINK_APP_DEV}`)).toBe(true);
+    expect(isBaseHost(ONELINK_APP)).toBe(true);
+    expect(isBaseHost(ONELINK_LANDING)).toBe(true);
     expect(isBaseHost("foo.bar")).toBe(false);
   });
 
@@ -30,9 +40,9 @@ describe("domain utils", () => {
 
   it("isBaseHost handles edge cases", () => {
     expect(isBaseHost("GETONELINK.APP")).toBe(true); // case insensitive
-    expect(isBaseHost("sub.getonelink.app")).toBe(true);
+    expect(isBaseHost(`sub.${ONELINK_APP_DEV}`)).toBe(true);
     expect(isBaseHost("localhost:8080")).toBe(false); // different port
-    expect(isBaseHost("example.getonelink.app.com")).toBe(false); // different domain
+    expect(isBaseHost(`example.${ONELINK_APP_DEV}.com`)).toBe(false); // different domain
     expect(isBaseHost("")).toBe(false);
   });
 });

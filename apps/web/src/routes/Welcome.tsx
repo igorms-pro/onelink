@@ -7,6 +7,7 @@ import { supabase } from "../lib/supabase";
 import { toast } from "sonner";
 import { HeaderMobileSignIn } from "../components/HeaderMobileSignIn";
 import { Footer } from "@/components/Footer";
+import { ONELINK_APP } from "@/lib/constants";
 
 const USERNAME_STORAGE_KEY = "onelink_pending_username";
 
@@ -211,7 +212,7 @@ export default function Welcome() {
             <div className="space-y-2">
               <div className="relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-400 text-sm pointer-events-none">
-                  app.getonelink.io/
+                  {ONELINK_APP}/
                 </div>
                 <input
                   type="text"

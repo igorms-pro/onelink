@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { toast } from "sonner";
+import * as Sentry from "@sentry/react";
 import { supabase } from "./supabase";
 import { createUserSession } from "./sessionTracking";
 import { MFAChallenge } from "@/components/MFAChallenge";
@@ -211,12 +212,83 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       loading,
       checkingMFA,
       async signInWithEmail(email: string) {
-        const { error } = await supabase.auth.signInWithOtp({
-          email,
-          options: { emailRedirectTo: window.location.origin + "/dashboard" },
-        });
-        if (error) return { error: error.message };
-        return {};
+        const startTime = Date.now();
+        const userAgent =
+          typeof navigator !== "undefined" ? navigator.userAgent : "unknown";
+        const origin =
+          typeof window !== "undefined" ? window.location.origin : "unknown";
+
+        try {
+          console.log("[Auth] signInWithOtp attempt:", {
+            email: email.substring(0, 3) + "***", // Partial email for privacy
+            origin,
+            userAgent: userAgent.substring(0, 50), // First 50 chars
+            timestamp: new Date().toISOString(),
+          });
+
+          const { error } = await supabase.auth.signInWithOtp({
+            email,
+            options: { emailRedirectTo: window.location.origin + "/dashboard" },
+          });
+
+          const duration = Date.now() - startTime;
+
+          if (error) {
+            // Log to Sentry with context
+            Sentry.captureException(new Error(error.message), {
+              tags: {
+                auth_error: true,
+                error_type: "signInWithOtp",
+                error_status: error.status?.toString() || "unknown",
+              },
+              extra: {
+                email: email.substring(0, 3) + "***",
+                origin,
+                userAgent: userAgent.substring(0, 100),
+                duration,
+                errorName: error.name,
+              },
+            });
+
+            return { error: error.message };
+          }
+
+          console.log("[Auth] signInWithOtp success:", {
+            email: email.substring(0, 3) + "***",
+            duration,
+            timestamp: new Date().toISOString(),
+          });
+
+          return {};
+        } catch (err) {
+          // Catch network errors (CORS, fetch failed, etc.)
+          const duration = Date.now() - startTime;
+          const errorMessage =
+            err instanceof Error
+              ? err.message
+              : "Network error. Please check your connection and try again.";
+
+          // Log network error to Sentry
+          Sentry.captureException(
+            err instanceof Error ? err : new Error(errorMessage),
+            {
+              tags: {
+                auth_error: true,
+                error_type: "signInWithOtp_network",
+                error_name: err instanceof Error ? err.name : "Unknown",
+              },
+              extra: {
+                email: email.substring(0, 3) + "***",
+                origin,
+                userAgent: userAgent.substring(0, 100),
+                duration,
+                error: err instanceof Error ? err.toString() : String(err),
+              },
+            },
+          );
+
+          return { error: errorMessage };
+        }
       },
       async signInWithOAuth(provider: "google" | "apple" | "facebook") {
         // Username is already stored in localStorage by Auth.tsx if it came from URL param
