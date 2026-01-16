@@ -7,6 +7,8 @@ vi.mock("@sentry/react", () => ({
   init: vi.fn(),
   browserTracingIntegration: vi.fn(() => ({})),
   replayIntegration: vi.fn(() => ({})),
+  globalHandlersIntegration: vi.fn(() => ({})),
+  withErrorBoundary: vi.fn((component, _options) => component),
 }));
 
 describe("initSentry", () => {
@@ -105,7 +107,7 @@ describe("initSentry", () => {
     consoleSpy.mockRestore();
   });
 
-  it("should include browserTracingIntegration and replayIntegration", () => {
+  it("should include browserTracingIntegration, replayIntegration, and globalHandlersIntegration", () => {
     (import.meta.env as any).VITE_SENTRY_DSN = "https://test@sentry.io/123";
 
     initSentry();
@@ -114,6 +116,10 @@ describe("initSentry", () => {
     expect(Sentry.replayIntegration).toHaveBeenCalledWith({
       maskAllText: true,
       blockAllMedia: true,
+    });
+    expect(Sentry.globalHandlersIntegration).toHaveBeenCalledWith({
+      onerror: true,
+      onunhandledrejection: true,
     });
   });
 
@@ -175,6 +181,7 @@ describe("initSentry", () => {
             "content-type": "application/json",
           },
         },
+        extra: {},
       };
 
       const result = beforeSend!(event as any, {} as any) as any;

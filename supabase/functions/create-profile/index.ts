@@ -12,7 +12,7 @@ await initSentry();
 const corsHeaders: Record<string, string> = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, baggage, sentry-trace",
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
@@ -190,8 +190,20 @@ export async function handleCreateProfileRequest(
   req: Request,
   env: HandlerEnv = {},
 ) {
+  const requestStartTime = Date.now();
+  const userAgent = req.headers.get("user-agent") || "unknown";
+  const origin = req.headers.get("origin") || "unknown";
+  
+  console.log("[create-profile] Request received:", {
+    method: req.method,
+    origin,
+    userAgent: userAgent.substring(0, 100),
+    timestamp: new Date().toISOString(),
+  });
+
   // CORS preflight
   if (req.method === "OPTIONS") {
+    console.log("[create-profile] CORS preflight");
     return new Response(null, {
       status: 204,
       headers: corsHeaders,
@@ -199,6 +211,7 @@ export async function handleCreateProfileRequest(
   }
 
   if (req.method !== "POST") {
+    console.log("[create-profile] Method not allowed:", req.method);
     return new Response("Method Not Allowed", {
       status: 405,
       headers: corsHeaders,
@@ -259,7 +272,12 @@ export async function handleCreateProfileRequest(
     } = await supabase.auth.getUser(jwt);
 
     if (authError || !user) {
-      console.error("[create-profile] Authentication failed:", authError?.message);
+      const errorMsg = authError?.message || "User not found";
+      console.error("[create-profile] Authentication failed:", {
+        error: errorMsg,
+        userId: user?.id || "none",
+        timestamp: new Date().toISOString(),
+      });
       return new Response(
         JSON.stringify({
           error: "UNAUTHORIZED",
