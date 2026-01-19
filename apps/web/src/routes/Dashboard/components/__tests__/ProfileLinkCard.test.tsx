@@ -93,9 +93,40 @@ describe("ProfileLinkCard", () => {
       </MemoryRouter>,
     );
     expect(screen.getByText("Your Profile Link")).toBeInTheDocument();
+    // In tests, window.location.origin is mocked to "https://example.com"
+    // but since it's not localhost, it should use LANDING_URL
     expect(
       screen.getByDisplayValue("https://getonelink.io/test-user"),
     ).toBeInTheDocument();
+  });
+
+  it("uses localhost origin when on localhost", () => {
+    // Mock localhost
+    Object.defineProperty(window, "location", {
+      value: {
+        origin: "http://localhost:5173",
+        host: "localhost:5173",
+      },
+      writable: true,
+    });
+
+    render(
+      <MemoryRouter>
+        <ProfileLinkCard slug="test-user" isFree={false} />
+      </MemoryRouter>,
+    );
+    expect(
+      screen.getByDisplayValue("http://localhost:5173/test-user"),
+    ).toBeInTheDocument();
+
+    // Restore mock
+    Object.defineProperty(window, "location", {
+      value: {
+        origin: "https://example.com",
+        host: "example.com",
+      },
+      writable: true,
+    });
   });
 
   it.skip("copies link to clipboard", async () => {

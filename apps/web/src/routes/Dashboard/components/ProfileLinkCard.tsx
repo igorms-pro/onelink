@@ -27,9 +27,19 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
     return null;
   }
 
-  // Profiles should always be accessed on the landing domain (getonelink.io)
-  // not on the app domain (app.getonelink.io)
-  const profileUrl = `${LANDING_URL}/${slug}`;
+  // Determine the correct profile URL
+  // In production: use landing domain (getonelink.io)
+  // In localhost/dev: use current origin (localhost:5173)
+  const host = window.location?.host || "";
+  const isLocalhost =
+    host === "localhost" ||
+    host.startsWith("localhost:") ||
+    host === "127.0.0.1" ||
+    host.startsWith("127.0.0.1:");
+
+  const profileUrl = isLocalhost
+    ? `${window.location.origin}/${slug}`
+    : `${LANDING_URL}/${slug}`;
 
   const handleCopy = async () => {
     try {
