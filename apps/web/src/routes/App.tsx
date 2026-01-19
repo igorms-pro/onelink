@@ -4,12 +4,60 @@ import { useAuth } from "../lib/AuthProvider";
 import { OnboardingCarousel } from "../components/OnboardingCarousel";
 import { trackEvent, isPostHogLoaded } from "../lib/posthog";
 import { getOrCreateProfile } from "../lib/profile";
+import { isAppDomain, isLandingDomain } from "../lib/domain";
+import { APP_URL } from "../lib/constants";
 
 export default function App() {
   const { user, loading, checkingMFA } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [checkingProfile, setCheckingProfile] = useState(false);
+
+  // Redirect app routes from landing domain to app domain
+  useEffect(() => {
+    const host = window.location.host;
+    const pathname = location.pathname;
+
+    // List of routes that belong to landing page
+    const landingRoutes = [
+      "/",
+      "/features",
+      "/pricing",
+      "/privacy",
+      "/terms",
+      "/auth",
+    ];
+
+    // List of routes that should only be accessible on app domain
+    const appRoutes = ["/dashboard", "/settings", "/welcome", "/checkout"];
+
+    // If we're on landing domain and trying to access root or landing routes, redirect to landing
+    if (
+      isLandingDomain(host) &&
+      landingRoutes.includes(pathname) &&
+      pathname !== "/"
+    ) {
+      // These routes should be handled by landing page, but if we're here, redirect to landing
+      window.location.replace(`https://${host}${pathname}`);
+      return;
+    }
+
+    // If we're on landing domain and trying to access root, redirect to landing
+    if (isLandingDomain(host) && pathname === "/") {
+      window.location.replace(`https://${host}/`);
+      return;
+    }
+
+    // Check if current route is an app route
+    const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
+
+    // If we're on landing domain and trying to access an app route, redirect to app domain
+    if (isLandingDomain(host) && isAppRoute && !isAppDomain(host)) {
+      const redirectUrl = `${APP_URL}${pathname}${window.location.search}`;
+      window.location.replace(redirectUrl);
+      return;
+    }
+  }, [location.pathname, location.search]);
 
   useEffect(() => {
     // Send a test event when App component loads (only once on mount)
