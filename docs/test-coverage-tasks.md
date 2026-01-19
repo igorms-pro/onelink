@@ -1,456 +1,1024 @@
 # Plan de Tests - Fichiers avec < 70% de Couverture
 
-Ce document liste tous les fichiers nécessitant des tests pour améliorer la couverture de code.
-
-## 📊 Objectif
-Atteindre **74.23%** de couverture (seuil Codecov actuel: 71.42%)
+**Objectif**: Atteindre **≥74.23%** de couverture (actuellement: 71.42%)
 
 ---
 
-## ✅ Priorité HAUTE - Faciles à tester (Logique métier simple)
+## 📋 Structure de Distribution
 
-### `lib/` - Utilitaires et helpers
+Ce document est organisé en **PHASES** et **TÂCHES** pour faciliter la distribution entre plusieurs agents.
 
-#### `lib/onboarding.ts` - **10%** ⚠️ CRITIQUE
+Chaque **TÂCHE** est indépendante et peut être assignée à un agent différent.
+
+---
+
+## 🎯 Phase 1: Utilitaires Critiques `lib/` (Priorité MAXIMALE)
+
+Ces fichiers sont utilisés partout dans l'application. Les tester en premier améliorera la couverture globale.
+
+### TÂCHE 1.1: `lib/onboarding.ts` ⭐ FACILE
 - **Fichier**: `src/lib/onboarding.ts`
 - **Couverture actuelle**: 10%
 - **Lignes non couvertes**: 4-15
-- **Difficulté**: ⭐ Facile
-- **Description**: Fonctions simples de gestion localStorage pour l'onboarding
-- **Tests à ajouter**:
-  - `shouldShowOnboarding()` - retourne false si window undefined
-  - `shouldShowOnboarding()` - retourne true si localStorage n'a pas la clé
-  - `shouldShowOnboarding()` - retourne false si localStorage a la clé à "true"
-  - `setOnboardingCompleted()` - set localStorage
-  - `setOnboardingIncomplete()` - remove localStorage
-  - Tests avec window undefined (SSR)
+- **Difficulté**: ⭐ Facile (pas de dépendances externes)
+- **Temps estimé**: 15-20 min
 
-#### `lib/posthog-events.ts` - **9.09%** ⚠️ CRITIQUE
+**Tests à créer**: `src/lib/__tests__/onboarding.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("onboarding.ts", () => {
+  // Test shouldShowOnboarding()
+  - Retourne false si window est undefined (SSR)
+  - Retourne true si localStorage n'a pas la clé
+  - Retourne false si localStorage a la clé à "true"
+  
+  // Test setOnboardingCompleted()
+  - Set localStorage avec la bonne clé
+  - Ne fait rien si window est undefined
+  
+  // Test setOnboardingIncomplete()
+  - Remove la clé du localStorage
+  - Ne fait rien si window est undefined
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester toutes les fonctions
+- [ ] Tester les cas SSR (window undefined)
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for lib/onboarding.ts"
+
+---
+
+### TÂCHE 1.2: `lib/posthog-events.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/lib/posthog-events.ts`
 - **Couverture actuelle**: 9.09%
 - **Lignes non couvertes**: 10-14, 27-133
 - **Difficulté**: ⭐⭐ Moyen (nécessite mock PostHog)
-- **Description**: Helpers pour tracking d'événements PostHog
-- **Tests à ajouter**:
-  - `trackUserSignedUp()` - vérifie identifyUser et trackEvent
-  - `trackUserSignedIn()` - vérifie identifyUser et trackEvent
-  - `trackUserSignedOut()` - vérifie trackEvent et resetUser
-  - `trackUserDeletedAccount()` - vérifie trackEvent et resetUser
-  - `trackProfileCreated()` - vérifie trackEvent avec bonnes propriétés
-  - `trackProfileViewed()` - vérifie trackEvent avec isOwner
-  - Tous les autres événements de tracking
+- **Temps estimé**: 30-40 min
 
-#### `lib/posthog.ts` - **18.86%**
+**Tests à créer**: `src/lib/__tests__/posthog-events.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("posthog-events.ts", () => {
+  // Mock PostHog avant chaque test
+  
+  // User Lifecycle Events
+  - trackUserSignedUp() - vérifie identifyUser + trackEvent
+  - trackUserSignedIn() - vérifie identifyUser + trackEvent
+  - trackUserSignedOut() - vérifie trackEvent + resetUser
+  - trackUserDeletedAccount() - vérifie trackEvent + resetUser
+  
+  // Profile Actions
+  - trackProfileCreated() - vérifie trackEvent avec bonnes propriétés
+  - trackProfileViewed() - vérifie trackEvent avec isOwner
+  
+  // Link Actions
+  - trackLinkCreated() - vérifie trackEvent
+  - trackLinkDeleted() - vérifie trackEvent
+  - trackLinkClicked() - vérifie trackEvent
+  
+  // Drop Actions
+  - trackDropCreated() - vérifie trackEvent
+  - trackDropDeleted() - vérifie trackEvent
+  - trackDropSubmissionReceived() - vérifie trackEvent
+  
+  // Tous les autres événements...
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock PostHog (identifyUser, trackEvent, resetUser)
+- [ ] Tester tous les événements de tracking
+- [ ] Vérifier les propriétés passées aux événements
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for lib/posthog-events.ts"
+
+---
+
+### TÂCHE 1.3: `lib/posthog.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/lib/posthog.ts`
 - **Couverture actuelle**: 18.86%
 - **Lignes non couvertes**: 54-183, 201-207
 - **Difficulté**: ⭐⭐ Moyen (nécessite mock PostHog)
-- **Description**: Initialisation et configuration PostHog
-- **Tests à ajouter**:
-  - `initPostHog()` - sans API key (warning)
-  - `initPostHog()` - avec API key (initialise)
-  - `isPostHogLoaded()` - retourne true/false
-  - `trackEvent()` - avec queue avant chargement
-  - `trackEvent()` - après chargement
-  - `identifyUser()` - avec/sans propriétés
-  - `resetUser()` - reset PostHog
+- **Temps estimé**: 40-50 min
 
-#### `lib/profile.ts` - **44.82%**
+**Tests à créer**: `src/lib/__tests__/posthog.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("posthog.ts", () => {
+  // initPostHog()
+  - Sans API key - affiche warning, ne s'initialise pas
+  - Avec API key - s'initialise correctement
+  - Avec host personnalisé
+  - Avec environment personnalisé
+  
+  // isPostHogLoaded()
+  - Retourne false avant init
+  - Retourne true après init
+  
+  // trackEvent()
+  - Avec queue avant chargement (ajoute à queue)
+  - Après chargement (appelle directement PostHog)
+  - Queue max size (50 événements)
+  
+  // identifyUser()
+  - Avec propriétés
+  - Sans propriétés
+  
+  // resetUser()
+  - Reset PostHog user
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock posthog-js
+- [ ] Tester initPostHog avec/sans API key
+- [ ] Tester queue d'événements
+- [ ] Tester identifyUser et resetUser
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for lib/posthog.ts"
+
+---
+
+### TÂCHE 1.4: `lib/profile.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/lib/profile.ts`
 - **Couverture actuelle**: 44.82%
 - **Lignes non couvertes**: 50-64, 78, 131-135
 - **Difficulté**: ⭐⭐ Moyen (nécessite mock Supabase)
-- **Description**: Fonctions de gestion de profil
-- **Tests à ajouter**:
-  - `getOrCreateProfile()` - création si n'existe pas
-  - `getOrCreateProfile()` - retourne existant
-  - `getOrCreateProfile()` - gestion d'erreur
-  - `getPlanLinksLimit()` - free vs pro
-  - `getPlanDropsLimit()` - free vs pro
-  - Tests des fonctions deprecated
+- **Temps estimé**: 40-50 min
 
-#### `lib/drops/getDrops.ts` - **36.36%**
+**Tests à créer**: `src/lib/__tests__/profile.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("profile.ts", () => {
+  // Mock Supabase avant chaque test
+  
+  // getOrCreateProfile()
+  - Création si profil n'existe pas
+  - Retourne profil existant
+  - Gestion d'erreur Supabase
+  
+  // getPlanLinksLimit()
+  - Retourne 4 pour "free"
+  - Retourne Infinity pour "pro"
+  - Retourne 4 pour autres plans
+  
+  // getPlanDropsLimit()
+  - Retourne 2 pour "free"
+  - Retourne Infinity pour "pro"
+  - Retourne 2 pour autres plans
+  
+  // Fonctions deprecated (si encore utilisées)
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase (from, select, insert)
+- [ ] Tester getOrCreateProfile (création + récupération)
+- [ ] Tester getPlanLinksLimit et getPlanDropsLimit
+- [ ] Tester gestion d'erreurs
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for lib/profile.ts"
+
+---
+
+### TÂCHE 1.5: `lib/drops/getDrops.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/lib/drops/getDrops.ts`
 - **Couverture actuelle**: 36.36%
 - **Lignes non couvertes**: 10-29
 - **Difficulté**: ⭐⭐ Moyen (nécessite mock Supabase)
-- **Description**: Récupération des drops
-- **Tests à ajouter**:
-  - `getDrops()` - récupération réussie
-  - `getDrops()` - gestion d'erreur
-  - `getDrops()` - filtrage par profile_id
+- **Temps estimé**: 20-30 min
+
+**Tests à créer**: `src/lib/drops/__tests__/getDrops.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("getDrops.ts", () => {
+  // Mock Supabase
+  
+  // getDrops()
+  - Récupération réussie avec profile_id
+  - Récupération vide (pas de drops)
+  - Gestion d'erreur Supabase
+  - Filtrage par profile_id correct
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester récupération réussie
+- [ ] Tester cas vide
+- [ ] Tester gestion d'erreurs
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for lib/drops/getDrops.ts"
 
 ---
 
-### `routes/` - Composants de routes
+## 🎯 Phase 2: Routes Principales (Priorité HAUTE)
 
-#### `routes/Auth.tsx` - **46.57%** ⚠️ IMPORTANT
+### TÂCHE 2.1: `routes/Auth.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
 - **Fichier**: `src/routes/Auth.tsx`
 - **Couverture actuelle**: 46.57%
 - **Lignes non couvertes**: 83-196, 299-365
 - **Difficulté**: ⭐⭐⭐ Moyen-Élevé (nécessite mocks OAuth, Supabase)
-- **Description**: Page d'authentification
-- **Tests à ajouter**:
-  - Affichage du formulaire email
-  - Soumission email (succès/erreur)
-  - Bouton Google OAuth
-  - Bouton Facebook OAuth
-  - Gestion erreurs OAuth dans URL
-  - Affichage username pending
-  - Lien vers onboarding
+- **Temps estimé**: 60-90 min
 
-#### `routes/Dashboard/components/InboxTab.tsx` - **58.87%**
-- **Fichier**: `src/routes/Dashboard/components/InboxTab.tsx`
-- **Couverture actuelle**: 58.87%
-- **Lignes non couvertes**: 107, 213-224, 466
-- **Difficulté**: ⭐⭐⭐ Moyen-Élevé (composant complexe)
-- **Description**: Onglet inbox du dashboard
-- **Tests à ajouter**:
-  - Affichage submissions
-  - Marquer comme lu
-  - Supprimer submission
-  - Filtres
-  - États vides
+**Tests à créer**: `src/routes/__tests__/Auth.test.tsx` (existe déjà, à compléter)
 
-#### `routes/Dashboard/components/ProfileLinkCard.tsx` - **58.33%**
-- **Fichier**: `src/routes/Dashboard/components/ProfileLinkCard.tsx`
-- **Couverture actuelle**: 58.33%
-- **Lignes non couvertes**: 32-38, 48-50
-- **Difficulté**: ⭐⭐ Moyen
-- **Description**: Carte de profil dans dashboard
-- **Tests à ajouter**:
-  - Affichage du profil
-  - Clic sur la carte
-  - États de chargement
+**Tests à ajouter**:
+```typescript
+describe("Auth.tsx", () => {
+  // Tests existants: vérifier ce qui manque
+  
+  // Formulaire email
+  - Soumission email réussie (toast success)
+  - Soumission email erreur (toast error)
+  - Validation email (required)
+  - Reset du formulaire après succès
+  
+  // OAuth Google
+  - Clic bouton Google (appelle signInWithOAuth)
+  - Gestion erreur OAuth
+  - Gestion annulation OAuth
+  
+  // OAuth Facebook
+  - Clic bouton Facebook
+  - Gestion erreur OAuth
+  
+  // Username pending
+  - Affichage si username dans URL
+  - Affichage si username dans localStorage
+  - Stockage username dans localStorage
+  
+  // Erreurs OAuth dans URL
+  - Affichage erreur si ?error= dans URL
+  - Nettoyage URL après affichage erreur
+  
+  // Lien onboarding
+  - Clic sur "View onboarding"
+})
+```
 
-#### `routes/Pricing/components/PricingFAQ.tsx` - **53.84%**
+**Checklist**:
+- [ ] Lire les tests existants
+- [ ] Identifier les lignes non couvertes
+- [ ] Ajouter tests manquants
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: improve coverage for routes/Auth.tsx"
+
+---
+
+### TÂCHE 2.2: `routes/Pricing/components/PricingFAQ.tsx` ⭐ FACILE
 - **Fichier**: `src/routes/Pricing/components/PricingFAQ.tsx`
 - **Couverture actuelle**: 53.84%
 - **Lignes non couvertes**: 17-23, 40
 - **Difficulté**: ⭐ Facile
-- **Description**: FAQ de la page pricing
-- **Tests à ajouter**:
-  - Affichage des questions
-  - Expansion/collapse des réponses
-  - Toutes les questions/réponses
+- **Temps estimé**: 20-30 min
 
-#### `routes/Pricing/components/PricingHeader.tsx` - **50%**
+**Tests à créer**: `src/routes/Pricing/components/__tests__/PricingFAQ.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("PricingFAQ.tsx", () => {
+  - Affichage de toutes les questions
+  - Expansion d'une question (clic)
+  - Collapse d'une question (re-clic)
+  - Plusieurs questions peuvent être ouvertes en même temps
+  - Affichage des réponses
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester affichage FAQ
+- [ ] Tester expansion/collapse
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for PricingFAQ.tsx"
+
+---
+
+### TÂCHE 2.3: `routes/Pricing/components/PricingHeader.tsx` ⭐ FACILE
 - **Fichier**: `src/routes/Pricing/components/PricingHeader.tsx`
 - **Couverture actuelle**: 50%
 - **Lignes non couvertes**: 47-59
 - **Difficulté**: ⭐ Facile
-- **Description**: En-tête de la page pricing
-- **Tests à ajouter**:
+- **Temps estimé**: 15-20 min
+
+**Tests à créer**: `src/routes/Pricing/components/__tests__/PricingHeader.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("PricingHeader.tsx", () => {
   - Affichage du titre
   - Affichage de la description
-  - Responsive
+  - Responsive (mobile/desktop)
+})
+```
 
-#### `routes/Pricing/hooks/usePricingPlans.ts` - **57.14%**
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester affichage
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for PricingHeader.tsx"
+
+---
+
+### TÂCHE 2.4: `routes/Pricing/hooks/usePricingPlans.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/routes/Pricing/hooks/usePricingPlans.ts`
 - **Couverture actuelle**: 57.14%
 - **Lignes non couvertes**: 44-57, 67-74
 - **Difficulté**: ⭐⭐ Moyen
-- **Description**: Hook pour récupérer les plans pricing
-- **Tests à ajouter**:
-  - Récupération des plans
+- **Temps estimé**: 30-40 min
+
+**Tests à créer**: `src/routes/Pricing/hooks/__tests__/usePricingPlans.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("usePricingPlans.ts", () => {
+  - Récupération des plans (mensuel)
+  - Récupération des plans (annuel)
+  - Changement de période
+  - États de chargement
   - Gestion d'erreur
-  - États de chargement
-  - Changement de période (mensuel/annuel)
+  - Calcul des prix avec remise annuelle
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock les données de plans
+- [ ] Tester récupération plans
+- [ ] Tester changement période
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for usePricingPlans.ts"
 
 ---
 
-## ⚠️ Priorité MOYENNE - Tests moyens (Composants UI)
+## 🎯 Phase 3: Dashboard Components (Priorité MOYENNE)
 
-### `components/` - Composants réutilisables
+### TÂCHE 3.1: `routes/Dashboard/components/InboxTab.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
+- **Fichier**: `src/routes/Dashboard/components/InboxTab.tsx`
+- **Couverture actuelle**: 58.87%
+- **Lignes non couvertes**: 107, 213-224, 466
+- **Difficulté**: ⭐⭐⭐ Moyen-Élevé (composant complexe)
+- **Temps estimé**: 60-90 min
 
-#### `components/ProfileEditor/ProfileFormFields.tsx` - **28.57%**
-- **Fichier**: `src/components/ProfileEditor/ProfileFormFields.tsx`
-- **Couverture actuelle**: 28.57%
-- **Lignes non couvertes**: 43-48
-- **Difficulté**: ⭐⭐ Moyen
-- **Description**: Champs du formulaire de profil
-- **Tests à ajouter**:
-  - Validation des champs
-  - Soumission du formulaire
-  - Gestion d'erreurs
+**Tests à créer**: `src/routes/Dashboard/components/__tests__/InboxTab.test.tsx` (existe déjà, à compléter)
 
-#### `components/ProfileEditor/index.tsx` - **66.66%**
-- **Fichier**: `src/components/ProfileEditor/index.tsx`
-- **Couverture actuelle**: 66.66%
-- **Lignes non couvertes**: 30-33, 41, 50-58
-- **Difficulté**: ⭐⭐ Moyen
-- **Description**: Éditeur de profil
-- **Tests à ajouter**:
-  - Affichage du formulaire
-  - Sauvegarde réussie
-  - Gestion d'erreurs
-  - Validation
+**Tests à ajouter**:
+```typescript
+describe("InboxTab.tsx", () => {
+  // Vérifier tests existants et ajouter:
+  
+  - Affichage submissions
+  - Marquer comme lu (ligne 107)
+  - Supprimer submission (lignes 213-224)
+  - Filtres (ligne 466)
+  - États vides
+  - Gestion erreurs
+})
+```
 
-#### `components/onboarding/hooks/useOnboardingCarousel.ts` - **60%**
-- **Fichier**: `src/components/onboarding/hooks/useOnboardingCarousel.ts`
-- **Couverture actuelle**: 60%
-- **Lignes non couvertes**: 13-17
-- **Difficulté**: ⭐ Facile
-- **Description**: Hook pour carrousel onboarding
-- **Tests à ajouter**:
-  - Navigation entre slides
-  - État actuel
-  - Callback onComplete
-
-#### `components/onboarding/components/OnboardingDots.tsx` - **66.66%`
-- **Fichier**: `src/components/onboarding/components/OnboardingDots.tsx`
-- **Couverture actuelle**: 66.66%
-- **Lignes non couvertes**: 17
-- **Difficulté**: ⭐ Facile
-- **Description**: Indicateurs de slide onboarding
-- **Tests à ajouter**:
-  - Affichage des dots
-  - Dots actifs/inactifs
+**Checklist**:
+- [ ] Lire tests existants
+- [ ] Identifier lignes non couvertes
+- [ ] Ajouter tests manquants
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: improve coverage for InboxTab.tsx"
 
 ---
 
-### `routes/Dashboard/components/ContentTab/` - Modals
+### TÂCHE 3.2: `routes/Dashboard/components/ProfileLinkCard.tsx` ⭐⭐ MOYEN
+- **Fichier**: `src/routes/Dashboard/components/ProfileLinkCard.tsx`
+- **Couverture actuelle**: 58.33%
+- **Lignes non couvertes**: 32-38, 48-50
+- **Difficulté**: ⭐⭐ Moyen
+- **Temps estimé**: 30-40 min
 
-#### `routes/Dashboard/components/ContentTab/EditDropModal.tsx` - **55.55%**
-- **Fichier**: `src/routes/Dashboard/components/ContentTab/EditDropModal.tsx`
-- **Couverture actuelle**: 55.55%
-- **Lignes non couvertes**: 63, 112, 131, 151
-- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Modal d'édition de drop
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Édition des champs
-  - Sauvegarde
-  - Gestion d'erreurs
+**Tests à créer**: `src/routes/Dashboard/components/__tests__/ProfileLinkCard.test.tsx` (existe déjà, à compléter)
 
-#### `routes/Dashboard/components/ContentTab/EditLinkModal.tsx` - **47.36%**
-- **Fichier**: `src/routes/Dashboard/components/ContentTab/EditLinkModal.tsx`
-- **Couverture actuelle**: 47.36%
-- **Lignes non couvertes**: 3, 47-54, 85, 105
-- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Modal d'édition de lien
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Édition des champs
-  - Sauvegarde
-  - Validation URL
-
-#### `routes/Dashboard/components/ContentTab/DeleteDropModal.tsx` - **29.78%**
-- **Fichier**: `src/routes/Dashboard/components/ContentTab/DeleteDropModal.tsx`
-- **Couverture actuelle**: 29.78%
-- **Lignes non couvertes**: 10-120, 165-200
-- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Modal de suppression de drop
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Confirmation suppression
-  - Gestion d'erreurs
+**Tests à ajouter**:
+```typescript
+describe("ProfileLinkCard.tsx", () => {
+  // Vérifier tests existants et ajouter:
+  
+  - Affichage du profil (lignes 32-38)
+  - Clic sur la carte (lignes 48-50)
   - États de chargement
+})
+```
 
-#### `routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx` - **31.70%`
-- **Fichier**: `src/routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx`
-- **Couverture actuelle**: 31.70%
-- **Lignes non couvertes**: 96-102, 122, 142
-- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Modal de suppression de lien
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Confirmation suppression
-  - Gestion d'erreurs
+**Checklist**:
+- [ ] Lire tests existants
+- [ ] Ajouter tests manquants
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: improve coverage for ProfileLinkCard.tsx"
 
-#### `routes/Dashboard/components/ContentTab/ShareDropModal.tsx` - **36.36%**
+---
+
+### TÂCHE 3.3: `routes/Dashboard/components/ContentTab/ShareDropModal.tsx` ⭐⭐ MOYEN
 - **Fichier**: `src/routes/Dashboard/components/ContentTab/ShareDropModal.tsx`
 - **Couverture actuelle**: 36.36%
 - **Lignes non couvertes**: 30-36
 - **Difficulté**: ⭐⭐ Moyen
-- **Description**: Modal de partage de drop
-- **Tests à ajouter**:
+- **Temps estimé**: 30-40 min
+
+**Tests à créer**: `src/routes/Dashboard/components/ContentTab/__tests__/ShareDropModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("ShareDropModal.tsx", () => {
+  - Ouverture/fermeture modal
   - Affichage du lien de partage
-  - Copie du lien
-  - QR code
+  - Copie du lien (clipboard)
+  - Affichage QR code
+  - Gestion erreur copie
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock clipboard API
+- [ ] Tester ouverture/fermeture
+- [ ] Tester copie lien
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for ShareDropModal.tsx"
 
 ---
 
-### `routes/Settings/` - Paramètres
+## 🎯 Phase 4: Dashboard Modals (Priorité MOYENNE)
 
-#### `routes/Settings/components/ChangePasswordModal.tsx` - **22.58%**
+### TÂCHE 4.1: `routes/Dashboard/components/ContentTab/EditDropModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
+- **Fichier**: `src/routes/Dashboard/components/ContentTab/EditDropModal.tsx`
+- **Couverture actuelle**: 55.55%
+- **Lignes non couvertes**: 63, 112, 131, 151
+- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Dashboard/components/ContentTab/__tests__/EditDropModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("EditDropModal.tsx", () => {
+  - Ouverture modal avec données existantes
+  - Fermeture modal
+  - Édition des champs (nom, description, etc.)
+  - Sauvegarde réussie
+  - Sauvegarde erreur
+  - Validation des champs
+  - États de chargement
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester ouverture/fermeture
+- [ ] Tester édition champs
+- [ ] Tester sauvegarde
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for EditDropModal.tsx"
+
+---
+
+### TÂCHE 4.2: `routes/Dashboard/components/ContentTab/EditLinkModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
+- **Fichier**: `src/routes/Dashboard/components/ContentTab/EditLinkModal.tsx`
+- **Couverture actuelle**: 47.36%
+- **Lignes non couvertes**: 3, 47-54, 85, 105
+- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Dashboard/components/ContentTab/__tests__/EditLinkModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("EditLinkModal.tsx", () => {
+  - Ouverture modal avec données existantes
+  - Fermeture modal
+  - Édition des champs (titre, URL, etc.)
+  - Validation URL
+  - Sauvegarde réussie
+  - Sauvegarde erreur
+  - États de chargement
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester ouverture/fermeture
+- [ ] Tester édition champs
+- [ ] Tester validation URL
+- [ ] Tester sauvegarde
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for EditLinkModal.tsx"
+
+---
+
+### TÂCHE 4.3: `routes/Dashboard/components/ContentTab/DeleteDropModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
+- **Fichier**: `src/routes/Dashboard/components/ContentTab/DeleteDropModal.tsx`
+- **Couverture actuelle**: 29.78%
+- **Lignes non couvertes**: 10-120, 165-200
+- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Dashboard/components/ContentTab/__tests__/DeleteDropModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("DeleteDropModal.tsx", () => {
+  - Ouverture modal
+  - Fermeture modal (annulation)
+  - Confirmation suppression
+  - Suppression réussie
+  - Suppression erreur
+  - États de chargement
+  - Message de confirmation
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester ouverture/fermeture
+- [ ] Tester confirmation
+- [ ] Tester suppression
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for DeleteDropModal.tsx"
+
+---
+
+### TÂCHE 4.4: `routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
+- **Fichier**: `src/routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx`
+- **Couverture actuelle**: 31.70%
+- **Lignes non couvertes**: 96-102, 122, 142
+- **Difficulté**: ⭐⭐⭐ Moyen-Élevé
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Dashboard/components/ContentTab/__tests__/DeleteLinkModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("DeleteLinkModal.tsx", () => {
+  - Ouverture modal
+  - Fermeture modal (annulation)
+  - Confirmation suppression
+  - Suppression réussie
+  - Suppression erreur
+  - États de chargement
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester ouverture/fermeture
+- [ ] Tester confirmation
+- [ ] Tester suppression
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for DeleteLinkModal.tsx"
+
+---
+
+## 🎯 Phase 5: Settings Components (Priorité MOYENNE)
+
+### TÂCHE 5.1: `routes/Settings/components/ChangePasswordModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
 - **Fichier**: `src/routes/Settings/components/ChangePasswordModal.tsx`
 - **Couverture actuelle**: 22.58%
 - **Lignes non couvertes**: 17, 122-127, 198
 - **Difficulté**: ⭐⭐⭐ Moyen-Élevé (nécessite mock Supabase auth)
-- **Description**: Modal de changement de mot de passe
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Validation des champs
-  - Changement réussi
-  - Gestion d'erreurs
-  - Validation mot de passe
+- **Temps estimé**: 60-90 min
 
-#### `routes/Settings/components/DataExportModal.tsx` - **47.91%`
+**Tests à créer**: `src/routes/Settings/components/__tests__/ChangePasswordModal.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("ChangePasswordModal.tsx", () => {
+  - Ouverture/fermeture modal
+  - Validation des champs (ancien mot de passe requis)
+  - Validation nouveau mot de passe (force, longueur)
+  - Changement réussi
+  - Changement erreur (mauvais ancien mot de passe)
+  - Changement erreur (autre erreur)
+  - États de chargement
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase auth (updateUser)
+- [ ] Tester ouverture/fermeture
+- [ ] Tester validation
+- [ ] Tester changement réussi
+- [ ] Tester gestion erreurs
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for ChangePasswordModal.tsx"
+
+---
+
+### TÂCHE 5.2: `routes/Settings/components/DataExportModal.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
 - **Fichier**: `src/routes/Settings/components/DataExportModal.tsx`
 - **Couverture actuelle**: 47.91%
 - **Lignes non couvertes**: 76, 81-108, 149
 - **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Modal d'export de données
-- **Tests à ajouter**:
-  - Ouverture/fermeture modal
-  - Sélection format (JSON/CSV)
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Settings/components/__tests__/DataExportModal.test.tsx` (existe déjà, à compléter)
+
+**Tests à ajouter**:
+```typescript
+describe("DataExportModal.tsx", () => {
+  // Vérifier tests existants et ajouter:
+  
+  - Ouverture/fermeture modal (ligne 76)
+  - Sélection format JSON/CSV (lignes 81-108)
   - Sélection données à exporter
   - Déclenchement export
-  - États de progression
+  - États de progression (ligne 149)
+})
+```
 
-#### `routes/Settings/components/DataExport/useDataExport.ts` - **31.25%`
+**Checklist**:
+- [ ] Lire tests existants
+- [ ] Identifier lignes non couvertes
+- [ ] Ajouter tests manquants
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: improve coverage for DataExportModal.tsx"
+
+---
+
+### TÂCHE 5.3: `routes/Settings/components/DataExport/useDataExport.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/routes/Settings/components/DataExport/useDataExport.ts`
 - **Couverture actuelle**: 31.25%
 - **Lignes non couvertes**: 28-56, 63-70, 79-80
 - **Difficulté**: ⭐⭐ Moyen
-- **Description**: Hook pour export de données
-- **Tests à ajouter**:
-  - Export JSON
-  - Export CSV
+- **Temps estimé**: 40-50 min
+
+**Tests à créer**: `src/routes/Settings/components/DataExport/__tests__/useDataExport.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("useDataExport.ts", () => {
+  - Export JSON avec toutes les données
+  - Export JSON avec données sélectionnées
+  - Export CSV avec toutes les données
+  - Export CSV avec données sélectionnées
   - Gestion d'erreurs
   - États de chargement
-  - Filtrage des données
+  - Formatage des données pour CSV
+})
+```
 
-#### `routes/Settings/components/DataExport/DataExportReadyState.tsx` - **33.33%`
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock les données utilisateur
+- [ ] Tester export JSON
+- [ ] Tester export CSV
+- [ ] Tester filtrage données
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for useDataExport.ts"
+
+---
+
+### TÂCHE 5.4: `routes/Settings/components/DataExport/DataExportReadyState.tsx` ⭐ FACILE
 - **Fichier**: `src/routes/Settings/components/DataExport/DataExportReadyState.tsx`
 - **Couverture actuelle**: 33.33%
 - **Lignes non couvertes**: 15-21
 - **Difficulté**: ⭐ Facile
-- **Description**: État "prêt" de l'export
-- **Tests à ajouter**:
-  - Affichage du message
-  - Bouton de téléchargement
+- **Temps estimé**: 15-20 min
 
-#### `routes/Settings/components/ApiIntegrationsSection.tsx` - **50%**
+**Tests à créer**: `src/routes/Settings/components/DataExport/__tests__/DataExportReadyState.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("DataExportReadyState.tsx", () => {
+  - Affichage du message "prêt"
+  - Bouton de téléchargement visible
+  - Clic sur téléchargement déclenche download
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester affichage
+- [ ] Tester téléchargement
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for DataExportReadyState.tsx"
+
+---
+
+### TÂCHE 5.5: `routes/Settings/components/ApiIntegrationsSection.tsx` ⭐⭐ MOYEN
 - **Fichier**: `src/routes/Settings/components/ApiIntegrationsSection.tsx`
 - **Couverture actuelle**: 50%
 - **Lignes non couvertes**: 24, 64-79
 - **Difficulté**: ⭐⭐ Moyen
-- **Description**: Section intégrations API
-- **Tests à ajouter**:
+- **Temps estimé**: 30-40 min
+
+**Tests à créer**: `src/routes/Settings/components/__tests__/ApiIntegrationsSection.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("ApiIntegrationsSection.tsx", () => {
   - Affichage de la section
   - Affichage de la clé API
-  - Copie de la clé
+  - Copie de la clé (clipboard)
   - Régénération de la clé
+  - Gestion erreurs
+})
+```
 
-#### `routes/Settings/pages/CustomDomainPage.tsx` - **60%**
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock clipboard API
+- [ ] Tester affichage clé
+- [ ] Tester copie
+- [ ] Tester régénération
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for ApiIntegrationsSection.tsx"
+
+---
+
+### TÂCHE 5.6: `routes/Settings/pages/CustomDomainPage.tsx` ⭐⭐⭐ MOYEN-ÉLEVÉ
 - **Fichier**: `src/routes/Settings/pages/CustomDomainPage.tsx`
 - **Couverture actuelle**: 60%
 - **Lignes non couvertes**: 35-69
 - **Difficulté**: ⭐⭐⭐ Moyen-Élevé
-- **Description**: Page de gestion des domaines personnalisés
-- **Tests à ajouter**:
-  - Affichage des domaines
+- **Temps estimé**: 60-90 min
+
+**Tests à créer**: `src/routes/Settings/pages/__tests__/CustomDomainPage.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("CustomDomainPage.tsx", () => {
+  - Affichage des domaines existants
   - Ajout d'un domaine
   - Suppression d'un domaine
   - Validation du domaine
   - États de chargement
+  - Gestion erreurs
+})
+```
 
-#### `routes/Settings/pages/CustomDomain/useCustomDomains.ts` - **32.35%`
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock useCustomDomains hook
+- [ ] Tester affichage domaines
+- [ ] Tester ajout domaine
+- [ ] Tester suppression domaine
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for CustomDomainPage.tsx"
+
+---
+
+### TÂCHE 5.7: `routes/Settings/pages/CustomDomain/useCustomDomains.ts` ⭐⭐ MOYEN
 - **Fichier**: `src/routes/Settings/pages/CustomDomain/useCustomDomains.ts`
 - **Couverture actuelle**: 32.35%
 - **Lignes non couvertes**: 74-113, 120-141
 - **Difficulté**: ⭐⭐ Moyen
-- **Description**: Hook pour gestion domaines personnalisés
-- **Tests à ajouter**:
+- **Temps estimé**: 40-50 min
+
+**Tests à créer**: `src/routes/Settings/pages/CustomDomain/__tests__/useCustomDomains.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("useCustomDomains.ts", () => {
   - Récupération des domaines
   - Ajout d'un domaine
   - Suppression d'un domaine
   - Gestion d'erreurs
+  - États de chargement
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Mock Supabase
+- [ ] Tester récupération
+- [ ] Tester ajout
+- [ ] Tester suppression
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for useCustomDomains.ts"
 
 ---
 
-## 🔴 Priorité BASSE - Tests complexes ou à exclure
+## 🎯 Phase 6: Components & Hooks (Priorité BASSE)
 
-### Fichiers à EXCLURE (difficiles ou non critiques)
+### TÂCHE 6.1: `components/ProfileEditor/ProfileFormFields.tsx` ⭐⭐ MOYEN
+- **Fichier**: `src/components/ProfileEditor/ProfileFormFields.tsx`
+- **Couverture actuelle**: 28.57%
+- **Lignes non couvertes**: 43-48
+- **Difficulté**: ⭐⭐ Moyen
+- **Temps estimé**: 30-40 min
 
-#### ❌ Fichiers de traduction JSON (0%)
-- `lib/locales/*.json` - Fichiers de traduction, pas besoin de tests unitaires
+**Tests à créer**: `src/components/ProfileEditor/__tests__/ProfileFormFields.test.tsx`
 
-#### ❌ Composants UI complexes (0%)
-- `components/ui/drawer.tsx` - Composant UI de base, déjà testé indirectement
-- `components/ui/dialog.tsx` - Composant UI de base (70% déjà)
+**Tests à ajouter**:
+```typescript
+describe("ProfileFormFields.tsx", () => {
+  - Affichage des champs
+  - Validation des champs
+  - Soumission du formulaire
+  - Gestion d'erreurs
+})
+```
 
-#### ❌ Utilitaires non critiques (0%)
-- `lib/billing/*` - Fonctions Stripe, tests d'intégration plutôt que unitaires
-- `lib/drops/getDropFiles.ts`, `getDropOwner.ts`, `uploadFiles.ts` - Tests E2E plutôt
-- `lib/utils/socialDetection.ts` - Utilitaires simples, faible priorité
-- `lib/sessionTracking.ts` - Tracking, tests d'intégration plutôt
-
-#### ❌ Composants complexes (0%)
-- `routes/Dashboard/components/DashboardHeader.tsx` - Composant simple, faible priorité
-- `routes/Dashboard/components/OwnerFileUpload.tsx` - Upload fichiers, tests E2E
-- `routes/Settings/components/ChangePasswordInput.tsx` - Composant simple
-- `routes/Settings/pages/CustomDomain/*` (sauf useCustomDomains.ts) - Composants UI simples
-- `routes/Settings/pages/SessionsPage/components/SessionHistoryList.tsx` - Composant simple
-
-#### ❌ TwoFactor - Tests complexes (15-52%)
-- `routes/Settings/pages/TwoFactor/*` - Tests MFA complexes, nécessitent setup Supabase MFA réel
-- **Note**: Ces fichiers nécessitent des tests d'intégration plutôt que unitaires
-
-#### ❌ Composants Profile (5.26%)
-- `routes/Profile/components/ProfileLanguageToggleButton.tsx` - **5.26%**
-- **Difficulté**: ⭐⭐⭐ Élevé (nécessite i18n setup complet)
-- **Note**: Peut être testé mais complexe
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester validation
+- [ ] Tester soumission
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for ProfileFormFields.tsx"
 
 ---
 
-## 📋 Checklist par Agent
+### TÂCHE 6.2: `components/ProfileEditor/index.tsx` ⭐⭐ MOYEN
+- **Fichier**: `src/components/ProfileEditor/index.tsx`
+- **Couverture actuelle**: 66.66%
+- **Lignes non couvertes**: 30-33, 41, 50-58
+- **Difficulté**: ⭐⭐ Moyen
+- **Temps estimé**: 40-50 min
 
-### Agent 1 - Utilitaires `lib/`
-- [ ] `lib/onboarding.ts` (10%)
-- [ ] `lib/posthog-events.ts` (9.09%)
-- [ ] `lib/posthog.ts` (18.86%)
-- [ ] `lib/profile.ts` (44.82%)
-- [ ] `lib/drops/getDrops.ts` (36.36%)
+**Tests à créer**: `src/components/ProfileEditor/__tests__/index.test.tsx`
 
-### Agent 2 - Routes principales
-- [ ] `routes/Auth.tsx` (46.57%)
-- [ ] `routes/Pricing/components/PricingFAQ.tsx` (53.84%)
-- [ ] `routes/Pricing/components/PricingHeader.tsx` (50%)
-- [ ] `routes/Pricing/hooks/usePricingPlans.ts` (57.14%)
+**Tests à ajouter**:
+```typescript
+describe("ProfileEditor/index.tsx", () => {
+  - Affichage du formulaire
+  - Sauvegarde réussie
+  - Gestion d'erreurs
+  - Validation
+})
+```
 
-### Agent 3 - Dashboard Components
-- [ ] `routes/Dashboard/components/InboxTab.tsx` (58.87%)
-- [ ] `routes/Dashboard/components/ProfileLinkCard.tsx` (58.33%)
-- [ ] `routes/Dashboard/components/ContentTab/ShareDropModal.tsx` (36.36%)
-
-### Agent 4 - Dashboard Modals
-- [ ] `routes/Dashboard/components/ContentTab/EditDropModal.tsx` (55.55%)
-- [ ] `routes/Dashboard/components/ContentTab/EditLinkModal.tsx` (47.36%)
-- [ ] `routes/Dashboard/components/ContentTab/DeleteDropModal.tsx` (29.78%)
-- [ ] `routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx` (31.70%)
-
-### Agent 5 - Settings Components
-- [ ] `routes/Settings/components/ChangePasswordModal.tsx` (22.58%)
-- [ ] `routes/Settings/components/DataExportModal.tsx` (47.91%)
-- [ ] `routes/Settings/components/DataExport/useDataExport.ts` (31.25%)
-- [ ] `routes/Settings/components/DataExport/DataExportReadyState.tsx` (33.33%)
-- [ ] `routes/Settings/components/ApiIntegrationsSection.tsx` (50%)
-
-### Agent 6 - Settings Pages & Profile Editor
-- [ ] `routes/Settings/pages/CustomDomainPage.tsx` (60%)
-- [ ] `routes/Settings/pages/CustomDomain/useCustomDomains.ts` (32.35%)
-- [ ] `components/ProfileEditor/ProfileFormFields.tsx` (28.57%)
-- [ ] `components/ProfileEditor/index.tsx` (66.66%)
-- [ ] `components/onboarding/hooks/useOnboardingCarousel.ts` (60%)
-- [ ] `components/onboarding/components/OnboardingDots.tsx` (66.66%)
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester affichage
+- [ ] Tester sauvegarde
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for ProfileEditor/index.tsx"
 
 ---
 
-## 📝 Notes importantes
+### TÂCHE 6.3: `components/onboarding/hooks/useOnboardingCarousel.ts` ⭐ FACILE
+- **Fichier**: `src/components/onboarding/hooks/useOnboardingCarousel.ts`
+- **Couverture actuelle**: 60%
+- **Lignes non couvertes**: 13-17
+- **Difficulté**: ⭐ Facile
+- **Temps estimé**: 20-30 min
 
-1. **Ordre de priorité**: Commencer par les fichiers `lib/` (utilitaires) car ils sont utilisés partout
-2. **Mocking**: La plupart nécessitent des mocks pour Supabase, PostHog, ou React Router
-3. **Tests existants**: Vérifier les patterns dans les tests existants avant de créer de nouveaux
-4. **Coverage goal**: Chaque fichier doit atteindre au moins 70% de couverture
-5. **Fichiers exclus**: Ne pas tester les fichiers listés dans "Priorité BASSE"
+**Tests à créer**: `src/components/onboarding/hooks/__tests__/useOnboardingCarousel.test.ts`
+
+**Tests à ajouter**:
+```typescript
+describe("useOnboardingCarousel.ts", () => {
+  - Navigation entre slides
+  - État slide actuel
+  - Callback onComplete
+  - Navigation précédent/suivant
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester navigation
+- [ ] Tester callback
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for useOnboardingCarousel.ts"
 
 ---
 
-## 🎯 Objectif final
+### TÂCHE 6.4: `components/onboarding/components/OnboardingDots.tsx` ⭐ FACILE
+- **Fichier**: `src/components/onboarding/components/OnboardingDots.tsx`
+- **Couverture actuelle**: 66.66%
+- **Lignes non couvertes**: 17
+- **Difficulté**: ⭐ Facile
+- **Temps estimé**: 15-20 min
 
-- **Couverture globale**: Passer de **71.42%** à **≥74.23%**
-- **Fichiers critiques**: Tous les fichiers `lib/` doivent être ≥70%
-- **Routes principales**: `Auth.tsx` et routes Dashboard doivent être ≥70%
+**Tests à créer**: `src/components/onboarding/components/__tests__/OnboardingDots.test.tsx`
+
+**Tests à ajouter**:
+```typescript
+describe("OnboardingDots.tsx", () => {
+  - Affichage des dots
+  - Dots actifs/inactifs
+  - Nombre de dots correspond au nombre de slides
+})
+```
+
+**Checklist**:
+- [ ] Créer le fichier de test
+- [ ] Tester affichage dots
+- [ ] Tester état actif
+- [ ] Vérifier couverture ≥70%
+- [ ] Commit avec message: "test: add tests for OnboardingDots.tsx"
+
+---
+
+## 📊 Résumé des Tâches par Phase
+
+### Phase 1: Utilitaires Critiques (5 tâches)
+- TÂCHE 1.1: `lib/onboarding.ts` ⭐ Facile
+- TÂCHE 1.2: `lib/posthog-events.ts` ⭐⭐ Moyen
+- TÂCHE 1.3: `lib/posthog.ts` ⭐⭐ Moyen
+- TÂCHE 1.4: `lib/profile.ts` ⭐⭐ Moyen
+- TÂCHE 1.5: `lib/drops/getDrops.ts` ⭐⭐ Moyen
+
+### Phase 2: Routes Principales (4 tâches)
+- TÂCHE 2.1: `routes/Auth.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 2.2: `routes/Pricing/components/PricingFAQ.tsx` ⭐ Facile
+- TÂCHE 2.3: `routes/Pricing/components/PricingHeader.tsx` ⭐ Facile
+- TÂCHE 2.4: `routes/Pricing/hooks/usePricingPlans.ts` ⭐⭐ Moyen
+
+### Phase 3: Dashboard Components (3 tâches)
+- TÂCHE 3.1: `routes/Dashboard/components/InboxTab.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 3.2: `routes/Dashboard/components/ProfileLinkCard.tsx` ⭐⭐ Moyen
+- TÂCHE 3.3: `routes/Dashboard/components/ContentTab/ShareDropModal.tsx` ⭐⭐ Moyen
+
+### Phase 4: Dashboard Modals (4 tâches)
+- TÂCHE 4.1: `routes/Dashboard/components/ContentTab/EditDropModal.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 4.2: `routes/Dashboard/components/ContentTab/EditLinkModal.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 4.3: `routes/Dashboard/components/ContentTab/DeleteDropModal.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 4.4: `routes/Dashboard/components/ContentTab/DeleteLinkModal.tsx` ⭐⭐⭐ Moyen-Élevé
+
+### Phase 5: Settings Components (7 tâches)
+- TÂCHE 5.1: `routes/Settings/components/ChangePasswordModal.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 5.2: `routes/Settings/components/DataExportModal.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 5.3: `routes/Settings/components/DataExport/useDataExport.ts` ⭐⭐ Moyen
+- TÂCHE 5.4: `routes/Settings/components/DataExport/DataExportReadyState.tsx` ⭐ Facile
+- TÂCHE 5.5: `routes/Settings/components/ApiIntegrationsSection.tsx` ⭐⭐ Moyen
+- TÂCHE 5.6: `routes/Settings/pages/CustomDomainPage.tsx` ⭐⭐⭐ Moyen-Élevé
+- TÂCHE 5.7: `routes/Settings/pages/CustomDomain/useCustomDomains.ts` ⭐⭐ Moyen
+
+### Phase 6: Components & Hooks (4 tâches)
+- TÂCHE 6.1: `components/ProfileEditor/ProfileFormFields.tsx` ⭐⭐ Moyen
+- TÂCHE 6.2: `components/ProfileEditor/index.tsx` ⭐⭐ Moyen
+- TÂCHE 6.3: `components/onboarding/hooks/useOnboardingCarousel.ts` ⭐ Facile
+- TÂCHE 6.4: `components/onboarding/components/OnboardingDots.tsx` ⭐ Facile
+
+---
+
+## 🚀 Guide de Distribution
+
+### Pour dispatcher le travail:
+
+1. **Assigner une PHASE complète** à un agent (recommandé pour cohérence)
+2. **Ou assigner des TÂCHES individuelles** si besoin de parallélisation maximale
+
+### Exemple de distribution:
+
+**Agent A** → Phase 1 complète (5 tâches utilitaires)
+**Agent B** → Phase 2 complète (4 tâches routes)
+**Agent C** → Phase 3 + Phase 4 (7 tâches dashboard)
+**Agent D** → Phase 5 complète (7 tâches settings)
+**Agent E** → Phase 6 complète (4 tâches components)
+
+### Ou distribution par difficulté:
+
+**Agent 1** → Toutes les tâches ⭐ Faciles (1.1, 2.2, 2.3, 5.4, 6.3, 6.4)
+**Agent 2** → Toutes les tâches ⭐⭐ Moyennes (1.2, 1.3, 1.4, 1.5, 2.4, 3.2, 3.3, 5.3, 5.5, 5.7, 6.1, 6.2)
+**Agent 3** → Toutes les tâches ⭐⭐⭐ Moyen-Élevé (2.1, 3.1, 4.1, 4.2, 4.3, 4.4, 5.1, 5.2, 5.6)
+
+---
+
+## ✅ Checklist Générale pour chaque Agent
+
+Avant de commencer:
+- [ ] Lire le fichier source à tester
+- [ ] Vérifier s'il existe déjà des tests
+- [ ] Comprendre les dépendances (mocks nécessaires)
+
+Pendant le développement:
+- [ ] Créer le fichier de test dans le bon dossier `__tests__/`
+- [ ] Suivre les patterns des tests existants
+- [ ] Tester tous les cas d'usage (succès, erreurs, edge cases)
+- [ ] Vérifier la couverture avec `pnpm test --coverage`
+
+Avant de commit:
+- [ ] Vérifier que tous les tests passent (`pnpm test`)
+- [ ] Vérifier couverture ≥70% pour le fichier
+- [ ] Vérifier qu'il n'y a pas d'erreurs de lint (`pnpm lint`)
+- [ ] Commit avec message: `test: add tests for [nom-du-fichier]`
+
+---
+
+## 📈 Suivi de Progrès
+
+**Total**: 27 tâches
+- Phase 1: 5 tâches
+- Phase 2: 4 tâches
+- Phase 3: 3 tâches
+- Phase 4: 4 tâches
+- Phase 5: 7 tâches
+- Phase 6: 4 tâches
+
+**Objectif**: Toutes les tâches doivent être complétées pour atteindre ≥74.23% de couverture.
