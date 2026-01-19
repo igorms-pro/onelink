@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { LANDING_URL } from "@/lib/constants";
 
 interface ProfileLinkCardProps {
   slug: string | null;
@@ -26,7 +27,19 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
     return null;
   }
 
-  const profileUrl = `${window.location.origin}/${slug}`;
+  // Determine the correct profile URL
+  // In production: use landing domain (getonelink.io)
+  // In localhost/dev: use current origin (localhost:5173)
+  const host = window.location?.host || "";
+  const isLocalhost =
+    host === "localhost" ||
+    host.startsWith("localhost:") ||
+    host === "127.0.0.1" ||
+    host.startsWith("127.0.0.1:");
+
+  const profileUrl = isLocalhost
+    ? `${window.location.origin}/${slug}`
+    : `${LANDING_URL}/${slug}`;
 
   const handleCopy = async () => {
     try {

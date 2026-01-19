@@ -5,7 +5,7 @@ import { OnboardingCarousel } from "../components/OnboardingCarousel";
 import { trackEvent, isPostHogLoaded } from "../lib/posthog";
 import { getOrCreateProfile } from "../lib/profile";
 import { isLandingDomain, isAppDomain } from "../lib/domain";
-import { APP_URL } from "../lib/constants";
+import { APP_URL, LANDING_URL } from "../lib/constants";
 
 export default function App() {
   const { user, loading, checkingMFA } = useAuth();
@@ -31,11 +31,36 @@ export default function App() {
       return;
     }
 
-    // Skip redirect logic if we're on the app domain - this prevents infinite loops
-    // The app domain should handle its own routing without redirecting
-    // This is critical because isLandingDomain("app.getonelink.io") would incorrectly return true
-    // since "app.getonelink.io" ends with ".getonelink.io"
-    if (isAppDomain(host)) {
+    // If we're on app domain and trying to access a profile route, redirect to landing domain
+    // This ensures app.getonelink.io/username redirects to getonelink.io/username
+    // BUT: Skip this redirect in localhost/dev - allow profiles to work locally
+    if (isAppDomain(host) && !isLocalhost) {
+      // List of routes that belong to the app (these should NOT redirect)
+      const appRoutes = [
+        "/dashboard",
+        "/settings",
+        "/welcome",
+        "/checkout",
+        "/pricing",
+        "/auth",
+      ];
+
+      // Check if current pathname is NOT an app route (likely a profile route)
+      const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
+
+      // If it's not an app route and not root, it's probably a profile - redirect to landing
+      if (!isAppRoute && pathname !== "/" && pathname.length > 1) {
+        const redirectUrl = `${LANDING_URL}${pathname}${window.location.search}`;
+        window.location.replace(redirectUrl);
+        return;
+      }
+
+      // Otherwise, let app domain handle its own routing
+      return;
+    }
+
+    // If we're on app domain in localhost, skip redirect logic (allow profiles to work locally)
+    if (isAppDomain(host) && isLocalhost) {
       return;
     }
 
