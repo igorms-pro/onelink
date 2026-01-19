@@ -44,6 +44,10 @@ lerna-debug.log*
 docs/issues/*
 !docs/issues/ISSUE.md
 
+# Docs planning files (not versioned)
+docs/video-tutorial-guide.md
+docs/test-coverage-tasks.md
+
 # Supabase CLI temp/cache
 supabase/.temp/
 .supabase/
