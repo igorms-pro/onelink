@@ -161,4 +161,69 @@ describe("Auth", () => {
       expect(googleButton).toBeDisabled();
     });
   });
+
+  it("clears localStorage username when submitting email form", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithEmail.mockResolvedValue({});
+
+    renderAuth();
+
+    // Use placeholder text to find the email input
+    const emailInput = screen.getByPlaceholderText(/you@example.com/i);
+    const submitButton = screen.getByRole("button", { name: /send link/i });
+
+    await user.type(emailInput, "test@example.com");
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithEmail).toHaveBeenCalled();
+    });
+  });
+
+  it("clears localStorage username when clicking Google OAuth", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithOAuth.mockResolvedValue({});
+
+    renderAuth();
+    const googleButton = screen.getByRole("button", {
+      name: /continue with google/i,
+    });
+
+    await user.click(googleButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith("google");
+    });
+  });
+
+  it("clears localStorage username when clicking Facebook OAuth", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithOAuth.mockResolvedValue({});
+
+    renderAuth();
+    const facebookButton = screen.getByRole("button", {
+      name: /continue with facebook/i,
+    });
+
+    await user.click(facebookButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith("facebook");
+    });
+  });
 });
