@@ -70,7 +70,8 @@ describe("Footer", () => {
     );
     // Should show logo + slogan instead of brand name
     expect(screen.getByText("Un lien. Plusieurs vies.")).toBeInTheDocument();
-    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    // There are two images (light and dark mode), so use getAllByAltText
+    expect(screen.getAllByAltText("OneLink").length).toBeGreaterThan(0);
     // Should not show "OneLink" text when branding is shown
     expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
   });
@@ -78,7 +79,8 @@ describe("Footer", () => {
   it("shows custom branding text when provided", () => {
     renderWithRouter(<Footer showBranding brandingText="Custom branding" />);
     expect(screen.getByText("Custom branding")).toBeInTheDocument();
-    expect(screen.getByAltText("OneLink")).toBeInTheDocument();
+    // There are two images (light and dark mode), so use getAllByAltText
+    expect(screen.getAllByAltText("OneLink").length).toBeGreaterThan(0);
     expect(screen.queryByText("OneLink")).not.toBeInTheDocument();
   });
 

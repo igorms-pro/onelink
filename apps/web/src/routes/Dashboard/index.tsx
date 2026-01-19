@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Trash2 } from "lucide-react";
 import { useRequireAuth } from "@/hooks/useRequireAuth";
@@ -20,8 +20,38 @@ import { isPaidPlan } from "@/lib/types/plan";
 export default function Dashboard() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user, loading, signOut } = useRequireAuth();
-  const [activeTab, setActiveTab] = useState<TabId>("inbox");
+
+  // Get initial tab from URL or default to "inbox"
+  const getInitialTab = (): TabId => {
+    const tabParam = searchParams.get("tab");
+    if (
+      tabParam === "inbox" ||
+      tabParam === "content" ||
+      tabParam === "account"
+    ) {
+      return tabParam;
+    }
+    return "inbox";
+  };
+
+  const [activeTab, setActiveTab] = useState<TabId>(getInitialTab);
+
+  // Update URL when tab changes
+  const handleTabChange = (tab: TabId) => {
+    setActiveTab(tab);
+    setSearchParams({ tab }, { replace: true });
+  };
+
+  // Sync tab with URL on mount/URL change (but only if URL changed externally, not from our own setSearchParams)
+  useEffect(() => {
+    const tabFromUrl = getInitialTab();
+    if (tabFromUrl !== activeTab) {
+      setActiveTab(tabFromUrl);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const userId = user?.id ?? null;
 
@@ -86,7 +116,7 @@ export default function Dashboard() {
       <div className="flex-1 min-h-0 mx-auto max-w-4xl w-full px-4 md:px-6 lg:px-8 pb-4 flex flex-col overflow-hidden">
         <TabNavigation
           activeTab={activeTab}
-          onTabChange={setActiveTab}
+          onTabChange={handleTabChange}
           unreadCount={unreadCount}
         />
 
@@ -151,7 +181,7 @@ export default function Dashboard() {
 
       <BottomNavigation
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={handleTabChange}
         submissionCount={submissions.length}
         unreadCount={unreadCount}
         onClearAll={async () => {

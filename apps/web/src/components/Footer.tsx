@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import clsx from "clsx";
+import { LayoutDashboard } from "lucide-react";
 import { ThemeToggleButton } from "./ThemeToggleButton";
 import { ProfileLanguageToggleButton } from "@/routes/Profile/components/ProfileLanguageToggleButton";
 
@@ -12,6 +13,7 @@ interface FooterProps {
   showControls?: boolean; // Show language/theme toggles (for profile pages)
   showLegalLinks?: boolean; // Show Privacy/Terms links (default: true)
   hideBrandName?: boolean; // Hide brand name completely (for /auth endpoint)
+  showDashboardLink?: boolean; // Show "Back to Dashboard" link (for profile owner)
 }
 
 export function Footer({
@@ -22,6 +24,7 @@ export function Footer({
   showControls = false,
   showLegalLinks = true,
   hideBrandName = false,
+  showDashboardLink = false,
 }: FooterProps) {
   const { t } = useTranslation();
 
@@ -44,11 +47,16 @@ export function Footer({
               <div className="flex justify-between items-center gap-2 sm:gap-4 sm:justify-start">
                 {showBranding && brandingText ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-white dark:bg-white/20 flex items-center justify-center p-0.5 sm:p-1 shrink-0">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center shrink-0">
                       <img
                         src="/onelink-logo-O.png"
                         alt="OneLink"
-                        className="w-full h-full object-contain"
+                        className="w-full h-full object-contain dark:hidden"
+                      />
+                      <img
+                        src="/onelink-logo-white-O.png"
+                        alt="OneLink"
+                        className="w-full h-full object-contain hidden dark:block"
                       />
                     </div>
                     <span className="font-medium text-gray-800 dark:text-gray-100 text-sm sm:text-base">
@@ -62,8 +70,24 @@ export function Footer({
                 )}
                 {/* Language & Theme Controls - same line as slogan on mobile, right side on desktop */}
                 {showControls && (
-                  <div className="flex items-center gap-2 ml-2 sm:hidden">
-                    <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                  <div className="flex items-center gap-1.5 ml-2 sm:hidden">
+                    {showDashboardLink && (
+                      <>
+                        <Link
+                          to="/dashboard"
+                          className="p-2.5 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                          aria-label={t("footer_back_to_dashboard", {
+                            defaultValue: "Back to Dashboard",
+                          })}
+                          title={t("footer_back_to_dashboard", {
+                            defaultValue: "Back to Dashboard",
+                          })}
+                        >
+                          <LayoutDashboard className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                        </Link>
+                        <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                      </>
+                    )}
                     <div className="flex items-center gap-1">
                       <ProfileLanguageToggleButton />
                     </div>
@@ -77,7 +101,7 @@ export function Footer({
             )}
             {/* Privacy & Terms - separate line on mobile, center on desktop */}
             {showLegalLinks && (
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4 flex-wrap">
                 <Link
                   to="/privacy"
                   className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"
@@ -94,8 +118,24 @@ export function Footer({
             )}
             {/* Language & Theme Controls - right side on desktop only */}
             {showControls && (
-              <div className="hidden sm:flex items-center gap-2">
-                <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+              <div className="hidden sm:flex items-center gap-1.5">
+                {showDashboardLink && (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="p-2.5 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer"
+                      aria-label={t("footer_back_to_dashboard", {
+                        defaultValue: "Back to Dashboard",
+                      })}
+                      title={t("footer_back_to_dashboard", {
+                        defaultValue: "Back to Dashboard",
+                      })}
+                    >
+                      <LayoutDashboard className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+                    </Link>
+                    <div className="h-4 w-px bg-gray-300 dark:bg-gray-700" />
+                  </>
+                )}
                 <div className="flex items-center gap-1">
                   <ProfileLanguageToggleButton />
                 </div>

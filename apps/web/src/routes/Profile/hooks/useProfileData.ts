@@ -69,10 +69,12 @@ export function useProfileData(slug: string | undefined, host: string) {
   }, [host, slug]);
 
   async function loadBySlug(s: string): Promise<boolean> {
+    // Normalize slug to lowercase for case-insensitive lookup
+    const normalizedSlug = s.toLowerCase();
     const prof = await supabase
       .from("profiles")
       .select("display_name,bio,avatar_url,slug,id,user_id")
-      .eq("slug", s)
+      .eq("slug", normalizedSlug)
       .maybeSingle<{
         display_name: string | null;
         bio: string | null;
