@@ -94,7 +94,7 @@ describe("ProfileLinkCard", () => {
     );
     expect(screen.getByText("Your Profile Link")).toBeInTheDocument();
     expect(
-      screen.getByDisplayValue("https://example.com/test-user"),
+      screen.getByDisplayValue("https://getonelink.io/test-user"),
     ).toBeInTheDocument();
   });
 
@@ -152,7 +152,7 @@ describe("ProfileLinkCard", () => {
     fireEvent.click(previewButton);
 
     expect(windowOpenSpy).toHaveBeenCalledWith(
-      "https://example.com/test-user",
+      "https://getonelink.io/test-user",
       "_blank",
       "noopener,noreferrer",
     );

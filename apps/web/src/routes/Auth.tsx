@@ -181,6 +181,10 @@ export default function Auth() {
             className="grid gap-3 max-w-sm mx-auto w-full"
             onSubmit={handleSubmit(async (values) => {
               setLoading(true);
+              // Clear pending username from localStorage when sending link
+              localStorage.removeItem(USERNAME_STORAGE_KEY);
+              setPendingUsername(null);
+
               const res = await signInWithEmail(values.email);
               setLoading(false);
 
@@ -234,6 +238,10 @@ export default function Auth() {
               type="button"
               onClick={async () => {
                 setOauthLoading(true);
+                // Clear pending username from localStorage when using OAuth
+                localStorage.removeItem(USERNAME_STORAGE_KEY);
+                setPendingUsername(null);
+
                 try {
                   const res = await signInWithOAuth("google");
 
@@ -297,6 +305,10 @@ export default function Auth() {
               type="button"
               onClick={async () => {
                 setFacebookLoading(true);
+                // Clear pending username from localStorage when using OAuth
+                localStorage.removeItem(USERNAME_STORAGE_KEY);
+                setPendingUsername(null);
+
                 try {
                   const res = await signInWithOAuth("facebook");
 

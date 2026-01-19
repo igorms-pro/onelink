@@ -31,9 +31,9 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">0/2</span>
+            <span class="fraction">2/2</span>
           </div>
 
           <div class="fl pad1y space-right2">
@@ -43,15 +43,15 @@
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Functions</span>
-            <span class="fraction">0/1</span>
+            <span class="fraction">1/1</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">0% </span>
+            <span class="strong">100% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">0/2</span>
+            <span class="fraction">2/2</span>
           </div>
         </div>
         <p class="quiet">
@@ -65,7 +65,7 @@
           </div>
         </template>
       </div>
-      <div class="status-line low"></div>
+      <div class="status-line high"></div>
       <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,9 +101,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,10 +127,10 @@ interface DataExportProgressProps {
   progress: number;
 }
 &nbsp;
-export function <span class="fstat-no" title="function not covered" >DataExportProgress({</span> progress }: DataExportProgressProps) {
-  const { t <span class="cstat-no" title="statement not covered" >} = useTranslation();</span>
+export function DataExportProgress({ progress }: DataExportProgressProps) {
+  const { t } = useTranslation();
 &nbsp;
-<span class="cstat-no" title="statement not covered" >  return (</span>
+  return (
     &lt;div className="space-y-2"&gt;
       &lt;div className="flex items-center justify-between text-sm"&gt;
         &lt;span className="text-gray-700 dark:text-gray-300"&gt;
@@ -140,6 +140,7 @@ export function <span class="fstat-no" title="function not covered" >DataExportP
       &lt;/div&gt;
       &lt;div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2"&gt;
         &lt;div
+          data-testid="data-export-progress-bar"
           className="bg-linear-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300"
           style={{ width: `${progress}%` }}
         /&gt;
@@ -147,7 +148,6 @@ export function <span class="fstat-no" title="function not covered" >DataExportP
     &lt;/div&gt;
   );
 }
-&nbsp;
 &nbsp;</pre></td></tr></table></pre>
 
       <div class="push"></div>
@@ -162,7 +162,7 @@ export function <span class="fstat-no" title="function not covered" >DataExportP
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-11-12T11:59:05.882Z
+      at 2026-01-19T14:31:09.825Z
     </div>
     <script src="../../../../prettify.js"></script>
     <script>

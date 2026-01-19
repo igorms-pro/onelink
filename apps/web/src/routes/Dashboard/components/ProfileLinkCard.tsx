@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { LANDING_URL } from "@/lib/constants";
 
 interface ProfileLinkCardProps {
   slug: string | null;
@@ -26,7 +27,9 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
     return null;
   }
 
-  const profileUrl = `${window.location.origin}/${slug}`;
+  // Profiles should always be accessed on the landing domain (getonelink.io)
+  // not on the app domain (app.getonelink.io)
+  const profileUrl = `${LANDING_URL}/${slug}`;
 
   const handleCopy = async () => {
     try {

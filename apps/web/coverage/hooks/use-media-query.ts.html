@@ -23,27 +23,27 @@
         </h1>
         <div class="clearfix">
           <div class="fl pad1y space-right2">
-            <span class="strong">68.42% </span>
+            <span class="strong">89.47% </span>
             <span class="quiet">Statements</span>
-            <span class="fraction">13/19</span>
-          </div>
-
-          <div class="fl pad1y space-right2">
-            <span class="strong">50% </span>
-            <span class="quiet">Branches</span>
-            <span class="fraction">3/6</span>
+            <span class="fraction">17/19</span>
           </div>
 
           <div class="fl pad1y space-right2">
             <span class="strong">66.66% </span>
-            <span class="quiet">Functions</span>
+            <span class="quiet">Branches</span>
             <span class="fraction">4/6</span>
           </div>
 
           <div class="fl pad1y space-right2">
-            <span class="strong">80% </span>
+            <span class="strong">100% </span>
+            <span class="quiet">Functions</span>
+            <span class="fraction">6/6</span>
+          </div>
+
+          <div class="fl pad1y space-right2">
+            <span class="strong">100% </span>
             <span class="quiet">Lines</span>
-            <span class="fraction">12/15</span>
+            <span class="fraction">15/15</span>
           </div>
         </div>
         <p class="quiet">
@@ -57,7 +57,7 @@
           </div>
         </template>
       </div>
-      <div class="status-line medium"></div>
+      <div class="status-line high"></div>
       <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -103,33 +103,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { useState, useEffect } from "react";
 &nbsp;
@@ -150,18 +150,18 @@ export function useMediaQuery(query: string): boolean {
     const mediaQuery = window.matchMedia(query);
     setMatches(mediaQuery.matches);
 &nbsp;
-    const handler = <span class="fstat-no" title="function not covered" >(e</span>vent: MediaQueryListEvent) =&gt; {
-<span class="cstat-no" title="statement not covered" >      setMatches(event.matches);</span>
+    const handler = (event: MediaQueryListEvent) =&gt; {
+      setMatches(event.matches);
     };
 &nbsp;
     // Modern browsers
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener("change", handler);
       return () =&gt; mediaQuery.removeEventListener("change", handler);
-    } else <span class="missing-if-branch" title="else path not taken" >E</span>{
+    } else {
       // Fallback for older browsers
-<span class="cstat-no" title="statement not covered" >      mediaQuery.addListener(handler);</span>
-<span class="cstat-no" title="statement not covered" >      return <span class="fstat-no" title="function not covered" >() =&gt; <span class="cstat-no" title="statement not covered" >m</span>ediaQuery.removeListener(handler);</span></span>
+      mediaQuery.addListener(handler);
+      return () =&gt; mediaQuery.removeListener(handler);
     }
   }, [query]);
 &nbsp;
@@ -181,7 +181,7 @@ export function useMediaQuery(query: string): boolean {
         rel="noopener noreferrer"
         >istanbul</a
       >
-      at 2025-11-12T11:59:05.882Z
+      at 2026-01-19T14:31:09.825Z
     </div>
     <script src="../prettify.js"></script>
     <script>
