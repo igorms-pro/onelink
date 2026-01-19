@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm your new email - OneLink</title>
+</head>
+<body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f3f4f6;">
+  <div style="background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); padding: 40px 30px; text-align: center; border-radius: 8px 8px 0 0;">
+    <h1 style="color: white; margin: 0; font-size: 24px; font-weight: 600;">Confirm your new email</h1>
+  </div>
+  
+  <div style="background: white; padding: 30px; border-radius: 0 0 8px 8px; border: 1px solid #e5e7eb; border-top: none;">
+    <div style="text-align: center; margin-bottom: 30px;">
+      <img src="https://getonelink.io/onelink-logo.png" alt="OneLink" style="width: 120px; height: auto; display: block; margin-left: auto; margin-right: auto;">
+    </div>
+    
+    <p style="margin-top: 0; font-size: 16px; color: #333;">Hello,</p>
+    
+    <p style="font-size: 16px; color: #333;">You've requested to change your email address to <strong style="color: #333;">{{ .NewEmail }}</strong>. Click the button below to confirm this change:</p>
+    
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{{ .ConfirmationURL }}" style="display: inline-block; background: linear-gradient(135deg, #9333ea 0%, #7e22ce 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 16px;">Confirm email change</a>
+    </div>
+    
+    <p style="font-size: 14px; color: #6b7280;">
+      Or copy and paste this link into your browser:
+    </p>
+    <p style="font-size: 12px; color: #6b7280; word-break: break-all; background: #f9fafb; padding: 12px; border-radius: 6px; margin: 10px 0; border: 1px solid #e5e7eb;">
+      {{ .ConfirmationURL }}
+    </p>
+    
+    <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
+      If you didn't request this change, you can safely ignore this email.
+    </p>
+  </div>
+  
+  <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+    <p style="font-size: 12px; color: #9ca3af;">
+      © OneLink. All rights reserved.
+    </p>
+  </div>
+</body>
+</html>
