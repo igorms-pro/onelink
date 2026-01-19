@@ -12,6 +12,7 @@ interface FooterProps {
   showControls?: boolean; // Show language/theme toggles (for profile pages)
   showLegalLinks?: boolean; // Show Privacy/Terms links (default: true)
   hideBrandName?: boolean; // Hide brand name completely (for /auth endpoint)
+  showDashboardLink?: boolean; // Show "Back to Dashboard" link (for profile owner)
 }
 
 export function Footer({
@@ -22,6 +23,7 @@ export function Footer({
   showControls = false,
   showLegalLinks = true,
   hideBrandName = false,
+  showDashboardLink = false,
 }: FooterProps) {
   const { t } = useTranslation();
 
@@ -77,7 +79,20 @@ export function Footer({
             )}
             {/* Privacy & Terms - separate line on mobile, center on desktop */}
             {showLegalLinks && (
-              <div className="flex items-center justify-center gap-4">
+              <div className="flex items-center justify-center gap-4 flex-wrap">
+                {showDashboardLink && (
+                  <>
+                    <Link
+                      to="/dashboard"
+                      className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer font-medium"
+                    >
+                      {t("footer_back_to_dashboard", {
+                        defaultValue: "Back to Dashboard",
+                      })}
+                    </Link>
+                    <span className="text-gray-400">•</span>
+                  </>
+                )}
                 <Link
                   to="/privacy"
                   className="text-sm text-gray-600 transition-colors hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-300 cursor-pointer"

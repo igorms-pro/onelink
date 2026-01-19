@@ -38,7 +38,12 @@ export function ProfileFormFields({
           required
           placeholder={t("profile_form_slug_placeholder")}
           {...register("slug", {
-            onChange: () => {
+            onChange: (e) => {
+              // Normalize to lowercase
+              const normalized = e.target.value.toLowerCase();
+              if (e.target.value !== normalized) {
+                e.target.value = normalized;
+              }
               if (errors.slug) {
                 clearErrors("slug");
               }
@@ -54,11 +59,8 @@ export function ProfileFormFields({
       <div>
         <input
           className="rounded-lg border border-gray-300 dark:border-gray-600 bg-purple-50 dark:bg-purple-900/20 text-gray-900 dark:text-white px-4 py-2.5 text-sm placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:border-transparent transition-all w-full"
-          required
           placeholder={t("profile_form_display_name_placeholder")}
-          {...register("display_name", {
-            required: t("profile_form_display_name_required"),
-          })}
+          {...register("display_name")}
         />
         {errors.display_name && (
           <p className="text-red-600 dark:text-red-300 text-sm mt-1">

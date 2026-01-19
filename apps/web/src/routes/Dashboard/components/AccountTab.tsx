@@ -52,11 +52,13 @@ export function AccountTab({
           disabled={!profileId}
           onSave={async (values) => {
             if (!profileId) return;
+            // Normalize slug to lowercase
+            const normalizedSlug = values.slug.toLowerCase().trim();
             const { data, error } = await supabase
               .from("profiles")
               .update({
-                slug: values.slug,
-                display_name: values.display_name,
+                slug: normalizedSlug,
+                display_name: values.display_name?.trim() || null,
                 bio: values.bio,
                 avatar_url: values.avatar_url,
               })

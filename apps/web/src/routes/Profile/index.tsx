@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { isBaseHost } from "@/lib/domain";
 import { Footer } from "@/components/Footer";
@@ -19,10 +19,23 @@ import {
 
 export default function Profile() {
   const { t } = useTranslation();
-  const { slug } = useParams();
+  const { slug: rawSlug } = useParams();
+  const navigate = useNavigate();
   const { user } = useAuth();
   // Memoize host to prevent unnecessary re-renders
   const host = useMemo(() => window.location.host, []);
+
+  // Normalize slug to lowercase and redirect if needed
+  const slug = useMemo(() => {
+    if (!rawSlug) return undefined;
+    const normalized = rawSlug.toLowerCase();
+    // Redirect if slug contains uppercase letters
+    if (rawSlug !== normalized) {
+      navigate(`/${normalized}`, { replace: true });
+    }
+    return normalized;
+  }, [rawSlug, navigate]);
+
   const { links, drops, profile, plan, isLoading, errorType } = useProfileData(
     slug,
     host,
@@ -166,6 +179,11 @@ export default function Profile() {
               : undefined
           }
           showControls
+          showDashboardLink={(() => {
+            // Show dashboard link only if user is the owner
+            if (!profile || !user) return false;
+            return user.id === profile.user_id;
+          })()}
         />
       </div>
     </div>
