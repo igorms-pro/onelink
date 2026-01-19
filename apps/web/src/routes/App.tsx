@@ -4,7 +4,7 @@ import { useAuth } from "../lib/AuthProvider";
 import { OnboardingCarousel } from "../components/OnboardingCarousel";
 import { trackEvent, isPostHogLoaded } from "../lib/posthog";
 import { getOrCreateProfile } from "../lib/profile";
-import { isLandingDomain } from "../lib/domain";
+import { isLandingDomain, isAppDomain } from "../lib/domain";
 import { APP_URL } from "../lib/constants";
 
 export default function App() {
@@ -28,6 +28,14 @@ export default function App() {
 
     if (isLocalhost) {
       // In dev, allow everything to work without redirects
+      return;
+    }
+
+    // Skip redirect logic if we're on the app domain - this prevents infinite loops
+    // The app domain should handle its own routing without redirecting
+    // This is critical because isLandingDomain("app.getonelink.io") would incorrectly return true
+    // since "app.getonelink.io" ends with ".getonelink.io"
+    if (isAppDomain(host)) {
       return;
     }
 
