@@ -4,7 +4,7 @@ import { useAuth } from "../lib/AuthProvider";
 import { OnboardingCarousel } from "../components/OnboardingCarousel";
 import { trackEvent, isPostHogLoaded } from "../lib/posthog";
 import { getOrCreateProfile } from "../lib/profile";
-import { isAppDomain, isLandingDomain } from "../lib/domain";
+import { isLandingDomain } from "../lib/domain";
 import { APP_URL } from "../lib/constants";
 
 export default function App() {
@@ -14,11 +14,24 @@ export default function App() {
   const [checkingProfile, setCheckingProfile] = useState(false);
 
   // Redirect app routes from landing domain to app domain
+  // Skip in development/localhost - allow everything to work locally
   useEffect(() => {
     const host = window.location.host;
     const pathname = location.pathname;
 
-    // List of routes that belong to landing page
+    // Skip redirects in development/localhost
+    const isLocalhost =
+      host === "localhost" ||
+      host.startsWith("localhost:") ||
+      host === "127.0.0.1" ||
+      host.startsWith("127.0.0.1:");
+
+    if (isLocalhost) {
+      // In dev, allow everything to work without redirects
+      return;
+    }
+
+    // List of routes that belong to landing page (these should NOT be accessible on landing domain from web app)
     const landingRoutes = [
       "/",
       "/features",
@@ -28,19 +41,15 @@ export default function App() {
       "/auth",
     ];
 
-    // List of routes that should only be accessible on app domain
-    const appRoutes = ["/dashboard", "/settings", "/welcome", "/checkout"];
-
-    // If we're on landing domain and trying to access root or landing routes, redirect to landing
-    if (
-      isLandingDomain(host) &&
-      landingRoutes.includes(pathname) &&
-      pathname !== "/"
-    ) {
-      // These routes should be handled by landing page, but if we're here, redirect to landing
-      window.location.replace(`https://${host}${pathname}`);
-      return;
-    }
+    // List of routes that should ONLY be accessible on app domain
+    // These include ALL authenticated routes
+    const appRoutes = [
+      "/dashboard",
+      "/settings",
+      "/welcome",
+      "/checkout",
+      "/pricing", // Pricing page is also on app domain
+    ];
 
     // If we're on landing domain and trying to access root, redirect to landing
     if (isLandingDomain(host) && pathname === "/") {
@@ -48,15 +57,25 @@ export default function App() {
       return;
     }
 
-    // Check if current route is an app route
+    // If we're on landing domain and trying to access any landing route, redirect to landing
+    if (isLandingDomain(host) && landingRoutes.includes(pathname)) {
+      window.location.replace(`https://${host}${pathname}`);
+      return;
+    }
+
+    // Check if current route is an app route (dashboard, settings, etc.)
     const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
 
     // If we're on landing domain and trying to access an app route, redirect to app domain
-    if (isLandingDomain(host) && isAppRoute && !isAppDomain(host)) {
+    // This ensures getonelink.io/dashboard redirects to app.getonelink.io/dashboard
+    if (isLandingDomain(host) && isAppRoute) {
       const redirectUrl = `${APP_URL}${pathname}${window.location.search}`;
       window.location.replace(redirectUrl);
       return;
     }
+
+    // Profiles (/:slug) are allowed on landing domain - no redirect needed
+    // They will be proxied by vercel.json rewrites
   }, [location.pathname, location.search]);
 
   useEffect(() => {
