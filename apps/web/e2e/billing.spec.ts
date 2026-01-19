@@ -517,6 +517,20 @@ test.describe("Billing Page - Stripe Integration", () => {
     await expect(backButton).toBeVisible();
     await expect(backButton).toBeEnabled();
 
+    // Wait for MFA challenge to be dismissed if it appears (in case it shows up after page load)
+    const mfaChallenge = page.getByTestId("mfa-challenge-container");
+    const mfaBackdrop = page.locator(
+      ".fixed.inset-0.z-50.bg-black\\/40.backdrop-blur-sm",
+    );
+
+    await Promise.all([
+      mfaChallenge.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {}),
+      mfaBackdrop.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {}),
+    ]);
+
+    // Additional wait to ensure DOM has settled
+    await page.waitForTimeout(200);
+
     // Test navigation behavior
     await backButton.click();
     await expect(page).toHaveURL(/\/settings/);

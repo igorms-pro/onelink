@@ -102,6 +102,22 @@ test.describe("Settings Navigation", () => {
       page.getByTestId("settings-privacy-security-section"),
     ).toBeVisible({ timeout: 30000 });
 
+    // Wait for MFA challenge to be dismissed if it appears
+    // Check both the container and any backdrop overlays
+    const mfaChallenge = page.getByTestId("mfa-challenge-container");
+    const mfaBackdrop = page.locator(
+      ".fixed.inset-0.z-50.bg-black\\/40.backdrop-blur-sm",
+    );
+
+    // Wait for both to be hidden or removed
+    await Promise.all([
+      mfaChallenge.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {}),
+      mfaBackdrop.waitFor({ state: "hidden", timeout: 5000 }).catch(() => {}),
+    ]);
+
+    // Additional wait to ensure DOM has settled
+    await page.waitForTimeout(200);
+
     const twoFactorLink = page
       .getByTestId("settings-two-factor")
       .or(page.getByRole("button", { name: /two.factor|2fa/i }))
