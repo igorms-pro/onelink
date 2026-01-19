@@ -7,13 +7,15 @@ import { ProfileLinkCard } from "../ProfileLinkCard";
 import { toast } from "sonner";
 import type { ReactNode } from "react";
 
-vi.mock("sonner", () => ({
-  toast: {
-    success: vi.fn(),
-    error: vi.fn(),
-    info: vi.fn(),
-  },
-}));
+vi.mock("sonner", () => {
+  return {
+    toast: {
+      success: vi.fn(),
+      error: vi.fn(),
+      info: vi.fn(),
+    },
+  };
+});
 
 const mockNavigate = vi.fn();
 
@@ -63,6 +65,9 @@ describe("ProfileLinkCard", () => {
     vi.clearAllMocks();
     mockWriteText.mockClear();
     mockWriteText.mockResolvedValue(undefined);
+    vi.mocked(toast.info).mockClear();
+    vi.mocked(toast.success).mockClear();
+    vi.mocked(toast.error).mockClear();
     // Ensure clipboard mock is set up (re-define in case it was cleared)
     if (
       !navigator.clipboard ||

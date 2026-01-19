@@ -185,6 +185,35 @@ describe("Auth", () => {
     });
   });
 
+  it("handles email form error and clears localStorage", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithEmail.mockResolvedValue({
+      error: "Failed to send magic link",
+    });
+
+    renderAuth();
+
+    const emailInput = screen.getByPlaceholderText(/you@example.com/i);
+    const submitButton = screen.getByRole("button", { name: /send link/i });
+
+    await user.type(emailInput, "test@example.com");
+    await user.click(submitButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithEmail).toHaveBeenCalled();
+      expect(toast.error).toHaveBeenCalledWith("Failed to send magic link");
+      expect(logLoginAttempt).toHaveBeenCalledWith({
+        email: "test@example.com",
+        status: "failed",
+      });
+    });
+  });
+
   it("clears localStorage username when clicking Google OAuth", async () => {
     const user = userEvent.setup();
     const USERNAME_STORAGE_KEY = "onelink_pending_username";
@@ -224,6 +253,88 @@ describe("Auth", () => {
     await waitFor(() => {
       expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
       expect(mockSignInWithOAuth).toHaveBeenCalledWith("facebook");
+    });
+  });
+
+  it("handles Facebook OAuth cancellation error and clears localStorage", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithOAuth.mockResolvedValue({
+      error: "Sign in was cancelled",
+    });
+
+    renderAuth();
+    const facebookButton = screen.getByRole("button", {
+      name: /continue with facebook/i,
+    });
+
+    await user.click(facebookButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith("facebook");
+      expect(toast.error).toHaveBeenCalled();
+      expect(logLoginAttempt).toHaveBeenCalledWith({
+        email: "oauth_facebook",
+        status: "failed",
+      });
+    });
+  });
+
+  it("handles Facebook OAuth generic error and clears localStorage", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithOAuth.mockResolvedValue({
+      error: "OAuth provider is not configured",
+    });
+
+    renderAuth();
+    const facebookButton = screen.getByRole("button", {
+      name: /continue with facebook/i,
+    });
+
+    await user.click(facebookButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith("facebook");
+      expect(toast.error).toHaveBeenCalled();
+      expect(logLoginAttempt).toHaveBeenCalledWith({
+        email: "oauth_facebook",
+        status: "failed",
+      });
+    });
+  });
+
+  it("handles Facebook OAuth unexpected error and clears localStorage", async () => {
+    const user = userEvent.setup();
+    const USERNAME_STORAGE_KEY = "onelink_pending_username";
+
+    // Set a username in localStorage first
+    localStorage.setItem(USERNAME_STORAGE_KEY, "testuser");
+    mockSignInWithOAuth.mockRejectedValue(new Error("Network error"));
+
+    renderAuth();
+    const facebookButton = screen.getByRole("button", {
+      name: /continue with facebook/i,
+    });
+
+    await user.click(facebookButton);
+
+    await waitFor(() => {
+      expect(localStorage.getItem(USERNAME_STORAGE_KEY)).toBeNull();
+      expect(mockSignInWithOAuth).toHaveBeenCalledWith("facebook");
+      expect(toast.error).toHaveBeenCalled();
+      expect(logLoginAttempt).toHaveBeenCalledWith({
+        email: "oauth_facebook",
+        status: "failed",
+      });
     });
   });
 });
