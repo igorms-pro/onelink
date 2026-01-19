@@ -33,7 +33,8 @@ export default function App() {
 
     // If we're on app domain and trying to access a profile route, redirect to landing domain
     // This ensures app.getonelink.io/username redirects to getonelink.io/username
-    if (isAppDomain(host)) {
+    // BUT: Skip this redirect in localhost/dev - allow profiles to work locally
+    if (isAppDomain(host) && !isLocalhost) {
       // List of routes that belong to the app (these should NOT redirect)
       const appRoutes = [
         "/dashboard",
@@ -55,6 +56,11 @@ export default function App() {
       }
 
       // Otherwise, let app domain handle its own routing
+      return;
+    }
+
+    // If we're on app domain in localhost, skip redirect logic (allow profiles to work locally)
+    if (isAppDomain(host) && isLocalhost) {
       return;
     }
 
