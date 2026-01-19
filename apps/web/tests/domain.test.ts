@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { isBaseHost, isSafeHttpUrl } from "../src/lib/domain";
+import {
+  isBaseHost,
+  isSafeHttpUrl,
+  isAppDomain,
+  isLandingDomain,
+} from "../src/lib/domain";
 import {
   ONELINK_APP,
   ONELINK_LANDING,
@@ -44,5 +49,73 @@ describe("domain utils", () => {
     expect(isBaseHost("localhost:8080")).toBe(false); // different port
     expect(isBaseHost(`example.${ONELINK_APP_DEV}.com`)).toBe(false); // different domain
     expect(isBaseHost("")).toBe(false);
+  });
+
+  it("isAppDomain correctly identifies app domain", () => {
+    expect(isAppDomain(ONELINK_APP)).toBe(true);
+    expect(isAppDomain(`sub.${ONELINK_APP}`)).toBe(true);
+    expect(isAppDomain("localhost")).toBe(true);
+    expect(isAppDomain(`localhost:${LOCALHOST_PORT_DEV}`)).toBe(true);
+    expect(isAppDomain(`localhost:${LOCALHOST_PORT_ALT}`)).toBe(true);
+    expect(isAppDomain(`example.${ONELINK_APP_DEV}`)).toBe(true);
+    expect(isAppDomain(ONELINK_LANDING)).toBe(false);
+    expect(isAppDomain(`sub.${ONELINK_LANDING}`)).toBe(false);
+    expect(isAppDomain("example.com")).toBe(false);
+  });
+
+  it("isLandingDomain correctly identifies landing domain", () => {
+    expect(isLandingDomain(ONELINK_LANDING)).toBe(true);
+    expect(isLandingDomain(`sub.${ONELINK_LANDING}`)).toBe(true);
+    expect(isLandingDomain(ONELINK_APP)).toBe(false); // Critical: app.getonelink.io should NOT match
+    expect(isLandingDomain(`sub.${ONELINK_APP}`)).toBe(false);
+    expect(isLandingDomain("localhost")).toBe(false);
+    expect(isLandingDomain("example.com")).toBe(false);
+  });
+
+  it("isAppDomain and isLandingDomain are mutually exclusive for app domain", () => {
+    // Critical test: app.getonelink.io should be app domain, NOT landing domain
+    // This prevents redirect loops
+    expect(isAppDomain(ONELINK_APP)).toBe(true);
+    expect(isLandingDomain(ONELINK_APP)).toBe(false);
+
+    // Landing domain should be landing, not app
+    expect(isLandingDomain(ONELINK_LANDING)).toBe(true);
+    expect(isAppDomain(ONELINK_LANDING)).toBe(false);
+  });
+
+  it("isAppDomain handles case insensitivity", () => {
+    expect(isAppDomain("APP.GETONELINK.IO")).toBe(true);
+    expect(isAppDomain("App.GetOneLink.Io")).toBe(true);
+    expect(isAppDomain("app.getonelink.io")).toBe(true);
+  });
+
+  it("isLandingDomain handles case insensitivity", () => {
+    expect(isLandingDomain("GETONELINK.IO")).toBe(true);
+    expect(isLandingDomain("GetOneLink.Io")).toBe(true);
+    expect(isLandingDomain("getonelink.io")).toBe(true);
+  });
+
+  it("isAppDomain handles subdomains correctly", () => {
+    expect(isAppDomain(`test.${ONELINK_APP}`)).toBe(true);
+    expect(isAppDomain(`subdomain.${ONELINK_APP}`)).toBe(true);
+    expect(isAppDomain(`deep.nested.${ONELINK_APP}`)).toBe(true);
+    expect(isAppDomain(`not-${ONELINK_APP}`)).toBe(false);
+    expect(isAppDomain(`${ONELINK_APP}.com`)).toBe(false);
+  });
+
+  it("isLandingDomain handles subdomains correctly", () => {
+    expect(isLandingDomain(`test.${ONELINK_LANDING}`)).toBe(true);
+    expect(isLandingDomain(`subdomain.${ONELINK_LANDING}`)).toBe(true);
+    expect(isLandingDomain(`deep.nested.${ONELINK_LANDING}`)).toBe(true);
+    expect(isLandingDomain(`not-${ONELINK_LANDING}`)).toBe(false);
+    expect(isLandingDomain(`${ONELINK_LANDING}.com`)).toBe(false);
+  });
+
+  it("isLandingDomain excludes app domain even with matching suffix", () => {
+    // This is the critical bug fix: app.getonelink.io ends with .getonelink.io
+    // but should NOT be considered a landing domain
+    expect(isLandingDomain(ONELINK_APP)).toBe(false);
+    expect(isLandingDomain(`sub.${ONELINK_APP}`)).toBe(false);
+    expect(isLandingDomain(`anything.${ONELINK_APP}`)).toBe(false);
   });
 });

@@ -3,8 +3,19 @@ import { useTranslation } from "react-i18next";
 import StepCard from "@/components/StepCard";
 import { Layout } from "@/components/Layout";
 
+// YouTube video ID - Replace with your actual video ID when ready
+// You can also use environment variable: import.meta.env.VITE_YOUTUBE_HOW_IT_WORKS_ID
+const YOUTUBE_VIDEO_ID = ""; // e.g., "dQw4w9WgXcQ" (replace with your video ID)
+
 export default function HowItWorksSection() {
   const { t } = useTranslation();
+
+  // Get video ID from env or use default
+  const videoId =
+    import.meta.env.VITE_YOUTUBE_HOW_IT_WORKS_ID || YOUTUBE_VIDEO_ID;
+  const youtubeEmbedUrl = videoId
+    ? `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1&showinfo=0`
+    : null;
 
   const steps = [
     {
@@ -51,6 +62,21 @@ export default function HowItWorksSection() {
               {t("landing.howItWorks.subtitle")}
             </p>
           </div>
+
+          {/* YouTube Video - Responsive */}
+          {youtubeEmbedUrl && (
+            <div className="mb-12 md:mb-16">
+              <div className="aspect-video w-full rounded-lg overflow-hidden shadow-lg">
+                <iframe
+                  src={youtubeEmbedUrl}
+                  title={t("landing.howItWorks.title")}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                  className="w-full h-full"
+                />
+              </div>
+            </div>
+          )}
 
           {/* Steps - Mobile: Vertical, Desktop: Horizontal */}
           <div className="relative">

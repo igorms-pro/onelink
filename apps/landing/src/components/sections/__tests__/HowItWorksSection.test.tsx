@@ -93,4 +93,45 @@ describe("HowItWorksSection", () => {
     const icons = container.querySelectorAll("svg");
     expect(icons.length).toBeGreaterThanOrEqual(4);
   });
+
+  it("renders YouTube iframe when video ID is provided", () => {
+    // Mock environment variable with a test video ID
+    const originalEnv = import.meta.env.VITE_YOUTUBE_HOW_IT_WORKS_ID;
+    (import.meta.env as any).VITE_YOUTUBE_HOW_IT_WORKS_ID = "test-video-id-123";
+
+    const { container } = render(<HowItWorksSection />);
+
+    // Check that iframe is rendered
+    const iframe = container.querySelector("iframe");
+    expect(iframe).toBeInTheDocument();
+    expect(iframe).toHaveAttribute(
+      "src",
+      "https://www.youtube.com/embed/test-video-id-123?rel=0&modestbranding=1&showinfo=0",
+    );
+    expect(iframe).toHaveAttribute("title", "How It Works");
+
+    // Restore original env
+    if (originalEnv) {
+      (import.meta.env as any).VITE_YOUTUBE_HOW_IT_WORKS_ID = originalEnv;
+    } else {
+      delete (import.meta.env as any).VITE_YOUTUBE_HOW_IT_WORKS_ID;
+    }
+  });
+
+  it("does not render YouTube iframe when video ID is not provided", () => {
+    // Ensure no video ID is set
+    const originalEnv = import.meta.env.VITE_YOUTUBE_HOW_IT_WORKS_ID;
+    delete (import.meta.env as any).VITE_YOUTUBE_HOW_IT_WORKS_ID;
+
+    const { container } = render(<HowItWorksSection />);
+
+    // Check that iframe is NOT rendered
+    const iframe = container.querySelector("iframe");
+    expect(iframe).not.toBeInTheDocument();
+
+    // Restore original env
+    if (originalEnv) {
+      (import.meta.env as any).VITE_YOUTUBE_HOW_IT_WORKS_ID = originalEnv;
+    }
+  });
 });
