@@ -26,9 +26,17 @@ export function isAppDomain(host: string): boolean {
 /**
  * Check if we're on the landing domain (getonelink.io)
  * This is where profiles should be accessed
+ * Note: This excludes app.getonelink.io and its subdomains to prevent redirect loops
  */
 export function isLandingDomain(host: string): boolean {
   const lower = host.toLowerCase();
+
+  // First check if it's the app domain - if so, it's NOT the landing domain
+  if (isAppDomain(lower)) {
+    return false;
+  }
+
+  // Then check if it matches the landing domain
   return lower === ONELINK_LANDING || lower.endsWith(`.${ONELINK_LANDING}`);
 }
 

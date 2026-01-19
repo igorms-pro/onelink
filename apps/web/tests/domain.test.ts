@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { isBaseHost, isSafeHttpUrl } from "../src/lib/domain";
+import {
+  isBaseHost,
+  isSafeHttpUrl,
+  isAppDomain,
+  isLandingDomain,
+} from "../src/lib/domain";
 import {
   ONELINK_APP,
   ONELINK_LANDING,
@@ -44,5 +49,37 @@ describe("domain utils", () => {
     expect(isBaseHost("localhost:8080")).toBe(false); // different port
     expect(isBaseHost(`example.${ONELINK_APP_DEV}.com`)).toBe(false); // different domain
     expect(isBaseHost("")).toBe(false);
+  });
+
+  it("isAppDomain correctly identifies app domain", () => {
+    expect(isAppDomain(ONELINK_APP)).toBe(true);
+    expect(isAppDomain(`sub.${ONELINK_APP}`)).toBe(true);
+    expect(isAppDomain("localhost")).toBe(true);
+    expect(isAppDomain(`localhost:${LOCALHOST_PORT_DEV}`)).toBe(true);
+    expect(isAppDomain(`localhost:${LOCALHOST_PORT_ALT}`)).toBe(true);
+    expect(isAppDomain(`example.${ONELINK_APP_DEV}`)).toBe(true);
+    expect(isAppDomain(ONELINK_LANDING)).toBe(false);
+    expect(isAppDomain(`sub.${ONELINK_LANDING}`)).toBe(false);
+    expect(isAppDomain("example.com")).toBe(false);
+  });
+
+  it("isLandingDomain correctly identifies landing domain", () => {
+    expect(isLandingDomain(ONELINK_LANDING)).toBe(true);
+    expect(isLandingDomain(`sub.${ONELINK_LANDING}`)).toBe(true);
+    expect(isLandingDomain(ONELINK_APP)).toBe(false); // Critical: app.getonelink.io should NOT match
+    expect(isLandingDomain(`sub.${ONELINK_APP}`)).toBe(false);
+    expect(isLandingDomain("localhost")).toBe(false);
+    expect(isLandingDomain("example.com")).toBe(false);
+  });
+
+  it("isAppDomain and isLandingDomain are mutually exclusive for app domain", () => {
+    // Critical test: app.getonelink.io should be app domain, NOT landing domain
+    // This prevents redirect loops
+    expect(isAppDomain(ONELINK_APP)).toBe(true);
+    expect(isLandingDomain(ONELINK_APP)).toBe(false);
+
+    // Landing domain should be landing, not app
+    expect(isLandingDomain(ONELINK_LANDING)).toBe(true);
+    expect(isAppDomain(ONELINK_LANDING)).toBe(false);
   });
 });
