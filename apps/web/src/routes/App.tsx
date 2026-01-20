@@ -64,16 +64,6 @@ export default function App() {
       return;
     }
 
-    // List of routes that belong to landing page (these should NOT be accessible on landing domain from web app)
-    const landingRoutes = [
-      "/",
-      "/features",
-      "/pricing",
-      "/privacy",
-      "/terms",
-      "/auth",
-    ];
-
     // List of routes that should ONLY be accessible on app domain
     // These include ALL authenticated routes
     const appRoutes = [
@@ -84,26 +74,20 @@ export default function App() {
       "/pricing", // Pricing page is also on app domain
     ];
 
-    // If we're on landing domain and trying to access root, redirect to landing
-    if (isLandingDomain(host) && pathname === "/") {
-      window.location.replace(`https://${host}/`);
-      return;
-    }
-
-    // If we're on landing domain and trying to access any landing route, redirect to landing
-    if (isLandingDomain(host) && landingRoutes.includes(pathname)) {
-      window.location.replace(`https://${host}${pathname}`);
-      return;
-    }
-
-    // Check if current route is an app route (dashboard, settings, etc.)
-    const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
-
-    // If we're on landing domain and trying to access an app route, redirect to app domain
-    // This ensures onlnk.io/dashboard redirects to app.onlnk.io/dashboard
-    if (isLandingDomain(host) && isAppRoute) {
-      const redirectUrl = `${APP_URL}${pathname}${window.location.search}`;
-      window.location.replace(redirectUrl);
+    // If we're on landing domain, we should NOT be here - this is the web app!
+    // The landing domain should serve the landing page project, not this web app
+    // If we somehow end up here (misconfigured Vercel), redirect app routes to app domain
+    // and let profiles be handled by vercel.json rewrites
+    if (isLandingDomain(host)) {
+      // If it's an app route, redirect to app domain
+      const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
+      if (isAppRoute) {
+        const redirectUrl = `${APP_URL}${pathname}${window.location.search}`;
+        window.location.replace(redirectUrl);
+        return;
+      }
+      // For profiles and other routes, let vercel.json rewrites handle it
+      // Don't redirect root or landing routes - that causes infinite loops
       return;
     }
 
