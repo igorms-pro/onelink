@@ -109,7 +109,7 @@ describe("ProfileLinkCard", () => {
     // In tests, window.location.origin is mocked to "https://example.com"
     // but since it's not localhost, it should use LANDING_URL
     expect(
-      screen.getByDisplayValue("https://getonelink.io/test-user"),
+      screen.getByDisplayValue("https://onlnk.io/test-user"),
     ).toBeInTheDocument();
   });
 
@@ -166,7 +166,7 @@ describe("ProfileLinkCard", () => {
     await waitFor(
       () => {
         expect(mockWriteText).toHaveBeenCalledWith(
-          "https://getonelink.io/test-user",
+          "https://onlnk.io/test-user",
         );
       },
       { timeout: 3000 },
@@ -222,7 +222,7 @@ describe("ProfileLinkCard", () => {
     fireEvent.click(previewButton);
 
     expect(windowOpenSpy).toHaveBeenCalledWith(
-      "https://getonelink.io/test-user",
+      "https://onlnk.io/test-user",
       "_blank",
       "noopener,noreferrer",
     );
@@ -280,7 +280,7 @@ describe("ProfileLinkCard", () => {
 
     // Should fallback to LANDING_URL when host is undefined
     expect(
-      screen.getByDisplayValue("https://getonelink.io/test-user"),
+      screen.getByDisplayValue("https://onlnk.io/test-user"),
     ).toBeInTheDocument();
 
     // Restore mock

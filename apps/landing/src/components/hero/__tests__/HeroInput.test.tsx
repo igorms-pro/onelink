@@ -30,7 +30,7 @@ describe("HeroInput", () => {
       <HeroInput username="" onUsernameChange={vi.fn()} onSubmit={vi.fn()} />,
     );
 
-    expect(screen.getByText("app.getonelink.io/")).toBeInTheDocument();
+    expect(screen.getByText("app.onlnk.io/")).toBeInTheDocument();
   });
 
   it("calls onUsernameChange when input value changes", async () => {

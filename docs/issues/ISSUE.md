@@ -369,10 +369,10 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
    - **Status:** ✅ Completed
    - **Priority:** High (MVP Launch)
    - **Estimated Time:** 8-12 hours (✅ Completed)
-   - **Domain:** `getonelink.io` (à acheter)
+   - **Domain:** `onlnk.io` (à acheter)
    - **Architecture:** 
-     - `getonelink.io` → Landing page (`apps/landing/` - Vite + React)
-     - `app.getonelink.io` → Application (`apps/web` - dashboard actuel)
+     - `onlnk.io` → Landing page (`apps/landing/` - Vite + React)
+     - `app.onlnk.io` → Application (`apps/web` - dashboard actuel)
    - **Description:** Créer un site vitrine professionnel pour présenter OneLink, convertir les visiteurs, et servir de point d'entrée principal
    - **Documentation:** Voir `docs/LANDING_PAGE.md` pour le design complet, sections, et implementation steps
    - **Sections principales:**
@@ -448,7 +448,7 @@ Add multiple view modes for displaying files in drops, similar to Windows/Mac fi
      - ✅ Merged to main branch (PR #75)
    - **Design Requirements:**
      - Style similaire à la page Auth (logo, background, centré)
-     - Input pour username avec préfixe `app.getonelink.io/`
+     - Input pour username avec préfixe `app.onlnk.io/`
      - Indicateur de disponibilité (✓ disponible, ✗ pris, ⏳ vérification...)
      - Message d'aide: "You can always change it later"
      - Bouton "Continue" désactivé si username invalide ou pris

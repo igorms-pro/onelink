@@ -105,10 +105,7 @@ describe("Footer Component", () => {
     renderWithRouter(<Footer />);
 
     const contactLink = screen.getByText("Contact");
-    expect(contactLink).toHaveAttribute(
-      "href",
-      "mailto:support@getonelink.app",
-    );
+    expect(contactLink).toHaveAttribute("href", "mailto:support@onlnk.io");
   });
 
   it("renders app sign in and sign up links", () => {
@@ -117,13 +114,13 @@ describe("Footer Component", () => {
     const signInLinks = screen.getAllByText("Sign In");
     expect(signInLinks.length).toBeGreaterThan(0);
     signInLinks.forEach((link) => {
-      expect(link).toHaveAttribute("href", "https://app.getonelink.io/auth");
+      expect(link).toHaveAttribute("href", "https://app.onlnk.io/auth");
     });
 
     const signUpLinks = screen.getAllByText("Sign Up");
     expect(signUpLinks.length).toBeGreaterThan(0);
     signUpLinks.forEach((link) => {
-      expect(link).toHaveAttribute("href", "https://app.getonelink.io/auth");
+      expect(link).toHaveAttribute("href", "https://app.onlnk.io/auth");
     });
   });
 

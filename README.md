@@ -6,8 +6,8 @@ OneLink is a unified link-in-bio platform that combines routing and file sharing
 
 ## 🌐 Live Applications
 
-- **Landing Page**: [getonelink.io](https://getonelink.io)
-- **Web App**: [app.getonelink.io](https://app.getonelink.io)
+- **Landing Page**: [onlnk.io](https://onlnk.io)
+- **Web App**: [app.onlnk.io](https://app.onlnk.io)
 
 ## 📦 Monorepo Structure
 
@@ -17,7 +17,7 @@ This is a monorepo containing two main applications:
 
 Marketing website showcasing OneLink's features, pricing, and value proposition.
 
-- **Live**: [getonelink.io](https://getonelink.io)
+- **Live**: [onlnk.io](https://onlnk.io)
 - **Tech**: React 19, Vite, Tailwind CSS, i18next
 - **See**: [apps/landing/README.md](./apps/landing/README.md) for details
 
@@ -25,7 +25,7 @@ Marketing website showcasing OneLink's features, pricing, and value proposition.
 
 The core OneLink application with profiles, routes, drops, and dashboard.
 
-- **Live**: [app.getonelink.io](https://app.getonelink.io)
+- **Live**: [app.onlnk.io](https://app.onlnk.io)
 - **Tech**: React 19, Vite, Supabase, Stripe, Tailwind CSS
 - **See**: [apps/web/README.md](./apps/web/README.md) for details
 
@@ -96,8 +96,8 @@ cd apps/web && pnpm test
 
 Both applications are deployed on Vercel:
 
-- **Landing**: `getonelink.io` (Root: `apps/landing`)
-- **Web App**: `app.getonelink.io` (Root: `apps/web`)
+- **Landing**: `onlnk.io` (Root: `apps/landing`)
+- **Web App**: `app.onlnk.io` (Root: `apps/web`)
 
 See individual README files for deployment details.
 
@@ -107,8 +107,8 @@ Private - All rights reserved
 
 ## 🔗 Links
 
-- **Website**: [getonelink.io](https://getonelink.io)
-- **App**: [app.getonelink.io](https://app.getonelink.io)
+- **Website**: [onlnk.io](https://onlnk.io)
+- **App**: [app.onlnk.io](https://app.onlnk.io)
 - **GitHub**: [igorms-pro/onelink](https://github.com/igorms-pro/onelink)
 
 ---

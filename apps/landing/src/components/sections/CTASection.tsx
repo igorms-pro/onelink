@@ -23,8 +23,8 @@ export function CTASection() {
   const handleGetStarted = () => {
     trackSignUpClick("cta_section");
     const authUrl = username.trim()
-      ? `https://app.getonelink.io/auth?username=${encodeURIComponent(username.trim())}`
-      : "https://app.getonelink.io/auth";
+      ? `https://app.onlnk.io/auth?username=${encodeURIComponent(username.trim())}`
+      : "https://app.onlnk.io/auth";
     window.location.href = authUrl;
   };
 
@@ -46,7 +46,7 @@ export function CTASection() {
               <div className="relative w-full sm:flex-[0.8] sm:w-auto sm:min-w-[400px]">
                 <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
                   <span className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium">
-                    app.getonelink.io/
+                    app.onlnk.io/
                   </span>
                 </div>
                 <input

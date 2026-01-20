@@ -65,11 +65,11 @@ test.describe("Cross-Browser Compatibility", () => {
     const href = await heroCTA.getAttribute("href");
 
     if (href) {
-      expect(href).toContain("app.getonelink.io/auth");
+      expect(href).toContain("app.onlnk.io/auth");
     } else {
       let redirectUrl: string | null = null;
       page.on("framenavigated", (frame) => {
-        if (frame.url().includes("app.getonelink.io")) {
+        if (frame.url().includes("app.onlnk.io")) {
           redirectUrl = frame.url();
         }
       });
@@ -77,7 +77,7 @@ test.describe("Cross-Browser Compatibility", () => {
       // Click CTA (will navigate away)
       await Promise.all([
         page
-          .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+          .waitForURL("https://app.onlnk.io/auth**", { timeout: 5000 })
           .catch(() => {
             // In CI, external domain might not resolve
           }),
@@ -86,8 +86,8 @@ test.describe("Cross-Browser Compatibility", () => {
 
       const currentUrl = page.url();
       const redirectHappened =
-        redirectUrl?.includes("app.getonelink.io/auth") ||
-        currentUrl.includes("app.getonelink.io/auth");
+        redirectUrl?.includes("app.onlnk.io/auth") ||
+        currentUrl.includes("app.onlnk.io/auth");
 
       // Verify redirect was attempted (button is functional)
       expect(
@@ -205,14 +205,14 @@ test.describe("Cross-Browser Compatibility", () => {
   }) => {
     let redirectAttempted = false;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectAttempted = true;
       }
     });
 
     await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/auth", { timeout: 10000 })
+        .waitForURL("https://app.onlnk.io/auth", { timeout: 10000 })
         .catch(() => {
           // In CI, external domain might not resolve
         }),
@@ -222,7 +222,7 @@ test.describe("Cross-Browser Compatibility", () => {
     // Verify redirect was attempted (either completed or initiated)
     const currentUrl = page.url();
     const redirectHappened =
-      redirectAttempted || currentUrl.includes("app.getonelink.io/auth");
+      redirectAttempted || currentUrl.includes("app.onlnk.io/auth");
 
     // Even if external domain doesn't resolve, redirect should be attempted
     expect(redirectHappened || currentUrl.includes("/auth")).toBeTruthy();

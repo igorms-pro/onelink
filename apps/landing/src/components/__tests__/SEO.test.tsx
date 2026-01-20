@@ -135,11 +135,11 @@ describe("SEO Component", () => {
     await waitFor(() => {
       expect(document.querySelector('meta[property="og:url"]')).toHaveAttribute(
         "content",
-        "https://getonelink.io",
+        "https://onlnk.io",
       );
       expect(
         document.querySelector('meta[property="og:image"]'),
-      ).toHaveAttribute("content", "https://getonelink.io/og.png");
+      ).toHaveAttribute("content", "https://onlnk.io/og.png");
     });
   });
 

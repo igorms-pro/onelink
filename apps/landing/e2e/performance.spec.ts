@@ -148,7 +148,7 @@ test.describe("Performance Tests", () => {
 
     // Filter out external redirects (auth redirects are expected)
     const criticalFailures = failedRequests.filter(
-      (req) => !req.includes("app.getonelink.io") && !req.includes("posthog"),
+      (req) => !req.includes("app.onlnk.io") && !req.includes("posthog"),
     );
 
     expect(criticalFailures.length).toBe(0);

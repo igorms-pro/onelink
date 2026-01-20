@@ -1,6 +1,6 @@
 # OneLink Landing Page
 
-Marketing landing page for OneLink, deployed at [getonelink.io](https://getonelink.io).
+Marketing landing page for OneLink, deployed at [onlnk.io](https://onlnk.io).
 
 ## Overview
 
@@ -63,12 +63,12 @@ See `.env.example` for all available variables. All are optional:
 
 - `VITE_POSTHOG_KEY` - PostHog analytics API key
 - `VITE_POSTHOG_HOST` - PostHog host (default: https://app.posthog.com)
-- `VITE_APP_URL` - Web app URL (default: https://app.getonelink.io)
+- `VITE_APP_URL` - Web app URL (default: https://app.onlnk.io)
 - `VITE_YOUTUBE_VIDEO_ID` - YouTube video ID for demo section
 
 ## Deployment
 
-Deployed on Vercel at `getonelink.io`:
+Deployed on Vercel at `onlnk.io`:
 
 1. **Root Directory**: `apps/landing`
 2. **Framework**: Vite
