@@ -1,15 +1,13 @@
 import { test, expect } from "@playwright/test";
 
 test.describe("Auth Redirect Flow", () => {
-  test("should redirect /auth route to app.getonelink.io/auth", async ({
-    page,
-  }) => {
+  test("should redirect /auth route to app.onlnk.io/auth", async ({ page }) => {
     // Intercept navigation to external domain
     let redirectUrl: string | null = null;
     let redirectAttempted = false;
 
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectUrl = frame.url();
         redirectAttempted = true;
       }
@@ -39,8 +37,8 @@ test.describe("Auth Redirect Flow", () => {
     // Verify redirect was attempted (either URL changed, redirect initiated, or message shown)
     const currentUrl = page.url();
     const redirectHappened =
-      redirectUrl?.includes("app.getonelink.io/auth") ||
-      currentUrl.includes("app.getonelink.io/auth") ||
+      redirectUrl?.includes("app.onlnk.io/auth") ||
+      currentUrl.includes("app.onlnk.io/auth") ||
       redirectAttempted ||
       messageVisible ||
       (response && response.status() === 200); // Page loaded successfully
@@ -56,14 +54,14 @@ test.describe("Auth Redirect Flow", () => {
     const startTime = Date.now();
 
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectStarted = true;
       }
     });
 
     await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/auth", { timeout: 10000 })
+        .waitForURL("https://app.onlnk.io/auth", { timeout: 10000 })
         .catch(() => {
           // In CI, external domain might not resolve
         }),
@@ -78,7 +76,7 @@ test.describe("Auth Redirect Flow", () => {
     expect(redirectTime).toBeLessThan(2000);
 
     // If redirect completed, verify it happened quickly
-    if (redirectStarted || page.url().includes("app.getonelink.io")) {
+    if (redirectStarted || page.url().includes("app.onlnk.io")) {
       expect(redirectTime).toBeLessThan(2000);
     }
   });
@@ -86,7 +84,7 @@ test.describe("Auth Redirect Flow", () => {
   test("should display loading message during redirect", async ({ page }) => {
     let redirectHappened = false;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectHappened = true;
       }
     });
@@ -109,7 +107,7 @@ test.describe("Auth Redirect Flow", () => {
     // Verify redirect was attempted
     const currentUrl = page.url();
     const redirectAttempted =
-      redirectHappened || currentUrl.includes("app.getonelink.io/auth");
+      redirectHappened || currentUrl.includes("app.onlnk.io/auth");
 
     // Even if external domain doesn't resolve, redirect code should execute
     expect(
@@ -150,14 +148,14 @@ test.describe("Auth Redirect Flow", () => {
 
     let redirectAttempted = false;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectAttempted = true;
       }
     });
 
     await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/auth", { timeout: 30000 })
+        .waitForURL("https://app.onlnk.io/auth", { timeout: 30000 })
         .catch(() => {
           // In CI, external domain might not resolve
         }),
@@ -167,7 +165,7 @@ test.describe("Auth Redirect Flow", () => {
     // Verify redirect was attempted (either completed or initiated)
     const currentUrl = page.url();
     const redirectHappened =
-      redirectAttempted || currentUrl.includes("app.getonelink.io/auth");
+      redirectAttempted || currentUrl.includes("app.onlnk.io/auth");
 
     // Even if external domain doesn't resolve, redirect should be attempted
     expect(redirectHappened || page.url().includes("/auth")).toBeTruthy();
@@ -176,7 +174,7 @@ test.describe("Auth Redirect Flow", () => {
   test("should redirect from any /auth path", async ({ page }) => {
     let redirectUrl: string | null = null;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectUrl = frame.url();
       }
     });
@@ -187,7 +185,7 @@ test.describe("Auth Redirect Flow", () => {
     });
 
     await page
-      .waitForURL("https://app.getonelink.io/auth**", {
+      .waitForURL("https://app.onlnk.io/auth**", {
         timeout: 10000,
       })
       .catch(() => {
@@ -197,8 +195,8 @@ test.describe("Auth Redirect Flow", () => {
     // Verify redirect was attempted
     const currentUrl = page.url();
     const redirectHappened =
-      redirectUrl?.includes("app.getonelink.io/auth") ||
-      currentUrl.includes("app.getonelink.io/auth");
+      redirectUrl?.includes("app.onlnk.io/auth") ||
+      currentUrl.includes("app.onlnk.io/auth");
 
     // Even if external domain doesn't resolve, redirect should be attempted
     expect(redirectHappened || currentUrl.includes("/auth")).toBeTruthy();

@@ -6,7 +6,7 @@
   "rewrites": [
     {
       "source": "/((?!features|pricing|privacy|terms|auth).+)",
-      "destination": "https://app.getonelink.io/$1"
+      "destination": "https://app.onlnk.io/$1"
     }
   ]
 }

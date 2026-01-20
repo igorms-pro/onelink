@@ -12,7 +12,7 @@ test.describe("CTA Conversion Flows", () => {
     // Intercept navigation to verify redirect is attempted
     let redirectUrl: string | null = null;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectUrl = frame.url();
       }
     });
@@ -20,7 +20,7 @@ test.describe("CTA Conversion Flows", () => {
     // Click button and wait for redirect attempt
     await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+        .waitForURL("https://app.onlnk.io/auth**", { timeout: 5000 })
         .catch(() => {
           // In CI, external domain might not resolve, but redirect should be attempted
         }),
@@ -30,8 +30,8 @@ test.describe("CTA Conversion Flows", () => {
     // Verify redirect was attempted (either completed or URL changed)
     const currentUrl = page.url();
     const redirectHappened =
-      redirectUrl?.includes("app.getonelink.io/auth") ||
-      currentUrl.includes("app.getonelink.io/auth");
+      redirectUrl?.includes("app.onlnk.io/auth") ||
+      currentUrl.includes("app.onlnk.io/auth");
 
     // Even if external domain doesn't resolve, verify button is functional
     // The redirect code should execute (window.location.href is set)
@@ -97,19 +97,19 @@ test.describe("CTA Conversion Flows", () => {
 
       if (href) {
         // If it's a link, verify href is correct
-        expect(href).toContain("app.getonelink.io/auth");
+        expect(href).toContain("app.onlnk.io/auth");
       } else {
         // If it's a button, verify redirect happens on click
         let redirectUrl: string | null = null;
         page.on("framenavigated", (frame) => {
-          if (frame.url().includes("app.getonelink.io")) {
+          if (frame.url().includes("app.onlnk.io")) {
             redirectUrl = frame.url();
           }
         });
 
         await Promise.all([
           page
-            .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+            .waitForURL("https://app.onlnk.io/auth**", { timeout: 5000 })
             .catch(() => {
               // In CI, external domain might not resolve
             }),
@@ -118,8 +118,8 @@ test.describe("CTA Conversion Flows", () => {
 
         const currentUrl = page.url();
         const redirectHappened =
-          redirectUrl?.includes("app.getonelink.io/auth") ||
-          currentUrl.includes("app.getonelink.io/auth");
+          redirectUrl?.includes("app.onlnk.io/auth") ||
+          currentUrl.includes("app.onlnk.io/auth");
 
         // Verify redirect was attempted (button is functional)
         expect(
@@ -142,19 +142,19 @@ test.describe("CTA Conversion Flows", () => {
       const href = await proPlanCTA.getAttribute("href");
 
       if (href) {
-        expect(href).toContain("app.getonelink.io/pricing");
+        expect(href).toContain("app.onlnk.io/pricing");
       } else {
         // If no href, verify redirect happens on click
         let redirectAttempted = false;
         page.on("framenavigated", (frame) => {
-          if (frame.url().includes("app.getonelink.io")) {
+          if (frame.url().includes("app.onlnk.io")) {
             redirectAttempted = true;
           }
         });
 
         await Promise.all([
           page
-            .waitForURL("https://app.getonelink.io/pricing", { timeout: 5000 })
+            .waitForURL("https://app.onlnk.io/pricing", { timeout: 5000 })
             .catch(() => {
               // In CI, external domain might not resolve
             }),
@@ -163,7 +163,7 @@ test.describe("CTA Conversion Flows", () => {
 
         const currentUrl = page.url();
         const redirectHappened =
-          redirectAttempted || currentUrl.includes("app.getonelink.io/pricing");
+          redirectAttempted || currentUrl.includes("app.onlnk.io/pricing");
 
         expect(redirectHappened || href !== null).toBeTruthy();
       }
@@ -190,18 +190,18 @@ test.describe("CTA Conversion Flows", () => {
       const href = await ctaButton.getAttribute("href");
 
       if (href) {
-        expect(href).toContain("app.getonelink.io/auth");
+        expect(href).toContain("app.onlnk.io/auth");
       } else {
         let redirectUrl: string | null = null;
         page.on("framenavigated", (frame) => {
-          if (frame.url().includes("app.getonelink.io")) {
+          if (frame.url().includes("app.onlnk.io")) {
             redirectUrl = frame.url();
           }
         });
 
         await Promise.all([
           page
-            .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+            .waitForURL("https://app.onlnk.io/auth**", { timeout: 5000 })
             .catch(() => {
               // In CI, external domain might not resolve
             }),
@@ -210,8 +210,8 @@ test.describe("CTA Conversion Flows", () => {
 
         const currentUrl = page.url();
         const redirectHappened =
-          redirectUrl?.includes("app.getonelink.io/auth") ||
-          currentUrl.includes("app.getonelink.io/auth");
+          redirectUrl?.includes("app.onlnk.io/auth") ||
+          currentUrl.includes("app.onlnk.io/auth");
 
         // Verify redirect was attempted (button is functional)
         expect(
@@ -241,7 +241,7 @@ test.describe("CTA Conversion Flows", () => {
 
     let redirectHappened = false;
     page.on("framenavigated", (frame) => {
-      if (frame.url().includes("app.getonelink.io")) {
+      if (frame.url().includes("app.onlnk.io")) {
         redirectHappened = true;
       }
     });
@@ -249,17 +249,13 @@ test.describe("CTA Conversion Flows", () => {
     // Wait for potential redirect
     const [redirect] = await Promise.all([
       page
-        .waitForURL("https://app.getonelink.io/**", { timeout: 2000 })
+        .waitForURL("https://app.onlnk.io/**", { timeout: 2000 })
         .catch(() => null),
       heroCTA.click(),
     ]);
 
     // If redirect happened, analytics might not fire, which is okay
-    if (
-      redirect ||
-      redirectHappened ||
-      page.url().includes("app.getonelink.io")
-    ) {
+    if (redirect || redirectHappened || page.url().includes("app.onlnk.io")) {
       // Redirect happened, test passes
       return;
     }

@@ -141,18 +141,18 @@ test.describe("Pricing Section Flow", () => {
     const href = await freePlanCTA.getAttribute("href");
 
     if (href) {
-      expect(href).toContain("app.getonelink.io");
+      expect(href).toContain("app.onlnk.io");
     } else {
       let redirectUrl: string | null = null;
       page.on("framenavigated", (frame) => {
-        if (frame.url().includes("app.getonelink.io")) {
+        if (frame.url().includes("app.onlnk.io")) {
           redirectUrl = frame.url();
         }
       });
 
       await Promise.all([
         page
-          .waitForURL("https://app.getonelink.io/**", { timeout: 5000 })
+          .waitForURL("https://app.onlnk.io/**", { timeout: 5000 })
           .catch(() => {
             // In CI, external domain might not resolve
           }),
@@ -161,8 +161,8 @@ test.describe("Pricing Section Flow", () => {
 
       const currentUrl = page.url();
       const redirectHappened =
-        redirectUrl?.includes("app.getonelink.io") ||
-        currentUrl.includes("app.getonelink.io");
+        redirectUrl?.includes("app.onlnk.io") ||
+        currentUrl.includes("app.onlnk.io");
 
       // Verify redirect was attempted (button is functional)
       expect(

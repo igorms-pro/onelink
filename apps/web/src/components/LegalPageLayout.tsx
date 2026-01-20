@@ -33,8 +33,8 @@ export function LegalPageLayout({
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if user came from app.getonelink.io (should show back button)
-  // Don't show back button if coming from getonelink.io (landing page)
+  // Check if user came from app.onlnk.io (should show back button)
+  // Don't show back button if coming from onlnk.io (landing page)
   const shouldShowBackButton = useMemo(() => {
     if (typeof window === "undefined") return false;
     const referrer = document.referrer;
@@ -45,7 +45,7 @@ export function LegalPageLayout({
       return true;
     }
 
-    // Don't show back button if we came from landing page (getonelink.io without app.)
+    // Don't show back button if we came from landing page (onlnk.io without app.)
     if (
       referrer &&
       referrer.includes(ONELINK_LANDING) &&
@@ -54,7 +54,7 @@ export function LegalPageLayout({
       return false;
     }
 
-    // Show back button if we're on app.getonelink.io
+    // Show back button if we're on app.onlnk.io
     return currentHost.includes(ONELINK_APP);
   }, []);
 

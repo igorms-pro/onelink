@@ -48,8 +48,8 @@ describe("App", () => {
     Object.defineProperty(window, "location", {
       value: {
         ...originalLocation,
-        host: "app.getonelink.io",
-        hostname: "app.getonelink.io",
+        host: "app.onlnk.io",
+        hostname: "app.onlnk.io",
         replace: mockReplace,
       },
       writable: true,
@@ -154,8 +154,8 @@ describe("App", () => {
     Object.defineProperty(window, "location", {
       value: {
         ...originalLocation,
-        host: "app.getonelink.io",
-        hostname: "app.getonelink.io",
+        host: "app.onlnk.io",
+        hostname: "app.onlnk.io",
         replace: mockReplace,
       },
       writable: true,
@@ -178,8 +178,8 @@ describe("App", () => {
     Object.defineProperty(window, "location", {
       value: {
         ...originalLocation,
-        host: "getonelink.io",
-        hostname: "getonelink.io",
+        host: "onlnk.io",
+        hostname: "onlnk.io",
         replace: mockReplace,
       },
       writable: true,
@@ -196,7 +196,7 @@ describe("App", () => {
       </MemoryRouter>,
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("https://getonelink.io/");
+    expect(mockReplace).toHaveBeenCalledWith("https://onlnk.io/");
   });
 
   it("redirects authenticated user with profile to dashboard", async () => {
@@ -354,8 +354,8 @@ describe("App", () => {
     Object.defineProperty(window, "location", {
       value: {
         ...originalLocation,
-        host: "getonelink.io",
-        hostname: "getonelink.io",
+        host: "onlnk.io",
+        hostname: "onlnk.io",
         replace: mockReplace,
       },
       writable: true,
@@ -372,7 +372,7 @@ describe("App", () => {
       </MemoryRouter>,
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("https://getonelink.io/auth");
+    expect(mockReplace).toHaveBeenCalledWith("https://onlnk.io/auth");
   });
 
   it("redirects landing domain app routes to app domain", () => {
@@ -382,8 +382,8 @@ describe("App", () => {
     Object.defineProperty(window, "location", {
       value: {
         ...originalLocation,
-        host: "getonelink.io",
-        hostname: "getonelink.io",
+        host: "onlnk.io",
+        hostname: "onlnk.io",
         replace: mockReplace,
         search: "?tab=inbox",
       },
@@ -402,7 +402,7 @@ describe("App", () => {
     );
 
     expect(mockReplace).toHaveBeenCalledWith(
-      "https://app.getonelink.io/dashboard?tab=inbox",
+      "https://app.onlnk.io/dashboard?tab=inbox",
     );
   });
 

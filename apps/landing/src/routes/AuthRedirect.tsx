@@ -5,8 +5,8 @@ export default function AuthRedirect() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Redirect to app.getonelink.io/auth
-    window.location.replace("https://app.getonelink.io/auth");
+    // Redirect to app.onlnk.io/auth
+    window.location.replace("https://app.onlnk.io/auth");
   }, [navigate]);
 
   return (

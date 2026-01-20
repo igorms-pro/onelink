@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { SEO } from "@/components/SEO";
 
-const APP_URL = import.meta.env.VITE_APP_URL || "https://app.getonelink.io";
+const APP_URL = import.meta.env.VITE_APP_URL || "https://app.onlnk.io";
 
 export default function PrivacyPage() {
   useEffect(() => {

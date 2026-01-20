@@ -1,6 +1,6 @@
 # OneLink Web App
 
-Main web application for OneLink, deployed at [app.getonelink.io](https://app.getonelink.io).
+Main web application for OneLink, deployed at [app.onlnk.io](https://app.onlnk.io).
 
 ## Overview
 
@@ -90,7 +90,7 @@ Required variables (see `.env.local.example`):
 
 ## Deployment
 
-Deployed on Vercel at `app.getonelink.io`:
+Deployed on Vercel at `app.onlnk.io`:
 
 1. **Root Directory**: `apps/web`
 2. **Framework**: Vite

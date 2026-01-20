@@ -7,7 +7,7 @@ import {
 } from "./constants";
 
 /**
- * Check if we're on the app domain (app.getonelink.io)
+ * Check if we're on the app domain (app.onlnk.io)
  * This is where authenticated routes (dashboard, settings) should be accessed
  */
 export function isAppDomain(host: string): boolean {
@@ -24,9 +24,9 @@ export function isAppDomain(host: string): boolean {
 }
 
 /**
- * Check if we're on the landing domain (getonelink.io)
+ * Check if we're on the landing domain (onlnk.io)
  * This is where profiles should be accessed
- * Note: This excludes app.getonelink.io and its subdomains to prevent redirect loops
+ * Note: This excludes app.onlnk.io and its subdomains to prevent redirect loops
  */
 export function isLandingDomain(host: string): boolean {
   const lower = host.toLowerCase();
@@ -45,7 +45,7 @@ export function isLandingDomain(host: string): boolean {
  * Profiles can be accessed on both landing domain and app domain
  */
 export function isBaseHost(host: string): boolean {
-  // Treat app base like getonelink.app, app.getonelink.io, getonelink.io or localhost as base host
+  // Treat app base like onlnk.app, app.onlnk.io, onlnk.io or localhost as base host
   const lower = host.toLowerCase();
   return (
     lower === "localhost" ||

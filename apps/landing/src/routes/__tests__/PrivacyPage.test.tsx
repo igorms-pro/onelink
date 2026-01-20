@@ -49,7 +49,7 @@ describe("PrivacyPage", () => {
     renderWithHelmet(<PrivacyPage />);
 
     // Should redirect to default URL
-    expect(window.location.href).toBe("https://app.getonelink.io/privacy");
+    expect(window.location.href).toBe("https://app.onlnk.io/privacy");
   });
 
   it("renders SEO component with correct title and description", async () => {

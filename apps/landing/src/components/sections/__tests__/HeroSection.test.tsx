@@ -55,7 +55,7 @@ describe("HeroSection", () => {
     await user.click(primaryButton);
 
     expect(analytics.trackSignUpClick).toHaveBeenCalledWith("hero");
-    expect(window.location.href).toBe("https://app.getonelink.io/auth");
+    expect(window.location.href).toBe("https://app.onlnk.io/auth");
   });
 
   it("renders secondary CTA button", () => {

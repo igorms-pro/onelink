@@ -49,7 +49,7 @@ describe("TermsPage", () => {
     renderWithHelmet(<TermsPage />);
 
     // Should redirect to default URL
-    expect(window.location.href).toBe("https://app.getonelink.io/terms");
+    expect(window.location.href).toBe("https://app.onlnk.io/terms");
   });
 
   it("renders SEO component with correct title and description", async () => {

@@ -28,7 +28,7 @@ export function ProfileLinkCard({ slug, isFree }: ProfileLinkCardProps) {
   }
 
   // Determine the correct profile URL
-  // In production: use landing domain (getonelink.io)
+  // In production: use landing domain (onlnk.io)
   // In localhost/dev: use current origin (localhost:5173)
   const host = window.location?.host || "";
   const isLocalhost =

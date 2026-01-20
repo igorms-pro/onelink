@@ -153,11 +153,11 @@ test.describe("Homepage Load & Navigation", () => {
     const href = await signInButton.getAttribute("href");
 
     if (href) {
-      expect(href).toContain("app.getonelink.io/auth");
+      expect(href).toContain("app.onlnk.io/auth");
     } else {
       let redirectUrl: string | null = null;
       page.on("framenavigated", (frame) => {
-        if (frame.url().includes("app.getonelink.io")) {
+        if (frame.url().includes("app.onlnk.io")) {
           redirectUrl = frame.url();
         }
       });
@@ -165,7 +165,7 @@ test.describe("Homepage Load & Navigation", () => {
       // Click and verify redirect (will navigate away)
       await Promise.all([
         page
-          .waitForURL("https://app.getonelink.io/auth**", { timeout: 5000 })
+          .waitForURL("https://app.onlnk.io/auth**", { timeout: 5000 })
           .catch(() => {
             // In CI, external domain might not resolve
           }),
@@ -174,8 +174,8 @@ test.describe("Homepage Load & Navigation", () => {
 
       const currentUrl = page.url();
       const redirectHappened =
-        redirectUrl?.includes("app.getonelink.io/auth") ||
-        currentUrl.includes("app.getonelink.io/auth");
+        redirectUrl?.includes("app.onlnk.io/auth") ||
+        currentUrl.includes("app.onlnk.io/auth");
 
       // Verify redirect was attempted (button is functional)
       expect(

@@ -57,7 +57,7 @@ describe("HeaderActions", () => {
     const signInButton = screen.getByTestId("header-sign-in");
     fireEvent.click(signInButton);
 
-    expect(window.location.href).toBe("https://app.getonelink.io/auth");
+    expect(window.location.href).toBe("https://app.onlnk.io/auth");
   });
 
   it("renders mobile menu button", () => {
