@@ -20,8 +20,8 @@ export default function HeroSection() {
   const handleGetStarted = () => {
     trackSignUpClick("hero");
     const authUrl = username.trim()
-      ? `https://app.getonelink.io/auth?username=${encodeURIComponent(username.trim())}`
-      : "https://app.getonelink.io/auth";
+      ? `https://app.onlnk.io/auth?username=${encodeURIComponent(username.trim())}`
+      : "https://app.onlnk.io/auth";
     window.location.href = authUrl;
   };
 

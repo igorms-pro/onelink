@@ -13,7 +13,7 @@ export function PricingSection() {
     features: t("pricing.plans.free.features", {
       returnObjects: true,
     }) as string[],
-    ctaUrl: "https://app.getonelink.io/auth",
+    ctaUrl: "https://app.onlnk.io/auth",
   };
 
   const starterPlan = {
@@ -25,7 +25,7 @@ export function PricingSection() {
       returnObjects: true,
     }) as string[],
     highlight: true,
-    ctaUrl: "https://app.getonelink.io/pricing",
+    ctaUrl: "https://app.onlnk.io/pricing",
   };
 
   const proPlan = {
@@ -37,7 +37,7 @@ export function PricingSection() {
       returnObjects: true,
     }) as string[],
     highlight: false,
-    ctaUrl: "https://app.getonelink.io/pricing",
+    ctaUrl: "https://app.onlnk.io/pricing",
   };
 
   return (

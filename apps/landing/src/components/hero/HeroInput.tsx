@@ -33,7 +33,7 @@ export function HeroInput({
       <div className="flex-[0.65] relative">
         <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
           <span className="text-base md:text-lg text-gray-500 dark:text-gray-400 font-medium">
-            app.getonelink.io/
+            app.onlnk.io/
           </span>
         </div>
         <input

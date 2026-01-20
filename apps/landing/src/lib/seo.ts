@@ -12,8 +12,8 @@ export const defaultSEO: SEOProps = {
   title: "OneLink. Multiple lives.",
   description:
     "Share your links, files, and drops with one simple link. No more messy bios or multiple links.",
-  image: "https://getonelink.io/og.png",
-  url: "https://getonelink.io",
+  image: "https://onlnk.io/og.png",
+  url: "https://onlnk.io",
   type: "website",
   siteName: "OneLink",
   locale: "en",

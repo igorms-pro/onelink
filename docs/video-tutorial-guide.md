@@ -50,7 +50,7 @@ La vidéo doit être un **teaser rapide et accrocheur** qui montre OneLink en ac
 
 ### **Étape 3: Share** (10-15 secondes)
 **Ce qu'il faut montrer (rapide):**
-- Le profil public OneLink (ex: `getonelink.io/username`)
+- Le profil public OneLink (ex: `onlnk.io/username`)
 - Zoom sur le lien unique
 - Clic sur "Copy Link" → copié
 - Montage rapide de 3-4 exemples d'utilisation:
@@ -130,7 +130,7 @@ La vidéo doit être un **teaser rapide et accrocheur** qui montre OneLink en ac
 
 #### **3-15 secondes - Étape 1: Sign Up**
 **Montrer:**
-- Transition vers la page d'inscription (`app.getonelink.io` ou landing page)
+- Transition vers la page d'inscription (`app.onlnk.io` ou landing page)
 - Zoom sur le bouton "Sign Up" ou "Get Started Free"
 - Clic sur "Sign Up with Google" (le plus rapide)
 - Animation rapide: OAuth popup → Dashboard apparaît
@@ -158,7 +158,7 @@ La vidéo doit être un **teaser rapide et accrocheur** qui montre OneLink en ac
 
 #### **30-45 secondes - Étape 3: Share**
 **Montrer:**
-- Le profil public OneLink s'affiche (ex: `getonelink.io/username`)
+- Le profil public OneLink s'affiche (ex: `onlnk.io/username`)
 - Zoom sur le lien unique OneLink
 - Clic sur "Copy Link" → Animation "Copied!"
 - Montage rapide (split screen ou séquence):
@@ -193,7 +193,7 @@ La vidéo doit être un **teaser rapide et accrocheur** qui montre OneLink en ac
 - Écran final avec logo OneLink
 - Texte à l'écran: "Create Your Free Account →" (avec flèche animée)
 - Badge "FREE" visible
-- URL: `getonelink.io` ou `app.getonelink.io`
+- URL: `onlnk.io` ou `app.onlnk.io`
 - Tagline finale: "One link. Multiple lives." (petit, en bas)
 
 **Dire:**

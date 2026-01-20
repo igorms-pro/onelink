@@ -33,7 +33,7 @@ export function getFooterSections(
       links: [
         {
           label: t("landing.footer.contact"),
-          href: "mailto:support@getonelink.app",
+          href: "mailto:support@onlnk.io",
           isExternal: true,
         },
       ],
@@ -58,12 +58,12 @@ export function getFooterSections(
       links: [
         {
           label: t("landing.footer.signIn"),
-          href: "https://app.getonelink.io/auth",
+          href: "https://app.onlnk.io/auth",
           isExternal: true,
         },
         {
           label: t("landing.footer.signUp"),
-          href: "https://app.getonelink.io/auth",
+          href: "https://app.onlnk.io/auth",
           isExternal: true,
         },
       ],

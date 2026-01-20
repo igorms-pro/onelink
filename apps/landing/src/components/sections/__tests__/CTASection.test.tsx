@@ -43,7 +43,7 @@ describe("CTASection", () => {
     await user.click(primaryButton);
 
     expect(analytics.trackSignUpClick).toHaveBeenCalledWith("cta_section");
-    expect(window.location.href).toBe("https://app.getonelink.io/auth");
+    expect(window.location.href).toBe("https://app.onlnk.io/auth");
   });
 
   it("renders secondary link", () => {
@@ -116,7 +116,7 @@ describe("CTASection", () => {
     await user.click(button);
 
     expect(window.location.href).toBe(
-      "https://app.getonelink.io/auth?username=testuser",
+      "https://app.onlnk.io/auth?username=testuser",
     );
   });
 
@@ -129,7 +129,7 @@ describe("CTASection", () => {
 
     expect(analytics.trackSignUpClick).toHaveBeenCalledWith("cta_section");
     expect(window.location.href).toBe(
-      "https://app.getonelink.io/auth?username=testuser",
+      "https://app.onlnk.io/auth?username=testuser",
     );
   });
 
@@ -144,7 +144,7 @@ describe("CTASection", () => {
     await user.click(button);
 
     expect(window.location.href).toBe(
-      "https://app.getonelink.io/auth?username=testuser",
+      "https://app.onlnk.io/auth?username=testuser",
     );
   });
 });
