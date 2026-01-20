@@ -79,6 +79,12 @@ export default function App() {
     // If we somehow end up here (misconfigured Vercel), redirect app routes to app domain
     // and let profiles be handled by vercel.json rewrites
     if (isLandingDomain(host)) {
+      // Don't redirect if we're already on www.onlnk.io (landing page project)
+      // This prevents self-redirection loops
+      if (host === "www.onlnk.io") {
+        return;
+      }
+
       // If it's an app route, redirect to app domain
       const isAppRoute = appRoutes.some((route) => pathname.startsWith(route));
       if (isAppRoute) {
@@ -86,8 +92,25 @@ export default function App() {
         window.location.replace(redirectUrl);
         return;
       }
+
+      // List of landing page routes that should redirect to www.onlnk.io
+      const landingRoutes = [
+        "/",
+        "/features",
+        "/pricing",
+        "/privacy",
+        "/terms",
+      ];
+
+      // If it's a landing route (root or landing page routes), redirect to www.onlnk.io
+      // Only redirect if we're on onlnk.io (not www.onlnk.io) to avoid loops
+      if (landingRoutes.includes(pathname) && host === "onlnk.io") {
+        const landingUrl = `https://www.onlnk.io${pathname}${window.location.search}`;
+        window.location.replace(landingUrl);
+        return;
+      }
+
       // For profiles and other routes, let vercel.json rewrites handle it
-      // Don't redirect root or landing routes - that causes infinite loops
       return;
     }
 
