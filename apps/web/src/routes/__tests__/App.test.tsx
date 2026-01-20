@@ -171,7 +171,7 @@ describe("App", () => {
     expect(mockReplace).not.toHaveBeenCalled();
   });
 
-  it("redirects landing domain root to landing", () => {
+  it("does not redirect when on landing domain root (web app should not be served there)", () => {
     vi.mocked(isAppDomain).mockReturnValue(false);
     vi.mocked(isLandingDomain).mockReturnValue(true);
 
@@ -196,7 +196,8 @@ describe("App", () => {
       </MemoryRouter>,
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("https://onlnk.io/");
+    // Should not redirect - landing domain should serve landing project, not web app
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("redirects authenticated user with profile to dashboard", async () => {
@@ -347,7 +348,7 @@ describe("App", () => {
     expect(mockNavigate).not.toHaveBeenCalled();
   });
 
-  it("redirects landing domain landing routes to landing", () => {
+  it("does not redirect landing routes when on landing domain (web app should not be served there)", () => {
     vi.mocked(isAppDomain).mockReturnValue(false);
     vi.mocked(isLandingDomain).mockReturnValue(true);
 
@@ -372,7 +373,8 @@ describe("App", () => {
       </MemoryRouter>,
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("https://onlnk.io/auth");
+    // Should not redirect - landing domain should serve landing project, not web app
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
   it("redirects landing domain app routes to app domain", () => {
