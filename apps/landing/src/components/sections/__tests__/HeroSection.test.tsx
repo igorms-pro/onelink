@@ -58,6 +58,25 @@ describe("HeroSection", () => {
     expect(window.location.href).toBe("https://app.onlnk.io/auth");
   });
 
+  it("primary CTA button with username includes username in URL", async () => {
+    const user = userEvent.setup();
+    render(<HeroSection />);
+
+    // Find the username input and enter a username
+    const usernameInput = screen.getByPlaceholderText(/username/i);
+    await user.type(usernameInput, "testuser");
+
+    const primaryButton = screen.getByRole("button", {
+      name: /get started free/i,
+    });
+    await user.click(primaryButton);
+
+    expect(analytics.trackSignUpClick).toHaveBeenCalledWith("hero");
+    expect(window.location.href).toBe(
+      "https://app.onlnk.io/auth?username=testuser",
+    );
+  });
+
   it("renders secondary CTA button", () => {
     render(<HeroSection />);
 
