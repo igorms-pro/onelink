@@ -44,7 +44,7 @@ describe("domain utils", () => {
   });
 
   it("isBaseHost handles edge cases", () => {
-    expect(isBaseHost("GETONELINK.APP")).toBe(true); // case insensitive
+    expect(isBaseHost("ONLNK.APP")).toBe(true); // case insensitive
     expect(isBaseHost(`sub.${ONELINK_APP_DEV}`)).toBe(true);
     expect(isBaseHost("localhost:8080")).toBe(false); // different port
     expect(isBaseHost(`example.${ONELINK_APP_DEV}.com`)).toBe(false); // different domain
