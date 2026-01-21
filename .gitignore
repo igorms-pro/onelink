@@ -39,10 +39,8 @@ lerna-debug.log*
 *.sln
 *.sw?
 
-# Docs issues (temporary planning files)
-# Only track the main ISSUE.md; all other files in docs/issues/ stay unversioned
+# Docs issues (temporary planning files - not versioned)
 docs/issues/*
-!docs/issues/ISSUE.md
 
 # Docs planning files (not versioned)
 docs/video-tutorial-guide.md
