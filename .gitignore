@@ -48,6 +48,12 @@ docs/issues/*
 docs/video-tutorial-guide.md
 docs/test-coverage-tasks.md
 
+# Docs explanatory files (created by AI, not versioned)
+docs/*-explanation.md
+docs/*-migration.md
+docs/custom-domains-explanation.md
+docs/oauth-redirect-urls-migration.md
+
 # Supabase CLI temp/cache
 supabase/.temp/
 .supabase/
